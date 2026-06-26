@@ -1,0 +1,47 @@
+# Traceability Matrix EBTA Engine
+
+| Artefact runtime | Source normative exacte | SOP / DN | Type | Tests | Couverture |
+| --- | --- | --- | --- | --- | --- |
+| `schemas/config.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 3.1 + template de configuration | SOP 04, SOP 12 | CONTRACT_ENCODING | `test_schemas.py` | COVERED_MINIMAL |
+| `schemas/experiment_registry_event.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 3.2 | SOP 03, DN-005 a DN-008 | CONTRACT_ENCODING | `test_schemas.py` | COVERED_MINIMAL |
+| `schemas/oos_access_event.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 3.3 | SOP 10, DN-032, DN-033 | CONTRACT_ENCODING | `test_schemas.py` | COVERED_MINIMAL |
+| `schemas/reproducibility_manifest.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 5 | SOP 12, DN-038 a DN-041 | CONTRACT_ENCODING | `test_schemas.py`, `test_manifest_hashes.py` | COVERED_SOP12_RUNTIME_CONTRACT |
+| `schemas/execution_journal_event.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 4 (rapport d'execution) | SOP 09B, DN-028, DN-029 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — A3 lot exhaustivite |
+| `schemas/pit_data_declaration.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 1 (formulaire G1) | SOP 09A, DN-025, DN-026, DN-027 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — A4 lot exhaustivite |
+| `schemas/walk_forward_declaration.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 1 (formulaire G3) | SOP 04, DN-001 a DN-004, DN-027 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — A4 lot exhaustivite |
+| `schemas/robustness_plan.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 1 (formulaire G5) | SOP 05, DN-030 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — A4 lot exhaustivite |
+| `schemas/incubation_plan.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 1 (formulaires G12/G13) | SOP 11, DN-035, DN-036, DN-037 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — A4 lot exhaustivite |
+| `schemas/reproduction_report.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 4 (rapport de reproduction) | SOP 12, DN-039, DN-041, INV-016 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — B4 lot exhaustivite |
+| `schemas/lifecycle_archive.schema.json` | `PAQUET D'EXECUTION EBTA.md` section 2 (G14 checklist) | SOP 12, DN-041 | CONTRACT_ENCODING | `test_schemas.py` | COVERED — C2 lot exhaustivite |
+| `validators/registry_append_only_validator.py` | `PAQUET D'EXECUTION EBTA.md` section 3.2 | SOP 03, DN-005 a DN-008 | CONTRACT_ENCODING | `test_registry_append_only.py` | COVERED — A1 lot exhaustivite |
+| `manifests/manifest_builder.py` | `PAQUET D'EXECUTION EBTA.md` section 5; `MANIFESTE DE GEL EBTA.md` principe SHA-256 | SOP 12 | MANIFEST_CHECK | `test_manifest_hashes.py`, `test_schemas.py` | COVERED_SOP12_RUNTIME_CONTRACT |
+| `validators/invariant_validator.py` | `PAQUET D'EXECUTION EBTA.md` section 6 | INV-001 a INV-016 | INVARIANT_CHECK | `test_invariants.py` | COVERED |
+| `validators/gate_validator.py` | `PAQUET D'EXECUTION EBTA.md` section 2 | G0 a G14 | GATE_CHECK | `test_gates.py`, `test_package_validator.py` | COVERED |
+| `adapters/backtrader_mapping.py` | Hook Implementation Phase 6; hierarchie runtime -> adapters | N/A | ADAPTER_MAPPING | `test_backtrader_adapter.py` | LOCAL_CONTRACT_COVERED |
+| `tests/test_protocol_manifest_hashes.py` | `MANIFESTE DE GEL EBTA.md` hashes SHA-256 | EBTA-DOC-1.0 | MANIFEST_CHECK | `test_protocol_manifest_hashes.py` | COVERED |
+| `validators/package_validator.py` | `PAQUET D'EXECUTION EBTA.md` sections 2, 3, 5, 6 | SOP 03, SOP 10, SOP 12 | GATE_CHECK / MANIFEST_CHECK / INVARIANT_CHECK | `test_package_validator.py`, `test_minimal_pilot_pipeline.py` | COVERED_HARDENED |
+| `persistence.py` | Hook Phase 0bis.5 modele de persistance | N/A | IMPLEMENTATION_DETAIL | `test_package_validator.py` | COVERED |
+| `PROCEDURE_CALCULATION_MAP.md` | `Implementation/Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md` Phase 1; `PROTOCOLE EBTA.md` sections 3, 4, 6, 7, 10 | SOP 01 a SOP 12, DN-001 a DN-041 | GOVERNANCE / IMPLEMENTATION_DETAIL | `test_procedure_map.py` | COVERED |
+| `procedures/search_space.py` | SOP 06 section 5; SOP 03 sections 6 and 8 | SOP 03, SOP 06, DN-005 a DN-007 | IMPLEMENTATION_DETAIL | `test_procedure_sop06.py`, `test_minimal_pilot_pipeline.py` | COVERED_REFERENCE_HARDENED |
+| `procedures/optimization.py` | SOP 06 sections 9, 10, 11, 13, 23 | SOP 06 | IMPLEMENTATION_DETAIL | `test_procedure_sop06.py` | COVERED |
+| `procedures/ml_manifest.py` | SOP 06 section 16; DN-026 | SOP 06, SOP 09A | IMPLEMENTATION_DETAIL | `test_procedure_sop06.py` | COVERED |
+| `procedures/complexity_selection.py` | SOP 06 sections 8, 12, 19, 23 | SOP 06, DN-012, DN-013 | IMPLEMENTATION_DETAIL | `test_procedure_sop06.py` | COVERED |
+| `procedures/candidate_matrix.py` | SOP 03 section 14; SOP 02 sections 4 and 5; SOP 06 section 17 | SOP 02, SOP 03, SOP 06, DN-007, DN-008 | IMPLEMENTATION_DETAIL | `test_procedure_sop06.py` | COVERED |
+| `procedures/returns.py` | SOP 08 sections 3, 5, 6, 8, 10, 24, 25; SOP 09B sections 3 and 33 | SOP 08, SOP 09B, DN-014, DN-015, DN-028 | IMPLEMENTATION_DETAIL | `test_procedure_returns.py` | COVERED |
+| `procedures/detrending.py` | SOP 07 sections 3, 6, 8, 14, 20, 26; SOP 08 section 6 | SOP 07, SOP 08, DN-016, DN-017, DN-026 | IMPLEMENTATION_DETAIL | `test_procedure_returns.py` | COVERED |
+| `procedures/zero_centering.py` | SOP 07 sections 15, 17; SOP 02 section 8; DN-018 | SOP 02, SOP 07 | IMPLEMENTATION_DETAIL | `test_procedure_wrc.py` | COVERED |
+| `procedures/bootstrap.py` | SOP 02 sections 7, 9; SOP 07 section 16; DN-020 | SOP 01, SOP 02, SOP 07 | IMPLEMENTATION_DETAIL | `test_procedure_wrc.py` | COVERED |
+| `procedures/wrc.py` | SOP 02 sections 6, 7, 8, 9, 10, 11, 12, 14, 15, 18 | SOP 02, DN-008 a DN-011 | IMPLEMENTATION_DETAIL | `test_procedure_wrc.py` | COVERED_SECONDARY_ANALYSES — A5: family_catalogue_hash ajoute |
+| `procedures/oos_confidence_interval.py` | SOP 01 sections 3, 4, 7, 8, 10, 13, 15, 20; DN-019 a DN-022 | SOP 01, DN-019 a DN-022 | IMPLEMENTATION_DETAIL | `test_procedure_oos_ci.py` | COVERED — B5: validate_power_target + validate_information_stop_point ajoutes |
+| `procedures/data_availability.py` | SOP 09A sections 2, 4, 26, 31; DN-025 | SOP 09A, DN-025 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED |
+| `procedures/walk_forward.py` | SOP 04 sections 3, 10, 11, 13, 17, 22, 27; DN-001 a DN-004, DN-027 | SOP 04, DN-001 a DN-004, DN-027 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py`, `test_minimal_pilot_pipeline.py` | COVERED_REFERENCE_HARDENED — C3: verification preventive non-chevauchement OOS ajoutee |
+| `procedures/registry_lineage.py` | SOP 03 sections 8, 14, 18, 21, 22; DN-005 a DN-008, DN-034 | SOP 03 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED |
+| `procedures/robustness.py` | SOP 05 sections 5, 17, 19, 21, 23, 29; DN-030, DN-031 | SOP 05 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — A2: classification CENTRAL/PLAUSIBLE_BASE/EXTREME + separation pre/post-OOS ajoutees |
+| `procedures/sealing.py` | SOP 10 sections 5, 6; SOP 12 section 3; DN-038 | SOP 10, SOP 12 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED |
+| `procedures/oos_access.py` | SOP 10 sections 5, 7, 8, 29, 30; DN-032, DN-033 | SOP 10 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED |
+| `procedures/economic_gate.py` | SOP 08 section 19; SOP 09B sections 16, 17, 32; DN-023, DN-024, DN-028, DN-029 | SOP 08, SOP 09B | IMPLEMENTATION_DETAIL | `test_procedure_governance.py`, `test_minimal_pilot_pipeline.py` | COVERED_REFERENCE_HARDENED |
+| `procedures/lifecycle.py` | SOP 11 sections 3, 13, 15, 20, 28, 38; SOP 12 sections 3, 38; DN-035 a DN-041 | SOP 11, SOP 12 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED |
+| `procedures/monitoring.py` | SOP 11 sections 3, 13, 15, 20, 28, 38; DN-037 | SOP 11, DN-037 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — B2 lot exhaustivite |
+| `procedures/incubation_report.py` | SOP 11; SOP 12; DN-035, DN-036, DN-037, DN-039, DN-040 | SOP 11, SOP 12 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — B3 lot exhaustivite |
+| `procedures/reproduction_report.py` | SOP 12 sections 3, 5, 38; DN-039, DN-040, DN-041; INV-016 | SOP 12, INV-016 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — B4 lot exhaustivite |
+| `EXTERNAL_ENGINE_PROCEDURE_MAPPING.md` | `Implementation/Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md` Phase 8; adapter boundary from runtime hook | N/A | ADAPTER_MAPPING | `test_backtrader_adapter.py` | COVERED |

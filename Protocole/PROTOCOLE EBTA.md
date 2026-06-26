@@ -8,7 +8,7 @@
 | Date de gel documentaire | 2026-06-24 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | Gouvernance protocole EBTA |
-| Rôle dans le paquet EBTA | Carte generale du processus, ordre des gates, livrables, gouvernance et index des SOP. |
+| Rôle dans le paquet EBTA | Carte generale du processus, boucles de recherche, hooks de reprise, ordre des gates, livrables, gouvernance et index des SOP. |
 | Référence de gel | Protocole/MANIFESTE DE GEL EBTA.md |
 
 Version documentaire : 2026-06-24
@@ -34,6 +34,18 @@ Documents de référence internes :
 - `Protocole/REGISTRE DES DECISIONS NORMATIVES EBTA.md`
 - `Protocole/TEMPLATE - Configuration préenregistrée d'une recherche EBTA.md`
 - `Protocole/Archives/AUDIT METHODOLOGIQUE PROTOCOLE EBTA.md`
+- `Protocole/Archives/HOOK - Finalisation du protocole EBTA après revue des SOP.md`
+
+Pointeurs opérationnels subordonnés :
+
+- `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md`
+- `Implementation/GUIDE - Construire un pipeline de recherche EBTA.md`
+- `Implementation/PROCEDURE_CALCULATION_MAP.md`
+- `Implementation/TRACEABILITY_MATRIX.md`
+- `Implementation/task_tracking.json`
+
+Ces pointeurs opérationnels expliquent comment le protocole gelé est traduit en
+contrats exécutables. Ils ne créent aucune règle normative concurrente.
 
 Référence méthodologique principale :
 
@@ -84,6 +96,167 @@ Aucun holdout final supplémentaire n’est ajouté après l’OOS Walk-Forward 
 | `OOS_k` | Exécution passive du processus gelé et contribution à l’OOS global. | SOP 01, SOP 04, SOP 10 |
 
 L’OOS ne sélectionne, ne départage, ne répare et ne revalide jamais un modèle.
+
+### 3.3 Carte processuelle complète
+
+Le processus EBTA n’est pas une liste plate de contrôles. C’est une chaîne de
+décisions, de preuves et de verrous. Le diagramme ci-dessous donne l’ordre. Le
+tableau qui suit indique quelle SOP ouvrir pour comprendre chaque bloc.
+
+```text
+[P0] Intention de recherche
+        |
+        v
+[P1] Configuration préenregistrée
+     hypothèse, calendrier, seeds, gates
+        |
+        v
+[P2] Données point-in-time
+     purge, embargo, warm-up, anti-leakage
+        |
+        v
+[P3] Folds Walk-Forward non chevauchants
+     Train_k / Test_k / OOS_k
+        |
+        v
+[P4] Boucle locale du fold k
+     Train_k -> Test_k -> sélection locale -> WRC_k -> robustesse -> scellement
+        |                                               |
+        |                                               v
+        |                              FAIL / INCONCLUSIVE / NO_MODEL
+        |                                               |
+        v                                               v
+     gates pré-OOS satisfaits                    pas d'ouverture OOS_k
+        |
+        v
+[P5] Ouverture unique et journalisée de OOS_k
+        |
+        v
+[P6] Exécution passive du processus gelé sur OOS_k
+        |
+        v
+[P7] Concaténation chronologique des OOS_k
+        |
+        v
+[P8] Estimation OOS globale
+     gate statistique + gate économique séparé
+        |
+        v
+[P9] Paquet reproductible
+     incubation -> déploiement limité -> cycle de vie
+```
+
+Chaque flèche implique une preuve opposable : configuration, registre, matrice
+de candidates, rapport de gate, rapport WRC, manifeste, hash, journal d’accès ou
+paquet de validation.
+
+Lecture du diagramme :
+
+| Bloc | Ce que le bloc veut dire | SOP propriétaires à ouvrir |
+| --- | --- | --- |
+| P0-P1 | Définir l’intention, préenregistrer l’hypothèse, le calendrier, les seeds, les gates et les règles d’arrêt. | SOP 03, SOP 04, SOP 12 |
+| P2 | Prouver que les données et transformations étaient disponibles au moment de la décision. | SOP 09A, SOP 04 |
+| P3 | Construire les fenêtres `Train_k`, `Test_k`, `OOS_k`, sans chevauchement OOS, avec purge, embargo et warm-up. | SOP 04 |
+| P4 Train/Test | Calibrer sur `Train_k`, transférer mécaniquement vers `Test_k`, monter les niveaux de complexité et choisir la candidate locale. | SOP 06 |
+| P4 Famille complète | Conserver l’univers complet des candidates influentes qui ont pu conduire à la sélection. | SOP 03, SOP 06 |
+| P4 WRC | Tester la famille complète applicable avec le WRC local primaire ; garder SPA, Romano-Wolf et MCPM comme analyses secondaires. | SOP 02 |
+| P4 Robustesse | Exécuter les contrôles de robustesse pré-OOS sans utiliser l’OOS pour réparer. | SOP 05 |
+| P4 Scellement | Geler le paquet pré-OOS avant toute ouverture de `OOS_k`. | SOP 10, SOP 12 |
+| P5-P6 | Ouvrir `OOS_k` une seule fois et exécuter passivement le processus gelé, avec coûts, sizing, NAV et capacité. | SOP 08, SOP 09B, SOP 10 |
+| P7-P8 | Concaténer les segments OOS et produire l’estimation statistique globale, séparée du gate économique. | SOP 01, SOP 04, SOP 08, SOP 09B |
+| P9 | Produire le paquet reproductible, puis gouverner incubation, déploiement limité, monitoring et archivage. | SOP 11, SOP 12 |
+
+### 3.4 Boucle locale Train/Test/OOS
+
+Dans chaque fold, EBTA impose une boucle fermée :
+
+```text
+1. Construire Train_k, Test_k, OOS_k sans chevauchement.
+   Autorité : SOP 04.
+2. Apprendre uniquement sur Train_k.
+   Autorité : SOP 06, SOP 09A.
+3. Produire la famille complète des candidates applicables.
+   Autorité : SOP 03, SOP 06.
+4. Sélectionner localement sur Test_k selon la règle préenregistrée.
+   Autorité : SOP 06.
+5. Tester la famille complète avec le WRC local primaire.
+   Autorité : SOP 02.
+6. Exécuter les contrôles de robustesse pré-OOS.
+   Autorité : SOP 05.
+7. Sceller le paquet PRE_OOS_SEALED.
+   Autorité : SOP 10, SOP 12.
+8. Ouvrir OOS_k une seule fois.
+   Autorité : SOP 10.
+9. Exécuter passivement la candidate gelée.
+   Autorité : SOP 08, SOP 09B, SOP 10.
+10. Conserver le segment dans la chronologie globale.
+    Autorité : SOP 01, SOP 04.
+```
+
+Si la boucle échoue avant OOS, `OOS_k` n’est pas ouvert. Si elle échoue après
+ouverture OOS, le segment reste dans la chronologie comme preuve d’échec,
+d’inconclusivité ou de non-déploiement. Il ne doit pas être retiré pour
+améliorer le résultat global.
+
+### 3.5 Boucle globale de validation
+
+Les segments locaux ne valident pas isolément le processus. La validation finale
+porte sur la série OOS globale :
+
+```text
+OOS_1 + OOS_2 + ... + OOS_n
+        |
+        v
+Série quotidienne primaire complète
+        |
+        v
+Detrending et estimation statistique OOS
+        |
+        v
+Gate statistique global
+        |
+        v
+Gate économique séparé
+        |
+        v
+Reproductibilité indépendante
+        |
+        v
+Incubation puis déploiement limité si les gates requis passent
+```
+
+Lecture de la boucle globale :
+
+| Étape globale | SOP propriétaires |
+| --- | --- |
+| Segments OOS non chevauchants et concaténation chronologique | SOP 01, SOP 04 |
+| Série quotidienne primaire complète | SOP 01, SOP 08 |
+| Detrending et estimation statistique OOS | SOP 01, SOP 07 |
+| Gate statistique global | SOP 01 |
+| Gate économique séparé | SOP 08, SOP 09B |
+| Reproductibilité indépendante | SOP 12 |
+| Incubation, déploiement limité et cycle de vie | SOP 11, SOP 12 |
+
+Le gate économique ne remplace pas le gate statistique. La reproduction ne
+répare pas une faiblesse méthodologique. L’incubation et le live ne sont
+autorisés qu’après les paquets et statuts exigés par SOP 11 et SOP 12.
+
+### 3.6 Hiérarchie d’autorité et anti-divergence
+
+Les chemins de lecture et de reprise sont centralisés dans
+`Protocole/0-README - Comprendre et maintenir le protocole EBTA.md`.
+
+La hiérarchie d’autorité est :
+
+```text
+MANIFESTE -> PROTOCOLE -> REGISTRE -> SOP -> PAQUET D'EXECUTION
+        -> Implementation/ebta_engine -> adaptateurs externes
+```
+
+Si `Implementation/` contredit `Protocole/`, `Implementation/` est fautif. Si
+`Implementation/` révèle une ambiguïté normative, il faut ouvrir une correction
+documentaire contrôlée ou une nouvelle version documentaire avant de coder la
+règle comme norme.
 
 ---
 

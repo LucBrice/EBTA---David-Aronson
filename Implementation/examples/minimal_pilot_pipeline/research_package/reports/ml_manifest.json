@@ -1,0 +1,29 @@
+{
+  "architecture": "deterministic_stub",
+  "artifact_type": "ml_manifest",
+  "complexity_levels": [
+    1,
+    2
+  ],
+  "features": [
+    "ret_1",
+    "vol_5"
+  ],
+  "hyperparameters": {
+    "depth": 1
+  },
+  "loss_function": "primary_metric_surrogate",
+  "manifest_id": "ML-915113ACC092",
+  "model_id": "ML-PILOT-001",
+  "seeds": [
+    7
+  ],
+  "selection_rule": "max_test_score",
+  "train_segment": "Train_k",
+  "transformations": [
+    {
+      "fit_segment": "Train_k",
+      "name": "standardize"
+    }
+  ]
+}

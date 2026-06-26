@@ -1,0 +1,103 @@
+{
+  "alpha": 0.05,
+  "artifact_type": "wrc_report",
+  "bootstrap_distribution_count": 5000,
+  "bootstrap_distribution_hash": "4f2a83babd7b52cee5d47a4b19a7ebd400c6e6f49b8ceb83e26c687ccc3d074d",
+  "candidate_ids": [
+    "CAND-0208F4D7FF77",
+    "CAND-6D7FB83D272E",
+    "CAND-BC3AA6E8DA61",
+    "CAND-FC2EBFE60A26"
+  ],
+  "exceedance_count": 0,
+  "observed_candidate_statistics": {
+    "CAND-0208F4D7FF77": 0.06,
+    "CAND-6D7FB83D272E": 0.03,
+    "CAND-BC3AA6E8DA61": -0.01,
+    "CAND-FC2EBFE60A26": -0.015
+  },
+  "observed_statistic": 0.06,
+  "power_diagnostics": {
+    "bad_candidates_must_not_be_removed_after_observation": true,
+    "candidate_count": 4,
+    "negative_mean_candidate_count": 2,
+    "negative_mean_candidate_fraction": 0.5,
+    "non_significant_valid_wrc_is_not_inconclusive": true,
+    "status": "DIAGNOSTIC_ONLY",
+    "wrc_known_power_limit": "many_bad_candidates_can_reduce_power"
+  },
+  "primary_gate_authority": "WRC_ONLY",
+  "primary_test": "WRC",
+  "replications": 5000,
+  "secondary_tests": {
+    "mcpm": {
+      "cannot_override_wrc": true,
+      "reason": "SOP 02 forbids a generic permutation of final PnL without a preregistered signal-return recalculation scheme",
+      "role": "SECONDARY_CAUSAL_PERMUTATION",
+      "status": "BLOCKED_REQUIRES_PREREGISTERED_CAUSAL_RECALCULATION"
+    },
+    "romano_wolf": {
+      "alpha": 0.05,
+      "candidate_results": [
+        {
+          "adjusted_pvalue": 0.0001999600079984003,
+          "candidate_id": "CAND-0208F4D7FF77",
+          "decision": "REJECT",
+          "observed_statistic": 0.06,
+          "rank": 1,
+          "raw_pvalue": 0.0001999600079984003
+        },
+        {
+          "adjusted_pvalue": 0.0005998800239952009,
+          "candidate_id": "CAND-6D7FB83D272E",
+          "decision": "REJECT",
+          "observed_statistic": 0.03,
+          "rank": 2,
+          "raw_pvalue": 0.0005998800239952009
+        },
+        {
+          "adjusted_pvalue": 1.0,
+          "candidate_id": "CAND-BC3AA6E8DA61",
+          "decision": "STOP_NON_REJECT",
+          "observed_statistic": -0.01,
+          "rank": 3,
+          "raw_pvalue": 1.0
+        }
+      ],
+      "cannot_override_wrc": true,
+      "fwer_control": "ROMANO_WOLF_STEPDOWN",
+      "pvalue_monotonicity": "ENFORCED",
+      "role": "SECONDARY_IDENTIFICATION_AFTER_GLOBAL_REJECTION",
+      "status": "EXECUTED_SECONDARY"
+    },
+    "spa": {
+      "active_candidate_ids": [
+        "CAND-0208F4D7FF77",
+        "CAND-6D7FB83D272E"
+      ],
+      "alpha": 0.05,
+      "cannot_override_wrc": true,
+      "role": "SECONDARY_SENSITIVITY_TYPE_II_POWER_DIAGNOSTIC",
+      "sensitivity_verdict": "SUPPORTS_WRC_PASS",
+      "spa_pvalue": 0.0001999600079984003,
+      "status": "EXECUTED_SECONDARY",
+      "studentized_statistics": {
+        "CAND-0208F4D7FF77": 14.696938456699069,
+        "CAND-6D7FB83D272E": 10.39230484541327,
+        "CAND-BC3AA6E8DA61": -1.549193338482967,
+        "CAND-FC2EBFE60A26": -2.384158242717079
+      },
+      "truncated_candidate_ids": [
+        "CAND-BC3AA6E8DA61",
+        "CAND-FC2EBFE60A26"
+      ],
+      "truncation_rule": "hansen_style_negative_mean_truncated_at_zero",
+      "variance_estimator": "deterministic_hac_bartlett"
+    }
+  },
+  "secondary_tests_cannot_override_wrc": true,
+  "seed": 13,
+  "source_normative": "SOP 02 sections 6-12; DN-008 to DN-011; DN-018",
+  "verdict": "PASS",
+  "wrc_pvalue": 0.0001999600079984003
+}

@@ -1,0 +1,12 @@
+{
+  "artifact_type": "detrending_report",
+  "cash_drift": 0.001,
+  "detrended_returns": [
+    0.005000000000000001,
+    0.015,
+    0.011999999999999999
+  ],
+  "formula_version": "SOP07_SECTION_6_SINGLE_ASSET",
+  "market_drift": 0.005,
+  "segment_id": "OOS_GLOBAL"
+}

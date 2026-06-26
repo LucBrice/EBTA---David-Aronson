@@ -1,0 +1,23 @@
+{
+  "artifact_type": "economic_gate_report",
+  "capacity_grid": [
+    {
+      "capital": 1000000,
+      "status": "PASS"
+    }
+  ],
+  "economic_status": "PASS",
+  "failures": [],
+  "global_status": "PASS",
+  "observed_values": {
+    "annualized_return": 0.18,
+    "max_drawdown": 0.08,
+    "validated_capital": 1500000
+  },
+  "statistical_status": "PASS",
+  "thresholds": {
+    "max_drawdown": 0.2,
+    "min_annualized_return": 0.1,
+    "target_capital": 1000000
+  }
+}

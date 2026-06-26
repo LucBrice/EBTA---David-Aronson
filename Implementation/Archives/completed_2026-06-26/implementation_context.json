@@ -1,0 +1,267 @@
+{
+  "context_version": "1.0.0",
+  "plan_file": "Implementation/Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md",
+  "runtime_version": "EBTA-ENGINE-0.1.0",
+  "active_lot": "Phases 1 to 8",
+  "active_scope": [
+    "SOP 01",
+    "SOP 02",
+    "SOP 03",
+    "SOP 04",
+    "SOP 05",
+    "SOP 06",
+    "SOP 07",
+    "SOP 08",
+    "SOP 09A",
+    "SOP 09B",
+    "SOP 10",
+    "SOP 11",
+    "SOP 12"
+  ],
+  "completed_phases": [
+    "Phase 1 - Cartographie executable des procedures",
+    "Phase 2 - Optimisation / ML / complexite SOP 06",
+    "Phase 3 - Calculs de performance et transformations SOP 07 / SOP 08 / SOP 09B",
+    "Phase 4 - Zero-centering, bootstrap et WRC SOP 02",
+    "Phase 5 - IC OOS SOP 01",
+    "Phase 6 - Procedures de gouvernance non statistiques",
+    "Phase 7 - Integration dans le pipeline pilote",
+    "Phase 8 - Pre-adaptation BACKTRADER"
+  ],
+  "current_phase": "COMPLETE",
+  "next_step": "Use the hardened WRC as the SOP 02 primary gate; provide a preregistered MCPM recalculation scheme before enabling MCPM in a real pipeline",
+  "blocked_items": [],
+  "touched_files": [
+    "Implementation/implementation_context.json",
+    "Implementation/PROCEDURE_CALCULATION_MAP.md",
+    "Implementation/TRACEABILITY_MATRIX.md",
+    "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md",
+    "Implementation/ebta_engine/tests/test_procedure_map.py",
+    "Implementation/ebta_engine/procedures/__init__.py",
+    "Implementation/ebta_engine/procedures/_utils.py",
+    "Implementation/ebta_engine/procedures/search_space.py",
+    "Implementation/ebta_engine/procedures/optimization.py",
+    "Implementation/ebta_engine/procedures/ml_manifest.py",
+    "Implementation/ebta_engine/procedures/complexity_selection.py",
+    "Implementation/ebta_engine/procedures/candidate_matrix.py",
+    "Implementation/ebta_engine/tests/test_procedure_sop06.py",
+    "Implementation/ebta_engine/procedures/returns.py",
+    "Implementation/ebta_engine/procedures/detrending.py",
+    "Implementation/ebta_engine/tests/test_procedure_returns.py",
+    "Implementation/ebta_engine/procedures/zero_centering.py",
+    "Implementation/ebta_engine/procedures/bootstrap.py",
+    "Implementation/ebta_engine/procedures/wrc.py",
+    "Implementation/ebta_engine/tests/test_procedure_wrc.py",
+    "Implementation/ebta_engine/procedures/oos_confidence_interval.py",
+    "Implementation/ebta_engine/tests/test_procedure_oos_ci.py",
+    "Implementation/ebta_engine/procedures/data_availability.py",
+    "Implementation/ebta_engine/procedures/walk_forward.py",
+    "Implementation/ebta_engine/procedures/registry_lineage.py",
+    "Implementation/ebta_engine/procedures/robustness.py",
+    "Implementation/ebta_engine/procedures/sealing.py",
+    "Implementation/ebta_engine/procedures/oos_access.py",
+    "Implementation/ebta_engine/procedures/economic_gate.py",
+    "Implementation/ebta_engine/procedures/lifecycle.py",
+    "Implementation/ebta_engine/tests/test_procedure_governance.py",
+    "Implementation/examples/minimal_pilot_pipeline/build_research_package.py",
+    "Implementation/EXTERNAL_ENGINE_PROCEDURE_MAPPING.md",
+    "Implementation/ebta_engine/adapters/backtrader_mapping.py",
+    "Implementation/ebta_engine/validators/package_validator.py",
+    "Implementation/ebta_engine/manifests/manifest_builder.py",
+    "Implementation/ebta_engine/schemas/reproducibility_manifest.schema.json",
+    "Implementation/ebta_engine/procedures/search_space.py",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/search_space.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/optimization_log.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/ml_manifest.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/complexity_selection.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/candidate_matrix.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/data_availability.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/fold_schedule.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/registry_review.json",
+    "Implementation/ebta_engine/fixtures/valid_minimal/reports/detrending.json",
+    "Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py",
+    "Implementation/ebta_engine/tests/test_package_validator.py",
+    "Implementation/ebta_engine/tests/test_schemas.py",
+    "Implementation/ebta_engine/procedures/wrc.py",
+    "Implementation/ebta_engine/tests/test_procedure_wrc.py",
+    "Implementation/examples/minimal_pilot_pipeline/research_package/reports/wrc.json"
+  ],
+  "verification_log": [
+    {
+      "phase": "Phase 1",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 19 tests"
+    },
+    {
+      "phase": "Phase 1",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 2",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 25 tests"
+    },
+    {
+      "phase": "Phase 2",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 3",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 30 tests"
+    },
+    {
+      "phase": "Phase 3",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 4",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 34 tests"
+    },
+    {
+      "phase": "Phase 4",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 5",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 37 tests"
+    },
+    {
+      "phase": "Phase 5",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 6",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 44 tests"
+    },
+    {
+      "phase": "Phase 6",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 7",
+      "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
+      "result": "PASS - package status PASS"
+    },
+    {
+      "phase": "Phase 7",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 44 tests"
+    },
+    {
+      "phase": "Phase 7",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS - CRLF normalization warnings only"
+    },
+    {
+      "phase": "Phase 8",
+      "command": "python -m json.tool Implementation\\implementation_context.json",
+      "result": "PASS"
+    },
+    {
+      "phase": "Phase 8",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 45 tests"
+    },
+    {
+      "phase": "Phase 8",
+      "command": "git diff --check -- Implementation",
+      "result": "PASS - CRLF normalization warnings only"
+    },
+    {
+      "phase": "Blind spot hardening",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 48 tests"
+    },
+    {
+      "phase": "Blind spot hardening",
+      "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
+      "result": "PASS - package status PASS with hardened validator"
+    },
+    {
+      "phase": "WRC secondary analyses hardening",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_procedure_wrc.py",
+      "result": "PASS - 6 tests"
+    },
+    {
+      "phase": "WRC secondary analyses hardening",
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+      "result": "PASS - 50 tests"
+    },
+    {
+      "phase": "WRC secondary analyses hardening",
+      "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
+      "result": "PASS - package status PASS with SOP 02 secondary analyses"
+    }
+  ],
+  "technical_decisions": [
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Use a markdown procedure map plus tests as the executable handoff for Phase 1."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Encode SOP 06 calculation procedures as deterministic JSON-ready Python functions without making new schemas mandatory."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Keep economic log returns, detrended evaluation returns, and signal flow checks as separate runtime outputs."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Implement minimal WRC with complete-family enforcement, joint stationary bootstrap indices, and deferred secondary tests."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Build OOS confidence intervals from OOS bootstrap samples only, with WRC/Test sources rejected."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Model non-statistical governance procedures as JSON-ready validation reports without adding new EBTA thresholds."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "Make the minimal pilot package reports consume procedure modules instead of static-only fixtures."
+    },
+    {
+      "type": "ADAPTER_MAPPING",
+      "decision": "Document external engine outputs and contract errors without reading or modifying BACKTRADER."
+    },
+    {
+      "type": "CONTRACT_ENCODING",
+      "decision": "Package status now fails on missing procedure artifacts, manifest coverage gaps, gate failures, invariant failures, and preregistration/report inconsistencies."
+    },
+    {
+      "type": "CONTRACT_ENCODING",
+      "decision": "Reproducibility manifests now carry SOP 12 runtime sections and per-artifact provenance metadata."
+    },
+    {
+      "type": "TEST_FIXTURE",
+      "decision": "Minimal pilot now uses complete candidate-family artifacts and 5000 preregistered WRC/OOS replications."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "WRC now emits executable SOP 02 secondary reports for SPA and Romano-Wolf while preserving WRC_ONLY primary gate authority."
+    },
+    {
+      "type": "IMPLEMENTATION_DETAIL",
+      "decision": "MCPM remains blocked unless a real pipeline supplies a preregistered causal permutation scheme and full signal-position-PnL recalculation."
+    }
+  ],
+  "non_goals": [
+    "No Protocole/ change",
+    "No BACKTRADER access",
+    "No external dependency",
+    "No real market data",
+    "No OOS selection, tie-break, optimization, or repair"
+  ]
+}

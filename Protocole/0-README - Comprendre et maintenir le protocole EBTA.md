@@ -55,6 +55,71 @@ Si tu veux modifier le protocole :
 
 ---
 
+## Parcours de lecture par profil
+
+Le dossier est volontairement normatif. Il n'est donc pas lu de la même façon
+selon le niveau de familiarité avec EBTA.
+
+### Expert extérieur
+
+Objectif : auditer la rigueur scientifique, les biais évités et la cohérence
+des décisions.
+
+1. Lire `PROTOCOLE EBTA.md` pour comprendre la séquence des gates.
+2. Lire `REGISTRE DES DECISIONS NORMATIVES EBTA.md` pour vérifier les
+   décisions opposables et leurs SOP propriétaires.
+3. Lire `MATRICE DE COHERENCE DES SOP EBTA.md` pour contrôler les dépendances,
+   doublons et risques de contradiction.
+4. Ouvrir les SOP propriétaires des points contestés.
+5. Lire `PAQUET D'EXECUTION EBTA.md` seulement pour vérifier la traduction
+   opérationnelle des exigences documentaires.
+
+### Connaisseur du dossier
+
+Objectif : retrouver rapidement où se trouve une règle, une procédure ou un
+livrable sans relire tout le protocole.
+
+1. Lire la carte processuelle dans `PROTOCOLE EBTA.md`.
+2. Utiliser les tableaux de lecture du protocole principal pour passer de
+   chaque bloc de processus vers sa SOP propriétaire.
+3. Vérifier la décision dans `REGISTRE DES DECISIONS NORMATIVES EBTA.md` si la
+   règle a un effet de gate, de statut ou d'autorité.
+4. Utiliser `PAQUET D'EXECUTION EBTA.md` pour retrouver les artefacts attendus.
+
+### Débutant
+
+Objectif : comprendre le processus avant d'entrer dans les détails normatifs.
+
+1. Lire `PROTOCOLE EBTA.md`, surtout les sections de carte processuelle et de
+   boucles locales/globales.
+2. Lire le tableau ci-dessous pour savoir quelle SOP ouvrir selon la question.
+3. Lire uniquement la SOP concernée, puis revenir au protocole principal.
+4. Lire `PAQUET D'EXECUTION EBTA.md` seulement quand il faut produire ou
+   vérifier un paquet de recherche.
+5. Ne pas commencer par le manifeste : il prouve le gel documentaire, mais il
+   n'explique pas le processus.
+
+### Questions fréquentes et document à ouvrir
+
+| Question | Document à ouvrir en premier | Détail normatif |
+| --- | --- | --- |
+| Quel est l'ordre global du processus EBTA ? | `PROTOCOLE EBTA.md` | SOP selon le bloc concerné |
+| Comment sont créés les folds Walk-Forward ? | `PROTOCOLE EBTA.md` puis `SOP 04` | `SOP 04 - Segmentation temporelle et Walk-Forward.md` |
+| Comment éviter le look-ahead et les données indisponibles ? | `SOP 09A` | `SOP 09A - Données point-in-time et contrôles anti-leakage.md` |
+| Où sont définies les règles candidates ? | `SOP 03` | `SOP 03 - Registre des expériences et univers des règles candidates.md` |
+| Comment choisir la règle candidate dans Train/Test ? | `SOP 06` | `SOP 06 - Sélection des règles candidates et optimisation de la complexité.md` |
+| Où intervient la WRC et la correction du data-mining bias ? | `SOP 02` | `SOP 02 - Inférence multiple WRC SPA Romano-Wolf MCP.md` |
+| Comment sont évaluées robustesse et sensibilité ? | `SOP 05` | `SOP 05 - Tests de robustesse et gouvernance du holdout.md` |
+| Quelle série de rendement sert à l'évaluation ? | `SOP 08` | `SOP 08 - Mesures de performance et série de rendement de référence.md` |
+| Comment les coûts, fills, capacité et sizing sont-ils traités ? | `SOP 09B` | `SOP 09B - Modèle d’exécution frictions capacité et sizing.md` |
+| Quand l'OOS peut-il être ouvert ? | `SOP 10` | `SOP 10 - Gouvernance OOS et gestion des échecs.md` |
+| Comment produire l'estimation OOS finale et son intervalle ? | `SOP 01` | `SOP 01 - Estimation et intervalle de confiance OOS.md` |
+| Que se passe-t-il après validation OOS ? | `SOP 11` | `SOP 11 - Incubation passage live et monitoring séquentiel.md` |
+| Comment prouver la reproductibilité ? | `SOP 12` | `SOP 12 - Reproductibilité et paquet de validation EBTA.md` |
+| Quels artefacts concrets doivent exister ? | `PAQUET D'EXECUTION EBTA.md` | SOP propriétaires citées par artefact |
+
+---
+
 ## Classement par utilité
 
 Le premier niveau du dossier `Protocole/` conserve uniquement les documents

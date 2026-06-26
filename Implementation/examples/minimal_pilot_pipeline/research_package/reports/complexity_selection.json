@@ -1,0 +1,16 @@
+{
+  "all_test_scores": {
+    "CAND-6D7FB83D272E": 0.01,
+    "CAND-FC2EBFE60A26": 0.02
+  },
+  "artifact_type": "complexity_selection",
+  "selected_candidate_id": "CAND-FC2EBFE60A26",
+  "selected_complexity": 2,
+  "selection_rule": "max_test_score_then_preregistered_tie_breaks",
+  "source_segment": "Test_k",
+  "status": "PASS",
+  "test_score": 0.02,
+  "tie_break_candidates": [
+    "CAND-FC2EBFE60A26"
+  ]
+}

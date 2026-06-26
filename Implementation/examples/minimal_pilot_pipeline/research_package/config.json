@@ -1,0 +1,68 @@
+{
+  "candidate_space": {
+    "candidate_count": 4
+  },
+  "config_id": "CFG-PILOT-001",
+  "data_snapshots": [
+    {
+      "available_at": "2019-12-31T00:00:00Z",
+      "data_snapshot_id": "DATA-PILOT-001"
+    }
+  ],
+  "document_hash": "PILOT_CONFIG_HASH_PLACEHOLDER",
+  "execution_model": {
+    "central_scenario": "tradable_net"
+  },
+  "hypothesis_id": "HYP-PILOT-MA",
+  "incubation_plan": {
+    "requires_validation_ready": true
+  },
+  "oos_opening_gate": {
+    "requires_pre_oos_sealed": true
+  },
+  "process_version_id": "PROC-PILOT-001",
+  "project_id": "PRJ-PILOT",
+  "protocol_version": "EBTA-DOC-1.0",
+  "reproducibility_manifest": {
+    "package_stage": "VALIDATION_READY"
+  },
+  "research_family_id": "FAM-PILOT",
+  "robustness_plan": {
+    "required_before_oos": true
+  },
+  "schema_version": "1.0.0",
+  "selection_rule": {
+    "rule": "pre_registered_max_test_after_wrc_pass"
+  },
+  "statistical_plan": {
+    "oos_bootstrap_replications": 5000,
+    "oos_mean_block_length": 2,
+    "oos_seed": 23,
+    "wrc_alpha": 0.05,
+    "wrc_bootstrap_replications": 5000,
+    "wrc_mean_block_length": 2,
+    "wrc_seed": 13
+  },
+  "walk_forward_schedule": [
+    {
+      "embargo_days": 2,
+      "fold_id": "FOLD-001",
+      "information_cutoff": "2022-12-31T23:59:59Z",
+      "oos": [
+        "2023-01-01",
+        "2023-12-31"
+      ],
+      "policy": "rolling",
+      "purge_days": 5,
+      "test": [
+        "2022-01-01",
+        "2022-12-31"
+      ],
+      "train": [
+        "2020-01-01",
+        "2021-12-31"
+      ],
+      "warmup_days": 20
+    }
+  ]
+}

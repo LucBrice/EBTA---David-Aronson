@@ -1,0 +1,51 @@
+{
+  "artifact_type": "candidate_matrix",
+  "candidate_ids": [
+    "CAND-0208F4D7FF77",
+    "CAND-6D7FB83D272E",
+    "CAND-BC3AA6E8DA61",
+    "CAND-FC2EBFE60A26"
+  ],
+  "complete_family": true,
+  "fold_id": "FOLD-001",
+  "matrix_id": "MATRIX-736FAEDEE6D899E6",
+  "row_count": 4,
+  "rows": [
+    {
+      "date": "2022-01-03",
+      "values": {
+        "CAND-0208F4D7FF77": 0.03,
+        "CAND-6D7FB83D272E": 0.02,
+        "CAND-BC3AA6E8DA61": -0.01,
+        "CAND-FC2EBFE60A26": 0.0
+      }
+    },
+    {
+      "date": "2022-01-04",
+      "values": {
+        "CAND-0208F4D7FF77": 0.02,
+        "CAND-6D7FB83D272E": 0.01,
+        "CAND-BC3AA6E8DA61": 0.0,
+        "CAND-FC2EBFE60A26": -0.01
+      }
+    },
+    {
+      "date": "2022-01-05",
+      "values": {
+        "CAND-0208F4D7FF77": 0.04,
+        "CAND-6D7FB83D272E": 0.01,
+        "CAND-BC3AA6E8DA61": -0.02,
+        "CAND-FC2EBFE60A26": 0.0
+      }
+    },
+    {
+      "date": "2022-01-06",
+      "values": {
+        "CAND-0208F4D7FF77": 0.03,
+        "CAND-6D7FB83D272E": 0.02,
+        "CAND-BC3AA6E8DA61": 0.01,
+        "CAND-FC2EBFE60A26": -0.02
+      }
+    }
+  ]
+}

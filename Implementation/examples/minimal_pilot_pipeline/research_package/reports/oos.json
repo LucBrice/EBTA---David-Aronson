@@ -1,0 +1,20 @@
+{
+  "annualized_log_estimate": 3.591,
+  "annualized_simple_estimate": 35.270328125481434,
+  "artifact_type": "oos_confidence_interval",
+  "bootstrap_mean_count": 5000,
+  "bootstrap_means_hash": "880718edde407daad5b9effabe9332adbf2dc28697538062ca56eb8a6b4c5421",
+  "ci_90_descriptive": [
+    0.01175,
+    0.01675
+  ],
+  "estimate": 0.01425,
+  "lower_95_one_sided": 0.01175,
+  "oos_observation_count": 4,
+  "power": 0.8,
+  "replications": 5000,
+  "seed": 23,
+  "source": "OOS_STATIONARY_BLOCK",
+  "statistical_gate": "PASS",
+  "upper_90_descriptive": 0.01675
+}

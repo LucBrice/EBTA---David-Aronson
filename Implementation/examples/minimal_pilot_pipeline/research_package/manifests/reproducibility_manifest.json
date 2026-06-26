@@ -1,0 +1,269 @@
+{
+  "approvals": [
+    "runtime_fixture_approval"
+  ],
+  "artifacts": [
+    {
+      "artifact_role": "configuration",
+      "artifact_type": "preregistered_config",
+      "package_stage": "VALIDATION_READY",
+      "path": "config.json",
+      "produced_by": "ebta_engine",
+      "sha256": "E42EC187FE7A9D3A5F41A34D45DC41582899A94C764D5149A9569B205317AE95",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1"
+    },
+    {
+      "artifact_role": "oos_access_log",
+      "artifact_type": "oos_access_log",
+      "package_stage": "VALIDATION_READY",
+      "path": "oos_access_log.jsonl",
+      "produced_by": "ebta_engine",
+      "sha256": "FB79A3CD25C75A6B42A84F59202E8380D4D575FA0AB7A94D942DB31F6CB6BECB",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.3; SOP 10"
+    },
+    {
+      "artifact_role": "registry",
+      "artifact_type": "experiment_registry",
+      "package_stage": "VALIDATION_READY",
+      "path": "registry.jsonl",
+      "produced_by": "ebta_engine",
+      "sha256": "E9452CF41DC75E4005D6A5945B2D47B32B92890C95BBF6705C598A1321F18BC0",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.2; SOP 03"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "candidate_matrix",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/candidate_matrix.json",
+      "produced_by": "ebta_engine",
+      "sha256": "4B48D6196299C9DA4A16A5D2DC5D84FDD2EE56BCE39C7DC705155C68C5095D2A",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "complexity_selection",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/complexity_selection.json",
+      "produced_by": "ebta_engine",
+      "sha256": "E014EE0AB05A8A0A47F722256780F93E3234C74F4FBB757C03044D014DA68E88",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "data_availability",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/data_availability.json",
+      "produced_by": "ebta_engine",
+      "sha256": "D766DDC4AFEB23CB5FD7C3DEE9E838B48FDCBBB967EF43E6A9BECDB5E53B8066",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "detrending",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/detrending.json",
+      "produced_by": "ebta_engine",
+      "sha256": "E6571267F5E89C8F674EE4002B76497A82D62F3B3A0DE84A24B4F56F7A81CB71",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "economic",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/economic.json",
+      "produced_by": "ebta_engine",
+      "sha256": "4D12CAF82FAAB20B754BAA6CD0C6ECFF9CC56068CAE2FA22F4868408ED713930",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "execution",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/execution.json",
+      "produced_by": "ebta_engine",
+      "sha256": "99BF26749E9F5368D45E86425DF739C7F88F35F45BF2E67A22E9238DA8F845D1",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "fold_schedule",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/fold_schedule.json",
+      "produced_by": "ebta_engine",
+      "sha256": "E6FA94EC89E29261711847958E915852C18578C9DA0D5D94A99DA1BF908E7CA9",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "gates",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/gates.json",
+      "produced_by": "ebta_engine",
+      "sha256": "DCDD2DDC593C733C720C57A07D2D1E8ED4D56292C4DF7F1E86246ACFB7744C0D",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "invariant_evidence",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/invariant_evidence.json",
+      "produced_by": "ebta_engine",
+      "sha256": "DB8009BEDF645213C0C4AE6C53D5DBF6AF567326728862D15278D5032F0CA521",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "ml_manifest",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/ml_manifest.json",
+      "produced_by": "ebta_engine",
+      "sha256": "C8A51C9EDA93C2869442486C06E0BAB5EEEFC3A88F1C914C2DDA08A8DE18D911",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "oos",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/oos.json",
+      "produced_by": "ebta_engine",
+      "sha256": "269ECB75CA8E7BFAFCE207E95CFDDE8D4FFE444B8853FFD80236BD788F58F930",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "optimization_log",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/optimization_log.json",
+      "produced_by": "ebta_engine",
+      "sha256": "BA585EC0BBC51C99523682B800694E60CD585F562814F536E8473C37CF23D082",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "registry_review",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/registry_review.json",
+      "produced_by": "ebta_engine",
+      "sha256": "4E4ADD93A690FE69BBFD6E0A8D453F96B5B304BC5796D325B8BBFBCDFCF5AC0D",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "reproduction",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/reproduction.json",
+      "produced_by": "ebta_engine",
+      "sha256": "D61C9FF2D18ADB2E92E7E8148B30ADE10F268C35FE4BB0365320124089C6547C",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "robustness",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/robustness.json",
+      "produced_by": "ebta_engine",
+      "sha256": "164C0F34E67F5ADF449682636B7AA79389813248A6080CC123E2AEFB9B53ADCE",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "search_space",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/search_space.json",
+      "produced_by": "ebta_engine",
+      "sha256": "899A70CFC541196DD458D98DA982D9A387307573FD987ADB06170A2F40408F59",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "wrc",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/wrc.json",
+      "produced_by": "ebta_engine",
+      "sha256": "EA54327D202E2B36A295E69283315096289E36C46FA24E7A871E9E2C950837C1",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "series",
+      "artifact_type": "oos_primary_returns",
+      "package_stage": "VALIDATION_READY",
+      "path": "series/oos_primary_returns.json",
+      "produced_by": "ebta_engine",
+      "sha256": "5E1B8323081D0945C1075F5264DE49A5BB7A19B16ECD902AD8C5D43A523B0CA7",
+      "source_normative": "SOP 01; SOP 08; Protocole/PAQUET D'EXECUTION EBTA.md section 5"
+    }
+  ],
+  "candidate_registry": {
+    "registry_path": "registry.jsonl",
+    "research_family_id": "FAM-PILOT"
+  },
+  "code_environment": {
+    "language": "python-standard-library-first",
+    "runtime": "EBTA-ENGINE-0.1.0"
+  },
+  "configuration": {
+    "config_hash": "E42EC187FE7A9D3A5F41A34D45DC41582899A94C764D5149A9569B205317AE95",
+    "config_id": "CFG-PILOT-001",
+    "config_path": "config.json"
+  },
+  "data_snapshots": [
+    {
+      "available_at": "2019-12-31T00:00:00Z",
+      "data_snapshot_id": "DATA-PILOT-001"
+    }
+  ],
+  "execution_logs": [
+    "reports/execution.json"
+  ],
+  "gate_reports": [
+    "reports/gates.json"
+  ],
+  "hypothesis_id": "HYP-PILOT-MA",
+  "oos_access_logs": [
+    "oos_access_log.jsonl"
+  ],
+  "oos_matrices": [
+    "series/oos_primary_returns.json"
+  ],
+  "package_stage": "VALIDATION_READY",
+  "project_id": "PRJ-PILOT",
+  "protocol_version": "EBTA-DOC-1.0",
+  "random_seeds": {
+    "oos_bootstrap_replications": 5000,
+    "oos_mean_block_length": 2,
+    "oos_seed": 23,
+    "wrc_bootstrap_replications": 5000,
+    "wrc_mean_block_length": 2,
+    "wrc_seed": 13
+  },
+  "research_family_id": "FAM-PILOT",
+  "reviewers": [
+    "independent_reviewer"
+  ],
+  "schema_version": "1.0.0",
+  "test_matrices": [
+    "reports/candidate_matrix.json"
+  ],
+  "walk_forward_schedule": [
+    {
+      "embargo_days": 2,
+      "fold_id": "FOLD-001",
+      "information_cutoff": "2022-12-31T23:59:59Z",
+      "oos": [
+        "2023-01-01",
+        "2023-12-31"
+      ],
+      "policy": "rolling",
+      "purge_days": 5,
+      "test": [
+        "2022-01-01",
+        "2022-12-31"
+      ],
+      "train": [
+        "2020-01-01",
+        "2021-12-31"
+      ],
+      "warmup_days": 20
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "artifact_type": "search_space",
+  "candidate_count": 4,
+  "candidates": [
+    {
+      "candidate_id": "CAND-0208F4D7FF77",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "complexity": 1,
+          "lookback": 5
+        }
+      },
+      "complexity": 1,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "complexity": 1,
+        "lookback": 5
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "candidate_id": "CAND-6D7FB83D272E",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "complexity": 1,
+          "lookback": 10
+        }
+      },
+      "complexity": 1,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "complexity": 1,
+        "lookback": 10
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "candidate_id": "CAND-BC3AA6E8DA61",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "complexity": 2,
+          "lookback": 10
+        }
+      },
+      "complexity": 2,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "complexity": 2,
+        "lookback": 10
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "candidate_id": "CAND-FC2EBFE60A26",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "complexity": 2,
+          "lookback": 5
+        }
+      },
+      "complexity": 2,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "complexity": 2,
+        "lookback": 5
+      },
+      "research_family_id": "FAM-PILOT"
+    }
+  ],
+  "canonical_hash": "SPACE-3BA52856787A420A",
+  "canonical_json": "[{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":1,\"lookback\":5}},{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":1,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":2,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":2,\"lookback\":5}}]",
+  "fold_id": "FOLD-001",
+  "no_model_policy": "NO_MODEL",
+  "pre_registration": {
+    "budget": {
+      "max_candidates": 4,
+      "max_train_evaluations": 4
+    },
+    "cost_model": "tradable_net",
+    "missing_fields": [],
+    "seeds": [
+      13,
+      23
+    ],
+    "selection_metric": "mean_net_detrended_log_return",
+    "stability_criteria": [
+      "lower_complexity_tie_break",
+      "turnover_cost_exposure_tie_break"
+    ],
+    "stop_rule": "evaluate_preregistered_grid_once",
+    "transfer_rule": "mechanical_train_to_test_then_selected_candidate_to_oos",
+    "universe_snapshot_hash": "DATA-PILOT-001-HASH",
+    "universe_snapshot_id": "DATA-PILOT-001",
+    "validity_criteria": [
+      "train_only_calibration",
+      "complete_test_matrix"
+    ]
+  },
+  "research_family_id": "FAM-PILOT",
+  "search_type": "parametric"
+}
