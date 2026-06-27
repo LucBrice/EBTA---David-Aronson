@@ -9,7 +9,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "config.json",
       "produced_by": "ebta_engine",
-      "sha256": "E42EC187FE7A9D3A5F41A34D45DC41582899A94C764D5149A9569B205317AE95",
+      "sha256": "E70390181FE1469591B61A093F1562E04ABEDC1E01CFB5DB9B16CF43B5CE553A",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1"
     },
     {
@@ -59,6 +59,15 @@
     },
     {
       "artifact_role": "report",
+      "artifact_type": "deployment_gate",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/deployment_gate.json",
+      "produced_by": "ebta_engine",
+      "sha256": "423EC324ED34794BC9596CED7327114BA597F2B09F6E36C4907EFCD9C2BDDA79",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
       "artifact_type": "detrending",
       "package_stage": "VALIDATION_READY",
       "path": "reports/detrending.json",
@@ -81,7 +90,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/execution.json",
       "produced_by": "ebta_engine",
-      "sha256": "99BF26749E9F5368D45E86425DF739C7F88F35F45BF2E67A22E9238DA8F845D1",
+      "sha256": "E79A322D34CAC263998CEA822E244906C77963578AB8848191ECBF21F79355D2",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -90,7 +99,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/fold_schedule.json",
       "produced_by": "ebta_engine",
-      "sha256": "E6FA94EC89E29261711847958E915852C18578C9DA0D5D94A99DA1BF908E7CA9",
+      "sha256": "3B5088E51B2A0688C572FB33A8E806C027111046A2D854A016D3059A0EFD4FB8",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -104,11 +113,38 @@
     },
     {
       "artifact_role": "report",
+      "artifact_type": "incubation_gate",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/incubation_gate.json",
+      "produced_by": "ebta_engine",
+      "sha256": "09865ED7AEFD35413BAEFE3904F71B2D21361C239815DD165CF36A0EC9D4125A",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "incubation_report",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/incubation_report.json",
+      "produced_by": "ebta_engine",
+      "sha256": "90C843F624FA73069ADE4CA0AC060693ECE717B43EF48DD1D30F8CC3206A08E5",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
       "artifact_type": "invariant_evidence",
       "package_stage": "VALIDATION_READY",
       "path": "reports/invariant_evidence.json",
       "produced_by": "ebta_engine",
       "sha256": "DB8009BEDF645213C0C4AE6C53D5DBF6AF567326728862D15278D5032F0CA521",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "live_deployment",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/live_deployment.json",
+      "produced_by": "ebta_engine",
+      "sha256": "911FD1212F0648DF08B72D1A0DC6E38873763E78715762CB8EDF828A92714BEB",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -122,11 +158,38 @@
     },
     {
       "artifact_role": "report",
+      "artifact_type": "monitoring_consultation_log",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/monitoring_consultation_log.json",
+      "produced_by": "ebta_engine",
+      "sha256": "6FD77F66AA655237B9ED5A72410F9F6B942CB835CD12FCB9FE40AA75A2DEB75B",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "monitoring_plan",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/monitoring_plan.json",
+      "produced_by": "ebta_engine",
+      "sha256": "4D6F5A812B328E876FEB13E40C6F052CAEC2B4CD96A417BF06D92D65F5428C3D",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
       "artifact_type": "oos",
       "package_stage": "VALIDATION_READY",
       "path": "reports/oos.json",
       "produced_by": "ebta_engine",
-      "sha256": "269ECB75CA8E7BFAFCE207E95CFDDE8D4FFE444B8853FFD80236BD788F58F930",
+      "sha256": "7493CFA94043183F63577E5B4A9466B77288BB38994121A2C080EEAE287A4764",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "oos_access_decision",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/oos_access_decision.json",
+      "produced_by": "ebta_engine",
+      "sha256": "E091075C1CBAFE17C4F8DD6912F265A28E1BB3C0B78046E3E9773442C08CEB23",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -153,7 +216,16 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/reproduction.json",
       "produced_by": "ebta_engine",
-      "sha256": "D61C9FF2D18ADB2E92E7E8148B30ADE10F268C35FE4BB0365320124089C6547C",
+      "sha256": "F4AAE10463BEBC19D75793D7330C269E868280EE175E1DFC1BC012621DC59084",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "reproduction_validation",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/reproduction_validation.json",
+      "produced_by": "ebta_engine",
+      "sha256": "D81B4F53EF05401C2FC79C29187239DDD6862DF8C0854617BE9054F6E0342B8C",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -162,7 +234,16 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/robustness.json",
       "produced_by": "ebta_engine",
-      "sha256": "164C0F34E67F5ADF449682636B7AA79389813248A6080CC123E2AEFB9B53ADCE",
+      "sha256": "5F41DAE642924927EF9F354774A3B12FACAE129CE202F75087DAF1C9C05F9F4F",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "sealing",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/sealing.json",
+      "produced_by": "ebta_engine",
+      "sha256": "863CF73D885E201DB2579E9E11EE3074B758DE44563F0A2BD6717BED1909E2CA",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -180,7 +261,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/wrc.json",
       "produced_by": "ebta_engine",
-      "sha256": "EA54327D202E2B36A295E69283315096289E36C46FA24E7A871E9E2C950837C1",
+      "sha256": "74EAF9E57C5C77EDE218EEDED6E0FC7D65925DCD46FD0C877E06CA8359FB2658",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -202,7 +283,7 @@
     "runtime": "EBTA-ENGINE-0.1.0"
   },
   "configuration": {
-    "config_hash": "E42EC187FE7A9D3A5F41A34D45DC41582899A94C764D5149A9569B205317AE95",
+    "config_hash": "E70390181FE1469591B61A093F1562E04ABEDC1E01CFB5DB9B16CF43B5CE553A",
     "config_id": "CFG-PILOT-001",
     "config_path": "config.json"
   },

@@ -1,4 +1,25 @@
 {
-  "reproduced_by": "minimal_pilot_pipeline",
-  "status": "PASS"
+  "commands": [
+    "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py"
+  ],
+  "config_id": "CFG-PILOT-001",
+  "environment": {
+    "code_commit_hash": "PILOT-COMMIT-HASH",
+    "dependency_hash": null,
+    "hardware_notes": "local deterministic pilot",
+    "os": "windows-pilot",
+    "python_version": "3.13"
+  },
+  "notes": "Pilot fixture reproduction report; no live or BACKTRADER data.",
+  "original_manifest_hash": "VALIDATION-MANIFEST-HASH-PILOT",
+  "report_id": "REPRO-PILOT-001",
+  "reproduced_artefact_hashes": {
+    "config.json": "REPRO-CONFIG-HASH-PILOT",
+    "reports/wrc.json": "REPRO-WRC-HASH-PILOT"
+  },
+  "reproducer_id": "independent_reviewer",
+  "reproduction_timestamp": "2026-01-03T00:00:00Z",
+  "schema_version": "1.0.0",
+  "tolerances": {},
+  "verdict": "PASS"
 }

@@ -1,4 +1,13 @@
 {
+  "central_scenario": "tradable_net",
   "cost_model": "pilot_costs",
+  "nav_reconciliation": "PASS",
+  "orders": [
+    {
+      "fill_id": "FILL-PILOT-001",
+      "order_id": "ORDER-PILOT-001",
+      "status": "FILLED"
+    }
+  ],
   "status": "PASS"
 }

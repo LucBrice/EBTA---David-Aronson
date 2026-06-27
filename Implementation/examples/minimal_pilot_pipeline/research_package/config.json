@@ -15,6 +15,12 @@
   },
   "hypothesis_id": "HYP-PILOT-MA",
   "incubation_plan": {
+    "monitoring": {
+      "alpha_spending_function": null,
+      "max_consultations": 2,
+      "schedule_or_procedure": "Review pilot paper-trading evidence every 20 business days.",
+      "type": "CALENDAR_SCHEDULE"
+    },
     "requires_validation_ready": true
   },
   "oos_opening_gate": {

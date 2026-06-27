@@ -27,115 +27,112 @@ from ebta_engine.procedures.complexity_selection import select_complexity
 from ebta_engine.procedures.data_availability import validate_availability
 from ebta_engine.procedures.detrending import detrend_returns
 from ebta_engine.procedures.economic_gate import economic_gate_report
+from ebta_engine.procedures.incubation_report import validate_incubation_report, validate_live_deployment_report
+from ebta_engine.procedures.lifecycle import deployment_gate, incubation_gate
 from ebta_engine.procedures.ml_manifest import build_ml_manifest
+from ebta_engine.procedures.monitoring import validate_consultation_log, validate_monitoring_plan
+from ebta_engine.procedures.oos_access import authorize_oos_access
 from ebta_engine.procedures.oos_confidence_interval import oos_confidence_interval
 from ebta_engine.procedures.optimization import optimize_on_train
 from ebta_engine.procedures.registry_lineage import review_registry_lineage
+from ebta_engine.procedures.reproduction_report import validate_reproduction_report
 from ebta_engine.procedures.robustness import robustness_verdict
+from ebta_engine.procedures.sealing import validate_pre_oos_seal
 from ebta_engine.procedures.search_space import build_search_space_snapshot
 from ebta_engine.procedures.walk_forward import validate_walk_forward_schedule
 from ebta_engine.procedures.wrc import wrc_test
 from ebta_engine.validators.package_validator import validate_package_dir
 
 
-ARTIFACT_PATHS = [
-    "config.json",
-    "registry.jsonl",
-    "oos_access_log.jsonl",
-    "reports/gates.json",
-    "reports/invariant_evidence.json",
-    "reports/wrc.json",
-    "reports/robustness.json",
-    "reports/oos.json",
-    "reports/economic.json",
-    "reports/execution.json",
-    "reports/reproduction.json",
-    "reports/search_space.json",
-    "reports/optimization_log.json",
-    "reports/ml_manifest.json",
-    "reports/complexity_selection.json",
-    "reports/candidate_matrix.json",
-    "reports/data_availability.json",
-    "reports/fold_schedule.json",
-    "reports/registry_review.json",
-    "reports/detrending.json",
-    "series/oos_primary_returns.json",
-]
-
-WRC_REPLICATIONS = 5000
-OOS_REPLICATIONS = 5000
-WRC_SEED = 13
-OOS_SEED = 23
+PILOT_ROOT = Path(__file__).resolve().parent
+DEFAULT_INPUTS_PATH = PILOT_ROOT / "inputs" / "pilot_inputs.json"
+DEFAULT_PACKAGE_SHAPE_PATH = PILOT_ROOT / "inputs" / "package_shape.json"
 
 
-def build_package(package_dir: Path) -> dict:
+def load_pilot_inputs(path: Path = DEFAULT_INPUTS_PATH) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_package_shape(path: Path = DEFAULT_PACKAGE_SHAPE_PATH) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def build_package(
+    package_dir: Path,
+    *,
+    pilot_inputs: dict | None = None,
+    package_shape: dict | None = None,
+) -> dict:
+    pilot_inputs = pilot_inputs or load_pilot_inputs()
+    package_shape = package_shape or load_package_shape()
+    _validate_pilot_contract(pilot_inputs, package_shape)
+
     if package_dir.exists():
         shutil.rmtree(package_dir)
     package_dir.mkdir(parents=True)
 
-    _write_config(package_dir)
-    _write_registry(package_dir)
-    _write_oos_access_log(package_dir)
-    _write_reports(package_dir)
-    _write_series(package_dir)
-    _write_manifest(package_dir)
+    _write_config(package_dir, pilot_inputs)
+    _write_registry(package_dir, pilot_inputs)
+    _write_oos_access_log(package_dir, pilot_inputs)
+    _write_reports(package_dir, pilot_inputs)
+    _write_series(package_dir, pilot_inputs)
+    _write_manifest(package_dir, package_shape)
 
     return validate_package_dir(package_dir)
 
 
-def _write_config(package_dir: Path) -> None:
+def _validate_pilot_contract(pilot_inputs: dict, package_shape: dict) -> None:
+    required_input_keys = {
+        "identifiers",
+        "data_snapshots",
+        "walk_forward_schedule",
+        "candidate_space",
+        "selection_rule",
+        "statistical_plan",
+        "execution_model",
+        "robustness_plan",
+        "oos_opening_gate",
+        "incubation_plan",
+        "reproducibility_manifest",
+    }
+    missing_inputs = sorted(required_input_keys - pilot_inputs.keys())
+    if missing_inputs:
+        raise ValueError(f"pilot input contract missing keys: {missing_inputs}")
+    if not package_shape.get("artifact_paths"):
+        raise ValueError("package shape must define artifact_paths")
+
+
+def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
+    identifiers = pilot_inputs["identifiers"]
+    candidate_count = len(_pilot_search_space(pilot_inputs)["candidates"])
     atomic_write_json(
         package_dir / "config.json",
         {
             "schema_version": "1.0.0",
-            "config_id": "CFG-PILOT-001",
-            "project_id": "PRJ-PILOT",
-            "research_family_id": "FAM-PILOT",
-            "hypothesis_id": "HYP-PILOT-MA",
-            "process_version_id": "PROC-PILOT-001",
-            "protocol_version": "EBTA-DOC-1.0",
-            "data_snapshots": [
-                {
-                    "data_snapshot_id": "DATA-PILOT-001",
-                    "available_at": "2019-12-31T00:00:00Z",
-                }
-            ],
-            "walk_forward_schedule": [
-                {
-                    "fold_id": "FOLD-001",
-                    "train": ["2020-01-01", "2021-12-31"],
-                    "test": ["2022-01-01", "2022-12-31"],
-                    "oos": ["2023-01-01", "2023-12-31"],
-                    "purge_days": 5,
-                    "embargo_days": 2,
-                    "warmup_days": 20,
-                    "policy": "rolling",
-                    "information_cutoff": "2022-12-31T23:59:59Z",
-                }
-            ],
-            "candidate_space": {"candidate_count": 4},
-            "selection_rule": {"rule": "pre_registered_max_test_after_wrc_pass"},
-            "statistical_plan": {
-                "wrc_alpha": 0.05,
-                "wrc_bootstrap_replications": WRC_REPLICATIONS,
-                "wrc_seed": WRC_SEED,
-                "wrc_mean_block_length": 2,
-                "oos_bootstrap_replications": OOS_REPLICATIONS,
-                "oos_seed": OOS_SEED,
-                "oos_mean_block_length": 2,
-            },
-            "execution_model": {"central_scenario": "tradable_net"},
-            "robustness_plan": {"required_before_oos": True},
-            "oos_opening_gate": {"requires_pre_oos_sealed": True},
-            "incubation_plan": {"requires_validation_ready": True},
-            "reproducibility_manifest": {"package_stage": "VALIDATION_READY"},
-            "document_hash": "PILOT_CONFIG_HASH_PLACEHOLDER",
+            "config_id": identifiers["config_id"],
+            "project_id": identifiers["project_id"],
+            "research_family_id": identifiers["research_family_id"],
+            "hypothesis_id": identifiers["hypothesis_id"],
+            "process_version_id": identifiers["process_version_id"],
+            "protocol_version": identifiers["protocol_version"],
+            "data_snapshots": pilot_inputs["data_snapshots"],
+            "walk_forward_schedule": pilot_inputs["walk_forward_schedule"],
+            "candidate_space": {"candidate_count": candidate_count},
+            "selection_rule": pilot_inputs["selection_rule"],
+            "statistical_plan": pilot_inputs["statistical_plan"],
+            "execution_model": pilot_inputs["execution_model"],
+            "robustness_plan": {"required_before_oos": pilot_inputs["robustness_plan"]["required_before_oos"]},
+            "oos_opening_gate": pilot_inputs["oos_opening_gate"],
+            "incubation_plan": pilot_inputs["incubation_plan"],
+            "reproducibility_manifest": pilot_inputs["reproducibility_manifest"],
+            "document_hash": identifiers["document_hash"],
         },
     )
 
 
-def _write_registry(package_dir: Path) -> None:
-    for index, candidate in enumerate(_pilot_search_space()["candidates"], start=1):
+def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:
+    identifiers = pilot_inputs["identifiers"]
+    for index, candidate in enumerate(_pilot_search_space(pilot_inputs)["candidates"], start=1):
         append_jsonl(
             package_dir / "registry.jsonl",
             {
@@ -144,12 +141,12 @@ def _write_registry(package_dir: Path) -> None:
                 "timestamp": "2026-01-01T00:00:00Z",
                 "actor": "minimal_pilot_pipeline",
                 "event_type": "REGISTER_CANDIDATE",
-                "project_id": "PRJ-PILOT",
-                "research_family_id": "FAM-PILOT",
+                "project_id": identifiers["project_id"],
+                "research_family_id": identifiers["research_family_id"],
                 "candidate_id": candidate["candidate_id"],
                 "run_id": f"RUN-PILOT-{index:03d}",
-                "fold_id": "FOLD-001",
-                "data_snapshot_id": "DATA-PILOT-001",
+                "fold_id": pilot_inputs["walk_forward_schedule"][0]["fold_id"],
+                "data_snapshot_id": pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
                 "input_hashes": [],
                 "output_hashes": [],
                 "decision_status": "PASS",
@@ -160,39 +157,22 @@ def _write_registry(package_dir: Path) -> None:
         )
 
 
-def _write_oos_access_log(package_dir: Path) -> None:
-    append_jsonl(
-        package_dir / "oos_access_log.jsonl",
-        {
-            "schema_version": "1.0.0",
-            "access_event_id": "OOS-ACCESS-PILOT-001",
-            "timestamp": "2026-01-02T00:00:00Z",
-            "actor": "minimal_pilot_pipeline",
-            "fold_id": "FOLD-001",
-            "oos_segment_id": "OOS-001",
-            "pre_oos_package_hash": "PREOOS-HASH-PILOT",
-            "opening_authorization_id": "AUTH-PILOT-001",
-            "access_reason": "authorized_oos_execution",
-            "command_or_process_id": "CMD-PILOT-001",
-            "read_paths": ["series/oos_input.csv"],
-            "write_paths": ["reports/oos.json"],
-            "result_artifact_hash": "RESULT-HASH-PILOT",
-            "incident_flag": False,
-            "reviewer": "independent_reviewer",
-        },
-    )
+def _write_oos_access_log(package_dir: Path, pilot_inputs: dict) -> None:
+    for event in pilot_inputs["oos_access_log"]:
+        append_jsonl(package_dir / "oos_access_log.jsonl", event)
 
 
-def _write_reports(package_dir: Path) -> None:
-    procedure_reports = _procedure_reports()
+def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
+    identifiers = pilot_inputs["identifiers"]
+    procedure_reports = _procedure_reports(pilot_inputs)
     candidate_ids = procedure_reports["candidate_matrix"]["candidate_ids"]
     gates = {
-        "config_id": "CFG-PILOT-001",
-        "project_id": "PRJ-PILOT",
-        "research_family_id": "FAM-PILOT",
-        "hypothesis_id": "HYP-PILOT-MA",
-        "process_version_id": "PROC-PILOT-001",
-        "template_hash": "TEMPLATE-HASH-PILOT",
+        "config_id": identifiers["config_id"],
+        "project_id": identifiers["project_id"],
+        "research_family_id": identifiers["research_family_id"],
+        "hypothesis_id": identifiers["hypothesis_id"],
+        "process_version_id": identifiers["process_version_id"],
+        "template_hash": identifiers["template_hash"],
         "data_snapshots": True,
         "availability_timestamps": True,
         "anti_leakage_report": True,
@@ -290,8 +270,17 @@ def _write_reports(package_dir: Path) -> None:
         "robustness.json": procedure_reports["robustness"],
         "oos.json": _compact_oos_report(procedure_reports["oos"]),
         "economic.json": procedure_reports["economic"],
-        "execution.json": {"status": "PASS", "cost_model": "pilot_costs"},
-        "reproduction.json": {"status": "PASS", "reproduced_by": "minimal_pilot_pipeline"},
+        "execution.json": procedure_reports["execution"],
+        "reproduction.json": pilot_inputs["reproduction_report"],
+        "reproduction_validation.json": procedure_reports["reproduction_validation"],
+        "sealing.json": procedure_reports["sealing"],
+        "oos_access_decision.json": procedure_reports["oos_access_decision"],
+        "monitoring_plan.json": procedure_reports["monitoring_plan"],
+        "monitoring_consultation_log.json": procedure_reports["monitoring_consultation_log"],
+        "incubation_report.json": procedure_reports["incubation_report"],
+        "incubation_gate.json": procedure_reports["incubation_gate"],
+        "live_deployment.json": procedure_reports["live_deployment"],
+        "deployment_gate.json": procedure_reports["deployment_gate"],
         "search_space.json": procedure_reports["search_space"],
         "optimization_log.json": procedure_reports["optimization_log"],
         "ml_manifest.json": procedure_reports["ml_manifest"],
@@ -306,64 +295,90 @@ def _write_reports(package_dir: Path) -> None:
         atomic_write_json(package_dir / "reports" / filename, payload)
 
 
-def _procedure_reports() -> dict:
-    search_space = _pilot_search_space()
+def _procedure_reports(pilot_inputs: dict) -> dict:
+    search_space = _pilot_search_space(pilot_inputs)
     candidate_ids = [candidate["candidate_id"] for candidate in search_space["candidates"]]
-    train_scores = {candidate_id: index / 100 for index, candidate_id in enumerate(candidate_ids, start=1)}
+    statistical_plan = pilot_inputs["statistical_plan"]
+    train_scores = _scores_by_rank(candidate_ids, pilot_inputs["train_scores_by_rank"])
     optimization_log = optimize_on_train(search_space, train_scores)
     representatives = optimization_log["representatives"]
-    test_scores = {representative["candidate_id"]: index / 100 for index, representative in enumerate(representatives, start=1)}
+    test_scores = _scores_by_rank(
+        [representative["candidate_id"] for representative in representatives],
+        pilot_inputs["representative_test_scores_by_rank"],
+    )
     complexity_selection = select_complexity(representatives, test_scores)
+    candidate_returns = _scores_by_rank(candidate_ids, pilot_inputs["candidate_test_returns_by_rank"])
     candidate_matrix = build_candidate_matrix(
-        {
-            candidate_ids[0]: [0.03, 0.02, 0.04, 0.03],
-            candidate_ids[1]: [0.02, 0.01, 0.01, 0.02],
-            candidate_ids[2]: [-0.01, 0.00, -0.02, 0.01],
-            candidate_ids[3]: [0.00, -0.01, 0.00, -0.02],
-        },
-        dates=["2022-01-03", "2022-01-04", "2022-01-05", "2022-01-06"],
+        candidate_returns,
+        dates=pilot_inputs["candidate_test_dates"],
         influential_candidates=candidate_ids,
-        fold_id="FOLD-001",
+        fold_id=pilot_inputs["walk_forward_schedule"][0]["fold_id"],
     )
+    ml_inputs = pilot_inputs["ml_manifest"]
     ml_manifest = build_ml_manifest(
-        "ML-PILOT-001",
-        train_segment="Train_k",
-        features=["ret_1", "vol_5"],
-        transformations=[{"name": "standardize", "fit_segment": "Train_k"}],
-        hyperparameters={"depth": 1},
-        seeds=[7],
-        complexity_levels=[1, 2],
-        selection_rule="max_test_score",
+        ml_inputs["ml_id"],
+        train_segment=ml_inputs["train_segment"],
+        features=ml_inputs["features"],
+        transformations=ml_inputs["transformations"],
+        hyperparameters=ml_inputs["hyperparameters"],
+        seeds=ml_inputs["seeds"],
+        complexity_levels=ml_inputs["complexity_levels"],
+        selection_rule=ml_inputs["selection_rule"],
     )
-    detrending = detrend_returns([0.01, 0.02, 0.015], [0.005, 0.006, 0.004], [0.001, 0.001, 0.001], [1.0, 1.0, 0.5], segment_id="OOS_GLOBAL")
+    detrending_inputs = pilot_inputs["detrending"]
+    detrending = detrend_returns(
+        detrending_inputs["portfolio_returns"],
+        detrending_inputs["benchmark_returns"],
+        detrending_inputs["cash_returns"],
+        detrending_inputs["betas"],
+        segment_id=detrending_inputs["segment_id"],
+    )
     wrc = wrc_test(
-        {
-            candidate_ids[0]: [0.03, 0.02, 0.04, 0.03],
-            candidate_ids[1]: [0.02, 0.01, 0.01, 0.02],
-            candidate_ids[2]: [-0.01, 0.00, -0.02, 0.01],
-            candidate_ids[3]: [0.00, -0.01, 0.00, -0.02],
-        },
-        replications=WRC_REPLICATIONS,
-        mean_block_length=2,
-        seed=WRC_SEED,
-        alpha=0.05,
+        candidate_returns,
+        replications=statistical_plan["wrc_bootstrap_replications"],
+        mean_block_length=statistical_plan["wrc_mean_block_length"],
+        seed=statistical_plan["wrc_seed"],
+        alpha=statistical_plan["wrc_alpha"],
     )
-    oos = oos_confidence_interval([0.01, 0.02, 0.015, 0.012], replications=OOS_REPLICATIONS, mean_block_length=2, seed=OOS_SEED)
-    economic = economic_gate_report(
+    oos = oos_confidence_interval(
+        pilot_inputs["oos_returns"],
+        replications=statistical_plan["oos_bootstrap_replications"],
+        mean_block_length=statistical_plan["oos_mean_block_length"],
+        seed=statistical_plan["oos_seed"],
+    )
+    economic = economic_gate_report(pilot_inputs["economic_gate"])
+    robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
+    sealing = validate_pre_oos_seal(**pilot_inputs["pre_oos_seal"])
+    oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, robustness, sealing))
+    monitoring_plan = validate_monitoring_plan(pilot_inputs["incubation_plan"]["monitoring"])
+    monitoring_consultation_log = validate_consultation_log(
+        pilot_inputs["monitoring_consultations"],
+        max_consultations=pilot_inputs["incubation_plan"]["monitoring"].get("max_consultations"),
+        alpha_spending_function=pilot_inputs["incubation_plan"]["monitoring"].get("alpha_spending_function"),
+    )
+    incubation_report = validate_incubation_report(pilot_inputs["incubation_report"])
+    live_deployment = validate_live_deployment_report(pilot_inputs["live_deployment_report"])
+    reproduction_validation = validate_reproduction_report(
+        pilot_inputs["reproduction_report"],
+        original_manifest={"artefact_hashes": pilot_inputs["reproduction_report"]["reproduced_artefact_hashes"]},
+    )
+    incubation_gate_report = incubation_gate(
         {
             "statistical_status": "PASS",
-            "return_hurdle_pass": True,
-            "drawdown_pass": True,
-            "capacity_pass": True,
-            "costs_pass": True,
-            "execution_pass": True,
-            "thresholds": {"min_annualized_return": 0.10, "max_drawdown": 0.20, "target_capital": 1000000},
-            "observed_values": {"annualized_return": 0.18, "max_drawdown": 0.08, "validated_capital": 1500000},
-            "capacity_grid": [{"capital": 1000000, "status": "PASS"}],
+            "economic_status": economic["economic_status"],
+            "robustness_status": robustness["status"],
+            "execution_status": pilot_inputs["execution_report"]["status"],
+            "package_stage": pilot_inputs["reproducibility_manifest"]["package_stage"],
+            "reproduction_status": reproduction_validation["status"],
         }
     )
-    robustness = robustness_verdict(
-        [{"stress_id": "ROB-PILOT-001", "uses_observed_oos": False, "blocking": True, "scenario_verdict": "PASS"}]
+    deployment_gate_report = deployment_gate(
+        {
+            "paper_trading_status": incubation_report["status"],
+            "package_stage": pilot_inputs["live_deployment_report"]["package_stage"],
+            "kill_switch_tested": pilot_inputs["live_deployment_report"]["kill_switch_tested"],
+            "live_approval": True,
+        }
     )
     return {
         "search_space": search_space,
@@ -375,46 +390,64 @@ def _procedure_reports() -> dict:
         "oos": oos,
         "economic": economic,
         "robustness": robustness,
+        "execution": pilot_inputs["execution_report"],
+        "reproduction_validation": reproduction_validation,
+        "sealing": sealing,
+        "oos_access_decision": oos_access_decision,
+        "monitoring_plan": monitoring_plan,
+        "monitoring_consultation_log": monitoring_consultation_log,
+        "incubation_report": incubation_report,
+        "incubation_gate": incubation_gate_report,
+        "live_deployment": live_deployment,
+        "deployment_gate": deployment_gate_report,
         "detrending": detrending,
-        "data_availability": validate_availability(
-            [{"available_at": "2019-12-31T00:00:00Z", "decision_at": "2020-01-01T00:00:00Z"}]
-        ),
+        "data_availability": validate_availability(pilot_inputs["data_availability_checks"]),
         "fold_schedule": validate_walk_forward_schedule(
-            [
-                {
-                    "fold_id": "FOLD-001",
-                    "train": ["2020-01-01", "2021-12-31"],
-                    "test": ["2022-01-01", "2022-12-31"],
-                    "oos": ["2023-01-01", "2023-12-31"],
-                    "purge_days": 5,
-                    "embargo_days": 2,
-                    "warmup_days": 20,
-                    "policy": "rolling",
-                    "information_cutoff": "2022-12-31T23:59:59Z",
-                }
-            ]
+            pilot_inputs["walk_forward_schedule"],
+            information_stop_criterion=pilot_inputs["information_stop_criterion"],
         ),
         "registry_review": review_registry_lineage(candidate_ids, candidate_ids),
     }
 
 
-def _pilot_search_space() -> dict:
+def _oos_access_request(pilot_inputs: dict, robustness: dict, sealing: dict) -> dict:
+    event = pilot_inputs["oos_access_log"][0]
+    return {
+        **event,
+        "pre_oos_sealed": sealing["status"] == "PASS",
+        "wrc_pass": True,
+        "robustness_pass": robustness["status"] == "PASS",
+        "execution_pass": pilot_inputs["execution_report"]["status"] == "PASS",
+        "independent_approval": pilot_inputs["pre_oos_seal"]["independent_approval"],
+    }
+
+
+def _pilot_search_space(pilot_inputs: dict) -> dict:
+    identifiers = pilot_inputs["identifiers"]
+    candidate_space = pilot_inputs["candidate_space"]
+    statistical_plan = pilot_inputs["statistical_plan"]
     return build_search_space_snapshot(
-        "FAM-PILOT",
-        "FOLD-001",
-        {"complexity": [1, 2], "lookback": [5, 10]},
-        base_spec={"logic": "moving_average"},
-        universe_snapshot_id="DATA-PILOT-001",
-        universe_snapshot_hash="DATA-PILOT-001-HASH",
-        budget={"max_candidates": 4, "max_train_evaluations": 4},
-        stop_rule="evaluate_preregistered_grid_once",
-        seeds=[WRC_SEED, OOS_SEED],
-        selection_metric="mean_net_detrended_log_return",
-        cost_model="tradable_net",
-        validity_criteria=["train_only_calibration", "complete_test_matrix"],
-        stability_criteria=["lower_complexity_tie_break", "turnover_cost_exposure_tie_break"],
-        transfer_rule="mechanical_train_to_test_then_selected_candidate_to_oos",
+        identifiers["research_family_id"],
+        pilot_inputs["walk_forward_schedule"][0]["fold_id"],
+        candidate_space["parameter_grid"],
+        base_spec=candidate_space["base_spec"],
+        universe_snapshot_id=pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
+        universe_snapshot_hash=f"{pilot_inputs['data_snapshots'][0]['data_snapshot_id']}-HASH",
+        budget=candidate_space["budget"],
+        stop_rule=candidate_space["stop_rule"],
+        seeds=[statistical_plan["wrc_seed"], statistical_plan["oos_seed"]],
+        selection_metric=candidate_space["selection_metric"],
+        cost_model=candidate_space["cost_model"],
+        validity_criteria=candidate_space["validity_criteria"],
+        stability_criteria=candidate_space["stability_criteria"],
+        transfer_rule=candidate_space["transfer_rule"],
     )
+
+
+def _scores_by_rank(keys: list[str], values: list) -> dict:
+    if len(values) < len(keys):
+        raise ValueError(f"not enough pilot values for keys: expected {len(keys)}, got {len(values)}")
+    return {key: values[index] for index, key in enumerate(keys)}
 
 
 def _compact_wrc_report(report: dict) -> dict:
@@ -438,25 +471,20 @@ def _stable_payload_hash(payload: object) -> str:
     return sha256(encoded).hexdigest()
 
 
-def _write_series(package_dir: Path) -> None:
+def _write_series(package_dir: Path, pilot_inputs: dict) -> None:
     atomic_write_json(
         package_dir / "series" / "oos_primary_returns.json",
-        {
-            "observations": [
-                {"date": "2023-01-02", "net_detrended_log_return": 0.001, "status": "EXPOSED"},
-                {"date": "2023-01-03", "net_detrended_log_return": 0.0, "status": "NO_MODEL"},
-            ]
-        },
+        {"observations": pilot_inputs["oos_primary_returns"]},
     )
 
 
-def _write_manifest(package_dir: Path) -> None:
-    manifest = build_manifest(package_dir, ARTIFACT_PATHS, "VALIDATION_READY")
+def _write_manifest(package_dir: Path, package_shape: dict) -> None:
+    manifest = build_manifest(package_dir, package_shape["artifact_paths"], package_shape["package_stage"])
     atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
 
 
 def main() -> int:
-    package_dir = Path(__file__).resolve().parent / "research_package"
+    package_dir = PILOT_ROOT / "research_package"
     report = build_package(package_dir)
     print(json.dumps({"package_dir": str(package_dir), "status": report["status"]}, indent=2))
     return 0 if report["status"] == "PASS" else 1

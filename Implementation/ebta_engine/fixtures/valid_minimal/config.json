@@ -10,11 +10,29 @@
     { "data_snapshot_id": "DATA-DEMO-001", "available_at": "2026-01-01T00:00:00Z" }
   ],
   "walk_forward_schedule": [
-    { "fold_id": "FOLD-001", "train": ["2020-01-01", "2021-12-31"], "test": ["2022-01-01", "2022-12-31"], "oos": ["2023-01-01", "2023-12-31"] }
+    {
+      "fold_id": "FOLD-001",
+      "train": ["2020-01-01", "2021-12-31"],
+      "test": ["2022-01-01", "2022-12-31"],
+      "oos": ["2023-01-01", "2023-12-31"],
+      "purge_days": 5,
+      "embargo_days": 2,
+      "warmup_days": 20,
+      "policy": "rolling",
+      "information_cutoff": "2022-12-31T23:59:59Z"
+    }
   ],
   "candidate_space": { "candidate_count": 1 },
   "selection_rule": { "rule": "pre_registered_max_test_after_wrc_pass" },
-  "statistical_plan": { "wrc_alpha": 0.05, "oos_bootstrap_replications": 5000 },
+  "statistical_plan": {
+    "wrc_alpha": 0.05,
+    "wrc_bootstrap_replications": 5000,
+    "wrc_seed": 13,
+    "wrc_mean_block_length": 2,
+    "oos_bootstrap_replications": 5000,
+    "oos_seed": 23,
+    "oos_mean_block_length": 2
+  },
   "execution_model": { "central_scenario": "tradable_net" },
   "robustness_plan": { "required_before_oos": true },
   "oos_opening_gate": { "requires_pre_oos_sealed": true },

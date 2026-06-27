@@ -1,0 +1,13 @@
+{
+  "artifact_type": "oos_access_decision",
+  "log_entry": {
+    "access_event_id": "OOS-ACCESS-PILOT-001",
+    "access_reason": "authorized_oos_execution",
+    "actor": "minimal_pilot_pipeline",
+    "fold_id": "FOLD-001",
+    "oos_segment_id": "OOS-001",
+    "timestamp": "2026-01-02T00:00:00Z"
+  },
+  "missing_requirements": [],
+  "status": "AUTHORIZED"
+}

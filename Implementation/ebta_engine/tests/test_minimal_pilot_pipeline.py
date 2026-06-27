@@ -2,6 +2,7 @@ import importlib.util
 import json
 import tempfile
 import unittest
+from copy import deepcopy
 from pathlib import Path
 
 
@@ -16,6 +17,8 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         spec.loader.exec_module(module)
 
         with tempfile.TemporaryDirectory() as temp_dir:
+            pilot_inputs = module.load_pilot_inputs()
+            package_shape = module.load_package_shape()
             package_dir = Path(temp_dir) / "research_package"
             report = module.build_package(package_dir)
             reports_dir = package_dir / "reports"
@@ -26,17 +29,64 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             wrc = json.loads((reports_dir / "wrc.json").read_text(encoding="utf-8"))
             oos = json.loads((reports_dir / "oos.json").read_text(encoding="utf-8"))
             candidate_matrix = json.loads((reports_dir / "candidate_matrix.json").read_text(encoding="utf-8"))
+            procedure_reports = {
+                name: json.loads((reports_dir / name).read_text(encoding="utf-8"))
+                for name in [
+                    "sealing.json",
+                    "oos_access_decision.json",
+                    "monitoring_plan.json",
+                    "monitoring_consultation_log.json",
+                    "incubation_report.json",
+                    "incubation_gate.json",
+                    "live_deployment.json",
+                    "deployment_gate.json",
+                    "reproduction_validation.json",
+                ]
+            }
             manifest = json.loads((package_dir / "manifests" / "reproducibility_manifest.json").read_text(encoding="utf-8"))
+            direct_validation = module.validate_package_dir(package_dir)
 
         self.assertEqual(report["status"], "PASS")
+        self.assertEqual(direct_validation["status"], "PASS")
         self.assertEqual(report["manifest_artifact_failures"], [])
         self.assertEqual(report["semantic_errors"], [])
         self.assertEqual(report["gate_report"]["summary"]["inconclusive"], 0)
         self.assertTrue(all(result["status"] == "PASS" for result in report["invariant_results"]))
+        self.assertEqual(config["config_id"], pilot_inputs["identifiers"]["config_id"])
+        self.assertEqual(config["project_id"], pilot_inputs["identifiers"]["project_id"])
+        self.assertEqual(config["walk_forward_schedule"], pilot_inputs["walk_forward_schedule"])
         self.assertEqual(config["candidate_space"]["candidate_count"], len(candidate_matrix["candidate_ids"]))
         self.assertEqual(wrc["replications"], config["statistical_plan"]["wrc_bootstrap_replications"])
-        self.assertEqual(oos["replications"], 5000)
+        self.assertEqual(oos["replications"], pilot_inputs["statistical_plan"]["oos_bootstrap_replications"])
+        manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
+        self.assertEqual(manifest_paths, set(package_shape["artifact_paths"]))
         self.assertTrue(all("artifact_role" in artifact for artifact in manifest["artifacts"]))
+        for procedure_report in procedure_reports.values():
+            self.assertIn(procedure_report["status"], {"PASS", "AUTHORIZED"})
+        self.assertEqual(procedure_reports["oos_access_decision.json"]["status"], "AUTHORIZED")
+
+    def test_minimal_pilot_contract_requires_package_shape(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertRaises(ValueError):
+                module.build_package(Path(temp_dir) / "research_package", package_shape={"artifact_paths": []})
+
+    def test_minimal_pilot_fails_on_preregistered_oos_replication_drift(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        pilot_inputs = deepcopy(module.load_pilot_inputs())
+        pilot_inputs["statistical_plan"]["oos_bootstrap_replications"] = 4999
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            report = module.build_package(Path(temp_dir) / "research_package", pilot_inputs=pilot_inputs)
+
+        self.assertEqual(report["status"], "FAIL")
+        self.assertIn("OOS bootstrap replications must be preregistered as 5000 under DN-022", report["semantic_errors"])
 
 
 if __name__ == "__main__":

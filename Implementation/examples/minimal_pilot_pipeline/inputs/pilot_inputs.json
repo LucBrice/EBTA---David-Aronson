@@ -1,0 +1,267 @@
+{
+  "schema_version": "1.0.0",
+  "input_contract_id": "PILOT-INPUTS-001",
+  "classification": "IMPLEMENTATION_DETAIL",
+  "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 1, 2, 3, 5, and 6",
+  "non_goals": [
+    "No BACKTRADER access",
+    "No live data",
+    "No new EBTA gate, status, threshold, or methodology"
+  ],
+  "identifiers": {
+    "config_id": "CFG-PILOT-001",
+    "project_id": "PRJ-PILOT",
+    "research_family_id": "FAM-PILOT",
+    "hypothesis_id": "HYP-PILOT-MA",
+    "process_version_id": "PROC-PILOT-001",
+    "protocol_version": "EBTA-DOC-1.0",
+    "template_hash": "TEMPLATE-HASH-PILOT",
+    "document_hash": "PILOT_CONFIG_HASH_PLACEHOLDER"
+  },
+  "data_snapshots": [
+    {
+      "data_snapshot_id": "DATA-PILOT-001",
+      "available_at": "2019-12-31T00:00:00Z"
+    }
+  ],
+  "walk_forward_schedule": [
+    {
+      "fold_id": "FOLD-001",
+      "train": ["2020-01-01", "2021-12-31"],
+      "test": ["2022-01-01", "2022-12-31"],
+      "oos": ["2023-01-01", "2023-12-31"],
+      "purge_days": 5,
+      "embargo_days": 2,
+      "warmup_days": 20,
+      "policy": "rolling",
+      "information_cutoff": "2022-12-31T23:59:59Z"
+    }
+  ],
+  "information_stop_criterion": {
+    "criterion_type": "FIXED_FOLD_COUNT",
+    "description": "Pilot executes exactly one preregistered fold.",
+    "fixed_fold_count": 1,
+    "fixed_end_date": null
+  },
+  "candidate_space": {
+    "base_spec": { "logic": "moving_average" },
+    "parameter_grid": {
+      "complexity": [1, 2],
+      "lookback": [5, 10]
+    },
+    "budget": {
+      "max_candidates": 4,
+      "max_train_evaluations": 4
+    },
+    "stop_rule": "evaluate_preregistered_grid_once",
+    "selection_metric": "mean_net_detrended_log_return",
+    "cost_model": "tradable_net",
+    "validity_criteria": ["train_only_calibration", "complete_test_matrix"],
+    "stability_criteria": ["lower_complexity_tie_break", "turnover_cost_exposure_tie_break"],
+    "transfer_rule": "mechanical_train_to_test_then_selected_candidate_to_oos"
+  },
+  "selection_rule": {
+    "rule": "pre_registered_max_test_after_wrc_pass"
+  },
+  "statistical_plan": {
+    "wrc_alpha": 0.05,
+    "wrc_bootstrap_replications": 5000,
+    "wrc_seed": 13,
+    "wrc_mean_block_length": 2,
+    "oos_bootstrap_replications": 5000,
+    "oos_seed": 23,
+    "oos_mean_block_length": 2
+  },
+  "execution_model": {
+    "central_scenario": "tradable_net"
+  },
+  "robustness_plan": {
+    "required_before_oos": true,
+    "scenarios": [
+      {
+        "stress_id": "ROB-PILOT-001",
+        "classification": "CENTRAL",
+        "scenario_verdict": "PASS",
+        "blocking": true,
+        "uses_observed_oos": false
+      },
+      {
+        "stress_id": "ROB-PILOT-002",
+        "classification": "PLAUSIBLE_BASE",
+        "scenario_verdict": "PASS",
+        "blocking": true,
+        "uses_observed_oos": false
+      },
+      {
+        "stress_id": "ROB-PILOT-003",
+        "classification": "EXTREME",
+        "scenario_verdict": "PASS_WITH_WARNING",
+        "blocking": true,
+        "uses_observed_oos": false
+      }
+    ]
+  },
+  "oos_opening_gate": {
+    "requires_pre_oos_sealed": true
+  },
+  "incubation_plan": {
+    "requires_validation_ready": true,
+    "monitoring": {
+      "type": "CALENDAR_SCHEDULE",
+      "schedule_or_procedure": "Review pilot paper-trading evidence every 20 business days.",
+      "alpha_spending_function": null,
+      "max_consultations": 2
+    }
+  },
+  "reproducibility_manifest": {
+    "package_stage": "VALIDATION_READY"
+  },
+  "pre_oos_seal": {
+    "package_stage": "PRE_OOS_SEALED",
+    "manifest_hash": "PREOOS-HASH-PILOT",
+    "independent_approval": true
+  },
+  "train_scores_by_rank": [0.01, 0.02, 0.03, 0.04],
+  "representative_test_scores_by_rank": [0.01, 0.02],
+  "candidate_test_returns_by_rank": [
+    [0.03, 0.02, 0.04, 0.03],
+    [0.02, 0.01, 0.01, 0.02],
+    [-0.01, 0.0, -0.02, 0.01],
+    [0.0, -0.01, 0.0, -0.02]
+  ],
+  "candidate_test_dates": ["2022-01-03", "2022-01-04", "2022-01-05", "2022-01-06"],
+  "ml_manifest": {
+    "ml_id": "ML-PILOT-001",
+    "train_segment": "Train_k",
+    "features": ["ret_1", "vol_5"],
+    "transformations": [{ "name": "standardize", "fit_segment": "Train_k" }],
+    "hyperparameters": { "depth": 1 },
+    "seeds": [7],
+    "complexity_levels": [1, 2],
+    "selection_rule": "max_test_score"
+  },
+  "detrending": {
+    "portfolio_returns": [0.01, 0.02, 0.015],
+    "benchmark_returns": [0.005, 0.006, 0.004],
+    "cash_returns": [0.001, 0.001, 0.001],
+    "betas": [1.0, 1.0, 0.5],
+    "segment_id": "OOS_GLOBAL"
+  },
+  "oos_returns": [0.01, 0.02, 0.015, 0.012],
+  "oos_primary_returns": [
+    { "date": "2023-01-02", "net_detrended_log_return": 0.001, "status": "EXPOSED" },
+    { "date": "2023-01-03", "net_detrended_log_return": 0.0, "status": "NO_MODEL" }
+  ],
+  "data_availability_checks": [
+    { "available_at": "2019-12-31T00:00:00Z", "decision_at": "2020-01-01T00:00:00Z" }
+  ],
+  "economic_gate": {
+    "statistical_status": "PASS",
+    "return_hurdle_pass": true,
+    "drawdown_pass": true,
+    "capacity_pass": true,
+    "costs_pass": true,
+    "execution_pass": true,
+    "thresholds": {
+      "min_annualized_return": 0.1,
+      "max_drawdown": 0.2,
+      "target_capital": 1000000
+    },
+    "observed_values": {
+      "annualized_return": 0.18,
+      "max_drawdown": 0.08,
+      "validated_capital": 1500000
+    },
+    "capacity_grid": [
+      { "capital": 1000000, "status": "PASS" }
+    ]
+  },
+  "execution_report": {
+    "status": "PASS",
+    "cost_model": "pilot_costs",
+    "central_scenario": "tradable_net",
+    "orders": [
+      { "order_id": "ORDER-PILOT-001", "status": "FILLED", "fill_id": "FILL-PILOT-001" }
+    ],
+    "nav_reconciliation": "PASS"
+  },
+  "reproduction_report": {
+    "schema_version": "1.0.0",
+    "report_id": "REPRO-PILOT-001",
+    "config_id": "CFG-PILOT-001",
+    "original_manifest_hash": "VALIDATION-MANIFEST-HASH-PILOT",
+    "reproduced_artefact_hashes": {
+      "config.json": "REPRO-CONFIG-HASH-PILOT",
+      "reports/wrc.json": "REPRO-WRC-HASH-PILOT"
+    },
+    "environment": {
+      "python_version": "3.13",
+      "os": "windows-pilot",
+      "code_commit_hash": "PILOT-COMMIT-HASH",
+      "dependency_hash": null,
+      "hardware_notes": "local deterministic pilot"
+    },
+    "commands": [
+      "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py"
+    ],
+    "tolerances": {},
+    "verdict": "PASS",
+    "reproducer_id": "independent_reviewer",
+    "reproduction_timestamp": "2026-01-03T00:00:00Z",
+    "notes": "Pilot fixture reproduction report; no live or BACKTRADER data."
+  },
+  "monitoring_consultations": [
+    {
+      "consultation_id": "MON-PILOT-001",
+      "timestamp": "2026-02-01T00:00:00Z",
+      "consultation_verdict": "PASS",
+      "repair_attempted": false,
+      "reselection_attempted": false
+    }
+  ],
+  "incubation_report": {
+    "report_id": "INC-PILOT-001",
+    "config_id": "CFG-PILOT-001",
+    "package_stage": "VALIDATION_READY",
+    "paper_trading_days": 20,
+    "data_source_ids": ["DATA-PILOT-001"],
+    "signal_log_hash": "SIGNAL-LOG-HASH-PILOT",
+    "execution_log_hash": "EXECUTION-LOG-HASH-PILOT",
+    "costs_applied": true,
+    "risk_monitored": true,
+    "incidents": [],
+    "verdict": "PASS",
+    "alpha_repair_attempted": false
+  },
+  "live_deployment_report": {
+    "report_id": "LIVE-PILOT-001",
+    "config_id": "CFG-PILOT-001",
+    "package_stage": "DEPLOYMENT_CERTIFIED",
+    "live_version_id": "LIVE-PILOT-001",
+    "capital_deployed": 100000,
+    "capital_limit": 1000000,
+    "sizing_policy_applied": true,
+    "kill_switch_tested": true,
+    "monitoring_plan_id": "MONITORING-PILOT-001",
+    "verdict": "PASS"
+  },
+  "oos_access_log": [
+    {
+      "schema_version": "1.0.0",
+      "access_event_id": "OOS-ACCESS-PILOT-001",
+      "timestamp": "2026-01-02T00:00:00Z",
+      "actor": "minimal_pilot_pipeline",
+      "fold_id": "FOLD-001",
+      "oos_segment_id": "OOS-001",
+      "pre_oos_package_hash": "PREOOS-HASH-PILOT",
+      "opening_authorization_id": "AUTH-PILOT-001",
+      "access_reason": "authorized_oos_execution",
+      "command_or_process_id": "CMD-PILOT-001",
+      "read_paths": ["series/oos_input.csv"],
+      "write_paths": ["reports/oos.json"],
+      "result_artifact_hash": "RESULT-HASH-PILOT",
+      "incident_flag": false,
+      "reviewer": "independent_reviewer"
+    }
+  ]
+}

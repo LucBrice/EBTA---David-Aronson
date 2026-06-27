@@ -1,0 +1,9 @@
+{
+  "artifact_type": "incubation_report",
+  "incident_count": 0,
+  "paper_trading_days": 20,
+  "source_normative": "SOP 11; SOP 12; DN-035, DN-036, DN-037, DN-039, DN-040",
+  "status": "PASS",
+  "submitted_verdict": "PASS",
+  "violations": []
+}

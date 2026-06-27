@@ -80,6 +80,101 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-06-27 - STEP_2 : Pipeline pilote local termine
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE / GOVERNANCE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` sections 1, 2, 3, 5, 6; SOP 01, SOP 02, SOP 03, SOP 04, SOP 05, SOP 06, SOP 07, SOP 08, SOP 09A, SOP 09B, SOP 10, SOP 11, SOP 12 |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/research_package/`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/task_tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Impact protocole | NONE |
+| Verification | `python -m json.tool Implementation\task_tracking.json` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 52 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole` PASS avec avertissements CRLF/LF uniquement |
+
+### Contexte
+
+`STEP_2_T1` avait rendu explicites les inputs pilotes et la shape du
+`research_package/`. Les sous-taches restantes demandaient de connecter les
+modules de procedure aux artefacts, de valider le paquet genere avec
+`validate_package_dir()` et d'ajouter des tests limites au comportement pilote.
+
+### Decision
+
+Clore `STEP_2` comme pipeline pilote local input-driven :
+
+- le builder lit `pilot_inputs.json` et `package_shape.json` ;
+- les rapports de selection, WRC, OOS, robustesse, economie, folds, lineage,
+  detrending, sealing, acces OOS, monitoring, incubation, lifecycle et
+  reproduction validation sont produits via les modules existants quand ils
+  existent ;
+- `validate_package_dir()` reste le gate d'acceptation du paquet genere ;
+- les tests ciblent le paquet `PASS`, les rapports procedures manifestes, le
+  rejet d'une shape invalide et l'echec d'un drift de replications OOS.
+
+### Impact
+
+`Implementation/` avance comme traduction executable du protocole gele. Aucune
+modification de `Protocole/` n'est faite, aucun seuil/statut/gate EBTA nouveau
+n'est cree, et BACKTRADER reste non modifie.
+
+### Suite
+
+La prochaine etape du plan actif est `STEP_3_BACKTRADER_INTEGRATION`, a ne
+demarrer qu'apres lecture de la gouvernance locale BACKTRADER et en gardant
+EBTA comme autorite de contrat.
+
+---
+
+## 2026-06-27 - STEP_2_T1 : Contrat d'inputs et shape du pipeline pilote
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | IMPLEMENTATION_DETAIL / CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` sections 1, 2, 3, 5, 6; SOP 12; Template configuration |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/README.md`, `Implementation/ebta_engine/schemas/config.schema.json`, `Implementation/ebta_engine/fixtures/valid_minimal/config.json`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/task_tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Impact protocole | NONE |
+| Verification | `python -m json.tool Implementation\examples\minimal_pilot_pipeline\inputs\pilot_inputs.json`; `python -m json.tool Implementation\examples\minimal_pilot_pipeline\inputs\package_shape.json`; `python -m json.tool Implementation\ebta_engine\schemas\config.schema.json`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_minimal_pilot_pipeline.py` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_schemas.py` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 50 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole` PASS avec avertissements CRLF/LF uniquement |
+
+### Contexte
+
+`STEP_2_T0` avait clos les angles morts d'exhaustivite et reporte le
+durcissement complet de `config.schema.json` a `STEP_2_T1`. Le pipeline pilote
+minimal produisait deja un paquet valide, mais son contrat d'entree et sa forme
+de sortie restaient implicites dans le script.
+
+### Decision
+
+Ajouter deux contrats locaux et explicites pour le pilote :
+
+- `inputs/pilot_inputs.json` decrit les identifiants, snapshot PIT, calendrier
+  Walk-Forward, espace de candidates, plan statistique, robustesse, OOS,
+  execution et series compactes du pilote ;
+- `inputs/package_shape.json` decrit les artefacts attendus dans
+  `research_package/` et la stage `VALIDATION_READY`.
+
+Le script `build_research_package.py` lit ces contrats avant de produire le
+paquet et continue a utiliser `validate_package_dir()` comme gate d'acceptation.
+Le schema `config.schema.json` est durci sur les champs operationnels requis par
+la configuration preenregistree du runtime.
+
+### Impact
+
+Le pilote devient input-driven pour la reprise de `STEP_2_T2` sans creer de
+nouvelle regle EBTA. Les valeurs restent des donnees de fixture locales et ne
+constituent ni donnees live, ni integration BACKTRADER, ni nouvelle source
+normative.
+
+### Suite
+
+`STEP_2_T2` : connecter davantage les modules de procedure aux artefacts
+generes, en reduisant les derniers rapports statiques et en conservant les
+erreurs de contrat explicites lorsque la preuve pipeline manque.
+
+---
+
 ## 2026-06-26 - STEP_2_T0 : Audit exhaustivite Implementation/ vs Protocole/ - 13 angles morts corriges
 
 | Champ | Valeur |

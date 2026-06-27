@@ -1,6 +1,14 @@
 {
   "artifact_type": "robustness_report",
-  "scenario_count": 1,
+  "classification_counts": {
+    "CENTRAL": 1,
+    "EXTREME": 1,
+    "PLAUSIBLE_BASE": 1
+  },
+  "influential_variants": [],
+  "phase": "PRE_OOS",
+  "scenario_count": 3,
+  "source_normative": "SOP 05 sections 5, 17, 19, 21, 23, 29; DN-030, DN-031",
   "status": "PASS",
   "violations": []
 }

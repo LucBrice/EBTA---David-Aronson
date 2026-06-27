@@ -1,6 +1,7 @@
 {
   "artifact_type": "fold_schedule_report",
   "fold_count": 1,
+  "source_normative": "SOP 04 sections 3, 10, 11, 13, 17, 22, 27; DN-001 to DN-004, DN-027",
   "status": "PASS",
   "violations": []
 }

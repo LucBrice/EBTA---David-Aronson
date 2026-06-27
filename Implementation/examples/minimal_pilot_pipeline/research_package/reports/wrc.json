@@ -10,6 +10,7 @@
     "CAND-FC2EBFE60A26"
   ],
   "exceedance_count": 0,
+  "family_catalogue_hash": "46c57db533ee7b98d9653b8810e63d6171ded18d249e3e8b21c485f76f118559",
   "observed_candidate_statistics": {
     "CAND-0208F4D7FF77": 0.06,
     "CAND-6D7FB83D272E": 0.03,

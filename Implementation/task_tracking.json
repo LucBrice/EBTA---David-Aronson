@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0.0",
   "created_at": "2026-06-26",
-  "updated_at": "2026-06-26",
+  "updated_at": "2026-06-27",
   "status": "ACTIVE",
   "runtime_version": "EBTA-ENGINE-0.1.0",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.0",
   "hook_file": "Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md",
-  "current_step": "STEP_2_LOCAL_PILOT_PIPELINE",
+  "current_step": "STEP_3_BACKTRADER_INTEGRATION",
   "active_scope": [
     "Implementation/",
     "Protocole/Archives/",
@@ -107,7 +107,7 @@
     {
       "id": "STEP_2_LOCAL_PILOT_PIPELINE",
       "title": "Pipeline pilote EBTA reel local",
-      "status": "IN_PROGRESS",
+      "status": "COMPLETE",
       "classification": "IMPLEMENTATION_DETAIL",
       "objective": "Build a local pilot pipeline that produces a validated EBTA research_package from concrete inputs.",
       "tasks": [
@@ -138,22 +138,48 @@
         {
           "id": "STEP_2_T1",
           "title": "Define pilot inputs and output package shape",
-          "status": "TODO"
+          "status": "DONE",
+          "classification": "IMPLEMENTATION_DETAIL",
+          "deliverables": [
+            "examples/minimal_pilot_pipeline/inputs/pilot_inputs.json (contrat d'entrees pilotes locales)",
+            "examples/minimal_pilot_pipeline/inputs/package_shape.json (shape attendue du research_package)",
+            "examples/minimal_pilot_pipeline/build_research_package.py branche sur les contrats d'entree/shape",
+            "schemas/config.schema.json durci pour les champs operationnels du paquet pilote",
+            "tests/test_minimal_pilot_pipeline.py verifie la coherence inputs -> package -> manifest"
+          ]
         },
         {
           "id": "STEP_2_T2",
           "title": "Connect procedure modules to generated artifacts",
-          "status": "TODO"
+          "status": "DONE",
+          "classification": "IMPLEMENTATION_DETAIL",
+          "deliverables": [
+            "build_research_package.py connecte sealing, oos_access, monitoring, incubation, lifecycle et reproduction validation aux artefacts generes",
+            "package_shape.json manifeste les rapports optionnels de gouvernance procedure",
+            "pilot_inputs.json expose les preuves locales necessaires aux rapports de gouvernance"
+          ]
         },
         {
           "id": "STEP_2_T3",
           "title": "Validate generated package with validate_package_dir",
-          "status": "TODO"
+          "status": "DONE",
+          "classification": "TEST_FIXTURE",
+          "deliverables": [
+            "build_package retourne validate_package_dir(package_dir)",
+            "test_minimal_pilot_pipeline verifie validate_package_dir directement sur le paquet genere",
+            "build_research_package.py genere un research_package status PASS"
+          ]
         },
         {
           "id": "STEP_2_T4",
           "title": "Add focused tests for pilot behavior",
-          "status": "TODO"
+          "status": "DONE",
+          "classification": "TEST_FIXTURE",
+          "deliverables": [
+            "test_minimal_pilot_pipeline couvre les rapports procedures manifestes",
+            "test_minimal_pilot_pipeline couvre le rejet d'une shape package vide",
+            "test_minimal_pilot_pipeline couvre l'echec en cas de drift des replications OOS preregistrees"
+          ]
         }
       ],
       "exit_criteria": [
@@ -197,22 +223,22 @@
     {
       "command": "python -m json.tool Implementation\\task_tracking.json",
       "purpose": "Validate task tracking JSON syntax",
-      "last_result": "PASS - 2026-06-26"
+      "last_result": "PASS - 2026-06-27"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
       "purpose": "Runtime non-divergence tests",
-      "last_result": "PASS - 50 tests - 2026-06-26"
+      "last_result": "PASS - 52 tests - 2026-06-27"
     },
     {
       "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
       "purpose": "Minimal package generation smoke test",
-      "last_result": "PASS - package status PASS - 2026-06-26"
+      "last_result": "PASS - package status PASS - 2026-06-27"
     },
     {
       "command": "git diff --check -- Implementation Protocole",
       "purpose": "Whitespace and patch hygiene",
-      "last_result": "PASS - CRLF normalization warnings only - 2026-06-26 - scope: Implementation Protocole Archives .gitignore .agents"
+      "last_result": "PASS - CRLF normalization warnings only - 2026-06-27 - scope: Implementation Protocole"
     }
   ],
   "risk_register": [
@@ -224,9 +250,9 @@
     },
     {
       "id": "RISK_002",
-      "status": "OPEN",
+      "status": "CLOSED",
       "risk": "Pipeline pilot work could accidentally add normative EBTA rules.",
-      "mitigation": "Block as NORMATIVE_CLARIFICATION_REQUIRED when a new gate, status, threshold, or method definition is needed."
+      "mitigation": "STEP_2 reste local a Implementation/, lit des inputs pilotes, ne modifie pas Protocole/ et conserve validate_package_dir comme gate d'acceptation."
     },
     {
       "id": "RISK_003",
@@ -236,8 +262,8 @@
     }
   ],
   "latest_decision": {
-    "date": "2026-06-26",
-    "decision": "STEP_2_T0 DONE: audit exhaustivite Implementation/ vs Protocole/ complete. 13 angles morts corriges (5 critiques Phase A, 5 moderes Phase B, 3 mineurs Phase C). STEP_2_T1 a T4 (pipeline pilote) peuvent demarrer sur des contrats desormais exhaustifs.",
+    "date": "2026-06-27",
+    "decision": "STEP_2 DONE: pipeline pilote local input-driven, artefacts generes depuis modules de procedure existants, validation package explicite et tests cibles. BACKTRADER non touche, Protocole/ non modifie.",
     "impact_protocole": "NONE"
   }
 }
