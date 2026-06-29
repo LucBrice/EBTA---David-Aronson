@@ -451,6 +451,56 @@ Livrable attendu :
 - tests automatises.
 ```
 
+## Politique de migration de schema
+
+Les fichiers `.ai/checkpoint.json`, `Implementation/Active/tracking.json` et les
+schemas dans `Implementation/ebta_engine/schemas/` portent tous un champ
+`schema_version`. Ce champ suit le versioning semantique `MAJEUR.MINEUR.PATCH`.
+
+### Convention de versioning
+
+| Type de changement | Impact sur version | Exemple |
+| --- | --- | --- |
+| Champ obligatoire ajoute ou supprime | MAJEUR (cassant) | `1.0.0` → `2.0.0` |
+| Champ optionnel ajoute | MINEUR (compatible) | `1.0.0` → `1.1.0` |
+| Renommage de champ | MAJEUR (cassant) | `1.0.0` → `2.0.0` |
+| Correction de valeur enum | MAJEUR si suppressif, MINEUR si additif | selon cas |
+| Correction documentaire pure | PATCH | `1.0.0` → `1.0.1` |
+
+### Regles de compatibilite pour une IA reprenant le relais
+
+1. **Version identique** : reprise normale.
+2. **MINEUR superieur** : l'IA peut lire le fichier ; les champs optionnels
+   inconnus sont ignores.
+3. **MAJEUR superieur** : l'IA **doit refuser de demarrer** et alerter
+   l'utilisateur. Elle ne doit jamais silencieusement ignorer un schema
+   incompatible.
+
+### Procedure de migration
+
+Lorsqu'un changement de schema est necessaire :
+
+1. Classifier le changement (voir tableau ci-dessus).
+2. Si le changement est `NORMATIVE_CHANGE_REQUIRED`, bloquer et ouvrir une
+   procedure documentaire dans `Protocole/` avant de coder.
+3. Incrementer `schema_version` dans le fichier schema concerne.
+4. Migrer le fichier live correspondant (checkpoint, tracking, artefact) par
+   overwrite — jamais silencieusement.
+5. Journaliser la migration dans
+   `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` avec :
+   - la version avant/apres ;
+   - les champs impactes ;
+   - la justification normative.
+6. Relancer la suite de validation complete.
+
+### Responsabilite
+
+L'IA qui effectue le changement de schema est responsable de la migration du
+fichier live. Cette migration ne peut pas etre deleguee a l'utilisateur sans
+notification explicite.
+
+---
+
 ## Prochaine etape pratique
 
 La prochaine etape n'est pas de modifier le protocole.

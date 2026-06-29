@@ -5,7 +5,7 @@
   "status": "ACTIVE",
   "runtime_version": "EBTA-ENGINE-0.1.0",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.0",
-  "hook_file": "Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md",
+  "hook_file": "Implementation/Active/HOOK.md",
   "current_step": "STEP_3_BACKTRADER_INTEGRATION",
   "active_scope": [
     "Implementation/",
@@ -221,24 +221,24 @@
   ],
   "validation_commands": [
     {
-      "command": "python -m json.tool Implementation\\task_tracking.json",
+      "command": "python -m json.tool Implementation\\Active\\tracking.json",
       "purpose": "Validate task tracking JSON syntax",
-      "last_result": "PASS - 2026-06-27"
+      "last_result": "PASS - 2026-06-27T08:28:55+02:00"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
       "purpose": "Runtime non-divergence tests",
-      "last_result": "PASS - 52 tests - 2026-06-27"
+      "last_result": "PASS - 52 tests - 2026-06-27T08:28:55+02:00"
     },
     {
       "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
       "purpose": "Minimal package generation smoke test",
-      "last_result": "PASS - package status PASS - 2026-06-27"
+      "last_result": "PASS - package status PASS - 2026-06-27T08:28:55+02:00"
     },
     {
       "command": "git diff --check -- Implementation Protocole",
       "purpose": "Whitespace and patch hygiene",
-      "last_result": "PASS - CRLF normalization warnings only - 2026-06-27 - scope: Implementation Protocole"
+      "last_result": "PASS - 2026-06-27T08:28:55+02:00 - scope: Implementation Protocole .ai AGENTS.md .agents"
     }
   ],
   "risk_register": [
@@ -263,7 +263,7 @@
   ],
   "latest_decision": {
     "date": "2026-06-27",
-    "decision": "STEP_2 DONE: pipeline pilote local input-driven, artefacts generes depuis modules de procedure existants, validation package explicite et tests cibles. BACKTRADER non touche, Protocole/ non modifie.",
+    "decision": "Cockpit actif cree sous Implementation/Active avec HOOK.md et tracking.json; pointeurs .ai, AGENTS, runtime et protocole corriges; manifeste de gel recalcule pour correction documentaire des pointeurs.",
     "impact_protocole": "NONE"
   }
 }

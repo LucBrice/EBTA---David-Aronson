@@ -8,8 +8,8 @@
 | Statut | COMPLETE |
 | Type | GOVERNANCE |
 | Impact protocole | NONE |
-| Hook | `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` |
-| Suivi JSON | `Implementation/task_tracking.json` |
+| Hook | `Implementation/Active/HOOK.md` |
+| Suivi JSON | `Implementation/Active/tracking.json` |
 
 ## Regles appliquees
 
@@ -29,9 +29,9 @@
 | `Implementation/` | ACTIF | Conserve a sa place | Runtime EBTA actif et banc de controle du lot courant. |
 | `Implementation/HOOK - Reprise EBTA Engine Core autonome.md` | ARCHIVE_CANDIDATE | Deplace vers `Implementation/Archives/completed_2026-06-26/HOOK - Reprise EBTA Engine Core autonome.md` | Hook de reprise initial termine. Les pointeurs actifs ont ete corriges vers le hook actif ou vers l'archive selon le besoin. |
 | `Implementation/PLAN - Procedures de calcul EBTA et optimisation ML.md` | ARCHIVE_CANDIDATE | Deplace vers `Implementation/Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md` | Plan execute et termine. Les pointeurs de tracabilite et tests ont ete corriges vers l'archive. |
-| `Implementation/implementation_context.json` | ARCHIVE_CANDIDATE | Deplace vers `Implementation/Archives/completed_2026-06-26/implementation_context.json` | Ancien contexte du lot procedures termine. Le suivi actif est `Implementation/task_tracking.json`. |
-| `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` | ACTIF | Conserve a sa place | Hook actif du lot archivage/checkpoint/pipeline pilote. |
-| `Implementation/task_tracking.json` | ACTIF | Conserve a sa place | Suivi machine-readable actif du lot courant. |
+| `Implementation/implementation_context.json` | ARCHIVE_CANDIDATE | Deplace vers `Implementation/Archives/completed_2026-06-26/implementation_context.json` | Ancien contexte du lot procedures termine. Le suivi actif est `Implementation/Active/tracking.json`. |
+| `Implementation/Active/HOOK.md` | ACTIF | Conserve a sa place | Hook actif du lot archivage/checkpoint/pipeline pilote. |
+| `Implementation/Active/tracking.json` | ACTIF | Conserve a sa place | Suivi machine-readable actif du lot courant. |
 | `Implementation/**/__pycache__/` | GENERATED_CACHE | Non archive | Cache Python recreable, sans valeur historique EBTA. A exclure des decisions d'archive documentaire. |
 
 ## References verifiees
@@ -41,7 +41,7 @@ Commandes utilisees :
 ```powershell
 rg -n "Applications/|Applications\\|`Applications|\bApplications\b" -S Protocole Implementation .agents .codex .gitignore
 rg -n "Notes/|Notes\\|`Notes|\bNotes\b" -S Protocole Implementation .agents .codex .gitignore
-rg -n "HOOK - Reprise EBTA Engine Core autonome|PLAN - Procedures de calcul EBTA|implementation_context.json|HOOK - Plan actif stabilisation|task_tracking.json" -S Protocole Implementation .agents .codex
+rg -n "HOOK - Reprise EBTA Engine Core autonome|PLAN - Procedures de calcul EBTA|implementation_context.json|Active/HOOK.md|Active/tracking.json" -S Protocole Implementation .agents .codex
 git ls-files Applications
 git ls-files Notes
 ```

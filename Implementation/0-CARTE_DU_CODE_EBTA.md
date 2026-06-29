@@ -11,7 +11,7 @@ Ce sont les fichiers `.md` (Markdown) à la racine. Ce n'est pas du code, ce son
 
 *   **`GUIDE - Construire un pipeline de recherche EBTA.md`** : 🏆 **Le plus important pour vous**. C'est le mode d'emploi pratique. Il explique comment brancher votre backtester sur ce moteur.
 *   **`HISTORIQUE DES VERSIONS EBTA ENGINE.md`** : Le journal intime des développeurs. Tout ce qui a été codé, jour après jour, y est justifié.
-*   **`HOOK - Plan actif stabilisation archive et pipeline pilote.md`** : Le point de reprise courant. Il indique la prochaine étape de travail.
+*   **`Active/HOOK.md`** : Le point de reprise courant. Il indique la prochaine étape de travail.
 *   **`Archives/completed_2026-06-26/HOOK - Reprise EBTA Engine Core autonome.md`** : L'ancien point de départ, conservé pour comprendre pourquoi le moteur a été construit ainsi.
 *   **`Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md`** : L'ancienne To-Do list des calculs mathématiques, terminée et conservée en archive.
 *   **`PROCEDURE_CALCULATION_MAP.md`** : La carte mentale qui relie nos fichiers de calcul Python aux chapitres du livre de David Aronson.
@@ -38,7 +38,7 @@ C'est le "Laboratoire". C'est ici que se trouve le vrai code Python fonctionnel.
 ---
 
 ## 4. La Mémoire de l'IA
-*   **`task_tracking.json`** : 🤖 C'est le suivi actif que l'intelligence artificielle utilise pour ne pas perdre le fil.
+*   **`Active/tracking.json`** : 🤖 C'est le suivi actif que l'intelligence artificielle utilise pour ne pas perdre le fil.
 *   **`Archives/completed_2026-06-26/implementation_context.json`** : Ancien contexte IA du lot procédures terminé.
 
 ---

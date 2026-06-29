@@ -9,7 +9,7 @@
 | Version runtime cible | EBTA-ENGINE-0.1.0 |
 | Autorite normative | `Protocole/` gele en `EBTA-DOC-1.0` |
 | Source operationnelle | `Implementation/ebta_engine/` |
-| Fichier de suivi | `Implementation/task_tracking.json` |
+| Fichier de suivi | `Implementation/Active/tracking.json` |
 | Historique runtime | `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
 
 ## Objectif
@@ -24,18 +24,10 @@ de `Implementation/` comme traduction executable subordonnee au dossier
 
 ## Ordre de travail
 
-```text
-Etape 0 - Archivage controle des obsoletes
-        |
-        v
-Etape 1 - Checkpoint du lot actuel
-        |
-        v
-Etape 2 - Pipeline pilote EBTA reel local
-        |
-        v
-Etape 3 - Integration BACKTRADER apres lecture de sa gouvernance locale
-```
+- [x] Etape 0 - Archivage controle des obsoletes
+- [x] Etape 1 - Checkpoint du lot actuel
+- [x] Etape 2 - Pipeline pilote EBTA reel local
+- [ ] Etape 3 - Integration BACKTRADER apres lecture de sa gouvernance locale
 
 ## Etape 0 - Archivage controle des obsoletes
 
@@ -77,7 +69,7 @@ Regle :
   actifs sont corriges dans le meme lot ;
 - les references historiques peuvent rester dans l'historique runtime quand
   elles decrivent le chemin utilise au moment de l'ancien changement ;
-- le plan actif courant est ce fichier avec `Implementation/task_tracking.json`.
+- le plan actif courant est ce fichier avec `Implementation/Active/tracking.json`.
 
 Classification courante :
 
@@ -85,9 +77,9 @@ Classification courante :
 | --- | --- | --- |
 | `Implementation/Archives/completed_2026-06-26/HOOK - Reprise EBTA Engine Core autonome.md` | ARCHIVED_REFERENCED | Ancien hook termine, archive; le skill Gardien et le protocole pointent maintenant vers le hook actif. |
 | `Implementation/Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md` | ARCHIVED_REFERENCED | Ancien plan termine, archive; la matrice, la carte et les tests pointent vers l'archive. |
-| `Implementation/Archives/completed_2026-06-26/implementation_context.json` | ARCHIVED_REFERENCED | Ancien contexte IA du lot procedures, archive; le suivi actif est `task_tracking.json`. |
-| `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` | ACTIVE | Hook de travail courant. |
-| `Implementation/task_tracking.json` | ACTIVE | Suivi machine-readable courant. |
+| `Implementation/Archives/completed_2026-06-26/implementation_context.json` | ARCHIVED_REFERENCED | Ancien contexte IA du lot procedures, archive; le suivi actif est `tracking.json`. |
+| `Implementation/Active/HOOK.md` | ACTIVE | Hook de travail courant. |
+| `Implementation/Active/tracking.json` | ACTIVE | Suivi machine-readable courant. |
 
 ## Etape 1 - Checkpoint du lot actuel
 
@@ -169,7 +161,7 @@ clarification documentaire controlee.
 ## Commandes de validation
 
 ```powershell
-python -m json.tool Implementation\task_tracking.json
+python -m json.tool Implementation\Active\tracking.json
 python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation
 python Implementation\examples\minimal_pilot_pipeline\build_research_package.py
 git diff --check -- Implementation Protocole
@@ -178,7 +170,7 @@ git diff --check -- Implementation Protocole
 ## Reprise rapide
 
 1. Lire ce hook.
-2. Lire `Implementation/task_tracking.json`.
+2. Lire `Implementation/Active/tracking.json`.
 3. Si `current_step` vaut `STEP_0_ARCHIVE_OBSOLETE`, commencer par l'inventaire
    et ne pas creer de pipeline.
 4. Apres chaque deplacement ou modification significative, relancer les

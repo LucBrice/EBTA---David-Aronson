@@ -9,7 +9,7 @@
 | Objet | Journaliser les evolutions du dossier `Implementation/` et du futur EBTA Engine Core. |
 | Autorite normative | Aucune : l'autorite normative reste dans `Protocole/`. |
 | Source documentaire | `Protocole/PAQUET D'EXECUTION EBTA.md` |
-| Hook de reprise | `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` |
+| Hook de reprise | `Implementation/Active/HOOK.md` |
 
 ## Fonction
 
@@ -80,6 +80,53 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-06-27 - Cockpit actif Implementation/Active pour hook et tracking
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | GOVERNANCE |
+| Statut | ACCEPTED |
+| Source normative | Gouvernance runtime; `Protocole/0-README - Comprendre et maintenir le protocole EBTA.md` |
+| Fichiers impactes | `Implementation/Active/HOOK.md`, `Implementation/Active/tracking.json`, `.ai/current_plan.md`, `.ai/checkpoint.json`, `AGENTS.md`, `Implementation/0-CARTE_DU_CODE_EBTA.md`, `Implementation/ARCHIVE_INVENTORY_2026-06-26.md`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`, `.agents/skills/EBTA_Protocol_Guardian/SKILL.md`, `Protocole/PROTOCOLE EBTA.md`, `Protocole/HISTORIQUE DES VERSIONS EBTA.md` |
+| Impact protocole | NONE |
+| Verification | `python -m json.tool .ai\checkpoint.json` PASS; `python -m json.tool Implementation\Active\tracking.json` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 52 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS - package status PASS; `git diff --check -- Implementation Protocole .ai AGENTS.md .agents` PASS; recherche anciens chemins PASS - aucun match |
+
+### Contexte
+
+Le hook actif et son JSON de suivi etaient places a la racine de
+`Implementation/`, au milieu des cartes, guides, historiques et fichiers de
+contrat. Cela rendait la reprise inconfortable et risquait de faire traiter un
+ancien hook comme actif.
+
+### Decision
+
+Créer un cockpit stable :
+
+```text
+Implementation/Active/HOOK.md
+Implementation/Active/tracking.json
+```
+
+`.ai/checkpoint.json` reste le pointeur de relais multi-IA et declare ces deux
+chemins dans `active_paths`. `AGENTS.md` ne fige pas le nom du hook : il impose
+de lire les chemins actifs declares par `.ai/checkpoint.json`.
+
+### Impact
+
+Le changement est organisationnel. Il ne modifie aucun gate, statut, seuil,
+verdict ou ordre methodologique EBTA. `Protocole/` reste l'autorite normative et
+`Implementation/Active/` devient seulement le cockpit de travail courant.
+
+### Suite
+
+Pour chaque nouveau lot, ecraser `Implementation/Active/HOOK.md` et
+`Implementation/Active/tracking.json` ou mettre a jour `active_paths` si le
+lot exige d'autres chemins. Archiver les anciens contenus dans
+`Implementation/Archives/` lorsque leur lot est termine.
+
+---
+
 ## 2026-06-27 - STEP_2 : Pipeline pilote local termine
 
 | Champ | Valeur |
@@ -88,9 +135,9 @@ Chaque entree doit utiliser ce format :
 | Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE / GOVERNANCE |
 | Statut | ACCEPTED |
 | Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` sections 1, 2, 3, 5, 6; SOP 01, SOP 02, SOP 03, SOP 04, SOP 05, SOP 06, SOP 07, SOP 08, SOP 09A, SOP 09B, SOP 10, SOP 11, SOP 12 |
-| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/research_package/`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/task_tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/research_package/`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/Active/tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
 | Impact protocole | NONE |
-| Verification | `python -m json.tool Implementation\task_tracking.json` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 52 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole` PASS avec avertissements CRLF/LF uniquement |
+| Verification | `python -m json.tool Implementation\Active\tracking.json` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 52 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole` PASS avec avertissements CRLF/LF uniquement |
 
 ### Contexte
 
@@ -134,7 +181,7 @@ EBTA comme autorite de contrat.
 | Type | IMPLEMENTATION_DETAIL / CONTRACT_ENCODING / TEST_FIXTURE |
 | Statut | ACCEPTED |
 | Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` sections 1, 2, 3, 5, 6; SOP 12; Template configuration |
-| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/README.md`, `Implementation/ebta_engine/schemas/config.schema.json`, `Implementation/ebta_engine/fixtures/valid_minimal/config.json`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/task_tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/README.md`, `Implementation/ebta_engine/schemas/config.schema.json`, `Implementation/ebta_engine/fixtures/valid_minimal/config.json`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/Active/tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
 | Impact protocole | NONE |
 | Verification | `python -m json.tool Implementation\examples\minimal_pilot_pipeline\inputs\pilot_inputs.json`; `python -m json.tool Implementation\examples\minimal_pilot_pipeline\inputs\package_shape.json`; `python -m json.tool Implementation\ebta_engine\schemas\config.schema.json`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_minimal_pilot_pipeline.py` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_schemas.py` PASS; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 50 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole` PASS avec avertissements CRLF/LF uniquement |
 
@@ -224,7 +271,7 @@ Implementer l'exhaustivite en 3 phases (A critiques, B moderes, C mineurs) comme
 | C3 - Non-chevauchement preventif | `procedures/walk_forward.py` (MODIFIED) | SOP 04, DN-001, DN-004 |
 | C1 - config.schema.json complet | REPORTE a STEP_2_T1 | Template configuration |
 
-**Gouvernance** : TRACEABILITY_MATRIX.md, PROCEDURE_CALCULATION_MAP.md, task_tracking.json mis a jour.
+**Gouvernance** : TRACEABILITY_MATRIX.md, PROCEDURE_CALCULATION_MAP.md, `Implementation/Active/tracking.json` mis a jour.
 
 ### Suite
 
@@ -239,10 +286,10 @@ STEP_2_T1 : definir les inputs pilotes concrets et construire le pipeline end-to
 | Version runtime | EBTA-ENGINE-0.1.0 |
 | Type | GOVERNANCE |
 | Statut | ACCEPTED |
-| Source normative | `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` |
+| Source normative | `Implementation/Active/HOOK.md` |
 | Fichiers impactes | `Implementation/Archives/completed_2026-06-26/`, `Implementation/0-CARTE_DU_CODE_EBTA.md`, `Implementation/PROCEDURE_CALCULATION_MAP.md`, `Implementation/TRACEABILITY_MATRIX.md`, `Implementation/ebta_engine/tests/test_procedure_map.py`, `.agents/skills/EBTA_Protocol_Guardian/SKILL.md`, `Protocole/PROTOCOLE EBTA.md` |
 | Impact protocole | NONE |
-| Verification | `python -m json.tool Implementation\task_tracking.json`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 50 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole Archives .gitignore .agents` PASS avec avertissements CRLF/LF uniquement |
+| Verification | `python -m json.tool Implementation\Active\tracking.json`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 50 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS; `git diff --check -- Implementation Protocole Archives .gitignore .agents` PASS avec avertissements CRLF/LF uniquement |
 
 ### Contexte
 
@@ -275,7 +322,7 @@ normative.
 
 ### Suite
 
-Utiliser le hook actif et `task_tracking.json` pour les prochains lots. Lire les
+Utiliser le hook actif et `tracking.json` pour les prochains lots. Lire les
 artefacts archives uniquement pour l'historique des lots termines.
 
 ## 2026-06-26 - Creation du hook de plan actif et du suivi JSON
@@ -286,9 +333,9 @@ artefacts archives uniquement pour l'historique des lots termines.
 | Type | GOVERNANCE |
 | Statut | ACCEPTED |
 | Source normative | `Protocole/0-README - Comprendre et maintenir le protocole EBTA.md`, `Protocole/PAQUET D'EXECUTION EBTA.md` |
-| Fichiers impactes | `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md`, `Implementation/task_tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Fichiers impactes | `Implementation/Active/HOOK.md`, `Implementation/Active/tracking.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
 | Impact protocole | NONE |
-| Verification | `python -m json.tool Implementation\task_tracking.json`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation`; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py`; `git diff --check -- Implementation Protocole` |
+| Verification | `python -m json.tool Implementation\Active\tracking.json`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation`; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py`; `git diff --check -- Implementation Protocole` |
 
 ### Contexte
 
@@ -317,7 +364,7 @@ gates. `Protocole/` reste l'autorite normative.
 ### Suite
 
 Commencer par `STEP_0_ARCHIVE_OBSOLETE` dans
-`Implementation/task_tracking.json`, inventorier les candidats a l'archive,
+`Implementation/Active/tracking.json`, inventorier les candidats a l'archive,
 puis verifier les references avant tout deplacement.
 
 ## 2026-06-24 - Creation du plan de reprise EBTA Engine Core autonome

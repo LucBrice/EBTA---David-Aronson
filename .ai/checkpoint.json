@@ -1,0 +1,220 @@
+{
+  "schema_version": "1.0.0",
+  "checkpoint_kind": "multi_ai_relay",
+  "updated_at": "2026-06-29T09:53:00+02:00",
+  "status": "ACTIVE",
+  "repo": {
+    "name": "EBTA - David Aronson",
+    "root": "D:/Livre/Trading/Trading algorithmic/EBTA - David Aronson",
+    "git_head_short": "2176173",
+    "git_status_porcelain": "M .agents/skills/EBTA_Protocol_Guardian/SKILL.md; M Implementation/0-CARTE_DU_CODE_EBTA.md; M Implementation/ARCHIVE_INVENTORY_2026-06-26.md; M Implementation/CHECKPOINT_2026-06-26.md; M Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md; D old root hook; D old root tracking JSON; M Protocole/HISTORIQUE DES VERSIONS EBTA.md; M Protocole/MANIFESTE DE GEL EBTA.md; M Protocole/PROTOCOLE EBTA.md; ?? .ai/; ?? AGENTS.md; ?? Implementation/Active/",
+    "warning": "git status still emits permission warnings for C:/Users/liant/.config/git/ignore"
+  },
+  "relay_contract": {
+    "only_files": [
+      ".ai/current_plan.md",
+      ".ai/checkpoint.json"
+    ],
+    "write_policy": "overwrite_only",
+    "startup_read_order": [
+      ".ai/current_plan.md",
+      ".ai/checkpoint.json",
+      "active_paths.active_hook_path",
+      "active_paths.active_tracking_path",
+      "active_paths.active_protocol_entrypoint",
+      "AGENTS.md"
+    ],
+    "do_not_create": [
+      "dated plan files",
+      "versioned checkpoint files",
+      "parallel relay folders",
+      "competing project state snapshots"
+    ]
+  },
+  "active_paths": {
+    "active_hook_path": "Implementation/Active/HOOK.md",
+    "active_tracking_path": "Implementation/Active/tracking.json",
+    "active_protocol_entrypoint": "Protocole/0-README - Comprendre et maintenir le protocole EBTA.md",
+    "path_policy": "Hook and tracking paths are variables. AGENTS.md must not hard-code a specific hook/tracking pair as permanent truth."
+  },
+  "authority_model": {
+    "normative_authority": "Protocole/ frozen as EBTA-DOC-1.0",
+    "runtime_authority": "Implementation/ is executable derivative, not normative doctrine",
+    "runtime_hook": "See active_paths.active_hook_path",
+    "runtime_machine_state": "See active_paths.active_tracking_path",
+    "runtime_history": "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md",
+    "agent_bootstrap": "AGENTS.md",
+    "adapter_boundary": "BACKTRADER remains external until governance is read and explicit integration begins"
+  },
+  "current_runtime_state": {
+    "runtime_version": "EBTA-ENGINE-0.1.0",
+    "current_step": "STEP_3_BACKTRADER_INTEGRATION",
+    "completed_steps": [
+      "STEP_0_ARCHIVE_OBSOLETE",
+      "STEP_1_CHECKPOINT",
+      "STEP_2_LOCAL_PILOT_PIPELINE"
+    ],
+    "pending_steps": [
+      "STEP_3_BACKTRADER_INTEGRATION"
+    ],
+    "latest_runtime_decision": "STEP_2 DONE: local input-driven pilot pipeline completed; package validation explicit; BACKTRADER untouched; Protocole/ unchanged",
+    "impact_protocole": "NONE"
+  },
+  "active_objective": {
+    "id": "POST_AUDIT_IMPROVEMENTS_P1_P4",
+    "title": "Implement 4 post-audit improvements: rejection tests, stale checkpoint hook, .codex clarity, schema migration policy",
+    "status": "COMPLETE",
+    "classification": "IMPLEMENTATION_DETAIL",
+    "non_goals": [
+      "No Protocole/ normative change",
+      "No BACKTRADER modification",
+      "No new EBTA gate, status, threshold, or methodology",
+      "No additional relay files beyond .ai/current_plan.md and .ai/checkpoint.json"
+    ]
+  },
+  "next_actions": [
+    {
+      "id": "A1",
+      "status": "DONE",
+      "action": "Validate the newly created .ai/checkpoint.json syntax"
+    },
+    {
+      "id": "A2",
+      "status": "DONE",
+      "action": "Run EBTA non-divergence validation commands after relay initialization"
+    },
+    {
+      "id": "B1",
+      "status": "PENDING",
+      "action": "Read BACKTRADER .agents and CLAUDE.md before any STEP_3 integration design"
+    },
+    {
+      "id": "A3",
+      "status": "DONE",
+      "action": "Install repo-level AGENTS.md rule requiring .ai relay update before final response when state changes"
+    },
+    {
+      "id": "A4",
+      "status": "DONE",
+      "action": "Validate AGENTS.md plus .ai relay files after rule installation"
+    },
+    {
+      "id": "A5",
+      "status": "DONE",
+      "action": "Refactor AGENTS.md and .ai relay contract so active hook/tracking paths are variables declared in checkpoint.json"
+    },
+    {
+      "id": "A6",
+      "status": "DONE",
+      "action": "Validate checkpoint JSON and diff hygiene after variable-path refactor"
+    },
+    {
+      "id": "B2",
+      "status": "PENDING",
+      "action": "Compare BACKTRADER actual governance and outputs to Implementation/EXTERNAL_ENGINE_PROCEDURE_MAPPING.md"
+    },
+    {
+      "id": "A7",
+      "status": "DONE",
+      "action": "Move active runtime hook and tracking JSON into Implementation/Active and update impacted references"
+    },
+    {
+      "id": "P1",
+      "status": "DONE",
+      "action": "Add 7 rejection tests for COVERED_MINIMAL schemas in test_schemas.py — 59 tests PASS"
+    },
+    {
+      "id": "P2",
+      "status": "DONE",
+      "action": "Create pre-commit hook detecting stale checkpoint + INSTALL_GIT_HOOK.md install guide"
+    },
+    {
+      "id": "P3",
+      "status": "DONE",
+      "action": "Add .codex/README.md declaring the folder scope to eliminate bootstrap ambiguity"
+    },
+    {
+      "id": "P4",
+      "status": "DONE",
+      "action": "Document schema migration policy (semver convention + migration procedure) in GUIDE file"
+    },
+    {
+      "id": "A8",
+      "status": "DONE",
+      "action": "Update AGENTS.md and SKILL.md to formalize MACRO/MICRO split, .ai/backlog workflow, and Schema SemVer migration policy."
+    }
+  ],
+  "validation": {
+    "commands": [
+      {
+        "command": "python -m json.tool .ai\\checkpoint.json",
+        "purpose": "Validate relay checkpoint JSON syntax",
+        "last_result": "PASS - 59 tests - 2026-06-29T09:34:00+02:00"
+      },
+      {
+        "command": "python -m json.tool Implementation\\Active\\tracking.json",
+        "purpose": "Validate runtime task tracking JSON syntax",
+        "last_result": "PASS - 2026-06-29T09:34:00+02:00"
+      },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+        "purpose": "Runtime non-divergence tests",
+        "last_result": "PASS - 59 tests - 2026-06-29T09:34:00+02:00"
+      },
+      {
+        "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
+        "purpose": "Minimal pilot research_package smoke test",
+        "last_result": "PASS - package status PASS - 2026-06-29T09:34:00+02:00"
+      },
+      {
+        "command": "git diff --check -- Implementation Protocole .ai AGENTS.md .agents",
+        "purpose": "Patch hygiene for active EBTA scopes, relay files, and repo agent bootstrap",
+        "last_result": "PASS - 2026-06-29T09:34:00+02:00"
+      },
+      {
+        "command": "legacy active hook/tracking path search across repo text files",
+        "purpose": "Ensure old active hook/tracking paths are no longer referenced",
+        "last_result": "PASS - no matches - 2026-06-27T08:28:55+02:00"
+      }
+    ]
+  },
+  "files_touched_this_turn": [
+    ".ai/current_plan.md",
+    ".ai/checkpoint.json",
+    ".agents/AGENTS.md",
+    ".agents/skills/EBTA_Protocol_Guardian/SKILL.md",
+    ".codex/README.md",
+    ".ai/backlog/README.md",
+    "Implementation/0-CARTE_DU_CODE_EBTA.md",
+    "Implementation/GUIDE - Construire un pipeline de recherche EBTA.md",
+    "Implementation/Active/INSTALL_GIT_HOOK.md",
+    "Implementation/ebta_engine/tests/test_schemas.py",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/registry_missing_chain_hash.jsonl",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/oos_access_missing_event_id.jsonl",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/execution_missing_signal_id.json",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/pit_missing_data_sources.json",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/walk_forward_overlap_not_confirmed.json",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/robustness_no_central_scenario.json",
+    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/config_missing_config_id.json"
+  ],
+  "risks": [
+    {
+      "id": "R1",
+      "status": "CONTROLLED",
+      "risk": "Relay files could become a competing EBTA source of truth",
+      "control": "Relay files point to Protocole/ and Implementation/ authorities and only track handoff state"
+    },
+    {
+      "id": "R2",
+      "status": "OPEN",
+      "risk": "BACKTRADER integration could import external conventions into EBTA",
+      "control": "Read BACKTRADER governance before mapping or coding"
+    },
+    {
+      "id": "R3",
+      "status": "CONTROLLED",
+      "risk": "Future IA resumes from stale prose only",
+      "control": "Checkpoint requires live validation commands and git state refresh"
+    }
+  ]
+}

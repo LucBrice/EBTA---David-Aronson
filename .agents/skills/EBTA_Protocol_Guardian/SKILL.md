@@ -46,13 +46,14 @@ Tu es le seul autorisé à modifier le protocole. Avant de faire un changement :
 ## 4. Maintenir le runtime `Implementation/`
 Avant toute action significative dans `Implementation/` :
 
-1. Lire `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md`.
-2. Lire `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` s'il existe.
-3. Identifier la source normative dans `Protocole/` :
+1. **Bootstrap MACRO** : Lire `.ai/checkpoint.json` et `.ai/current_plan.md` pour comprendre l'etat global.
+2. **Consulter le Backlog** : Si le plan global l'exige ou si l'etabli est vide, extraire la prochaine etape depuis `.ai/backlog/`.
+3. **Bootstrap MICRO** : Lire le hook actif declare dans le checkpoint (ex: `Implementation/Active/HOOK.md`).
+4. Identifier la source normative dans `Protocole/` :
    - `PAQUET D'EXECUTION EBTA.md` pour les schémas, journaux, manifestes, rapports et invariants ;
    - `REGISTRE DES DECISIONS NORMATIVES EBTA.md` pour les statuts, propriétaires, décisions et moments de préenregistrement ;
    - SOP propriétaire pour le détail technique.
-4. Classer le changement :
+5. Classer le changement :
    - `IMPLEMENTATION_DETAIL` ;
    - `CONTRACT_ENCODING` ;
    - `TEST_FIXTURE` ;
@@ -60,8 +61,9 @@ Avant toute action significative dans `Implementation/` :
    - `ADAPTER_MAPPING` ;
    - `DOCUMENTATION_CLARIFICATION_NEEDED` ;
    - `NORMATIVE_CHANGE_REQUIRED`.
-5. Vérifier que le changement ne crée pas de source de vérité concurrente.
-6. Journaliser tout changement runtime significatif dans `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`.
+6. **Politique Schema (CRITIQUE)** : Si le changement touche un fichier JSON-Schema, appliquer strictement la regle de versioning SemVer etablie dans `GUIDE - Construire un pipeline de recherche EBTA.md`. Ne jamais ignorer ou migrer un schema incompatible silencieusement.
+7. Vérifier que le changement ne crée pas de source de vérité concurrente.
+8. Journaliser tout changement runtime significatif dans `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`.
 
 Règle de blocage :
 

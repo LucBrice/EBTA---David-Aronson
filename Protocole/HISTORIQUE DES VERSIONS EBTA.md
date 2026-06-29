@@ -34,8 +34,8 @@ Conformément au `0-README - Comprendre et maintenir le protocole EBTA.md`, tout
 **Résumé** : Mise à jour des pointeurs opérationnels subordonnés dans le
 protocole principal après archivage des anciens artefacts runtime terminés. Le
 protocole pointe désormais vers le hook actif
-`Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md`
-et vers `Implementation/task_tracking.json` au lieu des anciens fichiers de
+`Implementation/Active/HOOK.md`
+et vers `Implementation/Active/tracking.json` au lieu des anciens fichiers de
 reprise archivés.
 **Documents impactés** : `PROTOCOLE EBTA.md`,
 `HISTORIQUE DES VERSIONS EBTA.md`, `MANIFESTE DE GEL EBTA.md`.

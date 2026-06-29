@@ -9,8 +9,8 @@
 | Type | GOVERNANCE |
 | Runtime | EBTA-ENGINE-0.1.0 |
 | Impact protocole | NONE |
-| Hook | `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` |
-| Suivi JSON | `Implementation/task_tracking.json` |
+| Hook | `Implementation/Active/HOOK.md` |
+| Suivi JSON | `Implementation/Active/tracking.json` |
 
 ## Synthese
 
@@ -54,8 +54,8 @@ artefacts ajoutes pour ce lot :
 - `Archives/README.md` ;
 - `Implementation/ARCHIVE_INVENTORY_2026-06-26.md` ;
 - `Implementation/CHECKPOINT_2026-06-26.md` ;
-- `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md` ;
-- `Implementation/task_tracking.json` ;
+- `Implementation/Active/HOOK.md` ;
+- `Implementation/Active/tracking.json` ;
 - mise a jour de `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`.
 
 ### Anti-divergence Protocole -> Implementation
@@ -79,7 +79,7 @@ Conclusion :
 
 | Commande | Resultat |
 | --- | --- |
-| `python -m json.tool Implementation\task_tracking.json` | PASS |
+| `python -m json.tool Implementation\Active\tracking.json` | PASS |
 | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` | PASS - 50 tests |
 | `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` | PASS - package status PASS |
 | `git diff --check -- Implementation Protocole Archives .gitignore` | PASS |

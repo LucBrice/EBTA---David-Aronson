@@ -38,11 +38,11 @@ Documents de référence internes :
 
 Pointeurs opérationnels subordonnés :
 
-- `Implementation/HOOK - Plan actif stabilisation archive et pipeline pilote.md`
+- `Implementation/Active/HOOK.md`
 - `Implementation/GUIDE - Construire un pipeline de recherche EBTA.md`
 - `Implementation/PROCEDURE_CALCULATION_MAP.md`
 - `Implementation/TRACEABILITY_MATRIX.md`
-- `Implementation/task_tracking.json`
+- `Implementation/Active/tracking.json`
 
 Ces pointeurs opérationnels expliquent comment le protocole gelé est traduit en
 contrats exécutables. Ils ne créent aucune règle normative concurrente.
