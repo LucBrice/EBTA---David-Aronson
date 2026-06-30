@@ -1,5 +1,16 @@
 # HOOK - Plan actif stabilisation archive et pipeline pilote
 
+## Triage IA
+
+| Champ | Valeur |
+| --- | --- |
+| Track | `mainline` |
+| Lifecycle | `TRIAGED` |
+| Scope | Integration BACKTRADER apres gouvernance locale et mapping de contrats EBTA |
+| Non-goals | Pas de modification BACKTRADER avant lecture de gouvernance ; pas de nouvelle norme EBTA |
+| Source | Ancien backlog plat `.ai/backlog/EPIC_reprise_et_integration_backtrader.md` |
+| Exit criteria | Gouvernance BACKTRADER lue, mapping documente, integration journalisee et contrats EBTA preserves |
+
 ## Statut
 
 | Champ | Valeur |

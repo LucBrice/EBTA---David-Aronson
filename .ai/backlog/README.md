@@ -1,16 +1,47 @@
 # Backlog / File d'attente IA
 
-Ce dossier centralise tous les plans, brouillons de hooks et epics en attente de traitement pour l'ensemble du repository.
+Ce dossier contient les chantiers tries apres passage par `0 - HUMAN START HERE/` ou apres
+audit IA.
 
-## Regle de structure obligatoire (Checklist)
-**Tout plan depose dans ce dossier DOIT inclure une checklist sous forme de cases a cocher Markdown (`- [ ]`, `- [x]`).** C'est indispensable pour qu'une IA sache quelles portions du plan ont deja ete traitees.
+## Tracks
 
-## Flux de travail (Workflow)
+- `mainline/` : chantier principal qui fait avancer EBTA.
+- `annexes/` : chantier utile mais non bloquant.
+- `fixes/` : correction bornee, sans changement de direction.
 
-1. **Depot :** L'humain ou l'IA depose ici les gros plans de travail (Epics). *Ils doivent contenir une checklist.*
-2. **Decoupage (Chunking) :** Lorsqu'une IA prend le relais pour executer un plan, elle lit le document cible. Elle identifie la premiere tâche non cochee (`[ ]`).
-3. **Activation (Micro) :** L'IA extrait cette tâche realisable et la place dans l'etabli local correspondant (ex: `Implementation/Active/HOOK.md`).
-4. **Mise a jour :** Une fois la tâche locale terminee, l'IA coche la case (`[x]`) dans le document du backlog.
-5. **Archivage (Nettoyage) :** Quand **toutes** les cases de l'Epic sont cochees, l'IA deplace physiquement le fichier de `backlog/` vers `.ai/archive/`.
+## Regle de structure obligatoire
 
-**Responsabilite :** Ce dossier gere le *quoi* (gestion de projet). L'execution reelle (le *comment*) se passe toujours dans les dossiers `Active/` specifiques au composant.
+Tout chantier doit inclure :
+
+- une checklist Markdown (`- [ ]`, `- [x]`) ;
+- `Track` ;
+- `Lifecycle` ;
+- `Scope` ;
+- `Non-goals` ;
+- `Source` ;
+- `Exit criteria`.
+
+## Cycle de vie
+
+```text
+INTAKE -> TRIAGED -> PLANNED -> ACTIVE -> BLOCKED/DONE/REJECTED/SUPERSEDED -> ARCHIVED
+```
+
+Un fichier dans `0 - HUMAN START HERE/` est toujours `INTAKE` et non executable.
+Un fichier dans `backlog/` n'est executable que si `.ai/checkpoint.json`
+le declare explicitement comme `ACTIVE`.
+
+## Flux de travail
+
+1. **Depot humain** : l'humain depose un brouillon dans `0 - HUMAN START HERE/`.
+2. **Triage IA** : l'IA audite, classe et deplace vers `mainline/`, `annexes/`
+   ou `fixes/`.
+3. **Checkpoint** : si le chantier est suivi, l'IA ajoute ou met a jour son
+   entree dans `.ai/checkpoint.json`.
+4. **Activation** : l'IA extrait une tache realisable vers le cockpit actif du
+   composant seulement si le chantier est `ACTIVE`.
+5. **Fermeture** : `DONE`, `REJECTED` ou `SUPERSEDED` doivent indiquer une
+   raison avant archivage.
+
+**Responsabilite :** ce dossier gere le *quoi*. L'execution reelle, le
+*comment*, reste dans le cockpit actif du composant concerne.

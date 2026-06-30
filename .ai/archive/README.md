@@ -1,11 +1,15 @@
-﻿# Archives des Plans IA
+# Archives IA
 
-Ce dossier est le cimetiere fonctionnel des plans (Epics) termines.
+Ce dossier conserve les chantiers clotures.
 
-Lorsqu'un document du dossier .ai/backlog/ a toutes ses cases de checklist cochees ([x]), il est deplace physiquement ici.
+Un fichier peut etre archive si son cycle de vie est :
 
-**Pourquoi ?**
-- Garder le .ai/backlog/ propre et lisible pour qu'aucune IA ne perde de temps.
-- Conserver l'historique de 'pourquoi' et 'comment' on a fait les choses, afin qu'une future IA puisse retrouver le contexte si necessaire.
+- `DONE` : termine avec criteres de sortie satisfaits ;
+- `REJECTED` : refuse apres audit ;
+- `SUPERSEDED` : remplace par un autre chantier ;
+- `ARCHIVED` : historique pur.
 
-Les fichiers ici sont en **lecture seule**.
+Chaque archivage doit conserver la raison de fermeture dans le fichier ou dans
+`.ai/checkpoint.json` si le chantier etait suivi par l'etat machine.
+
+Les fichiers ici sont en lecture seule par convention.

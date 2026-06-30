@@ -17,5 +17,5 @@ Le lot `STEP_2B_STRATEGIE_ACTIF_RUNTIME` est termine.
 `STEP_3_BACKTRADER_INTEGRATION` reste pending.
 
 Avant toute modification, lire la gouvernance BACKTRADER indiquee par
-`.ai/current_plan.md`, puis preparer un plan d'adaptation separant clairement
+`.ai/checkpoint.json`, puis preparer un plan d'adaptation separant clairement
 les contrats EBTA des conventions du moteur externe.

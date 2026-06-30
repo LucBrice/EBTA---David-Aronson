@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Implementation/Active/tracking.schema.json",
+  "title": "EBTA active runtime tracking",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "created_at",
+    "updated_at",
+    "status",
+    "runtime_version",
+    "normative_authority",
+    "hook_file",
+    "current_step",
+    "active_scope",
+    "non_goals",
+    "steps",
+    "validation_commands",
+    "risk_register",
+    "latest_decision"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "created_at": { "type": "string", "format": "date" },
+    "updated_at": { "type": "string", "format": "date" },
+    "status": { "enum": ["ACTIVE", "PAUSED", "COMPLETE", "BLOCKED"] },
+    "runtime_version": { "type": "string", "minLength": 1 },
+    "normative_authority": { "type": "string", "minLength": 1 },
+    "hook_file": { "type": "string", "minLength": 1 },
+    "current_step": { "type": "string", "minLength": 1 },
+    "active_scope": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "non_goals": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "steps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/step" },
+      "minItems": 1
+    },
+    "validation_commands": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/validation_command" }
+    },
+    "risk_register": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/risk" }
+    },
+    "latest_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["date", "decision", "impact_protocole"],
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "decision": { "type": "string", "minLength": 1 },
+        "impact_protocole": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status", "classification", "objective", "tasks", "exit_criteria"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/status" },
+        "classification": { "$ref": "#/$defs/classification" },
+        "objective": { "type": "string", "minLength": 1 },
+        "entry_criteria": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "tasks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/task" }
+        },
+        "exit_criteria": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/status" },
+        "classification": { "$ref": "#/$defs/classification" },
+        "deliverables": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "validation_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "purpose", "last_result"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 },
+        "last_result": { "type": "string", "minLength": 1 }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "risk", "mitigation"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["OPEN", "CONTROLLED", "CLOSED", "DEFERRED"] },
+        "risk": { "type": "string", "minLength": 1 },
+        "mitigation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "status": {
+      "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "COMPLETE", "BLOCKED", "DEFERRED"]
+    },
+    "classification": {
+      "enum": [
+        "GOVERNANCE",
+        "IMPLEMENTATION_DETAIL",
+        "CONTRACT_ENCODING",
+        "TEST_FIXTURE",
+        "ADAPTER_MAPPING",
+        "DOCUMENTATION_CLARIFICATION_NEEDED",
+        "NORMATIVE_CHANGE_REQUIRED"
+      ]
+    }
+  }
+}

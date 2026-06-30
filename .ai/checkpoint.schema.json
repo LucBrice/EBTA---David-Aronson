@@ -1,0 +1,286 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "checkpoint.schema.json",
+  "title": "EBTA multi-AI relay checkpoint",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "checkpoint_kind",
+    "updated_at",
+    "status",
+    "repo",
+    "relay_contract",
+    "active_paths",
+    "authority_model",
+    "current_runtime_state",
+    "active_objective",
+    "next_actions",
+    "workstreams",
+    "validation",
+    "files_touched_this_turn",
+    "risks"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "checkpoint_kind": { "const": "multi_ai_relay" },
+    "updated_at": { "type": "string", "format": "date" },
+    "status": { "enum": ["ACTIVE", "PAUSED", "COMPLETE", "BLOCKED"] },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "root", "git_head_short", "git_status_policy", "warning"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "root": { "type": "string", "minLength": 1 },
+        "git_head_short": { "type": "string", "minLength": 1 },
+        "git_status_policy": { "type": "string", "minLength": 1 },
+        "warning": { "type": "string" }
+      }
+    },
+    "relay_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["only_files", "write_policy", "startup_read_order", "do_not_create"],
+      "properties": {
+        "only_files": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "write_policy": { "enum": ["overwrite_only"] },
+        "startup_read_order": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 5,
+          "uniqueItems": true
+        },
+        "do_not_create": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "active_paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "active_hook_path",
+        "active_tracking_path",
+        "active_protocol_entrypoint",
+        "human_start_path",
+        "backlog_mainline_path",
+        "backlog_annexes_path",
+        "backlog_fixes_path"
+      ],
+      "properties": {
+        "active_hook_path": { "type": "string", "minLength": 1 },
+        "active_tracking_path": { "type": "string", "minLength": 1 },
+        "active_protocol_entrypoint": { "type": "string", "minLength": 1 },
+        "human_start_path": { "type": "string", "minLength": 1 },
+        "backlog_mainline_path": { "type": "string", "minLength": 1 },
+        "backlog_annexes_path": { "type": "string", "minLength": 1 },
+        "backlog_fixes_path": { "type": "string", "minLength": 1 }
+      }
+    },
+    "authority_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normative_authority",
+        "runtime_authority",
+        "runtime_hook",
+        "runtime_machine_state",
+        "runtime_history",
+        "agent_bootstrap",
+        "ai_cockpit",
+        "tooling_support",
+        "codex_adapter",
+        "adapter_boundary"
+      ],
+      "properties": {
+        "normative_authority": { "type": "string", "minLength": 1 },
+        "runtime_authority": { "type": "string", "minLength": 1 },
+        "runtime_hook": { "type": "string", "minLength": 1 },
+        "runtime_machine_state": { "type": "string", "minLength": 1 },
+        "runtime_history": { "type": "string", "minLength": 1 },
+        "agent_bootstrap": { "type": "string", "minLength": 1 },
+        "ai_cockpit": { "type": "string", "minLength": 1 },
+        "tooling_support": { "type": "string", "minLength": 1 },
+        "codex_adapter": { "type": "string", "minLength": 1 },
+        "adapter_boundary": { "type": "string", "minLength": 1 }
+      }
+    },
+    "current_runtime_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime_version", "current_step", "completed_steps", "pending_steps", "latest_runtime_decision", "impact_protocole"],
+      "properties": {
+        "runtime_version": { "type": "string", "minLength": 1 },
+        "current_step": { "type": "string", "minLength": 1 },
+        "completed_steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "pending_steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "latest_runtime_decision": { "type": "string" },
+        "impact_protocole": { "type": "string" }
+      }
+    },
+    "active_objective": { "$ref": "#/$defs/action_item" },
+    "next_actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/action_item" }
+    },
+    "workstreams": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/workstream" },
+      "uniqueItems": true
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commands"],
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["command", "purpose", "last_result"],
+            "properties": {
+              "command": { "type": "string", "minLength": 1 },
+              "purpose": { "type": "string", "minLength": 1 },
+              "last_result": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "files_touched_this_turn": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "risk", "control"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["OPEN", "CONTROLLED", "DEFERRED", "CLOSED"] },
+          "risk": { "type": "string", "minLength": 1 },
+          "control": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "action_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "title", "classification", "non_goals"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "COMPLETE", "DEFERRED", "BLOCKED"] },
+        "title": { "type": "string", "minLength": 1 },
+        "classification": {
+          "enum": [
+            "GOVERNANCE",
+            "IMPLEMENTATION_DETAIL",
+            "CONTRACT_ENCODING",
+            "TEST_FIXTURE",
+            "ADAPTER_MAPPING",
+            "DOCUMENTATION_CLARIFICATION_NEEDED",
+            "NORMATIVE_CHANGE_REQUIRED"
+          ]
+        },
+        "non_goals": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "workstream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "track",
+        "status",
+        "lifecycle",
+        "classification",
+        "source_path",
+        "active_runtime_path",
+        "opened_at",
+        "last_moved_at",
+        "routing_decision",
+        "routing_reason",
+        "moved_by",
+        "blocks_mainline",
+        "advances_mainline",
+        "closure_reason",
+        "non_goals"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "track": { "enum": ["mainline", "annexe", "fix"] },
+        "status": { "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "COMPLETE", "DEFERRED", "BLOCKED"] },
+        "lifecycle": {
+          "enum": [
+            "INTAKE",
+            "TRIAGED",
+            "PLANNED",
+            "ACTIVE",
+            "BLOCKED",
+            "DONE",
+            "REJECTED",
+            "SUPERSEDED",
+            "ARCHIVED"
+          ]
+        },
+        "classification": {
+          "enum": [
+            "GOVERNANCE",
+            "IMPLEMENTATION_DETAIL",
+            "CONTRACT_ENCODING",
+            "TEST_FIXTURE",
+            "ADAPTER_MAPPING",
+            "DOCUMENTATION_CLARIFICATION_NEEDED",
+            "NORMATIVE_CHANGE_REQUIRED"
+          ]
+        },
+        "source_path": { "type": "string", "minLength": 1 },
+        "active_runtime_path": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "opened_at": { "type": "string", "format": "date" },
+        "last_moved_at": { "type": "string", "format": "date" },
+        "routing_decision": { "enum": ["mainline", "annexe", "fix", "rejected", "deferred"] },
+        "routing_reason": { "type": "string", "minLength": 1 },
+        "moved_by": { "enum": ["human", "ai", "mixed"] },
+        "blocks_mainline": { "type": "boolean" },
+        "advances_mainline": { "type": "boolean" },
+        "closure_reason": { "type": ["string", "null"] },
+        "non_goals": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

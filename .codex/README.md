@@ -1,18 +1,21 @@
-﻿# .codex/
+# .codex/
 
-Ce dossier est réservé à **Codex CLI** (OpenAI).
+Ce dossier est reserve a **Codex CLI** (OpenAI).
 
-Il ne contient pas de contexte EBTA normatif.
+Il ne contient pas de contexte EBTA normatif et ne definit aucune source de
+verite projet.
 
-Pour le relais multi-IA de ce repo, lire :
+Point d'entree IA officiel du repo :
 
-- .ai/current_plan.md — intention humaine et reprise conceptuelle
-- .ai/checkpoint.json — état machine vérifiable
+- `AGENTS.md` a la racine du repo
 
-Pour les règles d'agent, lire :
+Le bootstrap racine redirige ensuite vers :
 
-- AGENTS.md à la racine du repo
+- `.ai/README.md` - regles stables du cockpit IA
+- `.ai/checkpoint.json` - etat machine verifiable
+- chemins actifs declares dans `.ai/checkpoint.json`
 
 ---
 
-*Ce fichier est présent uniquement pour éviter toute ambiguïté lors du bootstrap d'un agent.*
+*Ce fichier est present uniquement pour eviter toute ambiguite lors du bootstrap
+d'un agent Codex.*
