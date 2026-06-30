@@ -138,6 +138,11 @@ Cela comprend notamment :
 - le prétraitement ;
 - la gestion du risque.
 
+Lorsque l’actif peut influencer le classement, l’éligibilité ou la sélection,
+le couple `stratégie × actif` fait partie de l’identité logique de la
+candidate. Une stratégie abstraite n’est donc pas opposable sans la frontière
+d’actifs ou le portefeuille tradable dans lequel elle a été évaluée.
+
 Une modification purement technique sans effet possible sur ces éléments ne crée pas une nouvelle candidate. Elle crée une nouvelle version de code ou un nouveau run.
 
 ### 4.5 Run
@@ -442,6 +447,23 @@ Le nombre d’actifs ne multiplie pas automatiquement le nombre de candidates.
 - Une stratégie de portefeuille fixe produit une candidate de portefeuille.
 - Si le meilleur couple règle-actif peut être sélectionné, chaque couple évalué est une candidate.
 - Si l’univers d’actifs est sélectionnable ou modifié après observation, une nouvelle candidate ou version de processus est créée.
+
+La frontière normative est la suivante :
+
+- si l’allocation, les pondérations et les actifs sont fixés ex ante, la
+  spécification décrit une candidate de portefeuille ;
+- si la même logique est appliquée séparément à plusieurs actifs et que le
+  processus peut retenir l’actif qui performe le mieux, chaque couple
+  `stratégie × actif` évalué est une candidate distincte ;
+- si un filtre, un classement ou un seuil d’éligibilité choisit les actifs à
+  partir des données de sélection, ce mécanisme appartient au processus de
+  recherche et ses sorties doivent rester reconstructibles ;
+- aucun actif évalué ne peut être retiré de la famille parce que son résultat
+  est médiocre, incomplet ou moins robuste.
+
+L’objectif n’est pas de trouver une stratégie abstraite indépendante de tout
+marché, mais d’identifier une spécification tradable : soit un couple
+`stratégie × actif`, soit un portefeuille multi-actifs préenregistré.
 
 ### 9.5 Modèle de coûts
 
@@ -766,6 +788,7 @@ falsifiable_hypothesis:
 null_hypothesis:
 benchmark:
 asset_universe:
+asset_selection_axis:
 primary_metric:
 segmentation_protocol:
 preregistered_at:

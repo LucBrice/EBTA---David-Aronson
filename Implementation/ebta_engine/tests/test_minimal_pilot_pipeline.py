@@ -28,6 +28,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
             wrc = json.loads((reports_dir / "wrc.json").read_text(encoding="utf-8"))
             oos = json.loads((reports_dir / "oos.json").read_text(encoding="utf-8"))
+            search_space = json.loads((reports_dir / "search_space.json").read_text(encoding="utf-8"))
             candidate_matrix = json.loads((reports_dir / "candidate_matrix.json").read_text(encoding="utf-8"))
             procedure_reports = {
                 name: json.loads((reports_dir / name).read_text(encoding="utf-8"))
@@ -56,6 +57,10 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         self.assertEqual(config["project_id"], pilot_inputs["identifiers"]["project_id"])
         self.assertEqual(config["walk_forward_schedule"], pilot_inputs["walk_forward_schedule"])
         self.assertEqual(config["candidate_space"]["candidate_count"], len(candidate_matrix["candidate_ids"]))
+        self.assertEqual(config["candidate_space"]["asset_universe"], ["EURUSD", "XAUUSD"])
+        self.assertEqual(config["candidate_space"]["asset_selection_axis"], "asset")
+        self.assertEqual(search_space["asset_candidate_count"], {"EURUSD": 4, "XAUUSD": 4})
+        self.assertEqual(set(candidate_matrix["candidate_assets"].values()), {"EURUSD", "XAUUSD"})
         self.assertEqual(wrc["replications"], config["statistical_plan"]["wrc_bootstrap_replications"])
         self.assertEqual(oos["replications"], pilot_inputs["statistical_plan"]["oos_bootstrap_replications"])
         manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
@@ -87,6 +92,27 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
         self.assertEqual(report["status"], "FAIL")
         self.assertIn("OOS bootstrap replications must be preregistered as 5000 under DN-022", report["semantic_errors"])
+
+    def test_minimal_pilot_fails_when_wrc_omits_evaluated_asset(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "research_package"
+            module.build_package(package_dir)
+            evidence_path = package_dir / "reports" / "invariant_evidence.json"
+            evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+            evidence["wrc_matrix_candidates"] = [
+                candidate_id
+                for candidate_id in evidence["wrc_matrix_candidates"]
+                if evidence["candidate_assets"][candidate_id] != "XAUUSD"
+            ]
+            module.atomic_write_json(evidence_path, evidence)
+            report = module.validate_package_dir(package_dir)
+
+        self.assertEqual(report["status"], "FAIL")
+        self.assertTrue(any(failure.startswith("INV-017 FAIL") for failure in report["invariant_failures"]))
 
 
 if __name__ == "__main__":

@@ -1,13 +1,32 @@
 {
   "applicable_candidates": [
-    "CAND-0208F4D7FF77",
-    "CAND-6D7FB83D272E",
-    "CAND-BC3AA6E8DA61",
-    "CAND-FC2EBFE60A26"
+    "CAND-01252661EDAA",
+    "CAND-0FED98B76946",
+    "CAND-37230AE99928",
+    "CAND-4789F5ED21DB",
+    "CAND-A4F431B84F01",
+    "CAND-ABA4614D9225",
+    "CAND-B680DD363F65",
+    "CAND-C394514FD46E"
+  ],
+  "asset_selection_axis": "asset",
+  "asset_universe": [
+    "EURUSD",
+    "XAUUSD"
   ],
   "bootstrap_sources": {
     "oos": "OOS_STATIONARY_BLOCK",
     "wrc_test": "WRC_JOINT_ZERO_CENTERED"
+  },
+  "candidate_assets": {
+    "CAND-01252661EDAA": "EURUSD",
+    "CAND-0FED98B76946": "XAUUSD",
+    "CAND-37230AE99928": "EURUSD",
+    "CAND-4789F5ED21DB": "EURUSD",
+    "CAND-A4F431B84F01": "XAUUSD",
+    "CAND-ABA4614D9225": "XAUUSD",
+    "CAND-B680DD363F65": "EURUSD",
+    "CAND-C394514FD46E": "XAUUSD"
   },
   "decision_events": [
     {
@@ -29,10 +48,14 @@
     "statistical": "PASS"
   },
   "influential_candidates": [
-    "CAND-0208F4D7FF77",
-    "CAND-6D7FB83D272E",
-    "CAND-BC3AA6E8DA61",
-    "CAND-FC2EBFE60A26"
+    "CAND-01252661EDAA",
+    "CAND-0FED98B76946",
+    "CAND-37230AE99928",
+    "CAND-4789F5ED21DB",
+    "CAND-A4F431B84F01",
+    "CAND-ABA4614D9225",
+    "CAND-B680DD363F65",
+    "CAND-C394514FD46E"
   ],
   "influential_modifications": [
     {
@@ -84,10 +107,14 @@
   ],
   "pre_oos_sealed_at": "2023-01-01T00:00:00Z",
   "registered_candidates": [
-    "CAND-0208F4D7FF77",
-    "CAND-6D7FB83D272E",
-    "CAND-BC3AA6E8DA61",
-    "CAND-FC2EBFE60A26"
+    "CAND-01252661EDAA",
+    "CAND-0FED98B76946",
+    "CAND-37230AE99928",
+    "CAND-4789F5ED21DB",
+    "CAND-A4F431B84F01",
+    "CAND-ABA4614D9225",
+    "CAND-B680DD363F65",
+    "CAND-C394514FD46E"
   ],
   "robustness_checks": [
     {
@@ -108,9 +135,13 @@
     }
   ],
   "wrc_matrix_candidates": [
-    "CAND-0208F4D7FF77",
-    "CAND-6D7FB83D272E",
-    "CAND-BC3AA6E8DA61",
-    "CAND-FC2EBFE60A26"
+    "CAND-01252661EDAA",
+    "CAND-0FED98B76946",
+    "CAND-37230AE99928",
+    "CAND-4789F5ED21DB",
+    "CAND-A4F431B84F01",
+    "CAND-ABA4614D9225",
+    "CAND-B680DD363F65",
+    "CAND-C394514FD46E"
   ]
 }

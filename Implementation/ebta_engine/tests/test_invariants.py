@@ -14,7 +14,7 @@ class InvariantTests(unittest.TestCase):
             (ROOT / "fixtures" / "valid_minimal" / "reports" / "invariant_evidence.json").read_text(encoding="utf-8")
         )
         results = {result.invariant_id: result for result in validate_invariants(package)}
-        for invariant_id in [f"INV-{index:03d}" for index in range(1, 17)]:
+        for invariant_id in [f"INV-{index:03d}" for index in range(1, 18)]:
             self.assertEqual(results[invariant_id].status, "PASS")
 
     def test_overlap_fails_inv_001(self):
@@ -31,6 +31,18 @@ class InvariantTests(unittest.TestCase):
     def test_wrc_non_pass_fails_inv_003(self):
         results = validate_invariants({"oos_openings": [{"wrc_local_status": "FAIL"}]})
         self.assertEqual({r.invariant_id: r.status for r in results}["INV-003"], "FAIL")
+
+    def test_asset_axis_wrc_coverage_fails_inv_017(self):
+        results = validate_invariants(
+            {
+                "asset_selection_axis": "asset",
+                "asset_universe": ["EURUSD", "XAUUSD"],
+                "candidate_assets": {"CAND-EUR": "EURUSD", "CAND-XAU": "XAUUSD"},
+                "applicable_candidates": ["CAND-EUR", "CAND-XAU"],
+                "wrc_matrix_candidates": ["CAND-EUR"],
+            }
+        )
+        self.assertEqual({r.invariant_id: r.status for r in results}["INV-017"], "FAIL")
 
     def test_each_invalid_invariant_fixture_fails_its_target(self):
         cases = json.loads(

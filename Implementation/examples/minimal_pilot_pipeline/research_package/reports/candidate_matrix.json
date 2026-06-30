@@ -1,50 +1,84 @@
 {
   "artifact_type": "candidate_matrix",
+  "asset_universe": [
+    "EURUSD",
+    "XAUUSD"
+  ],
+  "candidate_assets": {
+    "CAND-01252661EDAA": "EURUSD",
+    "CAND-0FED98B76946": "XAUUSD",
+    "CAND-37230AE99928": "EURUSD",
+    "CAND-4789F5ED21DB": "EURUSD",
+    "CAND-A4F431B84F01": "XAUUSD",
+    "CAND-ABA4614D9225": "XAUUSD",
+    "CAND-B680DD363F65": "EURUSD",
+    "CAND-C394514FD46E": "XAUUSD"
+  },
   "candidate_ids": [
-    "CAND-0208F4D7FF77",
-    "CAND-6D7FB83D272E",
-    "CAND-BC3AA6E8DA61",
-    "CAND-FC2EBFE60A26"
+    "CAND-01252661EDAA",
+    "CAND-0FED98B76946",
+    "CAND-37230AE99928",
+    "CAND-4789F5ED21DB",
+    "CAND-A4F431B84F01",
+    "CAND-ABA4614D9225",
+    "CAND-B680DD363F65",
+    "CAND-C394514FD46E"
   ],
   "complete_family": true,
   "fold_id": "FOLD-001",
-  "matrix_id": "MATRIX-736FAEDEE6D899E6",
+  "matrix_id": "MATRIX-65975E6680FD48F6",
   "row_count": 4,
   "rows": [
     {
       "date": "2022-01-03",
       "values": {
-        "CAND-0208F4D7FF77": 0.03,
-        "CAND-6D7FB83D272E": 0.02,
-        "CAND-BC3AA6E8DA61": -0.01,
-        "CAND-FC2EBFE60A26": 0.0
+        "CAND-01252661EDAA": 0.03,
+        "CAND-0FED98B76946": 0.02,
+        "CAND-37230AE99928": -0.01,
+        "CAND-4789F5ED21DB": 0.0,
+        "CAND-A4F431B84F01": 0.025,
+        "CAND-ABA4614D9225": 0.015,
+        "CAND-B680DD363F65": -0.015,
+        "CAND-C394514FD46E": 0.005
       }
     },
     {
       "date": "2022-01-04",
       "values": {
-        "CAND-0208F4D7FF77": 0.02,
-        "CAND-6D7FB83D272E": 0.01,
-        "CAND-BC3AA6E8DA61": 0.0,
-        "CAND-FC2EBFE60A26": -0.01
+        "CAND-01252661EDAA": 0.02,
+        "CAND-0FED98B76946": 0.01,
+        "CAND-37230AE99928": 0.0,
+        "CAND-4789F5ED21DB": -0.01,
+        "CAND-A4F431B84F01": 0.015,
+        "CAND-ABA4614D9225": 0.005,
+        "CAND-B680DD363F65": -0.005,
+        "CAND-C394514FD46E": -0.005
       }
     },
     {
       "date": "2022-01-05",
       "values": {
-        "CAND-0208F4D7FF77": 0.04,
-        "CAND-6D7FB83D272E": 0.01,
-        "CAND-BC3AA6E8DA61": -0.02,
-        "CAND-FC2EBFE60A26": 0.0
+        "CAND-01252661EDAA": 0.04,
+        "CAND-0FED98B76946": 0.01,
+        "CAND-37230AE99928": -0.02,
+        "CAND-4789F5ED21DB": 0.0,
+        "CAND-A4F431B84F01": 0.035,
+        "CAND-ABA4614D9225": 0.005,
+        "CAND-B680DD363F65": -0.025,
+        "CAND-C394514FD46E": 0.005
       }
     },
     {
       "date": "2022-01-06",
       "values": {
-        "CAND-0208F4D7FF77": 0.03,
-        "CAND-6D7FB83D272E": 0.02,
-        "CAND-BC3AA6E8DA61": 0.01,
-        "CAND-FC2EBFE60A26": -0.02
+        "CAND-01252661EDAA": 0.03,
+        "CAND-0FED98B76946": 0.02,
+        "CAND-37230AE99928": 0.01,
+        "CAND-4789F5ED21DB": -0.02,
+        "CAND-A4F431B84F01": 0.025,
+        "CAND-ABA4614D9225": 0.015,
+        "CAND-B680DD363F65": 0.005,
+        "CAND-C394514FD46E": -0.015
       }
     }
   ]

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-06-29T09:53:00+02:00",
+  "updated_at": "2026-06-29",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -52,27 +52,68 @@
     "completed_steps": [
       "STEP_0_ARCHIVE_OBSOLETE",
       "STEP_1_CHECKPOINT",
-      "STEP_2_LOCAL_PILOT_PIPELINE"
+      "STEP_2_LOCAL_PILOT_PIPELINE",
+      "STEP_2B_STRATEGIE_ACTIF_RUNTIME"
     ],
     "pending_steps": [
       "STEP_3_BACKTRADER_INTEGRATION"
     ],
-    "latest_runtime_decision": "STEP_2 DONE: local input-driven pilot pipeline completed; package validation explicit; BACKTRADER untouched; Protocole/ unchanged",
+    "latest_runtime_decision": "Strategie x actif encoded in Implementation runtime: asset_universe, asset axis, WRC coverage invariant, multi-asset pilot fixture, and rejection tests.",
     "impact_protocole": "NONE"
   },
   "active_objective": {
-    "id": "POST_AUDIT_IMPROVEMENTS_P1_P4",
-    "title": "Implement 4 post-audit improvements: rejection tests, stale checkpoint hook, .codex clarity, schema migration policy",
+    "id": "IMPLEMENTATION_STRATEGIE_ACTIF_RUNTIME",
+    "title": "Encode strategie x actif contract in Implementation runtime after Protocole clarification",
     "status": "COMPLETE",
-    "classification": "IMPLEMENTATION_DETAIL",
+    "classification": "CONTRACT_ENCODING",
     "non_goals": [
-      "No Protocole/ normative change",
+      "No further Protocole/ edit",
       "No BACKTRADER modification",
       "No new EBTA gate, status, threshold, or methodology",
       "No additional relay files beyond .ai/current_plan.md and .ai/checkpoint.json"
     ]
   },
   "next_actions": [
+    {
+      "id": "E1",
+      "status": "DONE",
+      "action": "Audit PROTOCOLE EBTA.md, SOP 03, SOP 08, SOP 09A, REGISTRE DES DECISIONS NORMATIVES EBTA.md, and MATRICE DE COHERENCE for strategie x actif wording."
+    },
+    {
+      "id": "E2",
+      "status": "DONE",
+      "action": "Classify the strategie x actif update as documentation clarification or normative change before any patch."
+    },
+    {
+      "id": "E3",
+      "status": "DONE",
+      "action": "Apply targeted strategy x asset wording after explicit GO."
+    },
+    {
+      "id": "E4",
+      "status": "DONE",
+      "action": "After GO, update required Protocole files, refresh manifest/history if required, and run git diff --check -- Protocole .ai."
+    },
+    {
+      "id": "E5",
+      "status": "DONE",
+      "action": "Implementation contract encoding completed for asset_universe, asset axis, multi-asset fixtures, and rejection tests."
+    },
+    {
+      "id": "F1",
+      "status": "DONE",
+      "action": "Expose asset_universe, asset_selection_axis, asset_candidate_count, and candidate_asset_map in search_space artifacts."
+    },
+    {
+      "id": "F2",
+      "status": "DONE",
+      "action": "Add candidate_matrix and INV-017 checks for complete strategie x actif WRC coverage."
+    },
+    {
+      "id": "F3",
+      "status": "DONE",
+      "action": "Convert minimal pilot fixture to an 8-candidate multi-asset family and add rejection test for omitted evaluated assets."
+    },
     {
       "id": "A1",
       "status": "DONE",
@@ -85,8 +126,8 @@
     },
     {
       "id": "B1",
-      "status": "PENDING",
-      "action": "Read BACKTRADER .agents and CLAUDE.md before any STEP_3 integration design"
+      "status": "DEFERRED",
+      "action": "Read BACKTRADER .agents and CLAUDE.md before any STEP_3 integration design; deferred until strategie x actif clarification is handled or explicitly postponed."
     },
     {
       "id": "A3",
@@ -110,8 +151,8 @@
     },
     {
       "id": "B2",
-      "status": "PENDING",
-      "action": "Compare BACKTRADER actual governance and outputs to Implementation/EXTERNAL_ENGINE_PROCEDURE_MAPPING.md"
+      "status": "DEFERRED",
+      "action": "Compare BACKTRADER actual governance and outputs to Implementation/EXTERNAL_ENGINE_PROCEDURE_MAPPING.md; deferred until strategie x actif clarification is handled or explicitly postponed."
     },
     {
       "id": "A7",
@@ -149,27 +190,27 @@
       {
         "command": "python -m json.tool .ai\\checkpoint.json",
         "purpose": "Validate relay checkpoint JSON syntax",
-        "last_result": "PASS - 59 tests - 2026-06-29T09:34:00+02:00"
+        "last_result": "PASS - 2026-06-29"
       },
       {
         "command": "python -m json.tool Implementation\\Active\\tracking.json",
         "purpose": "Validate runtime task tracking JSON syntax",
-        "last_result": "PASS - 2026-06-29T09:34:00+02:00"
+        "last_result": "PASS - 2026-06-29"
       },
       {
         "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
         "purpose": "Runtime non-divergence tests",
-        "last_result": "PASS - 59 tests - 2026-06-29T09:34:00+02:00"
+        "last_result": "PASS - 64 tests - 2026-06-29"
       },
       {
         "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
         "purpose": "Minimal pilot research_package smoke test",
-        "last_result": "PASS - package status PASS - 2026-06-29T09:34:00+02:00"
+        "last_result": "PASS - package status PASS - 2026-06-29"
       },
       {
         "command": "git diff --check -- Implementation Protocole .ai AGENTS.md .agents",
         "purpose": "Patch hygiene for active EBTA scopes, relay files, and repo agent bootstrap",
-        "last_result": "PASS - 2026-06-29T09:34:00+02:00"
+        "last_result": "PASS - 2026-06-29 - CRLF warnings only for generated research_package files"
       },
       {
         "command": "legacy active hook/tracking path search across repo text files",
@@ -181,21 +222,28 @@
   "files_touched_this_turn": [
     ".ai/current_plan.md",
     ".ai/checkpoint.json",
-    ".agents/AGENTS.md",
-    ".agents/skills/EBTA_Protocol_Guardian/SKILL.md",
-    ".codex/README.md",
-    ".ai/backlog/README.md",
-    "Implementation/0-CARTE_DU_CODE_EBTA.md",
-    "Implementation/GUIDE - Construire un pipeline de recherche EBTA.md",
-    "Implementation/Active/INSTALL_GIT_HOOK.md",
-    "Implementation/ebta_engine/tests/test_schemas.py",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/registry_missing_chain_hash.jsonl",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/oos_access_missing_event_id.jsonl",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/execution_missing_signal_id.json",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/pit_missing_data_sources.json",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/walk_forward_overlap_not_confirmed.json",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/robustness_no_central_scenario.json",
-    "Implementation/ebta_engine/fixtures/invalid_rejection_tests/config_missing_config_id.json"
+    "Protocole/PROTOCOLE EBTA.md",
+    "Protocole/SOP 03 - Registre des expériences et univers des règles candidates.md",
+    "Protocole/SOP 08 - Mesures de performance et série de rendement de référence.md",
+    "Protocole/SOP 09A - Données point-in-time et contrôles anti-leakage.md",
+    "Protocole/REGISTRE DES DECISIONS NORMATIVES EBTA.md",
+    "Protocole/MATRICE DE COHERENCE DES SOP EBTA.md",
+    "Protocole/HISTORIQUE DES VERSIONS EBTA.md",
+    "Protocole/MANIFESTE DE GEL EBTA.md",
+    "Implementation/Active/HOOK.md",
+    "Implementation/Active/tracking.json",
+    "Implementation/ebta_engine/procedures/search_space.py",
+    "Implementation/ebta_engine/procedures/candidate_matrix.py",
+    "Implementation/ebta_engine/validators/invariant_validator.py",
+    "Implementation/ebta_engine/schema_validation.py",
+    "Implementation/ebta_engine/schemas/config.schema.json",
+    "Implementation/ebta_engine/schemas/pit_data_declaration.schema.json",
+    "Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json",
+    "Implementation/examples/minimal_pilot_pipeline/build_research_package.py",
+    "Implementation/examples/minimal_pilot_pipeline/research_package",
+    "Implementation/TRACEABILITY_MATRIX.md",
+    "Implementation/PROCEDURE_CALCULATION_MAP.md",
+    "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md"
   ],
   "risks": [
     {
@@ -206,9 +254,21 @@
     },
     {
       "id": "R2",
-      "status": "OPEN",
+      "status": "DEFERRED",
       "risk": "BACKTRADER integration could import external conventions into EBTA",
-      "control": "Read BACKTRADER governance before mapping or coding"
+      "control": "Deferred until strategie x actif clarification is handled or explicitly postponed; then read BACKTRADER governance before mapping or coding"
+    },
+    {
+      "id": "R4",
+      "status": "CONTROLLED",
+      "risk": "Implementation could encode asset selection more explicitly than Protocole",
+      "control": "Implementation encoding is limited to the Protocole/SOP clarification and marked CONTRACT_ENCODING"
+    },
+    {
+      "id": "R5",
+      "status": "CONTROLLED",
+      "risk": "WRC could omit evaluated assets after multi-asset search",
+      "control": "candidate_matrix asset coverage, INV-017, and pilot rejection tests fail incomplete strategie x actif coverage"
     },
     {
       "id": "R3",

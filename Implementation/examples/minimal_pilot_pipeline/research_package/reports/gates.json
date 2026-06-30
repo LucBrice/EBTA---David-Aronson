@@ -41,7 +41,7 @@
   "retention_policy": true,
   "robustness_matrix": true,
   "robustness_report": true,
-  "selected_candidate_id": "CAND-FC2EBFE60A26",
+  "selected_candidate_id": "CAND-C394514FD46E",
   "selection_rule": true,
   "single_oos_execution_log": true,
   "statistical_gate_report": true,

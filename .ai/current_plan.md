@@ -13,8 +13,8 @@ importante est validee ou avant de quitter.
 
 | Champ | Valeur |
 | --- | --- |
-| Derniere mise a jour | 2026-06-29T09:34:00+02:00 |
-| Statut global | ACTIF - AMELIORATIONS_POST_AUDIT_COMPLETES |
+| Derniere mise a jour | 2026-06-29 |
+| Statut global | ACTIF - STRATEGIE_ACTIF_RUNTIME_VALIDEE |
 | Autorite normative | `Protocole/` gele en `EBTA-DOC-1.0` |
 | Runtime actif | `Implementation/` / `EBTA-ENGINE-0.1.0` |
 | Hook runtime actif | Variable declaree dans `.ai/checkpoint.json` : `active_paths.active_hook_path` |
@@ -55,7 +55,119 @@ des entrees de gouvernance BACKTRADER indiquees par l'utilisateur :
 - `D:\TRADING\ENTREPRISE\0 - Phase de lancement\Strategie de trading\0 - Backtest\BACKTRADER\.agents`
 - `D:\TRADING\ENTREPRISE\0 - Phase de lancement\Strategie de trading\0 - Backtest\BACKTRADER\CLAUDE.md`
 
+## Objectif actif
+
+Encoder dans `Implementation/` la clarification `strategie x actif` deja
+validee dans `Protocole/`, puis revenir a la reprise BACKTRADER sans la
+demarrer automatiquement.
+
+Classification retenue : `CONTRACT_ENCODING`.
+
+Regle de travail :
+
+- ne pas modifier davantage `Protocole/` dans ce lot ;
+- maintenir `Implementation/` comme derive executable, pas comme source de
+  doctrine concurrente.
+
 ## Plan operationnel propose
+
+### Phase E - Clarifier strategie x actif dans Protocole/
+
+Statut : termine.
+
+Objectif : rendre explicite, dans le protocole principal et les SOP
+proprietaires, que l'actif devient un axe de selection statistique lorsque le
+processus peut choisir le meilleur couple `strategie x actif`.
+
+Taches :
+
+- auditer `PROTOCOLE EBTA.md`, `SOP 03`, `SOP 08`, `SOP 09A`, le registre des
+  decisions normatives et la matrice de coherence ;
+- classer la demande entre clarification documentaire simple et changement
+  normatif ;
+- produire une proposition de patch ciblee sans l'appliquer tant que le `GO`
+  n'est pas donne ;
+- preciser les formulations attendues :
+  - strategie multi-actifs fixe = candidate de portefeuille ;
+  - strategie appliquee separement a plusieurs actifs avec selection du meilleur
+    actif = une candidate par couple `strategie x actif` ;
+  - `asset_universe` preenregistre et point-in-time ;
+  - WRC sur la famille complete des couples evalues lorsque l'actif est
+    selectionnable ;
+  - serie primaire = serie quotidienne du portefeuille ou du couple tradable,
+    jamais moyenne opportuniste de resultats par actif ;
+- apres `GO`, appliquer les corrections documentaires, mettre a jour les
+  references transversales requises, recalculer le manifeste si necessaire et
+  executer les validations de non-divergence ;
+- seulement ensuite, planifier le lot `Implementation/` pour encoder
+  `asset_universe`, axe `asset`, fixtures multi-actifs et tests de rejet.
+
+Livrables attendus avant `GO` :
+
+- diagnostic court : clarification ou changement normatif ;
+- liste exacte des fichiers et sections a modifier ;
+- texte propose ou diff preview ;
+- risques de coherence avec SOP 02, SOP 03, SOP 08, SOP 09A et le registre.
+
+Definition de fini apres `GO` :
+
+- `PROTOCOLE EBTA.md` explicite la place des couples `strategie x actif` dans
+  la famille de candidates ;
+- `SOP 03` rend la regle de comptage opposable ;
+- `SOP 08` distingue couple tradable, portefeuille multi-actifs et agregations
+  interdites ;
+- `SOP 09A` relie explicitement `asset_universe` aux contraintes
+  point-in-time ;
+- registre/matrice/manifeste/historique sont mis a jour selon le classement ;
+- `git diff --check -- Protocole .ai` passe.
+
+Resultat valide :
+
+- clarification appliquee dans `PROTOCOLE EBTA.md`, `SOP 03`, `SOP 08`,
+  `SOP 09A`, `REGISTRE DES DECISIONS NORMATIVES EBTA.md` et
+  `MATRICE DE COHERENCE DES SOP EBTA.md` ;
+- entree ajoutee dans `HISTORIQUE DES VERSIONS EBTA.md` ;
+- hashes affectes recalcules dans `MANIFESTE DE GEL EBTA.md` ;
+- aucune modification `Implementation/` fonctionnelle ;
+- validations : `git diff --check -- Protocole .ai` PASS,
+  `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation`
+  PASS avec 59 tests.
+
+### Phase F - Encoder strategie x actif dans Implementation/
+
+Statut : termine.
+
+Objectif : rendre executable la clarification documentaire : lorsque l'actif
+est selectionnable, chaque couple `strategie x actif` est une candidate et la
+WRC doit couvrir la famille complete des couples applicables.
+
+Resultat valide :
+
+- `search_space.py` expose `asset_universe`, `asset_selection_axis`,
+  `asset_selection_rule`, `asset_candidate_count` et `candidate_asset_map` ;
+- `candidate_matrix.py` valide le mapping candidat-actif et rejette un actif
+  declare non couvert ;
+- `invariant_validator.py` ajoute `INV-017` pour rejeter une WRC incomplete par
+  couple `strategie x actif` ;
+- `config.schema.json` et `pit_data_declaration.schema.json` acceptent les
+  metadonnees d'univers d'actifs ;
+- le pipeline pilote local passe a 8 candidates (`EURUSD`, `XAUUSD`) ;
+- `test_minimal_pilot_pipeline.py` couvre le rejet si les candidates d'un actif
+  evalue sont absentes de la WRC ;
+- `TRACEABILITY_MATRIX.md`, `PROCEDURE_CALCULATION_MAP.md`,
+  `HISTORIQUE DES VERSIONS EBTA ENGINE.md`, `Implementation/Active/HOOK.md` et
+  `Implementation/Active/tracking.json` sont alignes.
+
+Validations :
+
+- `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation`
+  PASS avec 64 tests ;
+- `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py`
+  PASS, package `PASS` ;
+- `python -m json.tool .ai\checkpoint.json` PASS ;
+- `python -m json.tool Implementation\Active\tracking.json` PASS.
+- `git diff --check -- Implementation Protocole .ai AGENTS.md .agents` PASS
+  avec alertes CRLF uniquement sur les artefacts `research_package` generes.
 
 ### Phase A - Stabiliser le relais multi-IA
 
@@ -181,13 +293,15 @@ git diff --check -- Implementation Protocole .ai AGENTS.md
 
 ## Prochaine action recommandee
 
-Les 4 ameliorations post-audit (P1-P4) sont completes et validees :
+La Phase F est terminee. Prochaine action recommandee :
+`STEP_3_BACKTRADER_INTEGRATION`.
 
-- P1 : 7 tests de rejet — 59 tests PASS ;
-- P2 : hook pre-commit anti-stale + INSTALL_GIT_HOOK.md ;
-- P3 : .codex/README.md ;
-- P4 : politique de migration de schema dans le GUIDE.
+Avant toute modification, lire la gouvernance BACKTRADER indiquee par
+l'utilisateur :
 
-Prochaine etape : reprendre `STEP_3_BACKTRADER_INTEGRATION` uniquement par
-un audit de gouvernance BACKTRADER et un mapping, sans modification de
-BACKTRADER ni du protocole EBTA.
+- `D:\TRADING\ENTREPRISE\0 - Phase de lancement\Strategie de trading\0 - Backtest\BACKTRADER\.agents`
+- `D:\TRADING\ENTREPRISE\0 - Phase de lancement\Strategie de trading\0 - Backtest\BACKTRADER\CLAUDE.md`
+
+Ensuite seulement, comparer ses sorties disponibles au contrat local
+`Implementation/EXTERNAL_ENGINE_PROCEDURE_MAPPING.md` et proposer un plan
+d'adaptation.

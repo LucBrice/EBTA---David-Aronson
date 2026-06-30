@@ -158,7 +158,7 @@ Lecture du diagramme :
 | P2 | Prouver que les données et transformations étaient disponibles au moment de la décision. | SOP 09A, SOP 04 |
 | P3 | Construire les fenêtres `Train_k`, `Test_k`, `OOS_k`, sans chevauchement OOS, avec purge, embargo et warm-up. | SOP 04 |
 | P4 Train/Test | Calibrer sur `Train_k`, transférer mécaniquement vers `Test_k`, monter les niveaux de complexité et choisir la candidate locale. | SOP 06 |
-| P4 Famille complète | Conserver l’univers complet des candidates influentes qui ont pu conduire à la sélection. | SOP 03, SOP 06 |
+| P4 Famille complète | Conserver l’univers complet des candidates influentes qui ont pu conduire à la sélection, y compris les couples `stratégie × actif` lorsque l’actif est sélectionnable. | SOP 03, SOP 06 |
 | P4 WRC | Tester la famille complète applicable avec le WRC local primaire ; garder SPA, Romano-Wolf et MCPM comme analyses secondaires. | SOP 02 |
 | P4 Robustesse | Exécuter les contrôles de robustesse pré-OOS sans utiliser l’OOS pour réparer. | SOP 05 |
 | P4 Scellement | Geler le paquet pré-OOS avant toute ouverture de `OOS_k`. | SOP 10, SOP 12 |
@@ -175,7 +175,9 @@ Dans chaque fold, EBTA impose une boucle fermée :
    Autorité : SOP 04.
 2. Apprendre uniquement sur Train_k.
    Autorité : SOP 06, SOP 09A.
-3. Produire la famille complète des candidates applicables.
+3. Produire la famille complète des candidates applicables, incluant tout
+   couple `stratégie × actif` évalué lorsque l’actif peut influencer la
+   sélection.
    Autorité : SOP 03, SOP 06.
 4. Sélectionner localement sur Test_k selon la règle préenregistrée.
    Autorité : SOP 06.
@@ -264,11 +266,11 @@ règle comme norme.
 
 | Ordre | Gate | Condition de passage | Sortie si échec | SOP propriétaires |
 | --- | --- | --- | --- | --- |
-| G0 | Préenregistrement | Hypothèse, configuration, données, folds, espace de recherche, seeds et gates scellés. | Pas de recherche EBTA valide. | SOP 03, SOP 04, SOP 12 |
+| G0 | Préenregistrement | Hypothèse, configuration, données, `asset_universe`, folds, espace de recherche, seeds et gates scellés. | Pas de recherche EBTA valide. | SOP 03, SOP 04, SOP 09A, SOP 12 |
 | G1 | Données point-in-time | Données disponibles, snapshots, latences, purge et embargo validés. | `FAIL` ou `INCONCLUSIVE`. | SOP 09A |
-| G2 | Registre et candidates | Registre complet, candidates et familles opposables, matrices reconstructibles. | `FAIL` ou `INCONCLUSIVE`. | SOP 03 |
+| G2 | Registre et candidates | Registre complet, candidates et familles opposables, couples `stratégie × actif` comptés si sélectionnables, matrices reconstructibles. | `FAIL` ou `INCONCLUSIVE`. | SOP 03 |
 | G3 | Sélection locale | Candidate locale désignée mécaniquement selon la règle préenregistrée. | `NO_MODEL`, `STOP_PROCESS`, `NOT_VALIDATED` ou `INCONCLUSIVE`. | SOP 06 |
-| G4 | Inférence multiple Test | WRC local primaire `PASS` sur la famille complète applicable. | Pas d’exposition sur `OOS_k`. | SOP 02 |
+| G4 | Inférence multiple Test | WRC local primaire `PASS` sur la famille complète applicable, sans retirer les actifs ou couples perdants après observation. | Pas d’exposition sur `OOS_k`. | SOP 02 |
 | G5 | Robustesse pré-OOS | Stress-tests décisionnels préenregistrés satisfaits. | OOS non ouvert ou statut bloquant préspécifié. | SOP 05 |
 | G6 | Exécution et capacité | Modèle d’exécution central, coûts, sizing, capacité et NAV tradable validés. | `REJECTED_ECONOMIC`, `FAIL` ou `INCONCLUSIVE`. | SOP 09B |
 | G7 | Paquet pré-OOS | Paquet `PRE_OOS_SEALED` complet et hashé. | OOS non ouvert. | SOP 12 |
@@ -340,7 +342,10 @@ pour construire l’intervalle de confiance OOS.
 ## 7. Série de rendement et performance
 
 La représentation canonique EBTA est une série quotidienne complète du
-portefeuille.
+portefeuille. Si la recherche sélectionne un couple `stratégie × actif`, ce
+couple est évalué comme candidate tradable ; si la recherche définit un
+portefeuille multi-actifs fixe, c’est le portefeuille qui constitue la
+candidate évaluée.
 
 | Objet | Règle | SOP propriétaire |
 | --- | --- | --- |
@@ -364,7 +369,7 @@ template :
 
 Cette configuration fixe notamment :
 
-- univers et période ;
+- univers, actifs, règles d’éligibilité et période ;
 - fréquence, calendrier et fuseau horaire ;
 - fournisseurs et snapshots de données ;
 - fenêtres `Train_k`, `Test_k`, `OOS_k` ;
@@ -444,13 +449,13 @@ Un segment OOS déjà ouvert ne redevient jamais vierge pour une version modifi�
 | --- | --- |
 | SOP 01 - Estimation et intervalle de confiance OOS | Estimation OOS, IC, puissance, verdict statistique global. |
 | SOP 02 - Inférence multiple WRC SPA Romano-Wolf MCP | WRC local, SPA, Romano-Wolf, MCPM, correction du data-mining bias. |
-| SOP 03 - Registre des expériences et univers des règles candidates | Source de vérité des candidates, runs, familles, événements et matrices. |
+| SOP 03 - Registre des expériences et univers des règles candidates | Source de vérité des candidates, couples `stratégie × actif`, runs, familles, événements et matrices. |
 | SOP 04 - Segmentation temporelle et Walk-Forward | Calendrier, folds, purge, embargo, OOS global. |
 | SOP 05 - Tests de robustesse et gouvernance du holdout | Robustesse décisionnelle pré-OOS et diagnostics post-OOS non réparateurs. |
 | SOP 06 - Sélection des règles candidates et optimisation de la complexité | Sélection locale, complexité, candidate transmise, `NO_MODEL`. |
 | SOP 07 - Detrending benchmark et zero-centering | Flux signal/évaluation, detrending, benchmark, cash, zero-centering. |
-| SOP 08 - Mesures de performance et série de rendement de référence | Série primaire, NAV, gate économique et métriques. |
-| SOP 09A - Données point-in-time et contrôles anti-leakage | Disponibilité temporelle, snapshots, anti-leakage, purge/embargo côté données. |
+| SOP 08 - Mesures de performance et série de rendement de référence | Série primaire, NAV, gate économique, portefeuille multi-actifs et métriques. |
+| SOP 09A - Données point-in-time et contrôles anti-leakage | Disponibilité temporelle, `asset_universe` point-in-time, snapshots, anti-leakage, purge/embargo côté données. |
 | SOP 09B - Modèle d’exécution frictions capacité et sizing | Ordres, fills, coûts, capacité, sizing, NAV tradable. |
 | SOP 10 - Gouvernance OOS et gestion des échecs | Accès OOS, contamination, échecs, réexécutions techniques. |
 | SOP 11 - Incubation passage live et monitoring séquentiel | Paper trading, live limité, monitoring, suspension, retrait. |

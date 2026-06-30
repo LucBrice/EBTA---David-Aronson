@@ -26,6 +26,31 @@ class Sop06ProcedureTests(unittest.TestCase):
             [candidate["candidate_id"] for candidate in second["candidates"]],
         )
 
+    def test_search_space_counts_strategy_asset_pairs(self):
+        space = build_search_space_snapshot(
+            "FAM-ASSET",
+            "FOLD-001",
+            {"asset": ["EURUSD", "XAUUSD"], "complexity": [1, 2], "lookback": [5]},
+            base_spec={"logic": "moving_average"},
+            asset_universe=["EURUSD", "XAUUSD"],
+            asset_selection_axis="asset",
+            asset_selection_rule="evaluate_all_declared_assets",
+        )
+        self.assertEqual(space["candidate_count"], 4)
+        self.assertEqual(space["asset_candidate_count"], {"EURUSD": 2, "XAUUSD": 2})
+        self.assertEqual(set(space["candidate_asset_map"].values()), {"EURUSD", "XAUUSD"})
+        self.assertTrue(all(candidate["asset"] in {"EURUSD", "XAUUSD"} for candidate in space["candidates"]))
+
+    def test_search_space_rejects_missing_asset_universe_member(self):
+        with self.assertRaises(ValueError):
+            build_search_space_snapshot(
+                "FAM-ASSET",
+                "FOLD-001",
+                {"asset": ["EURUSD"], "complexity": [1]},
+                asset_universe=["EURUSD", "XAUUSD"],
+                asset_selection_axis="asset",
+            )
+
     def test_train_optimization_selects_representative_per_complexity(self):
         space = self._space()
         scores = {
@@ -87,6 +112,20 @@ class Sop06ProcedureTests(unittest.TestCase):
         self.assertEqual(matrix["candidate_ids"], ["CAND-A", "CAND-B"])
         with self.assertRaises(ValueError):
             build_candidate_matrix({"CAND-A": [0.1]}, influential_candidates=["CAND-A", "CAND-MISSING"])
+
+    def test_candidate_matrix_rejects_incomplete_asset_axis_coverage(self):
+        matrix = build_candidate_matrix(
+            {"CAND-EUR": [0.1, 0.2], "CAND-XAU": [0.0, -0.1]},
+            asset_universe=["EURUSD", "XAUUSD"],
+            candidate_assets={"CAND-EUR": "EURUSD", "CAND-XAU": "XAUUSD"},
+        )
+        self.assertEqual(matrix["asset_universe"], ["EURUSD", "XAUUSD"])
+        with self.assertRaises(ValueError):
+            build_candidate_matrix(
+                {"CAND-EUR": [0.1, 0.2]},
+                asset_universe=["EURUSD", "XAUUSD"],
+                candidate_assets={"CAND-EUR": "EURUSD"},
+            )
 
 
 if __name__ == "__main__":

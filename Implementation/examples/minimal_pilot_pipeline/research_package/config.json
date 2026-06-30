@@ -1,6 +1,16 @@
 {
   "candidate_space": {
-    "candidate_count": 4
+    "asset_candidate_count": {
+      "EURUSD": 4,
+      "XAUUSD": 4
+    },
+    "asset_selection_axis": "asset",
+    "asset_selection_rule": "evaluate_all_declared_assets",
+    "asset_universe": [
+      "EURUSD",
+      "XAUUSD"
+    ],
+    "candidate_count": 8
   },
   "config_id": "CFG-PILOT-001",
   "data_snapshots": [

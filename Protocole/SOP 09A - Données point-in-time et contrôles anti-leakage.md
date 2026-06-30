@@ -216,6 +216,12 @@ Pour chaque date, conserver :
 
 Construire l’historique depuis les constituants actuels est interdit.
 
+L’`asset_universe` utilisé par une recherche multi-actifs doit être
+préenregistré et reconstructible point-in-time. Pour chaque actif
+sélectionnable, le pipeline doit prouver que son appartenance, son exclusion,
+ses données de marché, ses corporate actions et son statut de cotation étaient
+connus au moment de la décision.
+
 Les filtres de liquidité, capitalisation, prix et historique minimal utilisent uniquement les données disponibles à la date, avec lag réaliste.
 
 ---
@@ -603,6 +609,8 @@ calendar:
 membership_snapshot:
 entry_exit_policy:
 delisting_policy:
+asset_universe_hash:
+asset_selection_rule:
 liquidity_lag:
 
 [MISSING AND STALE]
@@ -640,6 +648,7 @@ timestamp:
 - provenance complète ;
 - timestamps opposables ;
 - univers point-in-time ;
+- `asset_universe` et règle de sélection d’actifs reconstructibles ;
 - corporate actions cohérentes ;
 - transformations fit sur Train ;
 - snapshots scellés ;

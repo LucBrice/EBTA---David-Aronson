@@ -16,6 +16,8 @@ def build_candidate_matrix(
     *,
     dates: list[str] | None = None,
     influential_candidates: list[str] | None = None,
+    asset_universe: list[str] | None = None,
+    candidate_assets: dict[str, str] | None = None,
     fold_id: str = "FOLD-001",
 ) -> dict[str, Any]:
     if not candidate_series:
@@ -35,6 +37,26 @@ def build_candidate_matrix(
     if missing:
         raise ValueError(f"influential candidates missing from matrix: {missing}")
 
+    active_asset_axis = asset_universe is not None or candidate_assets is not None
+    if active_asset_axis:
+        if not asset_universe:
+            raise ValueError("asset_universe is required when candidate assets are provided")
+        if not candidate_assets:
+            raise ValueError("candidate_assets is required when asset_universe is provided")
+        undeclared_candidates = sorted(set(candidate_assets) - set(columns))
+        if undeclared_candidates:
+            raise ValueError(f"candidate asset map references candidates outside matrix: {undeclared_candidates}")
+        unmapped_candidates = sorted(set(columns) - set(candidate_assets))
+        if unmapped_candidates:
+            raise ValueError(f"matrix candidates missing asset mapping: {unmapped_candidates}")
+        universe = set(asset_universe)
+        unknown_assets = sorted(set(candidate_assets.values()) - universe)
+        if unknown_assets:
+            raise ValueError(f"candidate asset map contains assets outside asset_universe: {unknown_assets}")
+        uncovered_assets = sorted(universe - set(candidate_assets.values()))
+        if uncovered_assets:
+            raise ValueError(f"asset_universe assets missing from matrix candidates: {uncovered_assets}")
+
     rows = []
     for row_index, date in enumerate(dates):
         rows.append({"date": date, "values": {candidate_id: candidate_series[candidate_id][row_index] for candidate_id in columns}})
@@ -47,6 +69,8 @@ def build_candidate_matrix(
         "rows": rows,
         "complete_family": True,
     }
+    if active_asset_axis:
+        payload["asset_universe"] = sorted(asset_universe)
+        payload["candidate_assets"] = {candidate_id: candidate_assets[candidate_id] for candidate_id in columns}
     payload["matrix_id"] = stable_id("MATRIX", payload, 16)
     return payload
-

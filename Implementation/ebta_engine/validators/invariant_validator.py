@@ -34,6 +34,7 @@ INVARIANT_MAP = {
     "INV-014": {"sop": "SOP 11 / SOP 12", "artifact": "package_stages"},
     "INV-015": {"sop": "SOP 11 / SOP 12", "artifact": "package_stages"},
     "INV-016": {"sop": "SOP 12", "artifact": "manifest_hash_failures"},
+    "INV-017": {"sop": "SOP 03 / SOP 09A", "artifact": "asset_universe + candidate_assets + wrc_matrix_candidates"},
 }
 
 
@@ -55,6 +56,7 @@ def validate_invariants(package: dict) -> list[InvariantResult]:
         _inv_014(package),
         _inv_015(package),
         _inv_016(package),
+        _inv_017(package),
     ]
     return sorted(results, key=lambda result: result.invariant_id)
 
@@ -206,6 +208,33 @@ def _inv_016(package: dict) -> InvariantResult:
     if package.get("manifest_hash_failures"):
         return InvariantResult("INV-016", "FAIL", "manifest hash mismatch")
     return InvariantResult("INV-016", "PASS", "manifest hashes match")
+
+
+def _inv_017(package: dict) -> InvariantResult:
+    if not package.get("asset_selection_axis"):
+        return InvariantResult("INV-017", "PASS", "asset selection axis not active")
+    required = {"asset_universe", "candidate_assets", "applicable_candidates", "wrc_matrix_candidates"}
+    missing_evidence = sorted(key for key in required if key not in package)
+    if missing_evidence:
+        return _missing("INV-017", f"asset-axis evidence: {missing_evidence}")
+    asset_universe = set(package["asset_universe"])
+    candidate_assets = package["candidate_assets"]
+    applicable_candidates = set(package["applicable_candidates"])
+    wrc_matrix_candidates = set(package["wrc_matrix_candidates"])
+    missing_mapping = sorted(applicable_candidates - set(candidate_assets))
+    if missing_mapping:
+        return InvariantResult("INV-017", "FAIL", f"applicable candidates missing asset mapping: {missing_mapping}")
+    unknown_assets = sorted({candidate_assets[candidate_id] for candidate_id in applicable_candidates} - asset_universe)
+    if unknown_assets:
+        return InvariantResult("INV-017", "FAIL", f"candidate assets outside asset_universe: {unknown_assets}")
+    missing_from_wrc = sorted(applicable_candidates - wrc_matrix_candidates)
+    if missing_from_wrc:
+        return InvariantResult("INV-017", "FAIL", f"WRC matrix missing strategie x actif candidates: {missing_from_wrc}")
+    covered_assets = {candidate_assets[candidate_id] for candidate_id in wrc_matrix_candidates if candidate_id in candidate_assets}
+    uncovered_assets = sorted(asset_universe - covered_assets)
+    if uncovered_assets:
+        return InvariantResult("INV-017", "FAIL", f"asset_universe assets missing from WRC matrix: {uncovered_assets}")
+    return InvariantResult("INV-017", "PASS", "asset-axis WRC coverage is complete")
 
 
 def _missing(invariant_id: str, evidence: str) -> InvariantResult:

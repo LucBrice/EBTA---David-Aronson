@@ -1,29 +1,34 @@
 {
   "artifact_type": "search_space",
-  "candidate_count": 4,
+  "asset_candidate_count": {
+    "EURUSD": 4,
+    "XAUUSD": 4
+  },
+  "asset_selection_axis": "asset",
+  "asset_selection_rule": "evaluate_all_declared_assets",
+  "asset_universe": [
+    "EURUSD",
+    "XAUUSD"
+  ],
+  "candidate_asset_map": {
+    "CAND-01252661EDAA": "EURUSD",
+    "CAND-0FED98B76946": "XAUUSD",
+    "CAND-37230AE99928": "EURUSD",
+    "CAND-4789F5ED21DB": "EURUSD",
+    "CAND-A4F431B84F01": "XAUUSD",
+    "CAND-ABA4614D9225": "XAUUSD",
+    "CAND-B680DD363F65": "EURUSD",
+    "CAND-C394514FD46E": "XAUUSD"
+  },
+  "candidate_count": 8,
   "candidates": [
     {
-      "candidate_id": "CAND-0208F4D7FF77",
+      "asset": "EURUSD",
+      "candidate_id": "CAND-01252661EDAA",
       "canonical_spec": {
         "logic": "moving_average",
         "parameters": {
-          "complexity": 1,
-          "lookback": 5
-        }
-      },
-      "complexity": 1,
-      "fold_id": "FOLD-001",
-      "parameters": {
-        "complexity": 1,
-        "lookback": 5
-      },
-      "research_family_id": "FAM-PILOT"
-    },
-    {
-      "candidate_id": "CAND-6D7FB83D272E",
-      "canonical_spec": {
-        "logic": "moving_average",
-        "parameters": {
+          "asset": "EURUSD",
           "complexity": 1,
           "lookback": 10
         }
@@ -31,33 +36,19 @@
       "complexity": 1,
       "fold_id": "FOLD-001",
       "parameters": {
+        "asset": "EURUSD",
         "complexity": 1,
         "lookback": 10
       },
       "research_family_id": "FAM-PILOT"
     },
     {
-      "candidate_id": "CAND-BC3AA6E8DA61",
+      "asset": "XAUUSD",
+      "candidate_id": "CAND-0FED98B76946",
       "canonical_spec": {
         "logic": "moving_average",
         "parameters": {
-          "complexity": 2,
-          "lookback": 10
-        }
-      },
-      "complexity": 2,
-      "fold_id": "FOLD-001",
-      "parameters": {
-        "complexity": 2,
-        "lookback": 10
-      },
-      "research_family_id": "FAM-PILOT"
-    },
-    {
-      "candidate_id": "CAND-FC2EBFE60A26",
-      "canonical_spec": {
-        "logic": "moving_average",
-        "parameters": {
+          "asset": "XAUUSD",
           "complexity": 2,
           "lookback": 5
         }
@@ -65,20 +56,147 @@
       "complexity": 2,
       "fold_id": "FOLD-001",
       "parameters": {
+        "asset": "XAUUSD",
         "complexity": 2,
         "lookback": 5
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "asset": "EURUSD",
+      "candidate_id": "CAND-37230AE99928",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "asset": "EURUSD",
+          "complexity": 2,
+          "lookback": 10
+        }
+      },
+      "complexity": 2,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "asset": "EURUSD",
+        "complexity": 2,
+        "lookback": 10
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "asset": "EURUSD",
+      "candidate_id": "CAND-4789F5ED21DB",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "asset": "EURUSD",
+          "complexity": 1,
+          "lookback": 5
+        }
+      },
+      "complexity": 1,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "asset": "EURUSD",
+        "complexity": 1,
+        "lookback": 5
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "asset": "XAUUSD",
+      "candidate_id": "CAND-A4F431B84F01",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "asset": "XAUUSD",
+          "complexity": 1,
+          "lookback": 10
+        }
+      },
+      "complexity": 1,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "asset": "XAUUSD",
+        "complexity": 1,
+        "lookback": 10
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "asset": "XAUUSD",
+      "candidate_id": "CAND-ABA4614D9225",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "asset": "XAUUSD",
+          "complexity": 1,
+          "lookback": 5
+        }
+      },
+      "complexity": 1,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "asset": "XAUUSD",
+        "complexity": 1,
+        "lookback": 5
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "asset": "EURUSD",
+      "candidate_id": "CAND-B680DD363F65",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "asset": "EURUSD",
+          "complexity": 2,
+          "lookback": 5
+        }
+      },
+      "complexity": 2,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "asset": "EURUSD",
+        "complexity": 2,
+        "lookback": 5
+      },
+      "research_family_id": "FAM-PILOT"
+    },
+    {
+      "asset": "XAUUSD",
+      "candidate_id": "CAND-C394514FD46E",
+      "canonical_spec": {
+        "logic": "moving_average",
+        "parameters": {
+          "asset": "XAUUSD",
+          "complexity": 2,
+          "lookback": 10
+        }
+      },
+      "complexity": 2,
+      "fold_id": "FOLD-001",
+      "parameters": {
+        "asset": "XAUUSD",
+        "complexity": 2,
+        "lookback": 10
       },
       "research_family_id": "FAM-PILOT"
     }
   ],
-  "canonical_hash": "SPACE-3BA52856787A420A",
-  "canonical_json": "[{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":1,\"lookback\":5}},{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":1,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":2,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"complexity\":2,\"lookback\":5}}]",
+  "canonical_hash": "SPACE-A27843B319348EF4",
+  "canonical_json": "[{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"EURUSD\",\"complexity\":1,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"XAUUSD\",\"complexity\":2,\"lookback\":5}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"EURUSD\",\"complexity\":2,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"EURUSD\",\"complexity\":1,\"lookback\":5}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"XAUUSD\",\"complexity\":1,\"lookback\":10}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"XAUUSD\",\"complexity\":1,\"lookback\":5}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"EURUSD\",\"complexity\":2,\"lookback\":5}},{\"logic\":\"moving_average\",\"parameters\":{\"asset\":\"XAUUSD\",\"complexity\":2,\"lookback\":10}}]",
   "fold_id": "FOLD-001",
   "no_model_policy": "NO_MODEL",
   "pre_registration": {
+    "asset_selection_axis": "asset",
+    "asset_selection_rule": "evaluate_all_declared_assets",
+    "asset_universe": [
+      "EURUSD",
+      "XAUUSD"
+    ],
     "budget": {
-      "max_candidates": 4,
-      "max_train_evaluations": 4
+      "max_candidates": 8,
+      "max_train_evaluations": 8
     },
     "cost_model": "tradable_net",
     "missing_fields": [],

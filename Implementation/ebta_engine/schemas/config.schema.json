@@ -83,7 +83,18 @@
       "additionalProperties": true,
       "required": ["candidate_count"],
       "properties": {
-        "candidate_count": { "type": "integer", "minimum": 1 }
+        "candidate_count": { "type": "integer", "minimum": 1 },
+        "asset_universe": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "asset_selection_axis": { "type": ["string", "null"] },
+        "asset_selection_rule": { "type": ["string", "null"] },
+        "asset_candidate_count": {
+          "type": ["object", "null"],
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        }
       }
     },
     "selection_rule": {

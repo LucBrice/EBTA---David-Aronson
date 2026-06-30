@@ -104,7 +104,9 @@ def _validate_pilot_contract(pilot_inputs: dict, package_shape: dict) -> None:
 
 def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
-    candidate_count = len(_pilot_search_space(pilot_inputs)["candidates"])
+    search_space = _pilot_search_space(pilot_inputs)
+    candidate_space = pilot_inputs["candidate_space"]
+    candidate_count = len(search_space["candidates"])
     atomic_write_json(
         package_dir / "config.json",
         {
@@ -117,7 +119,13 @@ def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
             "protocol_version": identifiers["protocol_version"],
             "data_snapshots": pilot_inputs["data_snapshots"],
             "walk_forward_schedule": pilot_inputs["walk_forward_schedule"],
-            "candidate_space": {"candidate_count": candidate_count},
+            "candidate_space": {
+                "candidate_count": candidate_count,
+                "asset_universe": candidate_space.get("asset_universe", []),
+                "asset_selection_axis": candidate_space.get("asset_selection_axis"),
+                "asset_selection_rule": candidate_space.get("asset_selection_rule"),
+                "asset_candidate_count": search_space.get("asset_candidate_count"),
+            },
             "selection_rule": pilot_inputs["selection_rule"],
             "statistical_plan": pilot_inputs["statistical_plan"],
             "execution_model": pilot_inputs["execution_model"],
@@ -233,6 +241,9 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "registered_candidates": candidate_ids,
         "applicable_candidates": candidate_ids,
         "wrc_matrix_candidates": procedure_reports["wrc"]["candidate_ids"],
+        "asset_selection_axis": procedure_reports["search_space"].get("asset_selection_axis"),
+        "asset_universe": procedure_reports["search_space"].get("asset_universe"),
+        "candidate_assets": procedure_reports["search_space"].get("candidate_asset_map"),
         "transformation_fits": [{"name": "scaler", "fit_segment": "Train_k"}],
         "decision_events": [
             {"decision_at": "2023-01-02T00:00:00Z", "data_available_at": "2023-01-01T00:00:00Z"}
@@ -312,6 +323,8 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
         candidate_returns,
         dates=pilot_inputs["candidate_test_dates"],
         influential_candidates=candidate_ids,
+        asset_universe=search_space.get("asset_universe"),
+        candidate_assets=search_space.get("candidate_asset_map"),
         fold_id=pilot_inputs["walk_forward_schedule"][0]["fold_id"],
     )
     ml_inputs = pilot_inputs["ml_manifest"]
@@ -438,6 +451,9 @@ def _pilot_search_space(pilot_inputs: dict) -> dict:
         seeds=[statistical_plan["wrc_seed"], statistical_plan["oos_seed"]],
         selection_metric=candidate_space["selection_metric"],
         cost_model=candidate_space["cost_model"],
+        asset_universe=candidate_space.get("asset_universe"),
+        asset_selection_axis=candidate_space.get("asset_selection_axis"),
+        asset_selection_rule=candidate_space.get("asset_selection_rule"),
         validity_criteria=candidate_space["validity_criteria"],
         stability_criteria=candidate_space["stability_criteria"],
         transfer_rule=candidate_space["transfer_rule"],

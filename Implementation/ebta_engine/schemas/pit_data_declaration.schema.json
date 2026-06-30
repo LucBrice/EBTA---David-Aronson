@@ -50,6 +50,20 @@
         }
       }
     },
+    "asset_universe": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "description": "Pre-registered point-in-time asset universe when assets are selectable candidates."
+    },
+    "asset_universe_hash": {
+      "type": ["string", "null"],
+      "description": "Hash proving the point-in-time asset universe snapshot."
+    },
+    "asset_selection_rule": {
+      "type": ["string", "null"],
+      "description": "Pre-registered rule governing which declared assets are evaluated."
+    },
     "survivorship_controls": {
       "type": "object",
       "required": ["covered", "method"],

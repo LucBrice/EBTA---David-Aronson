@@ -80,6 +80,50 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-06-29 - Encodage runtime de strategie x actif
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | Clarification documentaire `strategie x actif` dans `Protocole/PROTOCOLE EBTA.md`, SOP 03, SOP 08, SOP 09A |
+| Fichiers impactes | `procedures/search_space.py`, `procedures/candidate_matrix.py`, `validators/invariant_validator.py`, `schema_validation.py`, schemas config/G1, pipeline pilote, tests |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation`; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py`; `git diff --check -- Implementation Protocole .ai AGENTS.md .agents` |
+
+### Contexte
+
+Le protocole explicite maintenant que, lorsque l'actif est selectionnable, la
+famille de recherche porte sur des couples `strategie x actif`. Le runtime
+devait donc rendre visible cet axe et refuser une WRC qui ne couvre pas la
+famille complete des couples evalues.
+
+### Decision
+
+Encoder l'actif comme axe de candidates lorsque le processus evalue des couples
+`strategie x actif` :
+
+- `search_space` expose `asset_universe`, `asset_selection_axis`,
+  `asset_candidate_count` et `candidate_asset_map` ;
+- `candidate_matrix` rejette une matrice qui omet un actif declare ou un mapping
+  candidat-actif ;
+- `INV-017` verifie que la famille WRC couvre tous les couples applicables ;
+- la fixture pilote devient multi-actifs (`EURUSD`, `XAUUSD`) avec 8 candidates ;
+- les schemas config et G1 acceptent les metadonnees d'univers d'actifs.
+
+### Impact
+
+Cette evolution ne cree pas de nouveau gate ou seuil. Elle rend executable la
+regle deja clarifiee dans le protocole : si l'actif est selectionnable, la WRC
+doit couvrir la famille complete des couples `strategie x actif`.
+
+### Suite
+
+La reprise BACKTRADER reste en attente. Avant toute integration externe, mapper
+ses sorties vers ce contrat runtime sans transformer une convention BACKTRADER
+en norme EBTA.
+
 ## 2026-06-27 - Cockpit actif Implementation/Active pour hook et tracking
 
 | Champ | Valeur |

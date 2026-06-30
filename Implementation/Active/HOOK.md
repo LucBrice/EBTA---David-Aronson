@@ -1,6 +1,21 @@
-﻿# HOOK Actif : En attente
+# HOOK Actif : En attente
 
-L'établi est actuellement vide. L'Etape 2 (Pipeline Pilote Local) est terminee.
+Le lot `STEP_2B_STRATEGIE_ACTIF_RUNTIME` est termine.
 
-**Prochaine etape :**
-Une IA doit consulter .ai/backlog/EPIC_reprise_et_integration_backtrader.md, en extraire l'**Etape 3 (Integration BACKTRADER)**, decouper cette etape en micro-taches (ex: Audit de gouvernance), et remplacer ce texte par les instructions d'execution.
+## Dernier lot valide
+
+`Implementation/` encode maintenant la clarification `strategie x actif` :
+
+- `asset_universe` et `asset_selection_axis` dans le search space ;
+- comptage des candidates par actif ;
+- matrice candidate avec mapping candidat-actif ;
+- `INV-017` pour rejeter une WRC incomplete par couple `strategie x actif` ;
+- fixture pilote multi-actifs validee.
+
+## Prochaine etape
+
+`STEP_3_BACKTRADER_INTEGRATION` reste pending.
+
+Avant toute modification, lire la gouvernance BACKTRADER indiquee par
+`.ai/current_plan.md`, puis preparer un plan d'adaptation separant clairement
+les contrats EBTA des conventions du moteur externe.

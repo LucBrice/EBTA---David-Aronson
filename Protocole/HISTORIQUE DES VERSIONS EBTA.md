@@ -29,6 +29,27 @@ Conformément au `0-README - Comprendre et maintenir le protocole EBTA.md`, tout
 
 ## Historique
 
+### [EBTA-DOC-1.0] - 2026-06-29
+**Nature du changement** : Clarification documentaire sans changement normatif
+**Résumé** : Explicitation transversale de la notion de couple
+`stratégie × actif` dans le protocole principal, SOP 03, SOP 08, SOP 09A, le
+registre normatif et la matrice de cohérence. La clarification rend visible
+qu’un actif sélectionnable appartient à l’identité de la candidate et à la
+famille testée par WRC, tandis qu’un portefeuille multi-actifs fixe reste une
+candidate de portefeuille.
+**Documents impactés** : `PROTOCOLE EBTA.md`, `SOP 03 - Registre des
+expériences et univers des règles candidates.md`, `SOP 08 - Mesures de
+performance et série de rendement de référence.md`, `SOP 09A - Données
+point-in-time et contrôles anti-leakage.md`, `REGISTRE DES DECISIONS
+NORMATIVES EBTA.md`, `MATRICE DE COHERENCE DES SOP EBTA.md`, `HISTORIQUE DES
+VERSIONS EBTA.md`, `MANIFESTE DE GEL EBTA.md`.
+**Justification** : Le protocole prévoyait déjà l’univers d’actifs et le
+comptage des couples règle-actif dans SOP 03. La règle était toutefois trop
+locale pour guider correctement le futur encodage runtime. Cette clarification
+ne change ni l’ordre des gates, ni les statuts, ni les seuils, ni les
+propriétaires SOP ; elle évite qu’`Implementation/` encode une doctrine plus
+explicite que sa source normative.
+
 ### [EBTA-DOC-1.0] - 2026-06-26
 **Nature du changement** : Clarification documentaire sans changement normatif
 **Résumé** : Mise à jour des pointeurs opérationnels subordonnés dans le

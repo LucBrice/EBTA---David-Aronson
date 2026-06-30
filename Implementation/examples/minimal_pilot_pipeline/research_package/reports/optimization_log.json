@@ -2,46 +2,70 @@
   "artifact_type": "optimization_log",
   "evaluations": [
     {
-      "candidate_id": "CAND-0208F4D7FF77",
+      "candidate_id": "CAND-01252661EDAA",
       "complexity": 1,
       "status": "EVALUATED",
       "train_score": 0.01
     },
     {
-      "candidate_id": "CAND-6D7FB83D272E",
-      "complexity": 1,
+      "candidate_id": "CAND-0FED98B76946",
+      "complexity": 2,
       "status": "EVALUATED",
       "train_score": 0.02
     },
     {
-      "candidate_id": "CAND-BC3AA6E8DA61",
+      "candidate_id": "CAND-37230AE99928",
       "complexity": 2,
       "status": "EVALUATED",
       "train_score": 0.03
     },
     {
-      "candidate_id": "CAND-FC2EBFE60A26",
-      "complexity": 2,
+      "candidate_id": "CAND-4789F5ED21DB",
+      "complexity": 1,
       "status": "EVALUATED",
       "train_score": 0.04
+    },
+    {
+      "candidate_id": "CAND-A4F431B84F01",
+      "complexity": 1,
+      "status": "EVALUATED",
+      "train_score": 0.011
+    },
+    {
+      "candidate_id": "CAND-ABA4614D9225",
+      "complexity": 1,
+      "status": "EVALUATED",
+      "train_score": 0.021
+    },
+    {
+      "candidate_id": "CAND-B680DD363F65",
+      "complexity": 2,
+      "status": "EVALUATED",
+      "train_score": 0.031
+    },
+    {
+      "candidate_id": "CAND-C394514FD46E",
+      "complexity": 2,
+      "status": "EVALUATED",
+      "train_score": 0.041
     }
   ],
   "fold_id": "FOLD-001",
   "objective": "maximize",
   "representatives": [
     {
-      "candidate_id": "CAND-6D7FB83D272E",
+      "candidate_id": "CAND-4789F5ED21DB",
       "complexity": 1,
       "representative_rule": "best_train_score_per_complexity",
       "status": "EVALUATED",
-      "train_score": 0.02
+      "train_score": 0.04
     },
     {
-      "candidate_id": "CAND-FC2EBFE60A26",
+      "candidate_id": "CAND-C394514FD46E",
       "complexity": 2,
       "representative_rule": "best_train_score_per_complexity",
       "status": "EVALUATED",
-      "train_score": 0.04
+      "train_score": 0.041
     }
   ],
   "research_family_id": "FAM-PILOT",

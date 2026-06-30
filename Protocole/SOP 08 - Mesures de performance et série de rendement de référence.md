@@ -201,9 +201,16 @@ La série primaire est construite à partir du portefeuille réellement tradable
 - conversion FX ;
 - limites de liquidité.
 
+Si la candidate est un couple `stratégie × actif`, la série primaire est la
+série quotidienne tradable de ce couple, après coûts, cash, calendrier et
+conversion éventuelle. Si la candidate est un portefeuille multi-actifs fixe,
+la série primaire est celle du portefeuille complet.
+
 Il est interdit :
 
 - de moyenner des backtests mono-actif incompatibles ;
+- de retenir après observation uniquement les actifs favorables pour construire
+  une série agrégée ;
 - de sommer des P&L qui utilisent simultanément le même capital ;
 - d’ignorer les corrélations et chevauchements de positions.
 
@@ -428,7 +435,9 @@ Le contrat définit :
 - date d’ouverture et de clôture ;
 - P&L réalisé et mark-to-market.
 
-Le nombre de trades n’est pas automatiquement la taille d’échantillon statistique. L’unité primaire reste la série quotidienne du portefeuille.
+Le nombre de trades, d’actifs ou de couples `stratégie × actif` évalués n’est
+pas automatiquement la taille d’échantillon statistique. L’unité primaire reste
+la série quotidienne du portefeuille ou de la candidate tradable évaluée.
 
 ---
 
