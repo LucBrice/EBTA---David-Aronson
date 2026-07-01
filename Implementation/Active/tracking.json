@@ -1,16 +1,19 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "created_at": "2026-06-26",
-  "updated_at": "2026-06-29",
+  "updated_at": "2026-07-01",
   "status": "ACTIVE",
   "runtime_version": "EBTA-ENGINE-0.1.0",
-  "normative_authority": "Protocole/ frozen as EBTA-DOC-1.0",
+  "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
   "hook_file": "Implementation/Active/HOOK.md",
   "current_step": "STEP_3_BACKTRADER_INTEGRATION",
+  "current_task_id": "STEP_3_T1",
+  "next_task_id": "STEP_3_T2",
   "active_scope": [
     "Implementation/",
     "Protocole/Archives/",
-    "runtime governance documentation"
+    "runtime governance documentation",
+    "G-BIAS runtime governance"
   ],
   "non_goals": [
     "No normative Protocole/ change",
@@ -19,216 +22,6 @@
     "No new EBTA gate, status, threshold, or methodology"
   ],
   "steps": [
-    {
-      "id": "STEP_0_ARCHIVE_OBSOLETE",
-      "title": "Archivage controle des obsoletes",
-      "status": "COMPLETE",
-      "classification": "GOVERNANCE",
-      "objective": "Identify and archive obsolete folders or files before the checkpoint, without deleting useful history or breaking active references.",
-      "entry_criteria": [
-        "Current repo state is readable",
-        "Active normative documents remain in Protocole/",
-        "Archive candidates are listed before any move"
-      ],
-      "tasks": [
-        {
-          "id": "STEP_0_T1",
-          "title": "Inventory archive candidates",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_0_T2",
-          "title": "Classify each candidate as ACTIF, ARCHIVE_CANDIDATE, OBSOLETE_BUT_REFERENCED, or DELETE_NEVER",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_0_T3",
-          "title": "Search active references before moving anything",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_0_T4",
-          "title": "Archive approved runtime/protocol historical material in the appropriate archive area",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_0_T5",
-          "title": "Update references and runtime history if archival changes are made",
-          "status": "DONE"
-        }
-      ],
-      "exit_criteria": [
-        "No active source was archived",
-        "No active link points to a missing file",
-        "Archival decisions are documented",
-        "git diff --check passes"
-      ]
-    },
-    {
-      "id": "STEP_1_CHECKPOINT",
-      "title": "Checkpoint du lot actuel",
-      "status": "COMPLETE",
-      "classification": "GOVERNANCE",
-      "objective": "Confirm that the current EBTA runtime lot is coherent, tested, and ready to support the pilot pipeline work.",
-      "tasks": [
-        {
-          "id": "STEP_1_T1",
-          "title": "Audit current diff and classify intentional changes",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_1_T2",
-          "title": "Check Protocole to Implementation anti-divergence",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_1_T3",
-          "title": "Run runtime unit tests",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_1_T4",
-          "title": "Build minimal pilot research_package",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_1_T5",
-          "title": "Produce GO or LOCAL_FIX_REQUIRED checkpoint decision",
-          "status": "DONE"
-        }
-      ],
-      "exit_criteria": [
-        "Runtime tests pass",
-        "Minimal pilot package status is PASS",
-        "git diff --check passes",
-        "Residual risks are documented"
-      ]
-    },
-    {
-      "id": "STEP_2_LOCAL_PILOT_PIPELINE",
-      "title": "Pipeline pilote EBTA reel local",
-      "status": "COMPLETE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "objective": "Build a local pilot pipeline that produces a validated EBTA research_package from concrete inputs.",
-      "tasks": [
-        {
-          "id": "STEP_2_T0",
-          "title": "Combler les angles morts normatifs Phase A/B/C (audit exhaustivite Implementation vs Protocole)",
-          "status": "DONE",
-          "classification": "CONTRACT_ENCODING",
-          "deliverables": [
-            "validators/registry_append_only_validator.py (A1 - append-only + chain_hash + DN-005 a DN-008)",
-            "procedures/robustness.py renforcee (A2 - CENTRAL/PLAUSIBLE_BASE/EXTREME + pre/post-OOS DN-030/DN-031)",
-            "schemas/execution_journal_event.schema.json (A3 - chaine signal-ordre-fill-position SOP 09B)",
-            "schemas/pit_data_declaration.schema.json (A4 - formulaire G1 SOP 09A)",
-            "schemas/walk_forward_declaration.schema.json (A4 - formulaire G3 SOP 04)",
-            "schemas/robustness_plan.schema.json (A4 - formulaire G5 SOP 05)",
-            "schemas/incubation_plan.schema.json (A4 - formulaires G12/G13 SOP 11)",
-            "procedures/wrc.py + family_catalogue_hash (A5 - hash catalogue DN-008)",
-            "procedures/monitoring.py (B2 - monitoring sequentiel DN-037)",
-            "procedures/incubation_report.py (B3 - rapport incubation SOP 11)",
-            "procedures/reproduction_report.py (B4 - rapport reproduction SOP 12 INV-016)",
-            "schemas/reproduction_report.schema.json (B4)",
-            "procedures/oos_confidence_interval.py + validate_power_target + validate_information_stop_point (B5 - DN-004 DN-021)",
-            "procedures/walk_forward.py + verification preventive OOS (C3 - DN-001 INV-001)",
-            "schemas/lifecycle_archive.schema.json (C2 - DN-041)",
-            "TRACEABILITY_MATRIX.md mise a jour"
-          ]
-        },
-        {
-          "id": "STEP_2_T1",
-          "title": "Define pilot inputs and output package shape",
-          "status": "DONE",
-          "classification": "IMPLEMENTATION_DETAIL",
-          "deliverables": [
-            "examples/minimal_pilot_pipeline/inputs/pilot_inputs.json (contrat d'entrees pilotes locales)",
-            "examples/minimal_pilot_pipeline/inputs/package_shape.json (shape attendue du research_package)",
-            "examples/minimal_pilot_pipeline/build_research_package.py branche sur les contrats d'entree/shape",
-            "schemas/config.schema.json durci pour les champs operationnels du paquet pilote",
-            "tests/test_minimal_pilot_pipeline.py verifie la coherence inputs -> package -> manifest"
-          ]
-        },
-        {
-          "id": "STEP_2_T2",
-          "title": "Connect procedure modules to generated artifacts",
-          "status": "DONE",
-          "classification": "IMPLEMENTATION_DETAIL",
-          "deliverables": [
-            "build_research_package.py connecte sealing, oos_access, monitoring, incubation, lifecycle et reproduction validation aux artefacts generes",
-            "package_shape.json manifeste les rapports optionnels de gouvernance procedure",
-            "pilot_inputs.json expose les preuves locales necessaires aux rapports de gouvernance"
-          ]
-        },
-        {
-          "id": "STEP_2_T3",
-          "title": "Validate generated package with validate_package_dir",
-          "status": "DONE",
-          "classification": "TEST_FIXTURE",
-          "deliverables": [
-            "build_package retourne validate_package_dir(package_dir)",
-            "test_minimal_pilot_pipeline verifie validate_package_dir directement sur le paquet genere",
-            "build_research_package.py genere un research_package status PASS"
-          ]
-        },
-        {
-          "id": "STEP_2_T4",
-          "title": "Add focused tests for pilot behavior",
-          "status": "DONE",
-          "classification": "TEST_FIXTURE",
-          "deliverables": [
-            "test_minimal_pilot_pipeline couvre les rapports procedures manifestes",
-            "test_minimal_pilot_pipeline couvre le rejet d'une shape package vide",
-            "test_minimal_pilot_pipeline couvre l'echec en cas de drift des replications OOS preregistrees"
-          ]
-        }
-      ],
-      "exit_criteria": [
-        "No normative contract from PAQUET D'EXECUTION EBTA.md is left without a corresponding Implementation/ artefact",
-        "Pilot package is generated from concrete inputs",
-        "Package validator returns PASS or explicit EBTA contract errors",
-        "No OOS selection, repair, or opportunistic tie-break is introduced"
-      ]
-    },
-    {
-      "id": "STEP_2B_STRATEGIE_ACTIF_RUNTIME",
-      "title": "Encodage runtime de strategie x actif",
-      "status": "COMPLETE",
-      "classification": "CONTRACT_ENCODING",
-      "objective": "Encode the Protocole clarification that a selectable asset axis creates distinct strategie x actif candidates and must remain covered by WRC evidence.",
-      "tasks": [
-        {
-          "id": "STEP_2B_T1",
-          "title": "Expose asset_universe and asset selection axis in search-space artifacts",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_2B_T2",
-          "title": "Validate WRC matrix coverage for all applicable strategie x actif candidates",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_2B_T3",
-          "title": "Convert the minimal pilot fixture to a multi-asset candidate family",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_2B_T4",
-          "title": "Add rejection tests for missing asset-axis coverage",
-          "status": "DONE"
-        },
-        {
-          "id": "STEP_2B_T5",
-          "title": "Update runtime traceability/history and relay state",
-          "status": "DONE"
-        }
-      ],
-      "exit_criteria": [
-        "Search-space output shows asset_universe, asset_selection_axis, and asset_candidate_count when the asset axis is active",
-        "Candidate matrix and invariant checks reject omitted applicable candidates or undeclared candidate assets",
-        "Minimal pilot package validates with a multi-asset search family",
-        "Runtime tests and pilot smoke test pass"
-      ]
-    },
     {
       "id": "STEP_3_BACKTRADER_INTEGRATION",
       "title": "Integration BACKTRADER apres gouvernance locale",
@@ -239,17 +32,20 @@
         {
           "id": "STEP_3_T1",
           "title": "Read BACKTRADER governance entrypoints",
-          "status": "TODO"
+          "status": "TODO",
+          "blocked_by": null
         },
         {
           "id": "STEP_3_T2",
           "title": "Map BACKTRADER outputs to EBTA artifacts",
-          "status": "TODO"
+          "status": "TODO",
+          "blocked_by": "STEP_3_T1"
         },
         {
           "id": "STEP_3_T3",
           "title": "Implement adapter integration with explicit contract errors",
-          "status": "TODO"
+          "status": "TODO",
+          "blocked_by": "STEP_3_T2"
         }
       ],
       "exit_criteria": [
@@ -259,26 +55,49 @@
       ]
     }
   ],
+  "completed_steps_archive": [
+    { "id": "STEP_0_ARCHIVE_OBSOLETE",          "title": "Archivage controle des obsoletes",                 "completed_at": "2026-06-26", "tasks_done": 5 },
+    { "id": "STEP_1_CHECKPOINT",               "title": "Checkpoint du lot actuel",                        "completed_at": "2026-06-27", "tasks_done": 5 },
+    { "id": "STEP_2_LOCAL_PILOT_PIPELINE",      "title": "Pipeline pilote EBTA reel local",                 "completed_at": "2026-06-30", "tasks_done": 5 },
+    { "id": "STEP_2B_STRATEGIE_ACTIF_RUNTIME",  "title": "Encodage runtime de strategie x actif",           "completed_at": "2026-06-30", "tasks_done": 5 },
+    { "id": "ANNEXE_G_BIAS_RUNTIME_FOUNDATION", "title": "Socle runtime G-BIAS incidents et registre",      "completed_at": "2026-07-01", "tasks_done": 4 },
+    { "id": "ANNEXE_G_BIAS_RUNTIME_GATE",       "title": "Gate runtime G-BIAS complet",                     "completed_at": "2026-07-01", "tasks_done": 4 }
+  ],
   "validation_commands": [
     {
       "command": "python -m json.tool Implementation\\Active\\tracking.json",
       "purpose": "Validate task tracking JSON syntax",
-            "last_result": "PASS - 2026-06-29"
+      "last_result": "PASS - 2026-07-01"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
       "purpose": "Runtime non-divergence tests",
-            "last_result": "PASS - 64 tests - 2026-06-29"
+      "last_result": "PASS - 87 tests - 2026-07-01"
     },
     {
       "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
       "purpose": "Minimal package generation smoke test",
-            "last_result": "PASS - package status PASS - 2026-06-29"
+      "last_result": "PASS - package status PASS - 2026-07-01"
     },
     {
       "command": "git diff --check -- Implementation Protocole",
       "purpose": "Whitespace and patch hygiene",
-            "last_result": "PASS - 2026-06-29 - CRLF warnings only for generated research_package files"
+      "last_result": "PASS - 2026-07-01 - CRLF warnings only"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_governance_bias.py",
+      "purpose": "G-BIAS runtime schema, registry, incident logger, checkers, guard, and gate tests",
+      "last_result": "PASS - 20 tests - 2026-07-01"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_package_validator.py",
+      "purpose": "Package validator compatibility and G-BIAS enforcement tests",
+      "last_result": "PASS - 6 tests - 2026-07-01"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_procedure_governance.py",
+      "purpose": "OOS access procedure tests including bias_gate_pass",
+      "last_result": "PASS - 8 tests - 2026-07-01"
     }
   ],
   "risk_register": [
@@ -308,8 +127,8 @@
     }
   ],
   "latest_decision": {
-    "date": "2026-06-29",
-    "decision": "STEP_2B_STRATEGIE_ACTIF_RUNTIME complete: asset_universe and asset axis encoded in search space, candidate matrix, invariant evidence, schemas, pilot fixture, and tests.",
+    "date": "2026-07-01",
+    "decision": "tracking.json refactored to v1.1.0: current_task_id/next_task_id pointers added, completed steps archived compactly, status vocabulary unified, blocked_by added to tasks. ANNEXE_G_BIAS_RUNTIME_GATE complete: mainline STEP_3_BACKTRADER_INTEGRATION remains pending.",
     "impact_protocole": "NONE"
   }
 }

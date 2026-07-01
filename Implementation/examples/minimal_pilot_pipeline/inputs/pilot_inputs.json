@@ -14,7 +14,7 @@
     "research_family_id": "FAM-PILOT",
     "hypothesis_id": "HYP-PILOT-MA",
     "process_version_id": "PROC-PILOT-001",
-    "protocol_version": "EBTA-DOC-1.0",
+    "protocol_version": "EBTA-DOC-1.1",
     "template_hash": "TEMPLATE-HASH-PILOT",
     "document_hash": "PILOT_CONFIG_HASH_PLACEHOLDER"
   },
@@ -77,7 +77,8 @@
     "oos_mean_block_length": 2
   },
   "execution_model": {
-    "central_scenario": "tradable_net"
+    "central_scenario": "tradable_net",
+    "slippage_model": "pilot_fixed_spread"
   },
   "robustness_plan": {
     "required_before_oos": true,
@@ -252,6 +253,17 @@
     "kill_switch_tested": true,
     "monitoring_plan_id": "MONITORING-PILOT-001",
     "verdict": "PASS"
+  },
+  "bias_incidents": [],
+  "g_bias_reviewer_report": {
+    "independent_reviewer": "independent_reviewer",
+    "status": "PASS",
+    "reviewed_artifacts": [
+      "registry.jsonl",
+      "reports/candidate_matrix.json",
+      "reports/robustness.json",
+      "oos_access_log.jsonl"
+    ]
   },
   "oos_access_log": [
     {

@@ -48,7 +48,8 @@ function Resolve-RepoRoot {
 
 function ConvertTo-RepoPath {
     param([string]$AbsolutePath, [string]$RepoRoot)
-    $relative = [System.IO.Path]::GetRelativePath($RepoRoot, $AbsolutePath)
+    # PS 5.1 compat
+    $relative = $AbsolutePath.Replace($RepoRoot, "").TrimStart("\").TrimStart("/")
     return ($relative -replace "\\", "/")
 }
 
@@ -87,13 +88,6 @@ function Find-Workstream {
     return @($Checkpoint.workstreams | Where-Object { $_.id -eq $WorkstreamId })
 }
 
-function Add-UniqueTouchedFile {
-    param([object]$Checkpoint, [string]$RepoPath)
-    $files = @($Checkpoint.files_touched_this_turn)
-    if ($files -notcontains $RepoPath) {
-        $Checkpoint.files_touched_this_turn = @($files + $RepoPath)
-    }
-}
 
 function Assert-PlanAuditReady {
     param([string]$PlanPath)
@@ -114,13 +108,15 @@ function Assert-PlanAuditReady {
     }
 }
 
-function Set-ActiveObjective {
+function Set-ActiveWorkstream {
     param([object]$Checkpoint, [object]$Workstream)
-    $Checkpoint.active_objective.id = $Workstream.id
-    $Checkpoint.active_objective.status = "ACTIVE"
-    $Checkpoint.active_objective.title = $Workstream.title
-    $Checkpoint.active_objective.classification = $Workstream.classification
-    $Checkpoint.active_objective.non_goals = @($Workstream.non_goals)
+    # Point active_workstream_id at the new active workstream.
+    # Clear is_active on all others first, then set on the target.
+    foreach ($ws in $Checkpoint.workstreams) {
+        $ws | Add-Member -NotePropertyName "is_active" -NotePropertyValue $false -Force
+    }
+    $Workstream | Add-Member -NotePropertyName "is_active" -NotePropertyValue $true -Force
+    $Checkpoint.active_workstream_id = $Workstream.id
 }
 
 $repoRoot = Resolve-RepoRoot
@@ -150,7 +146,7 @@ switch ($Action) {
         if (-not $Title) {
             $Title = [System.IO.Path]::GetFileNameWithoutExtension($sourcePath)
         }
-        if ((Find-Workstream $checkpoint $Id).Count -gt 0) {
+        if (@(Find-Workstream $checkpoint $Id).Count -gt 0) {
             throw "Un chantier avec id '$Id' existe deja dans .ai/checkpoint.json."
         }
 
@@ -184,7 +180,6 @@ switch ($Action) {
         }
 
         $checkpoint.workstreams = @($checkpoint.workstreams) + @($workstream)
-        Add-UniqueTouchedFile $checkpoint $targetRepoPath
         Write-Checkpoint $checkpoint $checkpointPath
         Write-Host "Plan demarre: $Id -> $targetRepoPath"
     }
@@ -193,19 +188,18 @@ switch ($Action) {
         if (-not $Id) {
             throw "Action continue: utilise -Id pour choisir le chantier."
         }
-        $matches = Find-Workstream $checkpoint $Id
-        if ($matches.Count -ne 1) {
+        $foundWorkstreams = @(Find-Workstream $checkpoint $Id)
+        if ($foundWorkstreams.Count -ne 1) {
             throw "Chantier introuvable ou ambigu: $Id"
         }
-        $workstream = $matches[0]
+        $workstream = $foundWorkstreams[0]
         $workstream.status = "ACTIVE"
         $workstream.lifecycle = "ACTIVE"
         $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
         if ($Reason) {
             $workstream.routing_reason = $Reason
         }
-        Set-ActiveObjective $checkpoint $workstream
-        Add-UniqueTouchedFile $checkpoint $workstream.source_path
+        Set-ActiveWorkstream $checkpoint $workstream
         Write-Checkpoint $checkpoint $checkpointPath
         Write-Host "Plan actif: $Id"
     }
@@ -214,11 +208,11 @@ switch ($Action) {
         if (-not $Id) {
             throw "Action close: utilise -Id pour choisir le chantier."
         }
-        $matches = Find-Workstream $checkpoint $Id
-        if ($matches.Count -ne 1) {
+        $foundWorkstreams = @(Find-Workstream $checkpoint $Id)
+        if ($foundWorkstreams.Count -ne 1) {
             throw "Chantier introuvable ou ambigu: $Id"
         }
-        $workstream = $matches[0]
+        $workstream = $foundWorkstreams[0]
 
         $sourcePath = Join-Path $repoRoot ($workstream.source_path -replace "/", "\")
         if (Test-Path $sourcePath) {
@@ -243,14 +237,12 @@ switch ($Action) {
         $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
         $workstream.closure_reason = $Reason
 
-        if ($checkpoint.active_objective.id -eq $Id) {
-            $checkpoint.active_objective.status = $workstream.status
-            $checkpoint.active_objective.title = $workstream.title
-            $checkpoint.active_objective.classification = $workstream.classification
-            $checkpoint.active_objective.non_goals = @($workstream.non_goals)
+        if ($checkpoint.active_workstream_id -eq $Id) {
+            # Closed workstream was the active one — clear the pointer.
+            $checkpoint.active_workstream_id = $null
+            $workstream | Add-Member -NotePropertyName "is_active" -NotePropertyValue $false -Force
         }
 
-        Add-UniqueTouchedFile $checkpoint $workstream.source_path
         Write-Checkpoint $checkpoint $checkpointPath
         Write-Host "Plan cloture: $Id -> $($workstream.lifecycle)"
     }

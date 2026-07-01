@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - REGISTRE_NORMATIF |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | Gouvernance protocole EBTA |
 | Rôle dans le paquet EBTA | Index central des decisions figees, proprietaires documentaires, preuves et moments de preenregistrement. |
@@ -18,7 +18,7 @@ Date de création : 2026-06-24
 Ce registre centralise les décisions méthodologiques figées dans les SOP EBTA.
 Il sert d’index normatif entre :
 
-- les SOP 01 à 12 ;
+- les SOP 01 à 13 ;
 - la matrice de cohérence transversale ;
 - le futur template de configuration préenregistrée ;
 - la mise à jour ultérieure du protocole principal.
@@ -52,6 +52,7 @@ document propriétaire et les documents consommateurs.
 | Incident technique OOS | `INVALID_TECHNICAL` | SOP 10 | Marque une estimation OOS techniquement invalide sans restaurer automatiquement la virginité OOS. |
 | Monitoring | `WATCH`, `PASS`, `FAIL`, `INCONCLUSIVE` | SOP 11 | Surveille le processus validé en incubation/live ; ne remplace pas le verdict de validation. |
 | Stades du paquet | `PRE_OOS_SEALED`, `VALIDATION_READY`, `DEPLOYMENT_CERTIFIED`, `LIFECYCLE_ARCHIVED` | SOP 12 | États immuables du paquet de preuve et de son cycle de vie. |
+| Gouvernance des biais | `PASS`, `FAIL`, `INCONCLUSIVE`, `BURNED` | SOP 13 | Gate transversal `G-BIAS` sur les biais humains, organisationnels, assistés par IA, incidents et dérogations. |
 
 ---
 
@@ -100,6 +101,12 @@ document propriétaire et les documents consommateurs.
 | DN-039 | Paquet `VALIDATION_READY` | Le stade `VALIDATION_READY` est obligatoire avant incubation et exige séries OOS, verdicts, gates et reproduction indépendante `PASS`. | SOP 12 | SOP 11 | Empêche l’incubation sans paquet reproductible. | Fixe | Avant paper trading. | Manifeste `VALIDATION_READY`, rapport de reproduction. |
 | DN-040 | Paquet `DEPLOYMENT_CERTIFIED` | Le stade `DEPLOYMENT_CERTIFIED` est obligatoire avant live limité et ajoute paper trading `PASS`, version live, limites, sizing, kill switch et monitoring. | SOP 12 | SOP 11 | Lie le passage live à une version opérationnelle exacte. | Fixe | Avant live limité. | Manifeste `DEPLOYMENT_CERTIFIED`, approbation live. |
 | DN-041 | Conservation et archivage | Les versions, runs perdants, erreurs, accès OOS, décisions et journaux sont conservés au moins dix ans après retrait. | SOP 12 | SOP 03, 10, 11 | Permet audit indépendant et reconstruction historique. | Fixe | Dès création du paquet. | Archive, checksums, politique de rétention. |
+| DN-042 | Gouvernance des biais humains | Tout incident humain, organisationnel, méthodologique ou assisté par IA susceptible d'influencer une décision EBTA doit être journalisé, qualifié et revu. | SOP 13 | SOP 03, 05, 08, 10, 12 | Les tests statistiques ne couvrent pas seuls les biais de conduite de recherche. | Fixe | Dès détection ou avant le gate consommateur. | Incident de biais, événement append-only, revue indépendante. |
+| DN-043 | Gate transversal `G-BIAS` | `G-BIAS` est obligatoire avant `G8`, avant `G11` et après tout incident `LEVEL_2` ou supérieur ; il peut produire `PASS`, `FAIL`, `INCONCLUSIVE` ou `BURNED`. | SOP 13 | SOP 10, 12, 11 | Empêche l'ouverture OOS ou la validation sous contamination humaine, IA ou organisationnelle. | Fixe | Avant ouverture OOS et avant validation reproductible. | Checklist `G-BIAS`, registre de risques, incidents, décision reviewer. |
+| DN-044 | Gravité des incidents | Les incidents sont classés de `LEVEL_0` à `LEVEL_5`; `LEVEL_2` ou supérieur impose revue indépendante avant tout gate consommateur. | SOP 13 | SOP 03, 10, 12 | Rend les conséquences des biais opposables et proportionnées. | Fixe | Au moment de la déclaration d'incident. | Rapport d'incident, niveau, impact, décision finale. |
+| DN-045 | Registre des risques de biais | `BIAS_RISK_REGISTER.md` est la taxonomie minimale des biais à vérifier pour `G-BIAS`. | SOP 13 | SOP 03, 05, 08, 10, 12 | Évite que chaque recherche invente sa propre classification des biais. | Fixe | Avant `G-BIAS`. | Revue du registre des risques et catégories cochées. |
+| DN-046 | Contamination IA | Un assistant IA ou outil externe ayant consommé un résultat sensible et proposé une décision ou réparation est présumé contaminant jusqu'à preuve contraire. | SOP 13 | SOP 10, 12 | Les assistants peuvent mémoriser, résumer ou recombiner des informations OOS/Test sensibles. | Fixe | Avant usage décisionnel de la sortie IA. | Trace d'interaction, contenu exposé, revue d'impact. |
+| DN-047 | Dérogations non réparatrices | Une dérogation ne peut jamais restaurer un OOS consommé, réduire une famille, retirer un résultat défavorable ou transformer un statut bloquant en `PASS`. | SOP 13 | SOP 08, 10, 12 | Empêche les exceptions narratives de contourner les interdictions EBTA. | Fixe | Avant la décision affectée. | Template de dérogation, approbation indépendante, événement de registre. |
 
 ---
 
@@ -122,6 +129,7 @@ universelles. Ils doivent être fournis par recherche ou famille de recherche.
 | Scénarios de robustesse et seuils bloquants | SOP 05 | Avant ouverture `OOS_k`. |
 | Seeds, réplications et longueurs de blocs si non fixées par SOP | SOP 01, SOP 02, SOP 12 | Avant calcul statistique. |
 | Critères d’incubation, suspension, kill switch et monitoring | SOP 11 | Avant incubation/live. |
+| Critères `G-BIAS`, catégories de biais, seuil de revue et règles de dérogation | SOP 13 | Avant ouverture OOS, avant validation reproductible et avant toute dérogation. |
 
 ---
 
@@ -139,6 +147,7 @@ universelles. Ils doivent être fournis par recherche ou famille de recherche.
 | Clôture de l’audit méthodologique | `CLOSED_WITH_DEFERRED_IMPLEMENTATION` | Audit mis à jour avec statuts par constat ; les artefacts exécutables restent à produire. |
 | Paquet d’exécution documentaire | `CLOSED_WITH_DEFERRED_IMPLEMENTATION` | `Protocole/PAQUET D'EXECUTION EBTA.md` créé ; scripts et schémas machine-readable restent à implémenter. |
 | Revue finale et gel documentaire | `CLOSED` | Version documentaire `EBTA-DOC-1.0` gelée dans `Protocole/MANIFESTE DE GEL EBTA.md`. |
+| Gouvernance des biais humains et incidents | `CLOSED_FOR_PROTOCOL_DRAFT` | SOP 13, `BIAS_RISK_REGISTER.md`, templates d'incident/dérogation et décisions DN-042 à DN-047 ajoutés en `EBTA-DOC-1.1`. |
 
 ---
 
@@ -146,4 +155,4 @@ universelles. Ils doivent être fournis par recherche ou famille de recherche.
 
 Ouvrir une nouvelle version documentaire pour toute évolution méthodologique
 future. La prochaine phase non documentaire est l’implémentation machine-readable
-du paquet d’exécution.
+du paquet d’exécution, incluant les artefacts `G-BIAS`.

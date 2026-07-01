@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "checkpoint.schema.json",
   "title": "EBTA multi-AI relay checkpoint",
+  "description": "v1.2.0 — macro governance only. Runtime state lives exclusively in tracking.json.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,12 +14,11 @@
     "relay_contract",
     "active_paths",
     "authority_model",
-    "current_runtime_state",
-    "active_objective",
+    "active_workstream_id",
     "next_actions",
     "workstreams",
     "validation",
-    "files_touched_this_turn",
+    "session_log",
     "risks"
   ],
   "properties": {
@@ -113,28 +113,10 @@
         "adapter_boundary": { "type": "string", "minLength": 1 }
       }
     },
-    "current_runtime_state": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["runtime_version", "current_step", "completed_steps", "pending_steps", "latest_runtime_decision", "impact_protocole"],
-      "properties": {
-        "runtime_version": { "type": "string", "minLength": 1 },
-        "current_step": { "type": "string", "minLength": 1 },
-        "completed_steps": {
-          "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
-        },
-        "pending_steps": {
-          "type": "array",
-          "items": { "type": "string" },
-          "uniqueItems": true
-        },
-        "latest_runtime_decision": { "type": "string" },
-        "impact_protocole": { "type": "string" }
-      }
+    "active_workstream_id": {
+      "type": ["string", "null"],
+      "description": "ID of the currently active workstream. Null when nothing is active. Single source of truth — no duplication of workstream fields here."
     },
-    "active_objective": { "$ref": "#/$defs/action_item" },
     "next_actions": {
       "type": "array",
       "items": { "$ref": "#/$defs/action_item" }
@@ -164,10 +146,20 @@
         }
       }
     },
-    "files_touched_this_turn": {
+    "session_log": {
       "type": "array",
-      "items": { "type": "string" },
-      "uniqueItems": true
+      "description": "Rolling log of the last 5 sessions. Reset each new session; never accumulate unboundedly.",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "summary", "files_count"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "summary": { "type": "string", "minLength": 1 },
+          "files_count": { "type": "integer", "minimum": 0 }
+        }
+      }
     },
     "risks": {
       "type": "array",
@@ -191,19 +183,9 @@
       "required": ["id", "status", "title", "classification", "non_goals"],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
-        "status": { "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "COMPLETE", "DEFERRED", "BLOCKED"] },
+        "status": { "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "DEFERRED", "BLOCKED"] },
         "title": { "type": "string", "minLength": 1 },
-        "classification": {
-          "enum": [
-            "GOVERNANCE",
-            "IMPLEMENTATION_DETAIL",
-            "CONTRACT_ENCODING",
-            "TEST_FIXTURE",
-            "ADAPTER_MAPPING",
-            "DOCUMENTATION_CLARIFICATION_NEEDED",
-            "NORMATIVE_CHANGE_REQUIRED"
-          ]
-        },
+        "classification": { "$ref": "#/$defs/classification" },
         "non_goals": {
           "type": "array",
           "items": { "type": "string" },
@@ -236,8 +218,18 @@
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "title": { "type": "string", "minLength": 1 },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3,
+          "description": "1=critical blocks mainline, 2=important, 3=optional. Absent means unranked."
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "True on the workstream currently being executed. At most one workstream has is_active=true at a time."
+        },
         "track": { "enum": ["mainline", "annexe", "fix"] },
-        "status": { "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "COMPLETE", "DEFERRED", "BLOCKED"] },
+        "status": { "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "DEFERRED", "BLOCKED"] },
         "lifecycle": {
           "enum": [
             "INTAKE",
@@ -251,17 +243,7 @@
             "ARCHIVED"
           ]
         },
-        "classification": {
-          "enum": [
-            "GOVERNANCE",
-            "IMPLEMENTATION_DETAIL",
-            "CONTRACT_ENCODING",
-            "TEST_FIXTURE",
-            "ADAPTER_MAPPING",
-            "DOCUMENTATION_CLARIFICATION_NEEDED",
-            "NORMATIVE_CHANGE_REQUIRED"
-          ]
-        },
+        "classification": { "$ref": "#/$defs/classification" },
         "source_path": { "type": "string", "minLength": 1 },
         "active_runtime_path": {
           "type": ["string", "null"],
@@ -281,6 +263,17 @@
           "uniqueItems": true
         }
       }
+    },
+    "classification": {
+      "enum": [
+        "GOVERNANCE",
+        "IMPLEMENTATION_DETAIL",
+        "CONTRACT_ENCODING",
+        "TEST_FIXTURE",
+        "ADAPTER_MAPPING",
+        "DOCUMENTATION_CLARIFICATION_NEEDED",
+        "NORMATIVE_CHANGE_REQUIRED"
+      ]
     }
   }
 }

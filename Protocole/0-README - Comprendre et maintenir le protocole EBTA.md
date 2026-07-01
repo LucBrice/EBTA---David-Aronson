@@ -5,8 +5,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - POINT_ENTREE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | Gouvernance protocole EBTA |
 | Rôle dans le paquet EBTA | Point d’entrée humain et IA pour comprendre, maintenir et faire évoluer le protocole. |
@@ -24,7 +24,7 @@ Il explique :
 - dans quel ordre lire le dossier ;
 - comment faire évoluer le protocole sans casser le gel documentaire.
 
-Le dossier `Protocole/` est gelé en version documentaire `EBTA-DOC-1.0`.
+Le dossier `Protocole/` est gelé en version documentaire `EBTA-DOC-1.1`.
 Toute évolution méthodologique future doit ouvrir une nouvelle version.
 
 ---
@@ -114,6 +114,7 @@ Objectif : comprendre le processus avant d'entrer dans les détails normatifs.
 | Comment les coûts, fills, capacité et sizing sont-ils traités ? | `SOP 09B` | `SOP 09B - Modèle d’exécution frictions capacité et sizing.md` |
 | Quand l'OOS peut-il être ouvert ? | `SOP 10` | `SOP 10 - Gouvernance OOS et gestion des échecs.md` |
 | Comment produire l'estimation OOS finale et son intervalle ? | `SOP 01` | `SOP 01 - Estimation et intervalle de confiance OOS.md` |
+| Comment gouverner les biais humains, incidents, dérogations ou contaminations IA ? | `SOP 13` | `SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md` |
 | Que se passe-t-il après validation OOS ? | `SOP 11` | `SOP 11 - Incubation passage live et monitoring séquentiel.md` |
 | Comment prouver la reproductibilité ? | `SOP 12` | `SOP 12 - Reproductibilité et paquet de validation EBTA.md` |
 | Quels artefacts concrets doivent exister ? | `PAQUET D'EXECUTION EBTA.md` | SOP propriétaires citées par artefact |
@@ -135,9 +136,12 @@ sont conservés dans `Protocole/Archives/`.
 | --- | --- | --- |
 | `PROTOCOLE EBTA.md` | A remplacé l’ancien protocole long et contradictoire par une carte claire. | Point d’entrée normatif principal : ordre des gates, livrables, gouvernance, index SOP. |
 | `REGISTRE DES DECISIONS NORMATIVES EBTA.md` | A centralisé les décisions prises pendant la revue des SOP. | Source de vérité pour savoir qui possède chaque règle et éviter les redéfinitions. |
+| `BIAS_RISK_REGISTER.md` | Créé en `EBTA-DOC-1.1` pour rendre opposables les catégories de biais humains, méthodologiques et assistés par IA. | Taxonomie minimale à vérifier par `G-BIAS` avant ouverture OOS, validation reproductible, incubation ou live. |
 | `TEMPLATE - Configuration préenregistrée d'une recherche EBTA.md` | A séparé principes méthodologiques et paramètres propres à une recherche. | Formulaire à remplir avant chaque recherche EBTA. |
+| `TEMPLATE - Incident de biais EBTA.md` | Créé en `EBTA-DOC-1.1` pour standardiser la déclaration d'incident. | Format minimal de journalisation et revue indépendante d'un incident de biais. |
+| `TEMPLATE - Dérogation méthodologique EBTA.md` | Créé en `EBTA-DOC-1.1` pour encadrer les exceptions. | Format minimal d'une dérogation admissible, non réparatrice et approuvée. |
 | `PAQUET D'EXECUTION EBTA.md` | A transformé les SOP en contrôles opérationnels documentaires. | Base pour créer schémas JSON/JSONL, validateurs, checklists exécutables et tests d’invariants. |
-| `MANIFESTE DE GEL EBTA.md` | A figé la version documentaire `EBTA-DOC-1.0` et ses hashes. | Preuve de version, audit d’intégrité, point de départ d’une future version. |
+| `MANIFESTE DE GEL EBTA.md` | A figé la version documentaire `EBTA-DOC-1.1` et ses hashes. | Preuve de version, audit d’intégrité, point de départ d’une future version. |
 
 ### B. SOP normatives actives
 
@@ -159,6 +163,7 @@ le protocole principal.
 | `SOP 10 - Gouvernance OOS et gestion des échecs.md` | Accès OOS, contamination, échecs, réexécutions techniques. |
 | `SOP 11 - Incubation passage live et monitoring séquentiel.md` | Paper trading, live limité, monitoring, suspension, retrait. |
 | `SOP 12 - Reproductibilité et paquet de validation EBTA.md` | Paquets, stades, checksums, reproduction, archivage. |
+| `SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md` | Incidents de biais, dérogations, contaminations IA, revue indépendante et gate transversal `G-BIAS`. |
 
 ### C. Documents de maintenance et de contrôle transversal
 
@@ -272,13 +277,14 @@ Action :
 
 ## Ce qui est gelé et ce qui ne l’est pas
 
-Gelé en `EBTA-DOC-1.0` :
+Gelé en `EBTA-DOC-1.1` :
 
 - architecture Walk-Forward ;
 - absence de holdout final supplémentaire ;
 - ordre des gates ;
 - responsabilités des SOP ;
 - décisions normatives du registre ;
+- gouvernance des biais humains et assistés par IA par SOP 13 et `G-BIAS` ;
 - template de configuration ;
 - paquet d’exécution documentaire ;
 - manifeste de hashes.

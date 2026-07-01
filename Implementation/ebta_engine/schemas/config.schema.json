@@ -34,7 +34,7 @@
     "research_family_id": { "type": "string" },
     "hypothesis_id": { "type": "string" },
     "process_version_id": { "type": "string" },
-    "protocol_version": { "type": "string", "enum": ["EBTA-DOC-1.0"] },
+    "protocol_version": { "type": "string", "enum": ["EBTA-DOC-1.0", "EBTA-DOC-1.1"] },
     "data_snapshots": {
       "type": "array",
       "minItems": 1,

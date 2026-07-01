@@ -37,6 +37,7 @@
     "reports/fold_schedule.json",
     "reports/registry_review.json",
     "reports/detrending.json",
+    "reports/g_bias.json",
     "series/oos_primary_returns.json"
   ],
   "manifest_path": "manifests/reproducibility_manifest.json",

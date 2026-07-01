@@ -40,6 +40,28 @@ class GovernanceProcedureTests(unittest.TestCase):
         seal = validate_pre_oos_seal("PRE_OOS_SEALED", manifest_hash="HASH", independent_approval=True)
         self.assertEqual(seal["status"], "PASS")
 
+    def test_oos_access_authorizes_only_after_bias_gate_pass(self):
+        authorized = authorize_oos_access(
+            {
+                "access_event_id": "OOS-001",
+                "timestamp": "2026-07-01T00:00:00Z",
+                "actor": "tester",
+                "fold_id": "FOLD-001",
+                "oos_segment_id": "OOS-001",
+                "pre_oos_sealed": True,
+                "wrc_pass": True,
+                "robustness_pass": True,
+                "execution_pass": True,
+                "independent_approval": True,
+                "bias_gate_pass": True,
+            }
+        )
+
+        self.assertEqual(authorized["status"], "AUTHORIZED")
+
+        denied = authorize_oos_access({**authorized["log_entry"], "pre_oos_sealed": True})
+        self.assertIn("bias_gate_pass", denied["missing_requirements"])
+
     def test_economic_gate_remains_separate_from_statistical_gate(self):
         report = economic_gate_report(
             {

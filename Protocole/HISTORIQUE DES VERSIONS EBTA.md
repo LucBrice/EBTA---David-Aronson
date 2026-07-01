@@ -5,7 +5,7 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - REGISTRE_EVOLUTION |
-| Version documentaire | EBTA-DOC-1.0 |
+| Version documentaire | EBTA-DOC-1.1 |
 | Date de création | 2026-06-24 |
 | Propriétaire documentaire | Gouvernance protocole EBTA |
 | Rôle dans le paquet EBTA | Journaliser chronologiquement toutes les évolutions du protocole EBTA. |
@@ -28,6 +28,34 @@ Conformément au `0-README - Comprendre et maintenir le protocole EBTA.md`, tout
 ---
 
 ## Historique
+
+### [EBTA-DOC-1.1] - 2026-07-01
+**Nature du changement** : Changement normatif
+**Résumé** : Ouverture de la gouvernance des biais humains, organisationnels
+et assistés par IA avec création de `SOP 13`, du registre `BIAS_RISK_REGISTER.md`,
+des templates d'incident et de dérogation, et du gate transversal `G-BIAS`.
+`G-BIAS` ne renumérote pas les gates `G0` à `G14`, mais il devient obligatoire
+avant ouverture OOS, avant validation reproductible et après tout incident
+matériel.
+**Documents impactés** : `0-README - Comprendre et maintenir le protocole
+EBTA.md`, `PROTOCOLE EBTA.md`, `REGISTRE DES DECISIONS NORMATIVES EBTA.md`,
+`MATRICE DE COHERENCE DES SOP EBTA.md`, `PAQUET D'EXECUTION EBTA.md`,
+`SOP 03 - Registre des expériences et univers des règles candidates.md`,
+`SOP 05 - Tests de robustesse et gouvernance du holdout.md`,
+`SOP 08 - Mesures de performance et série de rendement de référence.md`,
+`SOP 10 - Gouvernance OOS et gestion des échecs.md`,
+`SOP 12 - Reproductibilité et paquet de validation EBTA.md`,
+`SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`,
+`BIAS_RISK_REGISTER.md`, `TEMPLATE - Incident de biais EBTA.md`,
+`TEMPLATE - Dérogation méthodologique EBTA.md`, `HISTORIQUE DES VERSIONS
+EBTA.md`, `MANIFESTE DE GEL EBTA.md`.
+**Justification** : Le protocole corrigeait déjà le data-mining bias par WRC et
+familles statistiques, mais ne possédait pas d'autorité explicite pour les biais
+de conduite de recherche : incident humain, dérogation réparatrice, metric
+shopping, robustness shopping, communication influente ou contamination IA.
+`EBTA-DOC-1.1` rend ces risques opposables sans créer de source de vérité
+concurrente : SOP 13 est propriétaire, SOP 03 journalise, SOP 10 protège l'OOS
+et SOP 12 assemble les preuves.
 
 ### [EBTA-DOC-1.0] - 2026-06-29
 **Nature du changement** : Clarification documentaire sans changement normatif

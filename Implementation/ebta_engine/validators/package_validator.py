@@ -6,6 +6,7 @@ Source: Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 3, 5, and 6.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from ebta_engine.manifests.manifest_builder import verify_manifest
@@ -39,8 +40,10 @@ REQUIRED_PACKAGE_PATHS = {
     "manifests/reproducibility_manifest.json",
 }
 
+OPTIONAL_G_BIAS_PATH = "reports/g_bias.json"
 
-def validate_package_dir(package_dir: Path) -> dict:
+
+def validate_package_dir(package_dir: Path, *, enforce_bias_governance: bool | None = None) -> dict:
     missing_paths = sorted(path for path in REQUIRED_PACKAGE_PATHS if not (package_dir / path).exists())
     schema_errors = []
     if (package_dir / "config.json").exists():
@@ -84,6 +87,12 @@ def validate_package_dir(package_dir: Path) -> dict:
     gate_failures = _gate_failures(gates)
     invariant_failures = _invariant_failures(invariant_results)
     semantic_errors = _semantic_consistency_errors(package_dir)
+    bias_gate_report = _load_json(package_dir / OPTIONAL_G_BIAS_PATH, default={})
+    bias_gate_failures = _bias_gate_failures(
+        bias_gate_report,
+        enforce_bias_governance=_enforce_bias_governance(enforce_bias_governance),
+        report_exists=(package_dir / OPTIONAL_G_BIAS_PATH).exists(),
+    )
 
     return {
         "missing_paths": missing_paths,
@@ -95,6 +104,8 @@ def validate_package_dir(package_dir: Path) -> dict:
         "invariant_results": [result.__dict__ for result in invariant_results],
         "invariant_failures": invariant_failures,
         "semantic_errors": semantic_errors,
+        "bias_gate_report": bias_gate_report,
+        "bias_gate_failures": bias_gate_failures,
         "status": "PASS"
         if not (
             missing_paths
@@ -104,6 +115,7 @@ def validate_package_dir(package_dir: Path) -> dict:
             or gate_failures
             or invariant_failures
             or semantic_errors
+            or bias_gate_failures
         )
         else "FAIL",
     }
@@ -139,6 +151,21 @@ def _invariant_failures(results: list) -> list[str]:
         for result in results
         if result.status != "PASS"
     ]
+
+
+def _enforce_bias_governance(enforce_bias_governance: bool | None) -> bool:
+    if enforce_bias_governance is not None:
+        return enforce_bias_governance
+    return os.environ.get("EBTA_ENABLE_BIAS_GOVERNANCE", "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _bias_gate_failures(report: dict, *, enforce_bias_governance: bool, report_exists: bool) -> list[str]:
+    if not report_exists:
+        return ["missing optional enforced artifact: reports/g_bias.json"] if enforce_bias_governance else []
+    status = report.get("status")
+    if status != "PASS":
+        return [f"G-BIAS {status or 'MISSING_STATUS'}"]
+    return []
 
 
 def _semantic_consistency_errors(package_dir: Path) -> list[str]:

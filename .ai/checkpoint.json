@@ -1,249 +1,261 @@
-{
-  "schema_version": "1.1.0",
-  "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-06-30",
-  "status": "ACTIVE",
-  "repo": {
-    "name": "EBTA - David Aronson",
-    "root": "D:/Livre/Trading/Trading algorithmic/EBTA - David Aronson",
-    "git_head_short": "e22b327",
-    "git_status_policy": "Run git status live before relying on repo dirtiness; do not persist porcelain snapshots here.",
-    "warning": "git status may emit permission warnings for C:/Users/liant/.config/git/ignore"
-  },
-  "relay_contract": {
-    "only_files": [
-      ".ai/checkpoint.json"
-    ],
-    "write_policy": "overwrite_only",
-    "startup_read_order": [
-      "AGENTS.md",
-      ".ai/README.md",
-      ".ai/checkpoint.json",
-      "active_paths.active_hook_path",
-      "active_paths.active_tracking_path",
-      "active_paths.active_protocol_entrypoint",
-      ".ai/governance/AI_MODIFICATION_CHECKLIST.md when the task is normative, structural, or implementation-impacting"
-    ],
-    "do_not_create": [
-      "dated plan files",
-      "versioned checkpoint files",
-      "parallel relay folders",
-      "reactivated current_plan.md",
-      "competing project state snapshots"
-    ]
-  },
-  "active_paths": {
-    "active_hook_path": "Implementation/Active/HOOK.md",
-    "active_tracking_path": "Implementation/Active/tracking.json",
-    "active_protocol_entrypoint": "Protocole/0-README - Comprendre et maintenir le protocole EBTA.md",
-    "human_start_path": "0 - HUMAN START HERE/",
-    "backlog_mainline_path": ".ai/backlog/mainline/",
-    "backlog_annexes_path": ".ai/backlog/annexes/",
-    "backlog_fixes_path": ".ai/backlog/fixes/"
-  },
-  "authority_model": {
-    "normative_authority": "Protocole/ frozen as EBTA-DOC-1.0",
-    "runtime_authority": "Implementation/ is executable derivative, not normative doctrine",
-    "runtime_hook": "See active_paths.active_hook_path",
-    "runtime_machine_state": "See active_paths.active_tracking_path",
-    "runtime_history": "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md",
-    "agent_bootstrap": "AGENTS.md",
-    "ai_cockpit": ".ai/ is the single AI project-state cockpit; .ai/governance/ is procedural modification governance, not scientific authority",
-    "tooling_support": ".agents/ is historical/tooling support only, not a project-state authority",
-    "codex_adapter": ".codex/README.md",
-    "adapter_boundary": "BACKTRADER remains external until governance is read and explicit integration begins"
-  },
-  "current_runtime_state": {
-    "runtime_version": "EBTA-ENGINE-0.1.0",
-    "current_step": "STEP_3_BACKTRADER_INTEGRATION",
-    "completed_steps": [
-      "STEP_0_ARCHIVE_OBSOLETE",
-      "STEP_1_CHECKPOINT",
-      "STEP_2_LOCAL_PILOT_PIPELINE",
-      "STEP_2B_STRATEGIE_ACTIF_RUNTIME"
-    ],
-    "pending_steps": [
-      "STEP_3_BACKTRADER_INTEGRATION"
-    ],
-    "latest_runtime_decision": "STEP_2B_STRATEGIE_ACTIF_RUNTIME complete; next runtime step is BACKTRADER governance read before adapter mapping.",
-    "impact_protocole": "NONE"
-  },
-  "active_objective": {
-    "id": "STEP_3_BACKTRADER_INTEGRATION",
-    "status": "PENDING",
-    "title": "Integration BACKTRADER apres gouvernance locale",
-    "classification": "ADAPTER_MAPPING",
-    "non_goals": [
-      "No BACKTRADER modification before governance read",
-      "No EBTA runtime contract change before mapping gaps are known",
-      "No import of BACKTRADER conventions as EBTA norms"
-    ]
-  },
-  "next_actions": [
-    {
-      "id": "NEXT_RUNTIME_STEP",
-      "status": "PENDING",
-      "title": "Read BACKTRADER governance before adapter integration design",
-      "classification": "ADAPTER_MAPPING",
-      "non_goals": [
-        "No BACKTRADER modification before governance read",
-        "No EBTA runtime contract change before mapping gaps are known"
-      ]
-    }
-  ],
-  "workstreams": [
-    {
-      "id": "STEP_3_BACKTRADER_INTEGRATION",
-      "title": "Integration BACKTRADER apres gouvernance locale",
-      "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
-      "classification": "ADAPTER_MAPPING",
-      "source_path": ".ai/backlog/mainline/EPIC_reprise_et_integration_backtrader.md",
-      "active_runtime_path": "Implementation/Active/HOOK.md",
-      "opened_at": "2026-06-29",
-      "last_moved_at": "2026-06-30",
-      "routing_decision": "mainline",
-      "routing_reason": "Current EBTA runtime next step; advances adapter integration only after BACKTRADER governance read.",
-      "moved_by": "ai",
-      "blocks_mainline": true,
-      "advances_mainline": true,
-      "closure_reason": null,
-      "non_goals": [
-        "No BACKTRADER modification before governance read",
-        "No EBTA runtime contract change before mapping gaps are known",
-        "No import of BACKTRADER conventions as EBTA norms"
-      ]
-    },
-    {
-      "id": "EPIC_ARCHITECTURE_IA_RAG",
-      "title": "Proposition Architecture IA / RAG evolutive EBTA",
-      "track": "annexe",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/annexes/EPIC_Proposition_Architecture_IA_RAG.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-06-30",
-      "last_moved_at": "2026-06-30",
-      "routing_decision": "annexe",
-      "routing_reason": "Useful governance/RAG proposal, but not required to advance the current runtime mainline.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": [
-        "No Protocole/ frontmatter insertion in this governance reorg lot",
-        "No Knowledge_Router skill creation in this governance reorg lot",
-        "No mass metadata migration"
-      ]
-    },
-    {
-      "id": "EPIC_AI_GOVERNANCE_LAYER",
-      "title": "Couche de gouvernance IA pour transformation controlee des connaissances",
-      "track": "annexe",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/governance/README.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-06-30",
-      "last_moved_at": "2026-06-30",
-      "routing_decision": "annexe",
-      "routing_reason": "Governance layer documents how knowledge, conflicts, and modification requests are classified before any protocol or implementation change.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Governance policies created without changing Protocole/ or Implementation/.",
-      "non_goals": [
-        "No Protocole/ modification",
-        "No Implementation/ modification",
-        "No RAG, embeddings, vector database, or autonomous agent system",
-        "No new EBTA scientific authority outside Protocole/"
-      ]
-    }
-  ],
-  "validation": {
-    "commands": [
-      {
-        "command": "python -m json.tool .ai\\checkpoint.json",
-        "purpose": "Validate relay checkpoint JSON syntax",
-        "last_result": "PASS - 2026-06-30"
-      },
-      {
-        "command": "python -c \"import json, jsonschema; jsonschema.validate(json.load(open('.ai/checkpoint.json', encoding='utf-8')), json.load(open('.ai/checkpoint.schema.json', encoding='utf-8')))\"",
-        "purpose": "Validate relay checkpoint against schema",
-        "last_result": "PASS - 2026-06-30"
-      },
-      {
-        "command": "python -m json.tool Implementation\\Active\\tracking.json",
-        "purpose": "Validate runtime task tracking JSON syntax",
-        "last_result": "PASS - 2026-06-30"
-      },
-      {
-        "command": "python -c \"import json, jsonschema; jsonschema.validate(json.load(open('Implementation/Active/tracking.json', encoding='utf-8')), json.load(open('Implementation/Active/tracking.schema.json', encoding='utf-8')))\"",
-        "purpose": "Validate runtime tracking against schema",
-        "last_result": "PASS - 2026-06-30"
-      },
-      {
-        "command": "git diff --check -- AGENTS.md .ai",
-        "purpose": "Patch hygiene for AI bootstrap and governance files",
-        "last_result": "PASS - 2026-06-30"
-      }
-    ]
-  },
-  "files_touched_this_turn": [
-    "AGENTS.md",
-    ".ai/README.md",
-    ".ai/checkpoint.json",
-    ".ai/governance/README.md",
-    ".ai/governance/KNOWLEDGE_INTAKE_POLICY.md",
-    ".ai/governance/NORMATIVE_CHANGE_POLICY.md",
-    ".ai/governance/CONFLICT_RESOLUTION_POLICY.md",
-    ".ai/governance/AI_MODIFICATION_CHECKLIST.md"
-  ],
-  "risks": [
-    {
-      "id": "R1",
-      "status": "CONTROLLED",
-      "risk": "Relay files could become a competing EBTA source of truth",
-      "control": "Relay files point to Protocole/ and Implementation/ authorities and only track handoff state"
-    },
-    {
-      "id": "R2",
-      "status": "DEFERRED",
-      "risk": "BACKTRADER integration could import external conventions into EBTA",
-      "control": "STEP_3 remains pending until BACKTRADER governance is read"
-    },
-    {
-      "id": "R3",
-      "status": "CONTROLLED",
-      "risk": "Checkpoint could become stale or narrative again",
-      "control": ".ai/checkpoint.schema.json constrains structure; git dirtiness must be checked live"
-    },
-    {
-      "id": "R4",
-      "status": "CONTROLLED",
-      "risk": "Runtime tracking JSON could drift without machine validation",
-      "control": "Implementation/Active/tracking.schema.json constrains the active tracking file"
-    },
-    {
-      "id": "R5",
-      "status": "CONTROLLED",
-      "risk": "Human intake drafts could be executed without audit",
-      "control": "0 - HUMAN START HERE/ is intake-only; .ai/tools/plan.ps1 start requires -Audited and backlog-ready sections before routing"
-    },
-    {
-      "id": "R6",
-      "status": "CONTROLLED",
-      "risk": ".ai workstreams could duplicate Implementation/Active runtime tracking",
-      "control": ".ai/checkpoint.json tracks macro workstreams only; Implementation/Active remains the micro runtime cockpit"
-    },
-    {
-      "id": "R7",
-      "status": "CONTROLLED",
-      "risk": ".ai/governance/ could be mistaken for EBTA scientific authority",
-      "control": "Governance files state that Protocole/ remains normative and Implementation/ remains the executable derivative"
-    }
-  ]
+﻿{
+    "schema_version":  "1.2.0",
+    "checkpoint_kind":  "multi_ai_relay",
+    "updated_at":  "2026-07-01",
+    "status":  "ACTIVE",
+    "repo":  {
+                 "name":  "EBTA - David Aronson",
+                 "root":  "D:/Livre/Trading/Trading algorithmic/EBTA - David Aronson",
+                 "git_head_short":  "e22b327",
+                 "git_status_policy":  "Run git status live before relying on repo dirtiness; do not persist porcelain snapshots here.",
+                 "warning":  "git status may emit permission warnings for C:/Users/liant/.config/git/ignore"
+             },
+    "relay_contract":  {
+                           "only_files":  [
+                                              ".ai/checkpoint.json"
+                                          ],
+                           "write_policy":  "overwrite_only",
+                           "startup_read_order":  [
+                                                      "AGENTS.md",
+                                                      ".ai/README.md",
+                                                      ".ai/checkpoint.json",
+                                                      "active_paths.active_hook_path",
+                                                      "active_paths.active_tracking_path",
+                                                      "active_paths.active_protocol_entrypoint",
+                                                      ".ai/governance/AI_MODIFICATION_CHECKLIST.md when the task is normative, structural, or implementation-impacting"
+                                                  ],
+                           "do_not_create":  [
+                                                 "dated plan files",
+                                                 "versioned checkpoint files",
+                                                 "parallel relay folders",
+                                                 "reactivated current_plan.md",
+                                                 "competing project state snapshots"
+                                             ]
+                       },
+    "active_paths":  {
+                         "active_hook_path":  "Implementation/Active/HOOK.md",
+                         "active_tracking_path":  "Implementation/Active/tracking.json",
+                         "active_protocol_entrypoint":  "Protocole/0-README - Comprendre et maintenir le protocole EBTA.md",
+                         "human_start_path":  "0 - HUMAN START HERE/",
+                         "backlog_mainline_path":  ".ai/backlog/mainline/",
+                         "backlog_annexes_path":  ".ai/backlog/annexes/",
+                         "backlog_fixes_path":  ".ai/backlog/fixes/"
+                     },
+    "authority_model":  {
+                            "normative_authority":  "Protocole/ frozen as EBTA-DOC-1.1",
+                            "runtime_authority":  "Implementation/ is executable derivative, not normative doctrine",
+                            "runtime_hook":  "See active_paths.active_hook_path",
+                            "runtime_machine_state":  "See active_paths.active_tracking_path — single source of truth for runtime step/task state",
+                            "runtime_history":  "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md",
+                            "agent_bootstrap":  "AGENTS.md",
+                            "ai_cockpit":  ".ai/ is the single AI project-state cockpit; .ai/governance/ is procedural modification governance, not scientific authority",
+                            "tooling_support":  ".agents/ is historical/tooling support only, not a project-state authority",
+                            "codex_adapter":  ".codex/README.md",
+                            "adapter_boundary":  "BACKTRADER remains external until governance is read and explicit integration begins"
+                        },
+    "active_workstream_id":  "STEP_3_BACKTRADER_INTEGRATION",
+    "next_actions":  [
+                         {
+                             "id":  "NEXT_RUNTIME_STEP",
+                             "status":  "PENDING",
+                             "title":  "Read BACKTRADER governance before adapter integration design",
+                             "classification":  "ADAPTER_MAPPING",
+                             "non_goals":  [
+                                               "No BACKTRADER modification before governance read",
+                                               "No EBTA runtime contract change before mapping gaps are known"
+                                           ]
+                         }
+                     ],
+    "workstreams":  [
+                        {
+                            "id":  "STEP_3_BACKTRADER_INTEGRATION",
+                            "title":  "Integration BACKTRADER apres gouvernance locale",
+                            "priority":  1,
+                            "is_active":  true,
+                            "track":  "mainline",
+                            "status":  "PENDING",
+                            "lifecycle":  "TRIAGED",
+                            "classification":  "ADAPTER_MAPPING",
+                            "source_path":  ".ai/backlog/mainline/EPIC_reprise_et_integration_backtrader.md",
+                            "active_runtime_path":  "Implementation/Active/HOOK.md",
+                            "opened_at":  "2026-06-29",
+                            "last_moved_at":  "2026-06-30",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "Current EBTA runtime next step; advances adapter integration only after BACKTRADER governance read.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  true,
+                            "advances_mainline":  true,
+                            "closure_reason":  null,
+                            "non_goals":  [
+                                              "No BACKTRADER modification before governance read",
+                                              "No EBTA runtime contract change before mapping gaps are known",
+                                              "No import of BACKTRADER conventions as EBTA norms"
+                                          ]
+                        },
+                        {
+                            "id":  "EPIC_ARCHITECTURE_IA_RAG",
+                            "title":  "Proposition Architecture IA / RAG evolutive EBTA",
+                            "priority":  3,
+                            "is_active":  false,
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "REJECTED",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/backlog/annexes/EPIC_Proposition_Architecture_IA_RAG.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-06-30",
+                            "last_moved_at":  "2026-07-01",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Useful governance/RAG proposal, but not required to advance the current runtime mainline.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Fichier source supprime manuellement par l\u0027humain le 2026-07-01; plan rejete avant execution.",
+                            "non_goals":  [
+                                              "No Protocole/ frontmatter insertion in this governance reorg lot",
+                                              "No Knowledge_Router skill creation in this governance reorg lot",
+                                              "No mass metadata migration"
+                                          ]
+                        },
+                        {
+                            "id":  "EPIC_AI_GOVERNANCE_LAYER",
+                            "title":  "Couche de gouvernance IA pour transformation controlee des connaissances",
+                            "priority":  2,
+                            "is_active":  false,
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/governance/README.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-06-30",
+                            "last_moved_at":  "2026-06-30",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Governance layer documents how knowledge, conflicts, and modification requests are classified before any protocol or implementation change.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Governance policies created without changing Protocole/ or Implementation/.",
+                            "non_goals":  [
+                                              "No Protocole/ modification",
+                                              "No Implementation/ modification",
+                                              "No RAG, embeddings, vector database, or autonomous agent system",
+                                              "No new EBTA scientific authority outside Protocole/"
+                                          ]
+                        },
+                        {
+                            "id":  "PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA",
+                            "title":  "Gouvernance des biais humains dans EBTA",
+                            "priority":  2,
+                            "is_active":  false,
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "NORMATIVE_CHANGE_REQUIRED",
+                            "source_path":  ".ai/backlog/annexes/PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-01",
+                            "last_moved_at":  "2026-07-01",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Option A GO received on 2026-07-01; normative Protocole documentation completed as EBTA-DOC-1.1; runtime G-BIAS checkers, OOS guard, aggregate gate, package validation compatibility, pilot evidence, and regression tests completed.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Updated via .ai/tools/plan.ps1",
+                            "non_goals":  [
+
+                                          ]
+                        }
+                    ],
+    "validation":  {
+                       "commands":  [
+                                        {
+                                            "command":  "python -m json.tool .ai\\checkpoint.json",
+                                            "purpose":  "Validate relay checkpoint JSON syntax",
+                                            "last_result":  "PASS - 2026-07-01"
+                                        },
+                                        {
+                                            "command":  "python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\u0027.ai/checkpoint.json\u0027, encoding=\u0027utf-8\u0027)), json.load(open(\u0027.ai/checkpoint.schema.json\u0027, encoding=\u0027utf-8\u0027)))\"",
+                                            "purpose":  "Validate relay checkpoint against schema",
+                                            "last_result":  "PASS - 2026-07-01"
+                                        },
+                                        {
+                                            "command":  "python -m json.tool Implementation\\Active\\tracking.json",
+                                            "purpose":  "Validate runtime task tracking JSON syntax",
+                                            "last_result":  "PASS - 2026-07-01"
+                                        },
+                                        {
+                                            "command":  "python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\u0027Implementation/Active/tracking.json\u0027, encoding=\u0027utf-8\u0027)), json.load(open(\u0027Implementation/Active/tracking.schema.json\u0027, encoding=\u0027utf-8\u0027)))\"",
+                                            "purpose":  "Validate runtime tracking against schema",
+                                            "last_result":  "PASS - 2026-07-01"
+                                        },
+                                        {
+                                            "command":  "git diff --check -- Implementation Protocole .ai",
+                                            "purpose":  "Patch hygiene for implementation, protocol, and AI cockpit files",
+                                            "last_result":  "PASS - 2026-07-01 - CRLF warnings only"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+                                            "purpose":  "Runtime non-regression suite",
+                                            "last_result":  "PASS - 87 tests - 2026-07-01"
+                                        }
+                                    ]
+                   },
+    "session_log":  [
+                        {
+                            "date":  "2026-07-01",
+                            "summary":  "G-BIAS gate completed; checkpoint.json and tracking.json refactored to v1.2.0/v1.1.0; plan.ps1 updated to use active_workstream_id",
+                            "files_count":  6
+                        }
+                    ],
+    "risks":  [
+                  {
+                      "id":  "R1",
+                      "status":  "CONTROLLED",
+                      "risk":  "Relay files could become a competing EBTA source of truth",
+                      "control":  "Relay files point to Protocole/ and Implementation/ authorities and only track handoff state"
+                  },
+                  {
+                      "id":  "R2",
+                      "status":  "DEFERRED",
+                      "risk":  "BACKTRADER integration could import external conventions into EBTA",
+                      "control":  "STEP_3 remains pending until BACKTRADER governance is read"
+                  },
+                  {
+                      "id":  "R3",
+                      "status":  "CONTROLLED",
+                      "risk":  "Checkpoint could become stale or narrative again",
+                      "control":  ".ai/checkpoint.schema.json v1.2.0 constrains structure; runtime state delegated entirely to tracking.json"
+                  },
+                  {
+                      "id":  "R4",
+                      "status":  "CONTROLLED",
+                      "risk":  "Runtime tracking JSON could drift without machine validation",
+                      "control":  "Implementation/Active/tracking.schema.json v1.1.0 constrains the active tracking file"
+                  },
+                  {
+                      "id":  "R5",
+                      "status":  "CONTROLLED",
+                      "risk":  "Human intake drafts could be executed without audit",
+                      "control":  "0 - HUMAN START HERE/ is intake-only; .ai/tools/plan.ps1 start requires -Audited and backlog-ready sections before routing"
+                  },
+                  {
+                      "id":  "R6",
+                      "status":  "CONTROLLED",
+                      "risk":  ".ai workstreams could duplicate Implementation/Active runtime tracking",
+                      "control":  ".ai/checkpoint.json tracks macro workstreams only; runtime step/task state is exclusively in tracking.json"
+                  },
+                  {
+                      "id":  "R7",
+                      "status":  "CONTROLLED",
+                      "risk":  ".ai/governance/ could be mistaken for EBTA scientific authority",
+                      "control":  "Governance files state that Protocole/ remains normative and Implementation/ remains the executable derivative"
+                  },
+                  {
+                      "id":  "R8",
+                      "status":  "CONTROLLED",
+                      "risk":  "The G-BIAS runtime layer could become a competing taxonomy",
+                      "control":  "bias_registry.py, schemas, checkers, guard, and bias_gate.py cite SOP 13 and BIAS_RISK_REGISTER.md and are tracked as subordinate runtime contracts"
+                  }
+              ]
 }

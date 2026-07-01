@@ -4,14 +4,14 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - SPECIFICATION_OPERATIONNELLE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | Gouvernance protocole EBTA |
 | Rôle dans le paquet EBTA | Definition des formulaires, checklists, schemas, rapports, journaux, manifeste et invariants a implementer. |
 | Référence de gel | Protocole/MANIFESTE DE GEL EBTA.md |
 
-Version documentaire : 2026-06-24
+Version documentaire : 2026-07-01
 
 ## Fonction du paquet
 
@@ -44,6 +44,8 @@ Les scripts, formulaires machine-readable et tests automatisés effectifs resten
 | Espace de recherche et candidates | Avant première évaluation exploitable | SOP 03, SOP 06 | Section 4 du template |
 | Modèle d’exécution | Avant Test/OOS | SOP 09B | Section 8 du template |
 | Plan de robustesse | Avant ouverture `OOS_k` | SOP 05 | Section 10 du template |
+| Incident de biais | Dès détection d'un biais ou d'une contamination potentielle | SOP 13 | `Protocole/TEMPLATE - Incident de biais EBTA.md` |
+| Dérogation méthodologique | Avant la décision affectée et avant usage de l'exception | SOP 13 | `Protocole/TEMPLATE - Dérogation méthodologique EBTA.md` |
 | Plan d’incubation/live | Avant `VALIDATION_READY` / `DEPLOYMENT_CERTIFIED` | SOP 11 | Section 13 du template |
 
 ---
@@ -126,9 +128,13 @@ Les scripts, formulaires machine-readable et tests automatisés effectifs resten
 - [ ] Seeds, versions et hashes présents.
 - [ ] Aucun accès OOS antérieur non déclaré.
 - [ ] Reviewer indépendant approuve le paquet.
+- [ ] Checklist `G-BIAS` initiale jointe.
 
 ### G8 - Ouverture OOS
 
+- [ ] `G-BIAS` évalué `PASS` par reviewer indépendant.
+- [ ] Aucun incident `LEVEL_2` ou supérieur non résolu.
+- [ ] Registre des risques de biais revu.
 - [ ] Journal d’accès OOS initialisé.
 - [ ] Autorisation d’ouverture signée.
 - [ ] Accès horodaté.
@@ -157,6 +163,7 @@ Les scripts, formulaires machine-readable et tests automatisés effectifs resten
 - [ ] Rapport OOS complet.
 - [ ] Rapport économique complet.
 - [ ] Rapport de robustesse complet.
+- [ ] Paquet `G-BIAS` complet, incidents et dérogations inclus.
 - [ ] Reproduction indépendante niveau requis `PASS`.
 - [ ] Paquet `VALIDATION_READY` hashé.
 - [ ] Approbation d’incubation présente.
@@ -180,6 +187,7 @@ Les scripts, formulaires machine-readable et tests automatisés effectifs resten
 ### G14 - Cycle de vie et archive
 
 - [ ] Incidents et changements d’état journalisés.
+- [ ] Incidents de biais et dérogations réconciliés.
 - [ ] Suspensions, reprises et retraits documentés.
 - [ ] Paquet `LIFECYCLE_ARCHIVED` produit si applicable.
 - [ ] Conservation minimale respectée.
@@ -250,6 +258,43 @@ Champs minimaux :
 - `incident_flag`
 - `reviewer`
 
+### 3.4 Incident de biais
+
+Champs minimaux :
+
+- `incident_id`
+- `timestamp`
+- `actor_or_tool`
+- `bias_category`
+- `severity_level`
+- `affected_gate`
+- `affected_artifacts`
+- `information_exposure`
+- `impact_assessment`
+- `immediate_action`
+- `reviewer`
+- `gbias_status`
+- `evidence_path`
+- `evidence_hash`
+
+### 3.5 Dérogation méthodologique
+
+Champs minimaux :
+
+- `derogation_id`
+- `timestamp`
+- `requested_exception`
+- `objective_constraint`
+- `affected_gate`
+- `documented_before_decision`
+- `independent_of_observed_result`
+- `no_oos_repair_effect`
+- `reviewer`
+- `decision`
+- `conditions`
+- `expiration`
+- `registry_event_id`
+
 ---
 
 ## 4. Formats de rapports
@@ -263,6 +308,7 @@ Champs minimaux :
 | Rapport d’exécution | Ordres, fills, positions, frictions, rejets, partial fills, réconciliation. |
 | Rapport d’incubation | Données live/paper, signaux, exécution, coûts, risques, incidents, verdict. |
 | Rapport de reproduction | Environnement, données, code, commandes, résultats attendus, tolérances, verdict. |
+| Rapport `G-BIAS` | Registre de risques revu, incidents, dérogations, exposition d'information, impact, reviewer, verdict. |
 
 ---
 
@@ -282,6 +328,7 @@ Champs obligatoires :
 - rapports de gates ;
 - logs d’exécution ;
 - logs d’accès OOS ;
+- incidents de biais, dérogations et décisions `G-BIAS` ;
 - reviewers et approbations ;
 - hashes de tous les artefacts.
 
@@ -307,6 +354,9 @@ Champs obligatoires :
 | INV-014 | Le paquet `VALIDATION_READY` précède l’incubation. | `FAIL` |
 | INV-015 | Le paquet `DEPLOYMENT_CERTIFIED` précède le live limité. | `FAIL` |
 | INV-016 | Les hashes référencés dans le manifeste correspondent aux artefacts présents. | `FAIL` |
+| INV-017 | Aucun `G8` n'est ouvert sans `G-BIAS PASS`. | `FAIL` |
+| INV-018 | Aucun `G11` n'est validé avec incident `LEVEL_2` ou supérieur non résolu. | `FAIL` |
+| INV-019 | Toute dérogation est antérieure à la décision affectée et non réparatrice. | `FAIL` |
 
 ---
 
@@ -317,10 +367,11 @@ Pour rendre ce paquet machine-readable, créer ensuite :
 - un schéma JSON de configuration ;
 - un schéma JSONL du registre append-only ;
 - un schéma JSONL du journal d’accès OOS ;
+- un schéma JSONL des incidents de biais ;
+- un schéma JSON des dérogations méthodologiques ;
 - un générateur de manifeste ;
 - un validateur d’invariants ;
 - des tests automatisés intégrés au pipeline de recherche.
 
 Ces artefacts doivent être développés contre une implémentation concrète du
 pipeline EBTA afin d’éviter des contrôles abstraits non exécutables.
-

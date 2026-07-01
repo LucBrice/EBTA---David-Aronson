@@ -9,7 +9,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "config.json",
       "produced_by": "ebta_engine",
-      "sha256": "D77C3B02D8079522B89C9C2E716581143700FD8A2EBCA32E3AB78F691312A6CA",
+      "sha256": "472620A9D02CFDFDA0D0C955D31212C58EE0462D9B4546820537D43082891E5B",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1"
     },
     {
@@ -27,7 +27,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "registry.jsonl",
       "produced_by": "ebta_engine",
-      "sha256": "83CC5A8AB56F8B41F55E8D4238B22514B508FC66FCB1B79A45AC8D3B7330D2FF",
+      "sha256": "AEA06D59D2FBDBF0877F352A8E5F2132F9A0B13D010BD98E1B5A75F2FCD50181",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.2; SOP 03"
     },
     {
@@ -100,6 +100,15 @@
       "path": "reports/fold_schedule.json",
       "produced_by": "ebta_engine",
       "sha256": "3B5088E51B2A0688C572FB33A8E806C027111046A2D854A016D3059A0EFD4FB8",
+      "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
+    },
+    {
+      "artifact_role": "report",
+      "artifact_type": "g_bias",
+      "package_stage": "VALIDATION_READY",
+      "path": "reports/g_bias.json",
+      "produced_by": "ebta_engine",
+      "sha256": "5DF1DDD99DB371C8C8957404C4470BA8CE35B6F8456F2737EA41250BD2438694",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -234,7 +243,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/robustness.json",
       "produced_by": "ebta_engine",
-      "sha256": "5F41DAE642924927EF9F354774A3B12FACAE129CE202F75087DAF1C9C05F9F4F",
+      "sha256": "563B5606EAF8E951CDAB2A19F340A773FC3CA2132173EC0C62336950496244DB",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -283,7 +292,7 @@
     "runtime": "EBTA-ENGINE-0.1.0"
   },
   "configuration": {
-    "config_hash": "D77C3B02D8079522B89C9C2E716581143700FD8A2EBCA32E3AB78F691312A6CA",
+    "config_hash": "472620A9D02CFDFDA0D0C955D31212C58EE0462D9B4546820537D43082891E5B",
     "config_id": "CFG-PILOT-001",
     "config_path": "config.json"
   },

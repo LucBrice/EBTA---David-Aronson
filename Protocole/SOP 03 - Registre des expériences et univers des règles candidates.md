@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - SOP_NORMATIVE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | SOP 03 |
 | Rôle dans le paquet EBTA | Registre append-only, candidates, familles, runs, matrices et evenements. |
@@ -1142,6 +1142,7 @@ L’archivage ne doit pas rompre :
 - Ouvrir l’OOS sans revue indépendante.
 - Réutiliser un OOS consommé pour confirmer une descendante.
 - Réduire une famille incomplète au sous-univers reconstructible.
+- Omettre un incident de biais, une interaction IA sensible ou une dérogation méthodologique.
 - Détruire les artefacts après rejet ou retrait.
 
 ---
@@ -1172,6 +1173,12 @@ La SOP 04 définit les fenêtres, folds, purges, embargos et calendriers. La SOP
 
 La SOP 07 définit le benchmark, le detrending, le zero-centering et l’ordre des transformations. La SOP 03 conserve les entrées, sorties, versions et hashes permettant de les reproduire.
 
+### SOP 13 — Gouvernance des biais humains et incidents méthodologiques
+
+La SOP 13 définit les incidents de biais, dérogations, contaminations IA et
+verdicts `G-BIAS`. La SOP 03 conserve ces événements dans le registre append-only
+avec leurs liens vers candidates, runs, folds, artefacts et décisions.
+
 ---
 
 ## 26. Modifications requises dans le protocole principal
@@ -1198,6 +1205,7 @@ Après adoption de cette SOP, `PROTOCOLE EBTA.md` doit :
 - `Protocole/SOP 02 - Inférence multiple WRC SPA Romano-Wolf MCP.md`
 - `Protocole/SOP 04 - Segmentation temporelle et Walk-Forward.md`
 - `Protocole/SOP 07 - Detrending benchmark et zero-centering.md`
+- `Protocole/SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`
 - `Notes/82-L'Illusion du Minage de Données et le Mirage du Profit.md`
 - `Notes/85-Le Minage de Données comme Procédure de Comparaisons Multiples.md`
 - `Notes/86-Optimisation des Paramètres et Minage de Données Financières.md`
