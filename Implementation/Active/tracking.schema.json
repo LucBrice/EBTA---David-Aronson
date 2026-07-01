@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "Implementation/Active/tracking.schema.json",
   "title": "EBTA active runtime tracking",
+  "description": "v1.1.0 — micro execution state. Adds current_task_id/next_task_id pointers and completed_steps_archive. Unifies status vocabulary to DONE/IN_PROGRESS/TODO/BLOCKED/PENDING.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,9 +14,11 @@
     "normative_authority",
     "hook_file",
     "current_step",
+    "current_task_id",
     "active_scope",
     "non_goals",
     "steps",
+    "completed_steps_archive",
     "validation_commands",
     "risk_register",
     "latest_decision"
@@ -24,11 +27,19 @@
     "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
     "created_at": { "type": "string", "format": "date" },
     "updated_at": { "type": "string", "format": "date" },
-    "status": { "enum": ["ACTIVE", "PAUSED", "COMPLETE", "BLOCKED"] },
+    "status": { "enum": ["ACTIVE", "PAUSED", "DONE", "BLOCKED"] },
     "runtime_version": { "type": "string", "minLength": 1 },
     "normative_authority": { "type": "string", "minLength": 1 },
     "hook_file": { "type": "string", "minLength": 1 },
     "current_step": { "type": "string", "minLength": 1 },
+    "current_task_id": {
+      "type": ["string", "null"],
+      "description": "ID of the task currently being executed. Null when no task is active. Direct pointer — no scan needed."
+    },
+    "next_task_id": {
+      "type": ["string", "null"],
+      "description": "ID of the next task to execute after current_task_id completes. Null if unknown or current is last."
+    },
     "active_scope": {
       "type": "array",
       "items": { "type": "string", "minLength": 1 },
@@ -41,8 +52,24 @@
     },
     "steps": {
       "type": "array",
+      "description": "Active and pending steps only. Completed steps are moved to completed_steps_archive.",
       "items": { "$ref": "#/$defs/step" },
-      "minItems": 1
+      "minItems": 0
+    },
+    "completed_steps_archive": {
+      "type": "array",
+      "description": "Compact summary of completed steps. Grows over time but each entry is small.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "completed_at", "tasks_done"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "completed_at": { "type": "string", "format": "date" },
+          "tasks_done": { "type": "integer", "minimum": 0 }
+        }
+      }
     },
     "validation_commands": {
       "type": "array",
@@ -64,6 +91,9 @@
     }
   },
   "$defs": {
+    "status": {
+      "enum": ["TODO", "PENDING", "IN_PROGRESS", "DONE", "BLOCKED"]
+    },
     "step": {
       "type": "object",
       "additionalProperties": false,
@@ -97,6 +127,10 @@
         "title": { "type": "string", "minLength": 1 },
         "status": { "$ref": "#/$defs/status" },
         "classification": { "$ref": "#/$defs/classification" },
+        "blocked_by": {
+          "type": ["string", "null"],
+          "description": "ID of the task that must complete before this one can start."
+        },
         "deliverables": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 }
@@ -123,9 +157,6 @@
         "risk": { "type": "string", "minLength": 1 },
         "mitigation": { "type": "string", "minLength": 1 }
       }
-    },
-    "status": {
-      "enum": ["TODO", "PENDING", "ACTIVE", "DONE", "COMPLETE", "BLOCKED", "DEFERRED"]
     },
     "classification": {
       "enum": [

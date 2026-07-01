@@ -77,6 +77,39 @@ class PackageValidatorTests(unittest.TestCase):
             self.assertEqual(report["status"], "FAIL")
             self.assertIn("reports/search_space.json", report["missing_paths"])
 
+    def test_present_g_bias_report_must_pass_when_available(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+            manifest = build_manifest(
+                package_dir,
+                sorted(path for path in REQUIRED_PACKAGE_PATHS if path != "manifests/reproducibility_manifest.json"),
+                "VALIDATION_READY",
+            )
+            atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+            atomic_write_json(package_dir / "reports" / "g_bias.json", {"artifact_type": "g_bias_report", "status": "FAIL"})
+
+            report = validate_package_dir(package_dir)
+
+            self.assertEqual(report["status"], "FAIL")
+            self.assertEqual(report["bias_gate_failures"], ["G-BIAS FAIL"])
+
+    def test_enforced_g_bias_report_missing_fails_package(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+            manifest = build_manifest(
+                package_dir,
+                sorted(path for path in REQUIRED_PACKAGE_PATHS if path != "manifests/reproducibility_manifest.json"),
+                "VALIDATION_READY",
+            )
+            atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+
+            report = validate_package_dir(package_dir, enforce_bias_governance=True)
+
+            self.assertEqual(report["status"], "FAIL")
+            self.assertEqual(report["bias_gate_failures"], ["missing optional enforced artifact: reports/g_bias.json"])
+
 
 if __name__ == "__main__":
     unittest.main()

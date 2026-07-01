@@ -80,6 +80,99 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-01 - Gate runtime G-BIAS complet
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | CONTRACT_ENCODING / GATE_CHECK / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`; `Protocole/PAQUET D'EXECUTION EBTA.md` artefact `G-BIAS`; DN-042 a DN-047 |
+| Fichiers impactes | `Implementation/ebta_engine/governance/`, `Implementation/ebta_engine/validators/package_validator.py`, `Implementation/ebta_engine/procedures/oos_access.py`, `Implementation/ebta_engine/procedures/robustness.py`, `Implementation/examples/minimal_pilot_pipeline/`, `Implementation/ebta_engine/tests/`, `Implementation/TRACEABILITY_MATRIX.md` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS - 87 tests; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS |
+
+### Contexte
+
+Le socle initial avait expose le registre `BIAS-*` et le logger d'incidents,
+mais le gate transversal `G-BIAS` restait a brancher. EBTA-DOC-1.1 exige que la
+gouvernance des biais puisse bloquer l'ouverture OOS et la validation finale si
+les preuves sont manquantes, modifiees ou contaminees.
+
+### Decision
+
+Ajouter le lot runtime complet :
+
+- schéma de dérogation méthodologique ;
+- checkers `registry_completeness`, `candidate_family`, `metric_lock` et
+  `robustness_gate` ;
+- `oos_access_guard` avec statut `BURNED` en cas d'accès OOS non autorisé ;
+- `bias_gate` agregant les preuves en `PASS`, `FAIL`, `INCONCLUSIVE` ou
+  `BURNED` ;
+- intégration compatible dans `package_validator` : un rapport
+  `reports/g_bias.json` présent ou explicitement enforcé doit etre `PASS` ;
+- pilote minimal produisant `reports/g_bias.json` et exigeant `bias_gate_pass`
+  avant l'autorisation OOS.
+
+### Impact
+
+Le runtime encode des regles deja presentes dans SOP 13 et ne cree pas de source
+normative concurrente. Les anciens paquets restent validables tant que
+`G-BIAS` n'est pas explicitement enforcé et qu'aucun rapport `g_bias.json`
+non-PASS n'est fourni.
+
+### Suite
+
+Le chantier annexe `PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA` est complet.
+La prochaine etape reste le mainline `STEP_3_BACKTRADER_INTEGRATION`, apres
+lecture de la gouvernance locale BACKTRADER.
+
+## 2026-07-01 - Socle runtime G-BIAS incidents et registre de biais
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`; `Protocole/BIAS_RISK_REGISTER.md`; `Protocole/PAQUET D'EXECUTION EBTA.md` section 3.4; DN-042 a DN-046 |
+| Fichiers impactes | `Implementation/ebta_engine/governance/`, `Implementation/ebta_engine/tests/test_governance_bias.py`, `Implementation/ebta_engine/__init__.py`, `Implementation/TRACEABILITY_MATRIX.md` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_governance_bias.py` |
+
+### Contexte
+
+Le lot documentaire `EBTA-DOC-1.1` a cree SOP 13, le registre des risques de
+biais, les templates d'incident et de derogation, ainsi que le gate transversal
+`G-BIAS`. Le runtime devait commencer l'encodage sans creer de norme
+concurrente.
+
+### Decision
+
+Ajouter un premier socle executable :
+
+- `governance/bias_risk_schema.json` encode le format machine d'un risque de
+  biais ;
+- `governance/incident_schema.json` encode le format minimal d'un incident de
+  biais ;
+- `governance/bias_registry.py` expose les 20 categories `BIAS-001` a
+  `BIAS-020` derivees de `BIAS_RISK_REGISTER.md` ;
+- `governance/incident_logger.py` journalise les incidents en JSONL append-only
+  et permet le chargement/filtrage des incidents ouverts ;
+- `SUPPORTED_PROTOCOL_VERSIONS` accepte maintenant `EBTA-DOC-1.1`.
+
+### Impact
+
+Le lot encode seulement les artefacts documentaires deja valides. Il ne branche
+pas encore le gate `G-BIAS` dans `package_validator`, ne remplace pas les gates
+G0 a G14 et ne modifie pas BACKTRADER.
+
+### Suite
+
+Implementer les checkers pre-OOS (`registry_completeness_checker`,
+`candidate_family_checker`, `metric_lock_checker`, `robustness_gate_checker`),
+puis `oos_access_guard.py` et `bias_gate.py`, avec tests de non-divergence apres
+chaque lot.
+
 ## 2026-06-29 - Encodage runtime de strategie x actif
 
 | Champ | Valeur |

@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - SOP_NORMATIVE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | SOP 08 |
 | Rôle dans le paquet EBTA | Serie de rendement primaire, NAV, metriques et gate economique. |
@@ -701,10 +701,20 @@ hashes:
 - Traiter un ratio non défini comme infini favorable.
 - Winsoriser après observation.
 - Changer de métrique après un résultat décevant.
+- Changer hurdle, benchmark, coût ou convention économique après résultat pour obtenir `G-BIAS PASS`.
 
 ---
 
-## 31. Sources internes
+## 31. Relation avec SOP 13
+
+La SOP 13 gouverne les biais de métrique, hurdle, benchmark, coût et
+interprétation économique. Tout changement du contrat de performance après
+observation d'un résultat sensible doit être journalisé comme incident ou
+nouvelle version, jamais comme simple ajustement de reporting.
+
+---
+
+## 32. Sources internes
 
 - `Notes/50-Statistiques Descriptives L'Architecture des Données de Trading.md`
 - `Notes/76-L'Estimation Statistique de la Performance en Trading.md`
@@ -715,6 +725,6 @@ hashes:
 
 ---
 
-## 32. Décision méthodologique synthétique
+## 33. Décision méthodologique synthétique
 
 > **La représentation canonique EBTA est une série quotidienne complète du portefeuille. L’inférence porte sur la moyenne des log-rendements quotidiens nets detrendés ; le gate économique porte séparément sur la NAV réelle nette, le cash, les coûts, le risque, la capacité et l’exécutabilité. Tous les jours, y compris les périodes sans modèle ou sans exposition, restent dans la chronologie. Les métriques secondaires ne remplacent jamais rétroactivement la métrique primaire. Le verdict global est calculé sur l’OOS concaténé et toutes les séries doivent réconcilier la NAV dans une tolérance préenregistrée.**

@@ -21,7 +21,8 @@
   ],
   "document_hash": "PILOT_CONFIG_HASH_PLACEHOLDER",
   "execution_model": {
-    "central_scenario": "tradable_net"
+    "central_scenario": "tradable_net",
+    "slippage_model": "pilot_fixed_spread"
   },
   "hypothesis_id": "HYP-PILOT-MA",
   "incubation_plan": {
@@ -38,7 +39,7 @@
   },
   "process_version_id": "PROC-PILOT-001",
   "project_id": "PRJ-PILOT",
-  "protocol_version": "EBTA-DOC-1.0",
+  "protocol_version": "EBTA-DOC-1.1",
   "reproducibility_manifest": {
     "package_stage": "VALIDATION_READY"
   },

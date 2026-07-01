@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - CONTROLE_TRANSVERSAL |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | Gouvernance protocole EBTA |
 | Rôle dans le paquet EBTA | Controle de coherence inter-SOP et suivi des points de resolution documentaire. |
@@ -37,7 +37,7 @@ Le protocole principal n'est pas modifie par cette etape.
 
 **Verdict : `PARTIAL_READY_FOR_REGISTRY`**
 
-Les SOP 01 a 12 forment une architecture methodologique globalement coherente :
+Les SOP 01 a 13 forment une architecture methodologique globalement coherente :
 
 - Walk-Forward obligatoire avec segments `OOS_k` successifs et non chevauchants ;
 - aucun holdout final supplementaire ;
@@ -47,6 +47,7 @@ Les SOP 01 a 12 forment une architecture methodologique globalement coherente :
 - separation stricte entre gate statistique, gate economique, robustesse,
   execution/capacite, incubation et reproductibilite ;
 - impossibilite de reparer, reselectionner ou revalider sur un OOS deja ouvert.
+- gate transversal `G-BIAS` pour les biais humains, organisationnels et assistes par IA avant ouverture OOS et validation reproductible.
 
 Des corrections documentaires restent necessaires avant la mise a jour du
 protocole principal :
@@ -77,6 +78,7 @@ protocole principal :
 | SOP 10 - Gouvernance OOS et echecs | Specification normative. | Gate d'ouverture OOS, contamination, verdicts, post-mortem, reexecution technique. | `PASS`, `NOT_VALIDATED`, `FAIL`, `REJECTED_ECONOMIC`, `INCONCLUSIVE`, `INVALID_TECHNICAL`. | Interdit seconde chance OOS ; reexecution meme-OOS uniquement pour erreur objective, minimale et independante de la performance. | Journal d'acces OOS, post-mortem, preuves d'erreur, versions. | Coherent ; `INVALID_TECHNICAL` doit entrer dans la taxonomie globale. |
 | SOP 11 - Incubation, live et monitoring | Specification normative. | Paper trading, live limite, monitoring operationnel/statistique, suspension/retrait. | Paper trading `PASS`, `FAIL`, `INCONCLUSIVE`, `WATCH`; live par paliers. | Interdit incubation d'un statut non `PASS`, reparation alpha pendant paper/live. | Journal d'incubation, live, monitoring, incidents, decisions. | Coherent ; `WATCH` doit etre classe comme statut de monitoring, pas de validation. |
 | SOP 12 - Reproductibilite et paquet EBTA | Specification normative. | Paquet de preuve complet, versions immuables, checksums, reproduction. | Stades `PRE_OOS_SEALED`, `VALIDATION_READY`, `DEPLOYMENT_CERTIFIED`, `LIFECYCLE_ARCHIVED`; gates `PASS`, `FAIL`, `INCONCLUSIVE`. | Interdit paquet incomplet, export limite a la gagnante, live avec paquet non valide. | Manifeste, checksums, environnement, donnees, code, decisions, archives. | Coherent ; les stades doivent devenir l'ossature du paquet d'execution. |
+| SOP 13 - Gouvernance des biais humains et incidents methodologiques | Specification normative. | Incidents de biais, registre de risques, derogations, contaminations IA, revue independante. | Gate transversal `G-BIAS` : `PASS`, `FAIL`, `INCONCLUSIVE`, `BURNED`. | Interdit incident non journalise, derogation reparatrice, contamination IA non qualifiee, OOS repare par exception. | Checklist `G-BIAS`, rapport d'incident, template de derogation, revue du registre des risques. | Coherent ; ajoute une gouvernance de conduite de recherche sans modifier l'ordre `G0` a `G14`. |
 
 ---
 
@@ -97,6 +99,7 @@ protocole principal :
 | 11. Couts, sizing, capacite et execution | SOP 09B | SOP 05, 08, 09B, 10, 11, 12 | Le scenario central doit etre tradable et inclure couts, impact, borrow, financement, FX, sizing et capacite. | SOP 05 stress-teste les frictions ; SOP 09B definit le moteur central. Risque de redondance si non indexe. | Declarer SOP 09B proprietaire du modele central ; SOP 05 proprietaire des scenarios de robustesse autour de ce modele. |
 | 12. Seeds, hashes, versions et archivage | SOP 12 avec registre SOP 03 | SOP 01, 02, 03, 04, 06, 07, 09A, 09B, 10, 12 | Seeds, matrices, snapshots, versions, checksums et acces OOS doivent etre reconstructibles. | Pas de conflit, mais les schemas de noms restent disperses. | Le registre normatif doit indexer les identifiants minimaux ; le paquet SOP 12 doit devenir le point d'assemblage. |
 | 13. Incubation et passage live | SOP 11 | SOP 01, 05, 09B, 10, 11, 12 | Seul un vrai `PASS` statistique, economique, robustesse, execution/capacite et reproduction permet l'incubation ; le live progresse par paliers. | `WATCH` est un statut de monitoring et ne doit pas etre confondu avec un verdict de validation. | Ajouter la taxonomie `validation_status` vs `monitoring_status` avant le protocole principal. |
+| 14. Gouvernance des biais humains et assistes par IA | SOP 13 | SOP 02, 03, 05, 08, 10, 11, 12, 13 | Les incidents, derogations, communications, contaminations IA et biais de selection/metrique/robustesse sont journalises et peuvent bloquer l'ouverture OOS ou la validation. | Risque de double doctrine si les SOP consommatrices redefinissent les categories au lieu de pointer vers SOP 13. | Declarer SOP 13 proprietaire de `G-BIAS`, du registre de risques et des templates ; garder les autres SOP comme consommatrices. |
 
 ---
 
@@ -212,6 +215,7 @@ protocole principal :
 | 2026-06-24 | Paquet d’exécution documentaire | `CREATED` | `Protocole/PAQUET D'EXECUTION EBTA.md`. |
 | 2026-06-24 | C-03 à C-06 | `CLOSED_FOR_DOCUMENTATION` | Les propriétaires, statuts et paramètres sont indexés dans les livrables documentaires. |
 | 2026-06-24 | Revue finale et gel documentaire | `CLOSED` | Version documentaire `EBTA-DOC-1.0`, manifeste de hashes dans `Protocole/MANIFESTE DE GEL EBTA.md`. |
+| 2026-07-01 | Gouvernance des biais humains et incidents | `CLOSED_FOR_DOCUMENTATION` | SOP 13, `BIAS_RISK_REGISTER.md`, templates incident/dérogation, registre normatif DN-042 à DN-047 et `G-BIAS` transversal ajoutés en `EBTA-DOC-1.1`. |
 
 ---
 
@@ -219,4 +223,4 @@ protocole principal :
 
 Avant de modifier `Protocole/PROTOCOLE EBTA.md`, effectuer dans cet ordre :
 
-1. ouvrir une nouvelle version documentaire pour toute évolution méthodologique future ou lancer l’implémentation machine-readable du paquet d’exécution.
+1. lancer l’implémentation machine-readable du paquet d’exécution, incluant `G-BIAS`, ou ouvrir une nouvelle version documentaire pour toute évolution méthodologique future.

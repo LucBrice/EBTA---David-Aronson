@@ -20,6 +20,7 @@ IMPLEMENTATION_ROOT = Path(__file__).resolve().parents[2]
 if str(IMPLEMENTATION_ROOT) not in sys.path:
     sys.path.insert(0, str(IMPLEMENTATION_ROOT))
 
+from ebta_engine.governance import evaluate_bias_gate
 from ebta_engine.manifests.manifest_builder import build_manifest
 from ebta_engine.persistence import append_jsonl, atomic_write_json
 from ebta_engine.procedures.candidate_matrix import build_candidate_matrix
@@ -73,8 +74,8 @@ def build_package(
 
     _write_config(package_dir, pilot_inputs)
     _write_registry(package_dir, pilot_inputs)
-    _write_oos_access_log(package_dir, pilot_inputs)
     _write_reports(package_dir, pilot_inputs)
+    _write_oos_access_log(package_dir, pilot_inputs)
     _write_series(package_dir, pilot_inputs)
     _write_manifest(package_dir, package_shape)
 
@@ -94,6 +95,7 @@ def _validate_pilot_contract(pilot_inputs: dict, package_shape: dict) -> None:
         "oos_opening_gate",
         "incubation_plan",
         "reproducibility_manifest",
+        "g_bias_reviewer_report",
     }
     missing_inputs = sorted(required_input_keys - pilot_inputs.keys())
     if missing_inputs:
@@ -155,8 +157,13 @@ def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:
                 "run_id": f"RUN-PILOT-{index:03d}",
                 "fold_id": pilot_inputs["walk_forward_schedule"][0]["fold_id"],
                 "data_snapshot_id": pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
-                "input_hashes": [],
-                "output_hashes": [],
+                "input_hashes": [
+                    f"config_hash:{identifiers['document_hash']}",
+                    f"data_hash:{pilot_inputs['data_snapshots'][0]['data_snapshot_id']}",
+                ],
+                "output_hashes": [
+                    f"code_hash:{pilot_inputs['reproduction_report']['environment']['code_commit_hash']}",
+                ],
                 "decision_status": "PASS",
                 "evidence_path": "reports/candidate_matrix.json",
                 "parent_event_id": "",
@@ -301,6 +308,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "fold_schedule.json": procedure_reports["fold_schedule"],
         "registry_review.json": procedure_reports["registry_review"],
         "detrending.json": procedure_reports["detrending"],
+        "g_bias.json": procedure_reports["g_bias"],
     }
     for filename, payload in static_reports.items():
         atomic_write_json(package_dir / "reports" / filename, payload)
@@ -362,7 +370,8 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
     economic = economic_gate_report(pilot_inputs["economic_gate"])
     robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
     sealing = validate_pre_oos_seal(**pilot_inputs["pre_oos_seal"])
-    oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, robustness, sealing))
+    g_bias = _g_bias_report(pilot_inputs, search_space, candidate_matrix, robustness)
+    oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, robustness, sealing, g_bias))
     monitoring_plan = validate_monitoring_plan(pilot_inputs["incubation_plan"]["monitoring"])
     monitoring_consultation_log = validate_consultation_log(
         pilot_inputs["monitoring_consultations"],
@@ -403,6 +412,7 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
         "oos": oos,
         "economic": economic,
         "robustness": robustness,
+        "g_bias": g_bias,
         "execution": pilot_inputs["execution_report"],
         "reproduction_validation": reproduction_validation,
         "sealing": sealing,
@@ -423,7 +433,7 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
     }
 
 
-def _oos_access_request(pilot_inputs: dict, robustness: dict, sealing: dict) -> dict:
+def _oos_access_request(pilot_inputs: dict, robustness: dict, sealing: dict, g_bias: dict) -> dict:
     event = pilot_inputs["oos_access_log"][0]
     return {
         **event,
@@ -432,7 +442,51 @@ def _oos_access_request(pilot_inputs: dict, robustness: dict, sealing: dict) -> 
         "robustness_pass": robustness["status"] == "PASS",
         "execution_pass": pilot_inputs["execution_report"]["status"] == "PASS",
         "independent_approval": pilot_inputs["pre_oos_seal"]["independent_approval"],
+        "bias_gate_pass": g_bias["status"] == "PASS",
     }
+
+
+def _g_bias_report(pilot_inputs: dict, search_space: dict, candidate_matrix: dict, robustness: dict) -> dict:
+    candidate_ids = [candidate["candidate_id"] for candidate in search_space["candidates"]]
+    decision_lock = _decision_lock_payload(pilot_inputs)
+    return evaluate_bias_gate(
+        candidate_registry=_registry_events(pilot_inputs, candidate_ids),
+        statistical_family_matrix=candidate_matrix,
+        preregistration_manifest=decision_lock,
+        executed_configuration=decision_lock,
+        robustness_plan=pilot_inputs["robustness_plan"],
+        robustness_matrix=robustness,
+        oos_access_log=pilot_inputs["oos_access_log"],
+        incident_log=pilot_inputs.get("bias_incidents", []),
+        reviewer_report=pilot_inputs["g_bias_reviewer_report"],
+    )
+
+
+def _decision_lock_payload(pilot_inputs: dict) -> dict:
+    return {
+        "primary_metric": pilot_inputs["candidate_space"]["selection_metric"],
+        "secondary_metrics": pilot_inputs["candidate_space"].get("stability_criteria", []),
+        "economic_hurdle": pilot_inputs["economic_gate"]["thresholds"],
+        "benchmark": pilot_inputs["detrending"].get("benchmark_id", "cash_plus_benchmark_returns"),
+        "cost_model": pilot_inputs["candidate_space"]["cost_model"],
+        "slippage_model": pilot_inputs["execution_model"].get("slippage_model", "pilot_fixed_spread"),
+        "execution_assumptions": pilot_inputs["execution_model"],
+    }
+
+
+def _registry_events(pilot_inputs: dict, candidate_ids: list[str]) -> list[dict[str, object]]:
+    identifiers = pilot_inputs["identifiers"]
+    return [
+        {
+            "run_id": f"RUN-PILOT-{index:03d}",
+            "candidate_id": candidate_id,
+            "config_hash": identifiers["document_hash"],
+            "code_hash": pilot_inputs["reproduction_report"]["environment"]["code_commit_hash"],
+            "data_hash": pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
+            "decision_status": "PASS",
+        }
+        for index, candidate_id in enumerate(candidate_ids, start=1)
+    ]
 
 
 def _pilot_search_space(pilot_inputs: dict) -> dict:

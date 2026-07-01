@@ -1,0 +1,48 @@
+{
+  "artifact_type": "g_bias_report",
+  "blocking_incidents": [],
+  "checked_artifacts": [
+    "candidate_registry",
+    "statistical_family_matrix",
+    "preregistration_manifest",
+    "robustness_matrix",
+    "oos_access_log",
+    "incident_log",
+    "reviewer_report"
+  ],
+  "checker_reports": [
+    {
+      "artifact_type": "registry_completeness_report",
+      "incidents": [],
+      "source_normative": "SOP 03; SOP 13; DN-005 to DN-008",
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "artifact_type": "candidate_family_report",
+      "incidents": [],
+      "source_normative": "SOP 03; SOP 13; DN-008; DN-043",
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "artifact_type": "metric_lock_report",
+      "incidents": [],
+      "source_normative": "SOP 13; SOP 08; DN-042 to DN-047",
+      "status": "PASS",
+      "violations": []
+    },
+    {
+      "artifact_type": "robustness_gate_bias_report",
+      "incidents": [],
+      "source_normative": "SOP 05; SOP 13; DN-030; DN-043",
+      "status": "PASS",
+      "violations": []
+    }
+  ],
+  "gate": "G-BIAS",
+  "source_normative": "SOP 13; DN-042 to DN-047",
+  "status": "PASS",
+  "timestamp": "2026-07-01T12:34:47.450606+00:00",
+  "warnings": []
+}

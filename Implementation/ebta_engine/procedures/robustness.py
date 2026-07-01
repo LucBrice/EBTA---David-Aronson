@@ -72,6 +72,7 @@ def pre_oos_robustness_verdict(
                 "description": "No scenarios provided; a pre-OOS robustness plan must exist.",
             }],
             phase="PRE_OOS",
+            executed_stress_ids=[],
         )
 
     violations: list[dict[str, Any]] = []
@@ -158,6 +159,11 @@ def pre_oos_robustness_verdict(
             for s in scenarios
             if s.get("influential_variant")
         ],
+        executed_stress_ids=[
+            s.get("stress_id")
+            for s in scenarios
+            if s.get("stress_id")
+        ],
     )
 
 
@@ -188,6 +194,7 @@ def post_oos_diagnostic_report(
             scenario_count=0,
             violations=[],
             phase="POST_OOS_DIAGNOSTIC",
+            executed_stress_ids=[],
         )
 
     violations: list[dict[str, Any]] = []
@@ -237,6 +244,11 @@ def post_oos_diagnostic_report(
         scenario_count=len(scenarios),
         violations=violations,
         phase="POST_OOS_DIAGNOSTIC",
+        executed_stress_ids=[
+            s.get("stress_id")
+            for s in scenarios
+            if s.get("stress_id")
+        ],
     )
 
 
@@ -267,6 +279,7 @@ def _robustness_result(
     phase: str,
     classification_counts: dict[str, int] | None = None,
     influential_variants: list[str | None] | None = None,
+    executed_stress_ids: list[str | None] | None = None,
 ) -> dict[str, Any]:
     result: dict[str, Any] = {
         "artifact_type": "robustness_report",
@@ -280,4 +293,6 @@ def _robustness_result(
         result["classification_counts"] = classification_counts
     if influential_variants is not None:
         result["influential_variants"] = [v for v in influential_variants if v]
+    if executed_stress_ids is not None:
+        result["executed_stress_ids"] = [stress_id for stress_id in executed_stress_ids if stress_id]
     return result

@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - SOP_NORMATIVE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | SOP 05 |
 | Rôle dans le paquet EBTA | Robustesse decisionnelle pre-OOS et diagnostics post-OOS non reparateurs. |
@@ -1229,6 +1229,7 @@ La personne ayant conçu ou optimisé la candidate ne peut être l’unique revi
 - Utiliser un diagnostic post-OOS pour accorder une seconde chance.
 - Appeler un mauvais résultat « bug » sans preuve indépendante.
 - Réexécuter une correction logique sur le même OOS.
+- Reclassifier, retirer ou ajouter un scénario de robustesse après observation pour obtenir `G-BIAS PASS`.
 - Conserver uniquement une equity curve ou un rapport agrégé.
 
 ---
@@ -1275,6 +1276,12 @@ La SOP 05 gouverne les tests de robustesse avant OOS. La SOP 10 gouverne l’acc
 
 La SOP 12 assemble les artefacts de la SOP 05 dans le paquet final et contrôle la reproduction indépendante.
 
+### SOP 13 — Gouvernance des biais humains et incidents méthodologiques
+
+La SOP 13 qualifie les biais de robustesse : choix opportuniste de scénarios,
+reclassification après observation, seuil abaissé, retrait d'un stress-test
+défavorable ou réparation post-OOS. Ces incidents peuvent bloquer `G-BIAS`.
+
 ---
 
 ## 28. Sources internes
@@ -1290,6 +1297,7 @@ La SOP 12 assemble les artefacts de la SOP 05 dans le paquet final et contrôle 
 - `Protocole/SOP 09B - Modèle d’exécution frictions capacité et sizing.md`
 - `Protocole/SOP 10 - Gouvernance OOS et gestion des échecs.md`
 - `Protocole/SOP 12 - Reproductibilité et paquet de validation EBTA.md`
+- `Protocole/SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`
 - `Notes/104-Les Cinq Facteurs du Biais de Minage de Données.md`
 - `Notes/110-L'Illusion du Profit L'Impact des Valeurs Extrêmes en Trading.md`
 - `Notes/121-La Validation Hors-Échantillon L'Épreuve de Réalité Statistique.md`

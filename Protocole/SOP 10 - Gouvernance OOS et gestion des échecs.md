@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - SOP_NORMATIVE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | SOP 10 |
 | Rôle dans le paquet EBTA | Acces OOS, contamination, echecs, post-mortems et reexecutions techniques. |
@@ -108,7 +108,8 @@ L’ouverture exige simultanément :
 8. plan d’analyse et sorties autorisées figés ;
 9. revue indépendante ;
 10. paquet SOP 12 au stade `PRE_OOS_SEALED` ;
-11. accès journalisé.
+11. `G-BIAS PASS` selon SOP 13 ;
+12. accès journalisé.
 
 Un SPA favorable ne peut renverser un WRC `FAIL` ou `INCONCLUSIVE`.
 
@@ -623,6 +624,8 @@ Omettre un run OOS défavorable est une violation méthodologique.
 - Transformer `NOT_VALIDATED` ou `INCONCLUSIVE` en `PASS`.
 - Considérer une contamination individuelle seulement.
 - Omettre une visualisation ou communication du journal.
+- Ouvrir ou réexécuter l'OOS avec un incident `G-BIAS` non résolu.
+- Utiliser une dérogation pour restaurer la virginité d'un OOS consommé.
 
 ---
 
@@ -635,6 +638,7 @@ Omettre un run OOS défavorable est une violation méthodologique.
 - `Notes/172-Justification de la performance en OOS, rôle du test d'hypothèse.md`
 - `Notes/173-Le rôle de l'OOS, estimation et stabilité dans l'EBTA.md`
 - `Notes/174-Faut-il réaliser un test d'hypothèse sur l'OOS.md`
+- `Protocole/SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`
 
 ---
 

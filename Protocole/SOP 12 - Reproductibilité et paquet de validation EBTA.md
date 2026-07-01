@@ -4,8 +4,8 @@
 | Champ | Valeur |
 | --- | --- |
 | Statut | ACTIF - SOP_NORMATIVE |
-| Version documentaire | EBTA-DOC-1.0 |
-| Date de gel documentaire | 2026-06-24 |
+| Version documentaire | EBTA-DOC-1.1 |
+| Date de gel documentaire | 2026-07-01 |
 | Dernière version gelée | Oui |
 | Propriétaire documentaire | SOP 12 |
 | Rôle dans le paquet EBTA | Paquets de validation, stades, checksums, reproduction et archivage. |
@@ -546,6 +546,7 @@ validation_package/
   data_manifest/
   splits/
   registry/
+  bias_governance/
   returns/
   execution/
   statistics/
@@ -779,6 +780,7 @@ La séparation ne doit pas empêcher l’audit de la dépendance.
 - registre complet ;
 - tests `PASS` ;
 - séries et gates reproduits ;
+- artefacts `G-BIAS` présents et cohérents ;
 - niveau 3 réussi ;
 - verdict retrouvé.
 
@@ -878,6 +880,7 @@ timestamp:
 - Certifier soi-même le niveau indépendant.
 - Écraser une ancienne version.
 - Passer live avec un paquet `INCONCLUSIVE`.
+- Valider un paquet sans incidents de biais, dérogations et décision `G-BIAS` réconciliés.
 
 ---
 
@@ -893,6 +896,7 @@ timestamp:
 - `Notes/57-L'Échantillon Unique Le Défi de la Variabilité Invisible.md`
 - `Notes/159-Méthodologie de Data Mining sur le S&P 500.md`
 - `Notes/161-Protocole EBTA La Science de l’Analyse Technique Objective.md`
+- `Protocole/SOP 13 - Gouvernance des biais humains et incidents méthodologiques.md`
 
 ---
 

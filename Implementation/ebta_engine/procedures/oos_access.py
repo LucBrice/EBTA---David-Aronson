@@ -16,6 +16,7 @@ def authorize_oos_access(request: dict[str, Any]) -> dict[str, Any]:
         "robustness_pass",
         "execution_pass",
         "independent_approval",
+        "bias_gate_pass",
     ]
     missing = [flag for flag in required_flags if not request.get(flag)]
     status = "AUTHORIZED" if not missing else "DENIED"
@@ -36,4 +37,3 @@ def _log_entry(request: dict[str, Any]) -> dict[str, Any]:
         "oos_segment_id": request["oos_segment_id"],
         "access_reason": request.get("access_reason", "authorized_oos_execution"),
     }
-

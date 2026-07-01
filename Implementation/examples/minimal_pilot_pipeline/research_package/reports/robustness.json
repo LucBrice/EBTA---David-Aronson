@@ -5,6 +5,11 @@
     "EXTREME": 1,
     "PLAUSIBLE_BASE": 1
   },
+  "executed_stress_ids": [
+    "ROB-PILOT-001",
+    "ROB-PILOT-002",
+    "ROB-PILOT-003"
+  ],
   "influential_variants": [],
   "phase": "PRE_OOS",
   "scenario_count": 3,

@@ -1,16 +1,27 @@
 # HOOK Actif : En attente
 
-Le lot `STEP_2B_STRATEGIE_ACTIF_RUNTIME` est termine.
+Le lot annexe `PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA` est termine.
 
 ## Dernier lot valide
 
-`Implementation/` encode maintenant la clarification `strategie x actif` :
+`Implementation/` encode maintenant le runtime G-BIAS subordonne a
+`EBTA-DOC-1.1` :
 
-- `asset_universe` et `asset_selection_axis` dans le search space ;
-- comptage des candidates par actif ;
-- matrice candidate avec mapping candidat-actif ;
-- `INV-017` pour rejeter une WRC incomplete par couple `strategie x actif` ;
-- fixture pilote multi-actifs validee.
+- schemas et registre runtime des risques de biais ;
+- logger d'incidents append-only ;
+- checkers pre-OOS pour registre, famille candidate, metriques et robustesse ;
+- guard OOS avec blocage pre-OOS et statut `BURNED` en cas d'acces non autorise ;
+- gate transversal `G-BIAS` avec verdict `PASS`, `FAIL`, `INCONCLUSIVE` ou
+  `BURNED` ;
+- validation de paquet compatible via `reports/g_bias.json` ;
+- pilote minimal generant un paquet `PASS` avec preuve G-BIAS.
+
+## Validations du dernier lot
+
+- `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` : PASS, 87 tests.
+- `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` : PASS, package status PASS.
+- Checkpoint et tracking JSON : syntaxe + schemas PASS.
+- `git diff --check -- Implementation Protocole .ai` : PASS avec avertissements CRLF/LF uniquement.
 
 ## Prochaine etape
 
