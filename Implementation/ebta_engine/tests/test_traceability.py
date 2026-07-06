@@ -15,6 +15,10 @@ class TraceabilityTests(unittest.TestCase):
             "schemas/reproducibility_manifest.schema.json",
             "validators/invariant_validator.py",
             "adapters/backtrader_mapping.py",
+            "data/local_ohlcv.py",
+            "strategies/payloads.py",
+            "backtest/native_engine.py",
+            "package_builder/native_research_package.py",
         ]
         for artifact in required:
             self.assertIn(artifact, matrix)

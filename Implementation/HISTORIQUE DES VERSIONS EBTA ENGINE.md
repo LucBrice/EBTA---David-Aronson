@@ -80,6 +80,42 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-02 - Moteur natif EBTA MVP jusqu'a Phase 8
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / ADAPTER_MAPPING |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` |
+| Fichiers impactes | `Implementation/ebta_engine/data/`, `strategies/`, `features/`, `trading_signals/`, `backtest/`, `risk/`, `metrics/`, `package_builder/`, `schemas/strategy_payload.schema.json`, `Implementation/NATIVE_ENGINE_PROCEDURE_MAPPING.md`, `Implementation/PAYLOAD_DECOMPOSITION_E_TO_I.md`, `Implementation/BACKTRADER_DATA_SOURCE_AUDIT.md`, `Implementation/notebooks/` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 93 tests ; `python -m ebta_engine.package_builder.native_research_package` -> package PASS |
+
+### Contexte
+
+Le mainline BACKTRADER externe est remplace par un moteur EBTA natif. BACKTRADER
+reste une reference lue en lecture seule apres gouvernance locale ; il n'est pas
+une dependance runtime.
+
+### Decision
+
+Implementation fournit une verticale MVP native : chargement CSV local
+XAUUSD/NASDAQ, decomposition E-I en `StrategyPayload`, signaux causaux simples,
+backtest deterministe, generation d'un `research_package` valide, et notebooks
+Jupyter d'orchestration.
+
+### Impact
+
+Le package reel est genere dans `Implementation/research_packages/native_mvp`
+et reste ignore par git. Les validateurs EBTA existants restent l'autorite de
+verdict ; aucun fichier `Protocole/` n'est modifie.
+
+### Suite
+
+Ne pas etendre le MVP vers une recherche reelle avant de trancher le gap
+licence/vendor des donnees locales et de conserver les validations `PASS`.
+
 ## 2026-07-01 - Gate runtime G-BIAS complet
 
 | Champ | Valeur |

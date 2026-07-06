@@ -1,11 +1,19 @@
 # Plan d'implementation - Moteur de backtest natif EBTA
 
+## Audit IA de promotion
+
+- [x] Plan relu dans le contexte du cockpit EBTA (`AGENTS.md`, `.ai/README.md`, `.ai/checkpoint.json`, `Implementation/Active/HOOK.md`, `Implementation/Active/tracking.json`).
+- [x] Changement classe comme chantier `mainline` remplacant `STEP_3_BACKTRADER_INTEGRATION`.
+- [x] Aucun changement de `Protocole/` requis pour l'activation du chantier.
+- [x] BACKTRADER reste `REFERENCE_ONLY` tant que sa gouvernance locale et la provenance des donnees XAUUSD/NASDAQ ne sont pas documentees.
+- [x] Les phases d'implementation restent bloquees par les prerequis factuels et la gouvernance IA explicite decrits en Phase -1 et Phase 0-BIS.
+
 ## Triage IA
 
 | Champ | Valeur |
 | --- | --- |
 | Track | `mainline` |
-| Lifecycle | `DRAFT_FOR_DISCUSSION` |
+| Lifecycle | `ACTIVE` |
 | Scope | Refonte de l'integration BACKTRADER vers un moteur de backtest natif EBTA, avec BACKTRADER comme reference de reecriture uniquement. |
 | Non-goals | Pas de modification de `Protocole/`; pas de copie runtime de BACKTRADER; pas de maintien du pipeline sectionnel BACKTRADER; pas d'application web avant MVP moteur; pas d'ouverture OOS opportuniste. |
 | Source | Discussion utilisateur/Codex du 2026-07-02 autour de `STEP_3_BACKTRADER_INTEGRATION`. |
@@ -15,13 +23,34 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | DRAFT - MATIERE DE DISCUSSION |
+| Statut | DONE - PHASES_MINUS_1_TO_8_EXECUTEES |
 | Date de creation | 2026-07-02 |
+| Date d'activation | 2026-07-02 |
 | Runtime cible | `EBTA-ENGINE-0.1.x` |
 | Autorite normative | `Protocole/` gele en `EBTA-DOC-1.1` |
 | Autorite executable | `Implementation/ebta_engine/` |
 | Changement protocolaire | Aucun attendu |
 | Repo BACKTRADER | Reference externe, lecture/audit seulement avant decision explicite |
+
+## Resultat d'execution 2026-07-02
+
+| Champ | Valeur |
+| --- | --- |
+| Phases executees | Phase -1 a Phase 8 |
+| Package natif | `Implementation/research_packages/native_mvp` |
+| Validation package | `PASS` via `python -m ebta_engine.package_builder.native_research_package` |
+| Tests runtime | `PASS - 93 tests` via `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` |
+| Protocole | Non modifie |
+| BACKTRADER | Lu en reference seulement, non modifie |
+| Phase 9 | Reportee hors de cette execution |
+
+## Decisions humaines d'execution
+
+| Date | Decision | Portee |
+| --- | --- | --- |
+| 2026-07-02 | `1A` - Autorisation de lire BACKTRADER en lecture seule au chemin `D:\TRADING\ENTREPRISE\0 - Phase de lancement\Strategie de trading\0 - Backtest\BACKTRADER`. | BACKTRADER reste `REFERENCE_ONLY`, sans modification du repository et sans dependance runtime EBTA. |
+| 2026-07-02 | `2B` - Source de donnees MVP fournie : `D:\TRADING\ENTREPRISE\0 - Phase de lancement\Strategie de trading\0 - Backtest\Data`. | La provenance XAUUSD/NASDAQ doit etre documentee depuis ce dossier ; BACKTRADER peut etre audite pour les loaders et conventions historiques seulement apres lecture de sa gouvernance. |
+| 2026-07-02 | `3A` - Autorisation explicite de modifier `Implementation/` jusqu'a la Phase 8 de ce plan, sans modifier `Protocole/`. | Cette decision leve le verrou de `.ai/governance/AI_MODIFICATION_CHECKLIST.md` pour les changements de runtime strictement subordonnes au protocole gelee `EBTA-DOC-1.1`. |
 
 ## Decision d'architecture
 
@@ -216,7 +245,12 @@ Actions :
   dupliquer sa table en Phase 6 ;
 - decider explicitement du sort de
   `Implementation/ebta_engine/adapters/backtrader_mapping.py` (deja present
-  dans le repo) : `MIGRATE`, `ADAPT`, `REWRITE` ou `REJECT` ;
+  dans le repo) : `MIGRATE`, `ADAPT`, `REWRITE` ou `REJECT` ; trancher dans le
+  meme mouvement le sort de
+  `Implementation/ebta_engine/tests/test_backtrader_adapter.py`, qui importe
+  directement ce module et casse la suite de tests si `REJECT` ou `REWRITE`
+  est choisi sans que ce test soit lui-meme supprime, reecrit ou adapte en
+  consequence ;
 - identifier les documents d'entree humaine qui referencent BACKTRADER comme
   moteur actif et doivent etre mis a jour en meme temps que ce plan devient
   actif : `Implementation/0-CARTE_DU_CODE_EBTA.md`,
@@ -232,6 +266,53 @@ Critere de sortie :
 
 - le plan est suffisamment clair pour etre promu comme chantier actif sans
   modifier la doctrine EBTA.
+
+### Phase 0-BIS - Levee du verrou de gouvernance
+
+Objectif : aligner la couche d'etat machine (`.ai/checkpoint.json`,
+`Implementation/Active/tracking.json`, `HOOK.md`) et la couche de gouvernance
+IA (`.ai/governance/AI_MODIFICATION_CHECKLIST.md`) sur ce plan, avant toute
+phase d'implementation. Sans cette phase, les Phases 2 a 8 modifient du code
+d'implementation en violation d'une regle de gouvernance active du repo et le
+suivi machine-readable continue de pointer vers une strategie deja
+remplacee.
+
+Actions :
+
+- tracer, dans un registre de decision approprie (voir
+  `Protocole/REGISTRE DES DECISIONS NORMATIVES EBTA.md` si applicable, sinon
+  un registre non-normatif equivalent cote `Implementation/` ou `.ai/`), la
+  decision humaine explicite qui autorise les Phases 2 a 8 comme
+  "modification de code d'implementation" au sens de
+  `.ai/governance/AI_MODIFICATION_CHECKLIST.md` (section "Modifications
+  interdites sans decision explicite") ; sans cette trace, chaque phase
+  d'implementation viole une regle de gouvernance active du repo ;
+- mettre a jour `.ai/checkpoint.json` (`active_workstream_id`, entree
+  `workstreams[]` pour ce plan, `risks[R2]`) et
+  `Implementation/Active/tracking.json` + `HOOK.md`, pour remplacer l'etat
+  actuel qui pointe vers `STEP_3_BACKTRADER_INTEGRATION` (strategie "adapter
+  externe -> EBTA juge") par l'etat du plan natif ;
+- clore `.ai/backlog/mainline/EPIC_reprise_et_integration_backtrader.md`
+  (lifecycle -> `SUPERSEDED`, `is_active` -> `false`, `closure_reason`
+  referencant ce plan comme remplacant).
+
+Livrables :
+
+- entree de registre de decision tracant l'autorisation humaine explicite ;
+- `.ai/checkpoint.json` et `Implementation/Active/tracking.json` valides
+  contre leur schema (commandes deja listees dans `CLAUDE.md`) et coherents
+  avec ce plan ;
+- `HOOK.md` mis a jour ;
+- `EPIC_reprise_et_integration_backtrader.md` marque `SUPERSEDED`.
+
+Critere de sortie :
+
+- aucune contradiction entre `.ai/checkpoint.json`, `tracking.json`,
+  `HOOK.md` et ce plan ;
+- la regle de gouvernance sur le code d'implementation est explicitement
+  levee ;
+- la suite de tests reste `PASS` apres le tri du module adapter et de son
+  test (voir Phase 0).
 
 ### Phase 1 - Audit cible BACKTRADER
 
@@ -251,7 +332,12 @@ Actions :
   - `viz` seulement pour inventaire, sans priorite MVP ;
 - localiser les definitions ou configurations des payloads E-I ;
 - localiser les sources, formats et loaders des donnees XAUUSD/NASDAQ ;
-- identifier les dependances au pipeline sectionnel BACKTRADER.
+- identifier les dependances au pipeline sectionnel BACKTRADER ;
+- documenter explicitement dans `PAYLOAD_DECOMPOSITION_E_TO_I.md` que les
+  identifiants de payloads E, F, G, H, I proviennent d'une discussion
+  utilisateur/Codex externe du 2026-07-02 et non d'un artefact deja present
+  dans le repo EBTA, jusqu'a confirmation par l'audit BACKTRADER reel prevu
+  dans cette meme phase.
 
 Livrables :
 
@@ -550,6 +636,19 @@ plan) :
   doit rester `PASS` (87 tests au 2026-07-01) avant de demarrer chaque phase
   suivante ; une phase qui casse la suite existante ne peut pas etre
   consideree terminee.
+
+Note de portabilite : `Implementation/ebta_engine/tests/test_protocol_manifest_hashes.py`
+resout `Protocole/` par chemin relatif (`Path(__file__).resolve().parents[3]`,
+pas de chemin Windows en dur), mais compare un SHA-256 octet pour octet sur
+les fichiers geles de `Protocole/` ; ce hash est donc sensible a la
+normalisation de fin de ligne (CRLF/LF) selon la configuration git de
+l'environnement de checkout. Le dernier resultat trace
+(`.ai/checkpoint.json`, 2026-07-01) est un `PASS` obtenu sur environnement
+Windows/PowerShell ; la portabilite sur un checkout non-Windows n'est pas
+verifiee. Ce plan ne corrige pas ce point ; une decision separee doit
+confirmer si c'est un choix assume (repo travaille exclusivement sous
+Windows) ou si un ticket distinct doit neutraliser la sensibilite aux fins de
+ligne.
 
 Commandes de reference :
 

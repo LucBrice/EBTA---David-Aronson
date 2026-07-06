@@ -142,6 +142,7 @@ def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
 
 def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
+    actor = pilot_inputs.get("actor", "minimal_pilot_pipeline")
     for index, candidate in enumerate(_pilot_search_space(pilot_inputs)["candidates"], start=1):
         append_jsonl(
             package_dir / "registry.jsonl",
@@ -149,7 +150,7 @@ def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:
                 "schema_version": "1.0.0",
                 "event_id": f"EVT-PILOT-{index:03d}",
                 "timestamp": "2026-01-01T00:00:00Z",
-                "actor": "minimal_pilot_pipeline",
+                "actor": actor,
                 "event_type": "REGISTER_CANDIDATE",
                 "project_id": identifiers["project_id"],
                 "research_family_id": identifiers["research_family_id"],

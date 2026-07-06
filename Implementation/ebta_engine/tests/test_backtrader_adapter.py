@@ -38,12 +38,13 @@ class BacktraderAdapterBoundaryTests(unittest.TestCase):
         })
         self.assertEqual(artifacts["reports/execution.json"]["orders"], [])
 
-    def test_phase_8_mapping_documents_procedure_inputs(self):
+    def test_native_mapping_documents_procedure_inputs(self):
         mapping = procedure_input_requirements()
         self.assertIn("nav", mapping["procedure_input_map"])
         self.assertIn("wrc_reused_for_oos_ci", mapping["contract_errors"])
-        text = (ROOT / "EXTERNAL_ENGINE_PROCEDURE_MAPPING.md").read_text(encoding="utf-8")
-        self.assertIn("no BACKTRADER repository read", text)
+        text = (ROOT / "NATIVE_ENGINE_PROCEDURE_MAPPING.md").read_text(encoding="utf-8")
+        self.assertIn("BACKTRADER role | REFERENCE_ONLY", text)
+        self.assertIn("no BACKTRADER runtime dependency", text)
 
 
 if __name__ == "__main__":

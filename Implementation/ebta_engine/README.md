@@ -39,13 +39,14 @@ le runtime bloque ou marque le controle comme `INCONCLUSIVE` /
 
 ## Etat courant
 
-`EBTA-ENGINE-0.1.0` est un banc de controle local pour paquets EBTA minimaux. Il
-inclut schemas, fixtures, validateurs de paquet, manifestes, gates, invariants,
-persistance fichier et frontiere d'adaptateur BACKTRADER.
+`EBTA-ENGINE-0.1.x` est un banc de controle local pour paquets EBTA minimaux et
+un MVP de moteur natif. Il inclut schemas, fixtures, validateurs de paquet,
+manifestes, gates, invariants, persistance fichier, decomposition E-I, loader
+CSV local, backtest natif minimal et frontiere d'adaptateur BACKTRADER future.
 
-Il ne remplace pas un pipeline de recherche reel. La prochaine etape est de
-produire un `research_package/` depuis un pipeline pilote ou depuis BACKTRADER
-apres lecture de sa gouvernance locale.
+BACKTRADER est reference historique en lecture seule, pas dependance runtime.
+Le chemin actif est la production d'un `research_package/` par le moteur EBTA
+natif puis la validation par `validate_package_dir()`.
 
 ## Versions et compatibilite
 
@@ -90,7 +91,8 @@ Cette gate couvre:
 - rapports de gates;
 - hashes du protocole gele;
 - matrice de tracabilite;
-- frontiere d'adaptateur BACKTRADER.
+- MVP moteur natif E-I ;
+- frontiere d'adaptateur BACKTRADER future.
 
 ## Modele de paquet EBTA minimal
 
@@ -108,9 +110,10 @@ Les journaux critiques sont append-only au niveau contractuel. Le runtime lit le
 artefacts comme donnees non fiables et produit des erreurs contractuelles
 explicites.
 
-## Frontiere de confiance des adaptateurs
+## Frontiere de confiance
 
-Un adaptateur lit les sorties externes comme non fiables, les mappe vers les
-artefacts EBTA, puis laisse le noyau valider le contrat. Il ne corrige pas
-silencieusement les erreurs de mapping et n'importe pas les conventions du
-pipeline externe dans la norme EBTA.
+Le moteur natif produit directement les artefacts EBTA et laisse le noyau
+valider le contrat. Un adaptateur futur devra lire les sorties externes comme
+non fiables, les mapper vers les artefacts EBTA, puis laisser le noyau valider.
+Il ne corrigera pas silencieusement les erreurs de mapping et n'importera pas
+les conventions du pipeline externe dans la norme EBTA.

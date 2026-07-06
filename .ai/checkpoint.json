@@ -1,7 +1,7 @@
-﻿{
+{
     "schema_version":  "1.2.0",
     "checkpoint_kind":  "multi_ai_relay",
-    "updated_at":  "2026-07-01",
+    "updated_at":  "2026-07-02",
     "status":  "ACTIVE",
     "repo":  {
                  "name":  "EBTA - David Aronson",
@@ -51,41 +51,69 @@
                             "ai_cockpit":  ".ai/ is the single AI project-state cockpit; .ai/governance/ is procedural modification governance, not scientific authority",
                             "tooling_support":  ".agents/ is historical/tooling support only, not a project-state authority",
                             "codex_adapter":  ".codex/README.md",
-                            "adapter_boundary":  "BACKTRADER remains external until governance is read and explicit integration begins"
+                            "adapter_boundary":  "BACKTRADER remains reference-only; the active path is the native EBTA engine MVP"
                         },
-    "active_workstream_id":  "STEP_3_BACKTRADER_INTEGRATION",
+    "active_workstream_id":  null,
     "next_actions":  [
                          {
-                             "id":  "NEXT_RUNTIME_STEP",
-                             "status":  "PENDING",
-                             "title":  "Read BACKTRADER governance before adapter integration design",
+                             "id":  "NEXT_NATIVE_ENGINE_PREREQUISITES",
+                             "status":  "DONE",
+                             "title":  "Phases -1 a 8 du moteur natif EBTA executees",
                              "classification":  "ADAPTER_MAPPING",
                              "non_goals":  [
-                                               "No BACKTRADER modification before governance read",
-                                               "No EBTA runtime contract change before mapping gaps are known"
+                                               "No BACKTRADER runtime dependency",
+                                               "No native engine extension before package validation remains PASS",
+                                               "No OOS opening or winner-only selection"
                                            ]
                          }
                      ],
     "workstreams":  [
                         {
+                            "id":  "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF",
+                            "title":  "Moteur de backtest natif EBTA",
+                            "priority":  1,
+                            "is_active":  false,
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "ADAPTER_MAPPING",
+                            "source_path":  ".ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md",
+                            "active_runtime_path":  "Implementation/Active/HOOK.md",
+                            "opened_at":  "2026-07-02",
+                            "last_moved_at":  "2026-07-02",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "/start requested on 2026-07-02; replaces the external-engine BACKTRADER integration track with a native EBTA engine track. User later answered 1A/2B/3A: BACKTRADER read-only, data root supplied, and Implementation/ work authorized through Phase 8. Phases -1 through 8 were executed on 2026-07-02.",
+                            "moved_by":  "mixed",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  true,
+                            "closure_reason":  "Executed through Phase 8: native MVP modules, audits, package builder, validated research_package, and Jupyter cockpit completed.",
+                            "non_goals":  [
+                                              "No Protocole/ modification",
+                                              "No BACKTRADER runtime dependency",
+                                              "No native engine extension before package validation remains PASS",
+                                              "No web application in this Phase -1 through Phase 8 execution",
+                                              "No OOS opening before sealing"
+                                          ]
+                        },
+                        {
                             "id":  "STEP_3_BACKTRADER_INTEGRATION",
                             "title":  "Integration BACKTRADER apres gouvernance locale",
                             "priority":  1,
-                            "is_active":  true,
+                            "is_active":  false,
                             "track":  "mainline",
-                            "status":  "PENDING",
-                            "lifecycle":  "TRIAGED",
+                            "status":  "DONE",
+                            "lifecycle":  "SUPERSEDED",
                             "classification":  "ADAPTER_MAPPING",
                             "source_path":  ".ai/backlog/mainline/EPIC_reprise_et_integration_backtrader.md",
-                            "active_runtime_path":  "Implementation/Active/HOOK.md",
+                            "active_runtime_path":  null,
                             "opened_at":  "2026-06-29",
-                            "last_moved_at":  "2026-06-30",
+                            "last_moved_at":  "2026-07-02",
                             "routing_decision":  "mainline",
-                            "routing_reason":  "Current EBTA runtime next step; advances adapter integration only after BACKTRADER governance read.",
+                            "routing_reason":  "Superseded by PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF; BACKTRADER is now reference-only for native EBTA rewrite.",
                             "moved_by":  "ai",
                             "blocks_mainline":  true,
-                            "advances_mainline":  true,
-                            "closure_reason":  null,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Replaced by native EBTA engine plan activated via /start on 2026-07-02.",
                             "non_goals":  [
                                               "No BACKTRADER modification before governance read",
                                               "No EBTA runtime contract change before mapping gaps are known",
@@ -172,32 +200,37 @@
                                         {
                                             "command":  "python -m json.tool .ai\\checkpoint.json",
                                             "purpose":  "Validate relay checkpoint JSON syntax",
-                                            "last_result":  "PASS - 2026-07-01"
+                                            "last_result":  "PASS - 2026-07-02"
                                         },
                                         {
                                             "command":  "python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\u0027.ai/checkpoint.json\u0027, encoding=\u0027utf-8\u0027)), json.load(open(\u0027.ai/checkpoint.schema.json\u0027, encoding=\u0027utf-8\u0027)))\"",
                                             "purpose":  "Validate relay checkpoint against schema",
-                                            "last_result":  "PASS - 2026-07-01"
+                                            "last_result":  "PASS - 2026-07-02"
                                         },
                                         {
                                             "command":  "python -m json.tool Implementation\\Active\\tracking.json",
                                             "purpose":  "Validate runtime task tracking JSON syntax",
-                                            "last_result":  "PASS - 2026-07-01"
+                                            "last_result":  "PASS - 2026-07-02"
                                         },
                                         {
                                             "command":  "python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\u0027Implementation/Active/tracking.json\u0027, encoding=\u0027utf-8\u0027)), json.load(open(\u0027Implementation/Active/tracking.schema.json\u0027, encoding=\u0027utf-8\u0027)))\"",
                                             "purpose":  "Validate runtime tracking against schema",
-                                            "last_result":  "PASS - 2026-07-01"
+                                            "last_result":  "PASS - 2026-07-02"
                                         },
                                         {
                                             "command":  "git diff --check -- Implementation Protocole .ai",
                                             "purpose":  "Patch hygiene for implementation, protocol, and AI cockpit files",
-                                            "last_result":  "PASS - 2026-07-01 - CRLF warnings only"
+                                            "last_result":  "PASS - 2026-07-02"
                                         },
                                         {
                                             "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
                                             "purpose":  "Runtime non-regression suite",
-                                            "last_result":  "PASS - 87 tests - 2026-07-01"
+                                            "last_result":  "PASS - 93 tests - 2026-07-02"
+                                        },
+                                        {
+                                            "command":  "python -m ebta_engine.package_builder.native_research_package",
+                                            "purpose":  "Build native XAUUSD/NASDAQ x E-I MVP research_package under Implementation/research_packages/native_mvp",
+                                            "last_result":  "PASS - package status PASS - 2026-07-02"
                                         }
                                     ]
                    },
@@ -206,6 +239,21 @@
                             "date":  "2026-07-01",
                             "summary":  "G-BIAS gate completed; checkpoint.json and tracking.json refactored to v1.2.0/v1.1.0; plan.ps1 updated to use active_workstream_id",
                             "files_count":  6
+                        },
+                        {
+                            "date":  "2026-07-02",
+                            "summary":  "Activated native EBTA backtest engine plan; superseded external BACKTRADER integration track; runtime cockpit now points to Phase -1 prerequisites",
+                            "files_count":  5
+                        },
+                        {
+                            "date":  "2026-07-02",
+                            "summary":  "User confirmed 1A/2B/3A: BACKTRADER read-only path, MVP data root, and Implementation/ authorization through Phase 8 without Protocole/ changes",
+                            "files_count":  3
+                        },
+                        {
+                            "date":  "2026-07-02",
+                            "summary":  "Executed native EBTA engine plan through Phase 8: audits, native modules, tests, validated research_package, notebooks, and cockpit sync",
+                            "files_count":  30
                         }
                     ],
     "risks":  [
@@ -217,9 +265,9 @@
                   },
                   {
                       "id":  "R2",
-                      "status":  "DEFERRED",
-                      "risk":  "BACKTRADER integration could import external conventions into EBTA",
-                      "control":  "STEP_3 remains pending until BACKTRADER governance is read"
+                      "status":  "CONTROLLED",
+                      "risk":  "BACKTRADER reference mining could import external conventions into EBTA",
+                      "control":  "BACKTRADER governance was read first; BACKTRADER stayed read-only/reference-only; data provenance and native rewrite boundaries are documented; runtime tests and package validation passed"
                   },
                   {
                       "id":  "R3",

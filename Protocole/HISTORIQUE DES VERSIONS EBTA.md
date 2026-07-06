@@ -29,6 +29,12 @@ Conformément au `0-README - Comprendre et maintenir le protocole EBTA.md`, tout
 
 ## Historique
 
+### [EBTA-DOC-1.1] - 2026-07-06
+**Nature du changement** : Clarification non normative
+**Résumé** : Ajout et enrichissement d'une section "Perspective Business" dans le protocole principal.
+**Documents impactés** : `PROTOCOLE EBTA.md`, `MANIFESTE DE GEL EBTA.md`.
+**Justification** : Explicitation des inputs (modèle d'exécution), du processus (filtre WRC) et de l'output final (moteur de recalibration + limites de sizing/kill switch) du point de vue opérationnel et business.
+
 ### [EBTA-DOC-1.1] - 2026-07-01
 **Nature du changement** : Changement normatif
 **Résumé** : Ouverture de la gouvernance des biais humains, organisationnels

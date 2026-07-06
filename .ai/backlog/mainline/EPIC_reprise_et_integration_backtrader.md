@@ -5,18 +5,20 @@
 | Champ | Valeur |
 | --- | --- |
 | Track | `mainline` |
-| Lifecycle | `TRIAGED` |
+| Lifecycle | `SUPERSEDED` |
 | Scope | Integration BACKTRADER apres gouvernance locale et mapping de contrats EBTA |
 | Non-goals | Pas de modification BACKTRADER avant lecture de gouvernance ; pas de nouvelle norme EBTA |
 | Source | Ancien backlog plat `.ai/backlog/EPIC_reprise_et_integration_backtrader.md` |
 | Exit criteria | Gouvernance BACKTRADER lue, mapping documente, integration journalisee et contrats EBTA preserves |
+| Remplace par | `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` |
 
 ## Statut
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | ACTIF - PLAN_DE_TRAVAIL_RUNTIME |
+| Statut | SUPERSEDED - REMPLACE_PAR_PLAN_MOTEUR_NATIF |
 | Date de creation | 2026-06-26 |
+| Date de cloture | 2026-07-02 |
 | Version runtime cible | EBTA-ENGINE-0.1.0 |
 | Autorite normative | `Protocole/` gele en `EBTA-DOC-1.0` |
 | Source operationnelle | `Implementation/ebta_engine/` |
@@ -24,6 +26,11 @@
 | Historique runtime | `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
 
 ## Objectif
+
+Ce plan n'est plus le mainline actif. Il est remplace par
+`.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md`, qui
+classe BACKTRADER en reference de reecriture et fait du moteur EBTA natif la
+cible d'execution.
 
 Stabiliser le lot runtime EBTA deja produit, archiver les elements obsoletes
 avant le checkpoint, puis preparer un pipeline pilote local capable de produire

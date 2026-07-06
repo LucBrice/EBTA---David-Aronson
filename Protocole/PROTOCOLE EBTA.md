@@ -69,6 +69,24 @@ Le protocole EBTA transforme une recherche de stratégie de trading en processus
 Le protocole valide un **processus de recherche et de sélection**, pas seulement
 une règle isolée.
 
+### 2.1 Perspective "Business" : Input, Processus et Produit Final
+
+Afin de clarifier la nature opérationnelle et commerciale du protocole :
+
+- **L'Input (Ce qui entre) :** 
+  - Un univers préenregistré de règles ou de signaux candidats.
+  - Un flux de données chronologique et non contaminé (point-in-time).
+  - Un modèle d'exécution réaliste (coûts, slippage, capacité du marché).
+  - Une fréquence de recalibration dictée par l'horizon d'investissement.
+- **Le Processus (La machine) :** 
+  - L'algorithme Walk-Forward qui calibre et évalue les règles de façon glissante.
+  - Un filtre statistique implacable (White's Reality Check) qui isole l'Alpha de la pure chance.
+  - Des stress-tests de robustesse décisionnels qui s'assurent que l'Alpha survit aux frictions sans intervention humaine.
+- **L'Output / Produit Final (Ce qui part en production) :** 
+  - Le produit final n'est **pas** un set de paramètres statique, mais le **moteur de recalibration lui-même**, dont la profitabilité a été mathématiquement prouvée.
+  - La version déployée en live (paquet `DEPLOYMENT_CERTIFIED`) exécute les paramètres optimaux actuels, mais contient surtout le code ordonnant au système de se re-calibrer de façon autonome.
+  - Ce produit fini est indissociable de ses limites d'utilisation : un algorithme de *sizing* borné par la capacité, des règles de *monitoring* séquentiel, et un *kill switch* (SOP 11) qui débranche automatiquement la stratégie si les données en direct dévient de l'enveloppe de risque prouvée.
+
 ---
 
 ## 3. Architecture normative

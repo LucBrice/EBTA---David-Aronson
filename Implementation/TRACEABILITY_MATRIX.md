@@ -29,7 +29,12 @@
 | `manifests/manifest_builder.py` | `PAQUET D'EXECUTION EBTA.md` section 5; `MANIFESTE DE GEL EBTA.md` principe SHA-256 | SOP 12 | MANIFEST_CHECK | `test_manifest_hashes.py`, `test_schemas.py` | COVERED_SOP12_RUNTIME_CONTRACT |
 | `validators/invariant_validator.py` | `PAQUET D'EXECUTION EBTA.md` section 6; SOP 03/SOP 09A clarification `strategie x actif` | INV-001 a INV-017 | INVARIANT_CHECK | `test_invariants.py`, `test_minimal_pilot_pipeline.py` | COVERED_STRATEGIE_ACTIF |
 | `validators/gate_validator.py` | `PAQUET D'EXECUTION EBTA.md` section 2 | G0 a G14 | GATE_CHECK | `test_gates.py`, `test_package_validator.py` | COVERED |
-| `adapters/backtrader_mapping.py` | Hook Implementation Phase 6; hierarchie runtime -> adapters | N/A | ADAPTER_MAPPING | `test_backtrader_adapter.py` | LOCAL_CONTRACT_COVERED |
+| `adapters/backtrader_mapping.py` | `NATIVE_ENGINE_PROCEDURE_MAPPING.md` decision ADAPT; future boundary only | N/A | ADAPTER_MAPPING | `test_backtrader_adapter.py` | LOCAL_CONTRACT_REFERENCE_ONLY |
+| `data/local_ohlcv.py` | `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` Phase 2; `BACKTRADER_DATA_SOURCE_AUDIT.md` | SOP 09A | IMPLEMENTATION_DETAIL | `test_native_engine_mvp.py` | COVERED_NATIVE_MVP |
+| `strategies/payloads.py` | `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` Phase 3; `PAYLOAD_DECOMPOSITION_E_TO_I.md` | SOP 03, SOP 06 | IMPLEMENTATION_DETAIL | `test_native_engine_mvp.py` | COVERED_STRATEGIE_ACTIF_EI |
+| `features/causal_signals.py` | `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` Phase 4 | SOP 09A | IMPLEMENTATION_DETAIL | `test_native_engine_mvp.py` | COVERED_NO_LOOKAHEAD_MVP |
+| `backtest/native_engine.py` | `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` Phase 5 | SOP 08, SOP 09B | IMPLEMENTATION_DETAIL | `test_native_engine_mvp.py` | COVERED_ANTI_STUB_MVP |
+| `package_builder/native_research_package.py` | `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` Phase 6 and Phase 7 | SOP 03, SOP 10, SOP 12 | IMPLEMENTATION_DETAIL | `test_native_engine_mvp.py` | COVERED_NATIVE_PACKAGE |
 | `tests/test_protocol_manifest_hashes.py` | `MANIFESTE DE GEL EBTA.md` hashes SHA-256 | EBTA-DOC-1.0 | MANIFEST_CHECK | `test_protocol_manifest_hashes.py` | COVERED |
 | `validators/package_validator.py` | `PAQUET D'EXECUTION EBTA.md` sections 2, 3, 5, 6; SOP 13 artefact `G-BIAS` | SOP 03, SOP 10, SOP 12, SOP 13 | GATE_CHECK / MANIFEST_CHECK / INVARIANT_CHECK | `test_package_validator.py`, `test_minimal_pilot_pipeline.py` | COVERED_HARDENED_G_BIAS_COMPATIBLE |
 | `persistence.py` | Hook Phase 0bis.5 modele de persistance | N/A | IMPLEMENTATION_DETAIL | `test_package_validator.py` | COVERED |
@@ -56,4 +61,4 @@
 | `procedures/monitoring.py` | SOP 11 sections 3, 13, 15, 20, 28, 38; DN-037 | SOP 11, DN-037 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — B2 lot exhaustivite |
 | `procedures/incubation_report.py` | SOP 11; SOP 12; DN-035, DN-036, DN-037, DN-039, DN-040 | SOP 11, SOP 12 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — B3 lot exhaustivite |
 | `procedures/reproduction_report.py` | SOP 12 sections 3, 5, 38; DN-039, DN-040, DN-041; INV-016 | SOP 12, INV-016 | IMPLEMENTATION_DETAIL | `test_procedure_governance.py` | COVERED — B4 lot exhaustivite |
-| `EXTERNAL_ENGINE_PROCEDURE_MAPPING.md` | `Implementation/Archives/completed_2026-06-26/PLAN - Procedures de calcul EBTA et optimisation ML.md` Phase 8; adapter boundary from runtime hook | N/A | ADAPTER_MAPPING | `test_backtrader_adapter.py` | COVERED |
+| `NATIVE_ENGINE_PROCEDURE_MAPPING.md` | `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md` Phase 0 | N/A | NATIVE_ENGINE_MAPPING | `test_backtrader_adapter.py`, `test_native_engine_mvp.py` | COVERED |

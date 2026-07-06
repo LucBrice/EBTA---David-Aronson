@@ -1,60 +1,160 @@
 {
   "schema_version": "1.1.0",
   "created_at": "2026-06-26",
-  "updated_at": "2026-07-01",
+  "updated_at": "2026-07-02",
   "status": "ACTIVE",
-  "runtime_version": "EBTA-ENGINE-0.1.0",
+  "runtime_version": "EBTA-ENGINE-0.1.x",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
   "hook_file": "Implementation/Active/HOOK.md",
-  "current_step": "STEP_3_BACKTRADER_INTEGRATION",
-  "current_task_id": "STEP_3_T1",
-  "next_task_id": "STEP_3_T2",
+  "current_step": "NATIVE_ENGINE_PHASE_8_COMPLETED",
+  "current_task_id": null,
+  "next_task_id": null,
   "active_scope": [
+    ".ai/",
     "Implementation/",
-    "Protocole/Archives/",
-    "runtime governance documentation",
-    "G-BIAS runtime governance"
+    "Implementation/Active/",
+    ".ai/backlog/mainline/",
+    "BACKTRADER read-only reference audit after governance read",
+    "XAUUSD/NASDAQ data provenance",
+    "Native EBTA MVP engine through Phase 8"
   ],
   "non_goals": [
-    "No normative Protocole/ change",
+    "No Protocole/ change",
+    "No BACKTRADER runtime dependency",
     "No BACKTRADER modification before governance read",
+    "No further native-engine implementation before the generated package remains validator PASS",
     "No deletion of historical material",
-    "No new EBTA gate, status, threshold, or methodology"
+    "No new EBTA gate, status, threshold, or methodology",
+    "No OOS opening before sealing"
   ],
   "steps": [
     {
-      "id": "STEP_3_BACKTRADER_INTEGRATION",
-      "title": "Integration BACKTRADER apres gouvernance locale",
-      "status": "PENDING",
+      "id": "NATIVE_ENGINE_PHASE_MINUS_1_PREREQUISITES",
+      "title": "Deblocage des prerequis factuels du moteur natif",
+      "status": "DONE",
       "classification": "ADAPTER_MAPPING",
-      "objective": "Connect BACKTRADER to EBTA artifacts only after reading its local governance and preserving EBTA authority.",
+      "objective": "Make the native EBTA backtest engine plan executable by documenting BACKTRADER read-only access/governance and XAUUSD/NASDAQ data provenance before any implementation phase starts.",
       "tasks": [
         {
-          "id": "STEP_3_T1",
-          "title": "Read BACKTRADER governance entrypoints",
-          "status": "TODO",
+          "id": "NATIVE_ENGINE_P-1_T1",
+          "title": "Trace explicit BACKTRADER read-only reference authorization and real path",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "deliverables": [
+            "Decision trace naming the authorized BACKTRADER path",
+            "Confirmation that BACKTRADER remains reference-only and non-runtime"
+          ],
           "blocked_by": null
         },
         {
-          "id": "STEP_3_T2",
-          "title": "Map BACKTRADER outputs to EBTA artifacts",
-          "status": "TODO",
-          "blocked_by": "STEP_3_T1"
+          "id": "NATIVE_ENGINE_P-1_T2",
+          "title": "Read BACKTRADER local governance before code inventory",
+                  "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "deliverables": [
+            "Governance entrypoints read",
+            "No BACKTRADER mutation performed"
+          ],
+          "blocked_by": "NATIVE_ENGINE_P-1_T1"
         },
         {
-          "id": "STEP_3_T3",
-          "title": "Implement adapter integration with explicit contract errors",
-          "status": "TODO",
-          "blocked_by": "STEP_3_T2"
+          "id": "NATIVE_ENGINE_P-1_T3",
+          "title": "Document XAUUSD/NASDAQ source, format, licence, and available time coverage",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "deliverables": [
+            "XAUUSD/NASDAQ data provenance note",
+            "Deterministic MVP subset constraints"
+          ],
+          "blocked_by": "NATIVE_ENGINE_P-1_T2"
         }
       ],
       "exit_criteria": [
-        "BACKTRADER remains subordinate to EBTA runtime contracts",
-        "No BACKTRADER convention becomes EBTA norm",
-        "Integration is journaled in runtime history"
+        "BACKTRADER path and read-only/reference-only scope are traceable",
+        "BACKTRADER governance has been read before code inventory",
+        "XAUUSD/NASDAQ data provenance is documented",
+        "Phase 1 and Phase 2 can start without implicit assumptions"
       ]
-    }
-  ],
+    },
+    {
+      "id": "NATIVE_ENGINE_PHASE_0BIS_GOVERNANCE_UNLOCK",
+      "title": "Levee du verrou de gouvernance pour le moteur natif",
+      "status": "DONE",
+      "classification": "GOVERNANCE",
+      "objective": "Align AI governance and machine-readable cockpit state before implementation code changes in the native EBTA engine plan.",
+      "entry_criteria": [
+        "NATIVE_ENGINE_PHASE_MINUS_1_PREREQUISITES exit criteria completed"
+      ],
+      "tasks": [
+        {
+          "id": "NATIVE_ENGINE_0BIS_T1",
+          "title": "Trace the explicit implementation authorization required by AI_MODIFICATION_CHECKLIST",
+          "status": "DONE",
+          "classification": "GOVERNANCE",
+          "blocked_by": "NATIVE_ENGINE_P-1_T3"
+        },
+        {
+          "id": "NATIVE_ENGINE_0BIS_T2",
+          "title": "Finalize cockpit consistency after prerequisite evidence exists",
+                  "status": "DONE",
+          "classification": "GOVERNANCE",
+          "blocked_by": "NATIVE_ENGINE_0BIS_T1"
+        }
+      ],
+      "exit_criteria": [
+        "Implementation-code authorization is explicitly traceable",
+        ".ai/checkpoint.json, tracking.json, and HOOK.md remain schema-valid and coherent",
+          "Superseded BACKTRADER adapter plan remains closed as historical context"
+        ]
+      },
+      {
+        "id": "NATIVE_ENGINE_PHASE_0_TO_8_MVP",
+        "title": "Moteur natif EBTA MVP jusqu'a Phase 8",
+        "status": "DONE",
+        "classification": "IMPLEMENTATION_DETAIL",
+        "objective": "Produce a native EBTA MVP that loads local XAUUSD/NASDAQ CSV data, decomposes payloads E-I into candidates, runs deterministic native signals/backtests, generates a valid research_package, and exposes Jupyter orchestration notebooks.",
+        "entry_criteria": [
+          "User decision 3A authorized Implementation/ modifications through Phase 8 without Protocole/ changes"
+        ],
+        "tasks": [
+          {
+            "id": "NATIVE_ENGINE_PHASE_0_MAPPING",
+            "title": "Replace external-engine mapping with native-engine mapping",
+            "status": "DONE",
+            "classification": "ADAPTER_MAPPING",
+            "blocked_by": null
+          },
+          {
+            "id": "NATIVE_ENGINE_PHASE_1_AUDIT",
+            "title": "Document payload E-I and data-source audit",
+            "status": "DONE",
+            "classification": "ADAPTER_MAPPING",
+            "blocked_by": null
+          },
+          {
+            "id": "NATIVE_ENGINE_PHASE_2_TO_7_RUNTIME",
+            "title": "Implement native data, payload, signal, backtest, package-builder, and validation path",
+            "status": "DONE",
+            "classification": "IMPLEMENTATION_DETAIL",
+            "blocked_by": null
+          },
+          {
+            "id": "NATIVE_ENGINE_PHASE_8_NOTEBOOKS",
+            "title": "Add Jupyter cockpit notebooks that orchestrate runtime modules only",
+            "status": "DONE",
+            "classification": "IMPLEMENTATION_DETAIL",
+            "blocked_by": null
+          }
+        ],
+        "exit_criteria": [
+          "Implementation/research_packages/native_mvp validates PASS",
+          "93-test EBTA runtime suite passes",
+          "No Protocole/ modification",
+          "No BACKTRADER repository modification",
+          "BACKTRADER remains non-runtime reference only"
+        ]
+      }
+    ],
   "completed_steps_archive": [
     { "id": "STEP_0_ARCHIVE_OBSOLETE",          "title": "Archivage controle des obsoletes",                 "completed_at": "2026-06-26", "tasks_done": 5 },
     { "id": "STEP_1_CHECKPOINT",               "title": "Checkpoint du lot actuel",                        "completed_at": "2026-06-27", "tasks_done": 5 },
@@ -67,12 +167,12 @@
     {
       "command": "python -m json.tool Implementation\\Active\\tracking.json",
       "purpose": "Validate task tracking JSON syntax",
-      "last_result": "PASS - 2026-07-01"
+      "last_result": "PASS - 2026-07-02"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
       "purpose": "Runtime non-divergence tests",
-      "last_result": "PASS - 87 tests - 2026-07-01"
+        "last_result": "PASS - 93 tests - 2026-07-02"
     },
     {
       "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
@@ -82,7 +182,12 @@
     {
       "command": "git diff --check -- Implementation Protocole",
       "purpose": "Whitespace and patch hygiene",
-      "last_result": "PASS - 2026-07-01 - CRLF warnings only"
+        "last_result": "PASS - 2026-07-02"
+      },
+      {
+        "command": "python -m ebta_engine.package_builder.native_research_package",
+        "purpose": "Build native XAUUSD/NASDAQ x E-I MVP research_package under Implementation/research_packages/native_mvp",
+        "last_result": "PASS - package status PASS - 2026-07-02"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_governance_bias.py",
@@ -115,20 +220,26 @@
     },
     {
       "id": "RISK_003",
-      "status": "OPEN",
-      "risk": "BACKTRADER integration could import external repo conventions into EBTA.",
-      "mitigation": "Read BACKTRADER governance first and keep EBTA runtime as the contract authority."
+      "status": "CONTROLLED",
+      "risk": "BACKTRADER reference mining could import external repo conventions into the native EBTA engine.",
+      "mitigation": "BACKTRADER governance was read first; reused ideas are documented as reference-only and rewritten as EBTA runtime contracts without becoming normative doctrine."
     },
     {
       "id": "RISK_004",
       "status": "CONTROLLED",
       "risk": "A multi-asset strategy search could omit losing assets from the WRC family.",
       "mitigation": "INV-017, candidate_matrix asset coverage, and the multi-asset pilot rejection test fail packages with incomplete strategie x actif coverage."
+    },
+    {
+      "id": "RISK_005",
+      "status": "CONTROLLED",
+      "risk": "XAUUSD/NASDAQ data provenance could remain implicit and make the MVP non-reproducible.",
+      "mitigation": "User supplied data root D:\\TRADING\\ENTREPRISE\\0 - Phase de lancement\\Strategie de trading\\0 - Backtest\\Data; BACKTRADER_DATA_SOURCE_AUDIT.md documents CSV format, UTC convention, deterministic MVP window, temporal coverage, and the remaining licence/vendor gap."
     }
   ],
   "latest_decision": {
-    "date": "2026-07-01",
-    "decision": "tracking.json refactored to v1.1.0: current_task_id/next_task_id pointers added, completed steps archived compactly, status vocabulary unified, blocked_by added to tasks. ANNEXE_G_BIAS_RUNTIME_GATE complete: mainline STEP_3_BACKTRADER_INTEGRATION remains pending.",
+    "date": "2026-07-02",
+    "decision": "User answered 1A/2B/3A, then Phases -1 through 8 were executed in Implementation/: BACKTRADER read-only audit, data provenance, native mapping, native MVP modules, valid research_package generation, and Jupyter cockpit without Protocole/ or BACKTRADER modification.",
     "impact_protocole": "NONE"
   }
 }
