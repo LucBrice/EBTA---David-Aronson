@@ -40,9 +40,21 @@ Before any substantive action, read in this order:
 When the user sends `/start`, `/continue`, or `/close`, treat it as a request
 to manage a plan. These are the human-facing commands.
 
-- `/start` audits the referenced human draft first, structures it if needed, then
-  routes it with `.ai/tools/plan.ps1 start -Audited`. Do not ask the user to
+- `/start` never moves or rewrites the human draft in place. It audits the
+  draft, then WRITES A NEW FILE in the target backlog folder
+  (`mainline`/`annexes`/`fixes`) fully restructured per
+  `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md`, then routes it with
+  `.ai/tools/plan.ps1 start -Path <original draft> -RewrittenPath <new file
+  already written in the backlog folder> -Audited`. `plan.ps1` archives the
+  untouched original under `0 - HUMAN START HERE/archive/` and registers the
+  rewritten file as the workstream's `source_path` (original kept as
+  `original_draft_path` for traceability). Do not ask the user to
   pre-structure the human draft unless the intent is impossible to infer.
+  `plan.ps1` mechanically rejects `start` if key template sections are absent
+  from the rewritten file's text, or if `-RewrittenPath` is not already inside
+  the folder matching `-Track` — if it throws, fix the rewritten file (never
+  paste the template verbatim) and retry, do not treat the rejection as a
+  formatting nuisance to route around.
 - `/continue` resumes an existing workstream with `.ai/tools/plan.ps1 continue`.
 - `/close` closes and archives an existing workstream with
   `.ai/tools/plan.ps1 close`.

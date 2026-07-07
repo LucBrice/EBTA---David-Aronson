@@ -56,8 +56,13 @@ ou `backlog/fixes/`.
 Depuis la racine du repo, l'IA peut appeler :
 
 ```powershell
-# 1. Promouvoir un plan deja audite et structure.
-.\.ai\tools\plan.ps1 start -Path "0 - HUMAN START HERE\MON_PLAN.md" -Track mainline -Id MON_PLAN -Title "Mon plan" -Audited
+# 1. Promouvoir un plan : le brouillon original (-Path) reste intact et est
+#    archive ; le fichier reecrit selon le gabarit (-RewrittenPath) doit deja
+#    exister dans le dossier backlog cible AVANT cet appel.
+.\.ai\tools\plan.ps1 start `
+  -Path "0 - HUMAN START HERE\MON_PLAN.md" `
+  -RewrittenPath ".ai\backlog\mainline\MON_PLAN.md" `
+  -Track mainline -Id MON_PLAN -Title "Mon plan" -Audited
 
 # 2. Continuer un plan deja route dans le backlog.
 .\.ai\tools\plan.ps1 continue -Id MON_PLAN
@@ -67,10 +72,14 @@ Depuis la racine du repo, l'IA peut appeler :
 ```
 
 `plan.ps1` n'est pas l'interface humaine principale. Il ne fait pas l'audit
-semantique ; il applique le deplacement et met a jour le JSON une fois l'audit
-fait par l'IA. `start` exige `-Audited` et refuse un plan sans checklist
-Markdown, `Track`, `Lifecycle`, `Scope`, `Non-goals`, `Source` et
-`Exit criteria`.
+semantique ni la reecriture ; l'IA ecrit d'abord le fichier restructure a
+`-RewrittenPath`, puis `plan.ps1` archive le brouillon original (`-Path`) sous
+`0 - HUMAN START HERE/archive/` et enregistre le fichier reecrit comme
+`source_path` du chantier une fois l'audit fait par l'IA. `start` exige
+`-Audited`, refuse un plan sans checklist Markdown, `Track`, `Lifecycle`,
+`Scope`, `Non-goals`, `Source`, `Exit criteria`, refuse si les sections
+enrichies du gabarit sont absentes du fichier reecrit, et refuse si
+`-RewrittenPath` n'est pas deja dans le dossier correspondant a `-Track`.
 
 ## Commandes conversationnelles
 
@@ -84,10 +93,31 @@ L'humain peut aussi taper ces commandes directement dans l'IA :
 
 Contrat d'interpretation par l'IA :
 
-- `/start` signifie : lire le plan brut humain, l'auditer, le structurer si
-  besoin, choisir `mainline`, `annexe` ou `fix`, puis appeler
-  `.ai/tools/plan.ps1 start -Audited`. Le fichier humain peut etre brouillon ;
-  c'est l'IA qui le rend conforme avant promotion.
+- `/start` signifie : lire le plan brut humain, **sans jamais le modifier ni
+  le deplacer**, puis ECRIRE UN NOUVEAU FICHIER dans le dossier backlog cible
+  (`mainline`/`annexes`/`fixes`), integralement restructure selon le gabarit
+  `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md` (Bandeau de statut, Audit IA
+  de promotion, Triage, Contexte obligatoire, Etat des lieux, Decision
+  d'architecture, Decoupage en phases, Invariants/NO GO, Verification,
+  Journal de decisions, Definition of Done, ...), choisir `mainline`, `annexe`
+  ou `fix`, puis appeler
+  `.ai/tools/plan.ps1 start -Path <brouillon original> -RewrittenPath <nouveau
+  fichier deja ecrit dans le dossier backlog cible> -Audited`.
+  Le contenu de fond du brouillon (objectif, decisions deja actees,
+  contraintes) doit etre preserve dans la reecriture — seule la structure est
+  reformattee.
+  `plan.ps1` archive alors le brouillon original tel quel sous
+  `0 - HUMAN START HERE/archive/` (tracabilite garantie, jamais reecrit ni
+  supprime) et enregistre le nouveau fichier comme `source_path` du chantier
+  (l'original archive devient `original_draft_path`).
+  `plan.ps1 start` refuse mecaniquement le routage si une des sections cles du
+  gabarit est absente du texte du fichier reecrit, ou si `-RewrittenPath` ne
+  se trouve pas deja dans le dossier correspondant a `-Track`. Ce refus n'est
+  pas une simple erreur de formatage a contourner : il signifie que l'IA doit
+  corriger le fichier reecrit avec le contenu reel de ce chantier, puis
+  relancer `start -Audited`. Coller le gabarit vide sans le remplir ne suffit
+  pas a passer ce controle si le contenu attendu (ex. un `Non-goals` reel, un
+  `Exit criteria` verifiable) reste absent.
 - `/continue` signifie : retrouver l'id dans `.ai/checkpoint.json`, passer le
   chantier en `ACTIVE`, puis reprendre le fichier de plan associe.
 - `/close` signifie : retrouver l'id dans `.ai/checkpoint.json`, verifier les

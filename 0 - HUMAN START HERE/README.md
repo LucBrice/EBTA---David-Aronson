@@ -26,7 +26,24 @@ backend `.ai/tools/plan.ps1`.
 
 ## Sorties possibles
 
-- `.ai/backlog/mainline/` pour le chantier principal.
-- `.ai/backlog/annexes/` pour les chantiers utiles mais non bloquants.
-- `.ai/backlog/fixes/` pour les corrections bornees.
-- `.ai/archive/` pour un brouillon rejete, remplace ou cloture.
+- `.ai/backlog/mainline/` pour le chantier principal — mais jamais le fichier
+  original lui-meme : l'IA y ecrit un **nouveau fichier** integralement
+  reecrit selon `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md`.
+- `.ai/backlog/annexes/` pour les chantiers utiles mais non bloquants (meme
+  regle : nouveau fichier reecrit, pas le brouillon deplace).
+- `.ai/backlog/fixes/` pour les corrections bornees (idem).
+- `archive/` (dans ce dossier) pour le brouillon original, une fois la version
+  reecrite creee dans le backlog — voir ci-dessous.
+- `.ai/archive/` pour un brouillon rejete avant toute reecriture.
+
+## Archivage du brouillon original
+
+Le brouillon depose ici n'est **jamais reecrit ni edite en place**. Quand
+`/start` aboutit, `.ai/tools/plan.ps1 start -Path <ce brouillon>
+-RewrittenPath <plan reecrit deja ecrit dans le backlog>` deplace
+automatiquement le brouillon original vers `archive/` (prefixe par la date),
+pendant que la version structuree et detaillee apparait dans
+`.ai/backlog/mainline|annexes|fixes/`. Les deux chemins restent traces
+separement dans `.ai/checkpoint.json` (`source_path` pour le plan reecrit,
+`original_draft_path` pour le brouillon archive) — rien n'est perdu, rien
+n'est ecrase.

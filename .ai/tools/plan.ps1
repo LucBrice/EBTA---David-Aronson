@@ -1,8 +1,19 @@
-<# 
+<#
 Backend mecanique du cockpit IA.
 Interface humaine attendue : /start, /continue, /close dans l'IA.
 Ce script ne remplace pas l'audit semantique ; start exige -Audited apres
 structuration du plan par l'IA.
+
+Contrat "start" (deux fichiers distincts, jamais un seul deplace) :
+  -Path          brouillon humain original dans "0 - HUMAN START HERE/".
+                 Jamais reecrit. Archive tel quel sous
+                 "0 - HUMAN START HERE/archive/" pour tracabilite.
+  -RewrittenPath plan integralement reecrit par l'IA selon
+                 .ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md, deja ecrit par
+                 l'IA dans le dossier backlog cible (mainline/annexes/fixes)
+                 AVANT d'appeler ce script. C'est ce fichier qui devient
+                 source_path du chantier ; -Path original devient
+                 original_draft_path (archive).
 #>
 
 param(
@@ -11,6 +22,7 @@ param(
     [string]$Action,
 
     [string]$Path,
+    [string]$RewrittenPath,
     [string]$Id,
     [string]$Title,
 
@@ -106,6 +118,36 @@ function Assert-PlanAuditReady {
     if ($missing.Count -gt 0) {
         throw "Action start: plan non pret pour routage. Sections manquantes: $($missing -join ', '). Auditer et structurer le plan avant start."
     }
+
+    # Structure enrichie exigee par .ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md.
+    # Ce n'est pas une simple formalite : chaque phrase-cle ci-dessous doit
+    # apparaitre reellement reecrite pour CE plan (pas copiee telle quelle du
+    # gabarit) avant que start ne l'accepte.
+    $templateSections = [ordered]@{
+        "Bandeau de statut"                  = "Verifier si un chantier ou un verrou de gouvernance couvre deja ce perimetre."
+        "Contexte obligatoire"                = "Lister les documents qu'une IA froide doit lire avant de coder."
+        "Etat des lieux"                      = "Distinguer ce qui existe deja (a reutiliser) de ce qui manque reellement."
+        "Decision d'architecture"             = "Expliquer pourquoi cette architecture, pas seulement ce qu'elle est."
+        "Decoupage en phases"                 = "Separer phases de deblocage et phases d'implementation, chacune verifiable."
+        "NO GO"                               = "Lister les actions explicitement interdites, verifiables en revue de diff."
+        "Verification a chaque etape"         = "Donner la commande exacte de validation de chaque phase."
+        "Journal des decisions humaines"      = "Tracer les autorisations humaines explicites, jamais deduites."
+        "Definition of Done"                  = "Definir une sortie binaire et verifiable du chantier."
+    }
+    $missingSections = @()
+    foreach ($key in $templateSections.Keys) {
+        if ($content -notmatch [regex]::Escape($key)) {
+            $missingSections += "$key ($($templateSections[$key]))"
+        }
+    }
+
+    if ($missingSections.Count -gt 0) {
+        throw ("Action start: plan non conforme au gabarit .ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md. " +
+            "Sections manquantes ou non reecrites: `n- " + ($missingSections -join "`n- ") +
+            "`nCeci n'est pas une simple erreur de formatage: l'IA doit relire le brouillon et " +
+            "REDIGER chaque section manquante avec le contenu reel de ce chantier (pas coller le " +
+            "gabarit vide), puis relancer start -Audited.")
+    }
 }
 
 function Set-ActiveWorkstream {
@@ -125,39 +167,60 @@ $checkpoint = Read-Checkpoint $checkpointPath
 
 switch ($Action) {
     "start" {
+        # -Path : brouillon humain original dans "0 - HUMAN START HERE/".
+        #         N'est jamais reecrit ni deplace vers le backlog ; il est
+        #         archive tel quel pour tracabilite.
+        # -RewrittenPath : plan integralement reecrit par l'IA selon
+        #         .ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md, deja ecrit par
+        #         l'IA a l'emplacement cible avant d'appeler ce script.
         if (-not $Path) {
-            throw "Action start: utilise -Path pour indiquer le plan depose dans 0 - HUMAN START HERE/."
+            throw "Action start: utilise -Path pour indiquer le brouillon original depose dans 0 - HUMAN START HERE/."
+        }
+        if (-not $RewrittenPath) {
+            throw "Action start: utilise -RewrittenPath pour indiquer le plan deja reecrit selon le gabarit, deja present dans le dossier backlog cible."
         }
         if (-not $Audited) {
             throw "Action start: audit IA requis avant routage. Utilise /start via l'IA, ou relance avec -Audited apres audit explicite."
         }
 
-        $source = Resolve-Path $Path
-        $sourcePath = $source.Path
-        $sourceRepoPath = ConvertTo-RepoPath $sourcePath $repoRoot
-        if (-not $sourceRepoPath.StartsWith("0 - HUMAN START HERE/")) {
-            throw "Action start: le plan doit partir de 0 - HUMAN START HERE/."
+        $draft = Resolve-Path $Path
+        $draftPath = $draft.Path
+        $draftRepoPath = ConvertTo-RepoPath $draftPath $repoRoot
+        if (-not $draftRepoPath.StartsWith("0 - HUMAN START HERE/")) {
+            throw "Action start: le brouillon original (-Path) doit se trouver dans 0 - HUMAN START HERE/."
         }
-        Assert-PlanAuditReady $sourcePath
+        if ($draftRepoPath.StartsWith("0 - HUMAN START HERE/archive/")) {
+            throw "Action start: ce brouillon est deja archive."
+        }
+
+        $rewritten = Resolve-Path $RewrittenPath
+        $rewrittenPathResolved = $rewritten.Path
+        $rewrittenRepoPath = ConvertTo-RepoPath $rewrittenPathResolved $repoRoot
+        $expectedFolder = (Get-BacklogFolder $Track) + "/"
+        if (-not $rewrittenRepoPath.StartsWith($expectedFolder)) {
+            throw "Action start: -RewrittenPath ('$rewrittenRepoPath') doit deja se trouver dans '$expectedFolder' (coherent avec -Track $Track). Ecris d'abord le plan reecrit a cet emplacement."
+        }
+        Assert-PlanAuditReady $rewrittenPathResolved
 
         if (-not $Id) {
-            $Id = ConvertTo-PlanId $sourcePath
+            $Id = ConvertTo-PlanId $rewrittenPathResolved
         }
         if (-not $Title) {
-            $Title = [System.IO.Path]::GetFileNameWithoutExtension($sourcePath)
+            $Title = [System.IO.Path]::GetFileNameWithoutExtension($rewrittenPathResolved)
         }
         if (@(Find-Workstream $checkpoint $Id).Count -gt 0) {
             throw "Un chantier avec id '$Id' existe deja dans .ai/checkpoint.json."
         }
 
-        $targetFolder = Join-Path $repoRoot (Get-BacklogFolder $Track)
-        New-Item -ItemType Directory -Force $targetFolder | Out-Null
-        $targetPath = Join-Path $targetFolder ([System.IO.Path]::GetFileName($sourcePath))
-        if (Test-Path $targetPath) {
-            throw "Le fichier cible existe deja: $targetPath"
+        $draftArchiveFolder = Join-Path $repoRoot "0 - HUMAN START HERE/archive"
+        New-Item -ItemType Directory -Force $draftArchiveFolder | Out-Null
+        $draftArchiveName = "{0}_{1}" -f (Get-Date -Format "yyyyMMdd"), ([System.IO.Path]::GetFileName($draftPath))
+        $draftArchivePath = Join-Path $draftArchiveFolder $draftArchiveName
+        if (Test-Path $draftArchivePath) {
+            throw "Le brouillon archive existe deja: $draftArchivePath"
         }
-        Move-Item -LiteralPath $sourcePath -Destination $targetPath
-        $targetRepoPath = ConvertTo-RepoPath $targetPath $repoRoot
+        Move-Item -LiteralPath $draftPath -Destination $draftArchivePath
+        $draftArchiveRepoPath = ConvertTo-RepoPath $draftArchivePath $repoRoot
 
         $workstream = [ordered]@{
             id = $Id
@@ -166,7 +229,8 @@ switch ($Action) {
             status = "PENDING"
             lifecycle = "TRIAGED"
             classification = $Classification
-            source_path = $targetRepoPath
+            source_path = $rewrittenRepoPath
+            original_draft_path = $draftArchiveRepoPath
             active_runtime_path = $null
             opened_at = (Get-Date -Format "yyyy-MM-dd")
             last_moved_at = (Get-Date -Format "yyyy-MM-dd")
@@ -181,7 +245,7 @@ switch ($Action) {
 
         $checkpoint.workstreams = @($checkpoint.workstreams) + @($workstream)
         Write-Checkpoint $checkpoint $checkpointPath
-        Write-Host "Plan demarre: $Id -> $targetRepoPath"
+        Write-Host "Plan demarre: $Id -> $rewrittenRepoPath (brouillon original archive: $draftArchiveRepoPath)"
     }
 
     "continue" {

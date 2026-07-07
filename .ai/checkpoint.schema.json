@@ -245,6 +245,10 @@
         },
         "classification": { "$ref": "#/$defs/classification" },
         "source_path": { "type": "string", "minLength": 1 },
+        "original_draft_path": {
+          "type": ["string", "null"],
+          "description": "Path to the raw human draft as archived under '0 - HUMAN START HERE/archive/' at promotion time. Null if this workstream was authored directly in the backlog without a prior human draft. Kept for traceability: source_path points to the AI-rewritten plan, this field points to the untouched original."
+        },
         "active_runtime_path": {
           "type": ["string", "null"],
           "minLength": 1
