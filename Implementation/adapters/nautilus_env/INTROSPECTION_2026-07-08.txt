@@ -1,0 +1,1427 @@
+[1m2026-07-08T12:01:44.889112700Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889137200Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  NAUTILUS TRADER - Automated Algorithmic Trading Platform[0m
+[1m2026-07-08T12:01:44.889137800Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  by Nautech Systems Pty Ltd.[0m
+[1m2026-07-08T12:01:44.889137900Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  Copyright (C) 2015-2026. All rights reserved.[0m
+[1m2026-07-08T12:01:44.889138200Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889138300Z[0m [INFO] BACKTESTER-001.BacktestEngine: [0m
+[1m2026-07-08T12:01:44.889138500Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889138700Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⣿⣿⠀⢸⣿⣿⣿⣿⣶⣶⣤⣀⠀⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889138900Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠀⠀⢀⣴⡇⢀⣾⣿⣿⣿⣿⣿⠀⣾⣿⣿⣿⣿⣿⣿⣿⠿⠓⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889139100Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠀⣰⣿⣿⡀⢸⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠟⠁⣠⣄⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889139200Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⢠⣿⣿⣿⣇⠀⢿⣿⣿⣿⣿⣿⠀⢻⣿⣿⣿⡿⢃⣠⣾⣿⣿⣧⡀⠀⠀[0m
+[1m2026-07-08T12:01:44.889139400Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠠⣾⣿⣿⣿⣿⣿⣧⠈⠋⢀⣴⣧⠀⣿⡏⢠⡀⢸⣿⣿⣿⣿⣿⣿⣿⡇⠀[0m
+[1m2026-07-08T12:01:44.889140700Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⣀⠙⢿⣿⣿⣿⣿⣿⠇⢠⣿⣿⣿⡄⠹⠃⠼⠃⠈⠉⠛⠛⠛⠛⠛⠻⠇⠀[0m
+[1m2026-07-08T12:01:44.889140900Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⢸⡟⢠⣤⠉⠛⠿⢿⣿⠀⢸⣿⡿⠋⣠⣤⣄⠀⣾⣿⣿⣶⣶⣶⣦⡄⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889141100Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠸⠀⣾⠏⣸⣷⠂⣠⣤⠀⠘⢁⣴⣾⣿⣿⣿⡆⠘⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889141300Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠛⠀⣿⡟⠀⢻⣿⡄⠸⣿⣿⣿⣿⣿⣿⣿⡀⠘⣿⣿⣿⣿⠟⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889141500Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠀⠀⣿⠇⠀⠀⢻⡿⠀⠈⠻⣿⣿⣿⣿⣿⡇⠀⢹⣿⠿⠋⠀⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889141600Z[0m [INFO] BACKTESTER-001.BacktestEngine: ⠀⠀⠀⠀⠀⠀⠋⠀⠀⠀⡘⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀[0m
+[1m2026-07-08T12:01:44.889141800Z[0m [INFO] BACKTESTER-001.BacktestEngine: [0m
+[1m2026-07-08T12:01:44.889141900Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889142000Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  SYSTEM SPECIFICATION[0m
+[1m2026-07-08T12:01:44.889142200Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889142700Z[0m [INFO] BACKTESTER-001.BacktestEngine: CPU architecture: Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz[0m
+[1m2026-07-08T12:01:44.889143300Z[0m [INFO] BACKTESTER-001.BacktestEngine: CPU(s): 8 @ 2496 MHz[0m
+[1m2026-07-08T12:01:44.889147500Z[0m [INFO] BACKTESTER-001.BacktestEngine: OS: kernel-26200 Windows 11 Home[0m
+[1m2026-07-08T12:01:44.889268600Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889269100Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  MEMORY USAGE[0m
+[1m2026-07-08T12:01:44.889271200Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889276500Z[0m [INFO] BACKTESTER-001.BacktestEngine: RAM-Total: 31.84 GiB[0m
+[1m2026-07-08T12:01:44.889277400Z[0m [INFO] BACKTESTER-001.BacktestEngine: RAM-Used: 21.23 GiB (66.66%)[0m
+[1m2026-07-08T12:01:44.889278000Z[0m [INFO] BACKTESTER-001.BacktestEngine: RAM-Avail: 10.62 GiB (33.34%)[0m
+[1m2026-07-08T12:01:44.889279000Z[0m [INFO] BACKTESTER-001.BacktestEngine: Swap-Total: 31.84 GiB[0m
+[1m2026-07-08T12:01:44.889279500Z[0m [INFO] BACKTESTER-001.BacktestEngine: Swap-Used: 1.61 GiB (5.07%)[0m
+[1m2026-07-08T12:01:44.889280000Z[0m [INFO] BACKTESTER-001.BacktestEngine: Swap-Avail: 30.23 GiB (94.93%)[0m
+[1m2026-07-08T12:01:44.889283200Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889283500Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  IDENTIFIERS[0m
+[1m2026-07-08T12:01:44.889283700Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889284400Z[0m [INFO] BACKTESTER-001.BacktestEngine: trader_id: BACKTESTER-001[0m
+[1m2026-07-08T12:01:44.889285000Z[0m [INFO] BACKTESTER-001.BacktestEngine: machine_id: LiantsoaDesktop[0m
+[1m2026-07-08T12:01:44.889286000Z[0m [INFO] BACKTESTER-001.BacktestEngine: instance_id: 07bc97ae-9470-41c1-aa31-071de381be30[0m
+[1m2026-07-08T12:01:44.889286300Z[0m [INFO] BACKTESTER-001.BacktestEngine: PID: 39380[0m
+[1m2026-07-08T12:01:44.889286500Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889286700Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine:  VERSIONING[0m
+[1m2026-07-08T12:01:44.889286900Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889313400Z[0m [INFO] BACKTESTER-001.BacktestEngine: nautilus_trader: 1.230.0[0m
+[1m2026-07-08T12:01:44.889319700Z[0m [INFO] BACKTESTER-001.BacktestEngine: python: 3.13.0[0m
+[1m2026-07-08T12:01:44.889322200Z[0m [INFO] BACKTESTER-001.BacktestEngine: numpy: 2.5.1[0m
+[1m2026-07-08T12:01:44.889324900Z[0m [INFO] BACKTESTER-001.BacktestEngine: pandas: 3.0.3[0m
+[1m2026-07-08T12:01:44.889327100Z[0m [INFO] BACKTESTER-001.BacktestEngine: msgspec: 0.21.1[0m
+[1m2026-07-08T12:01:44.889329000Z[0m [INFO] BACKTESTER-001.BacktestEngine: pyarrow: 24.0.0[0m
+[1m2026-07-08T12:01:44.889330800Z[0m [INFO] BACKTESTER-001.BacktestEngine: pytz: 2026.2[0m
+[1m2026-07-08T12:01:44.889794400Z[0m [36m[INFO] BACKTESTER-001.BacktestEngine: =================================================================[0m
+[1m2026-07-08T12:01:44.889822200Z[0m [INFO] BACKTESTER-001.BacktestEngine: Building system kernel[0m
+[1m2026-07-08T12:01:44.889854200Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.database=None[0m
+[1m2026-07-08T12:01:44.889855100Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.encoding='json'[0m
+[1m2026-07-08T12:01:44.889857600Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.timestamps_as_iso8601=False[0m
+[1m2026-07-08T12:01:44.889858600Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.buffer_interval_ms=None[0m
+[1m2026-07-08T12:01:44.889859200Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.autotrim_mins=None[0m
+[1m2026-07-08T12:01:44.889859900Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.use_trader_prefix=True[0m
+[1m2026-07-08T12:01:44.889860900Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.use_trader_id=True[0m
+[1m2026-07-08T12:01:44.889861400Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.use_instance_id=False[0m
+[1m2026-07-08T12:01:44.889862000Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.streams_prefix='stream'[0m
+[1m2026-07-08T12:01:44.889863000Z[0m [94m[INFO] BACKTESTER-001.MessageBus: config.types_filter=None[0m
+[1m2026-07-08T12:01:44.889931300Z[0m [INFO] BACKTESTER-001.Cache: READY[0m
+[1m2026-07-08T12:01:44.890534800Z[0m [INFO] BACKTESTER-001.DataEngine: READY[0m
+[1m2026-07-08T12:01:44.890654400Z[0m [INFO] BACKTESTER-001.RiskEngine: READY[0m
+[1m2026-07-08T12:01:44.890691700Z[0m [94m[INFO] BACKTESTER-001.RiskEngine: TradingState is ACTIVE[0m
+[1m2026-07-08T12:01:44.890832200Z[0m [INFO] BACKTESTER-001.Throttler-ORDER_SUBMIT_THROTTLER: READY[0m
+[1m2026-07-08T12:01:44.890858700Z[0m [94m[INFO] BACKTESTER-001.RiskEngine: Set MAX_ORDER_SUBMIT_RATE: 100/00:00:01[0m
+[1m2026-07-08T12:01:44.890898900Z[0m [INFO] BACKTESTER-001.Throttler-ORDER_MODIFY_THROTTLER: READY[0m
+[1m2026-07-08T12:01:44.890916400Z[0m [94m[INFO] BACKTESTER-001.RiskEngine: Set MAX_ORDER_MODIFY_RATE: 100/00:00:01[0m
+[1m2026-07-08T12:01:44.890975400Z[0m [INFO] BACKTESTER-001.ExecEngine: READY[0m
+[1m2026-07-08T12:01:44.891016400Z[0m [94m[INFO] BACKTESTER-001.ExecEngine: config.snapshot_orders=False[0m
+[1m2026-07-08T12:01:44.891020200Z[0m [94m[INFO] BACKTESTER-001.ExecEngine: config.snapshot_positions=False[0m
+[1m2026-07-08T12:01:44.891021200Z[0m [94m[INFO] BACKTESTER-001.ExecEngine: config.snapshot_positions_interval_secs=None[0m
+[1m2026-07-08T12:01:44.891021900Z[0m [94m[INFO] BACKTESTER-001.ExecEngine: config.allow_overfills=False[0m
+[1m2026-07-08T12:01:44.891049300Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 general objects from database[0m
+[1m2026-07-08T12:01:44.891058500Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 currencies from database[0m
+[1m2026-07-08T12:01:44.891063000Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 instruments from database[0m
+[1m2026-07-08T12:01:44.891069100Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 accounts from database[0m
+[1m2026-07-08T12:01:44.891074100Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 orders from database[0m
+[1m2026-07-08T12:01:44.891081200Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 order lists from database[0m
+[1m2026-07-08T12:01:44.891085900Z[0m [INFO] BACKTESTER-001.Cache: Cached 0 positions from database[0m
+[1m2026-07-08T12:01:44.891104500Z[0m [INFO] BACKTESTER-001.Cache: Checking data integrity[0m
+[1m2026-07-08T12:01:44.891128800Z[0m [92m[INFO] BACKTESTER-001.Cache: Integrity check passed in 22μs[0m
+[1m2026-07-08T12:01:44.891147800Z[0m [INFO] BACKTESTER-001.ExecEngine: Loaded cache in 0ms[0m
+[1m2026-07-08T12:01:44.891294000Z[0m [INFO] BACKTESTER-001.OrderEmulator: READY[0m
+[1m2026-07-08T12:01:44.891440400Z[0m [INFO] BACKTESTER-001.BACKTESTER-001: READY[0m
+[1m2026-07-08T12:01:44.891533600Z[0m [INFO] BACKTESTER-001.BacktestEngine: Initialized in 407ms[0m
+[1m2026-07-08T12:01:44.891685100Z[0m [INFO] BACKTESTER-001.DataEngine: DISPOSED[0m
+[1m2026-07-08T12:01:44.891712300Z[0m [INFO] BACKTESTER-001.RiskEngine: DISPOSED[0m
+[1m2026-07-08T12:01:44.891762700Z[0m [INFO] BACKTESTER-001.ExecEngine: DISPOSED[0m
+[1m2026-07-08T12:01:44.891848800Z[0m [INFO] BACKTESTER-001.OrderEmulator: DISPOSED[0m
+[1m2026-07-08T12:01:44.891865900Z[0m [INFO] BACKTESTER-001.BACKTESTER-001: Cleared actors[0m
+[1m2026-07-08T12:01:44.891868100Z[0m [INFO] BACKTESTER-001.BACKTESTER-001: Cleared trading strategies[0m
+[1m2026-07-08T12:01:44.891869200Z[0m [INFO] BACKTESTER-001.BACKTESTER-001: Cleared execution algorithms[0m
+[1m2026-07-08T12:01:44.891878100Z[0m [INFO] BACKTESTER-001.BACKTESTER-001: DISPOSED[0m
+[1m2026-07-08T12:01:44.891889500Z[0m [INFO] BACKTESTER-001.Cache: Reset[0m
+[1m2026-07-08T12:01:44.891905700Z[0m [INFO] BACKTESTER-001.MessageBus: Closed message bus[0m
+# Construction checks
+version: 1.230.0
+python: D:\Livre\Trading\Trading algorithmic\EBTA - David Aronson\Implementation\adapters\nautilus_env\venv\Scripts\python.exe
+BacktestEngine(): OK -> <nautilus_trader.backtest.engine.BacktestEngine object at 0x000001FEE9A0BBC0>
+BacktestEngine.cache: <class 'nautilus_trader.cache.cache.Cache'>
+BacktestEngine.dispose(): OK
+FillModel kwargs: OK -> prob_fill_on_limit=0.5, prob_slippage=0.25
+LatencyModel(base_latency_nanos=...): OK -> 1000000
+MakerTakerFeeModel(): OK -> <nautilus_trader.backtest.models.fee.MakerTakerFeeModel object at 0x000001FEE8E4C190>
+LeveragedMarginModel(): OK -> <nautilus_trader.accounting.margin_models.LeveragedMarginModel object at 0x000001FEE8E4C190>
+OmsType.HEDGING: <OmsType.HEDGING: 2>
+AccountType.MARGIN: <AccountType.MARGIN: 2>
+Price.from_str('3000'): OK raw=3000000000000 precision=0
+Price.from_str('20000'): OK raw=20000000000000 precision=0
+Price.from_str('9200000000'): OK raw=9200000000000000000 precision=0
+Price.from_str('17014118346046'): FAIL ValueError: invalid raw price value outside range [-9223372036000000000, 9223372036000000000], was 17014118346046000000000
+Price.from_raw(9223372036000000000, 0): OK value=9223372036
+Price.from_raw(9223372037000000000, 0): FAIL OverflowError: int too big to convert
+
+# Symbol checks
+## nautilus_trader.backtest.engine.BacktestEngine
+type: <class 'type'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.engine.BacktestEngine'>)
+doc:
+  BacktestEngine(config: BacktestEngineConfig | None = None) -> None
+
+  Provides a backtest engine to run a portfolio of strategies over historical
+  data.
+
+  Parameters
+  ----------
+  config : BacktestEngineConfig, optional
+      The configuration for the instance.
+
+  Raises
+  ------
+  TypeError
+      If `config` is not of type `BacktestEngineConfig`.
+members:
+  add_actor, add_actors, add_data, add_data_iterator, add_exec_algorithm, add_exec_algorithms, add_instrument, add_strategies, add_strategy, add_venue, backtest_end, backtest_start, cache, change_fill_model, clear_actors, clear_data, clear_exec_algorithms, clear_strategies, data, dispose, dump_pickled_data, end, get_log_guard, get_result, instance_id, iteration, kernel, list_venues, load_pickled_data, logger, machine_id, portfolio, reset, run, run_config_id, run_finished, run_id, run_started, set_default_market_data_client, sort_data, trader, trader_id
+
+## nautilus_trader.backtest.engine.BacktestEngine.add_venue
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.add_venue
+signature: (self, venue: 'Venue', oms_type: 'OmsType', account_type: 'AccountType', starting_balances: 'list[Money]', base_currency: 'Currency | None' = None, default_leverage: 'Decimal | None' = None, leverages: 'dict[InstrumentId, Decimal] | None' = None, margin_model: 'MarginModel' = None, modules: 'list[SimulationModule] | None' = None, fill_model: 'FillModel | None' = None, fee_model: 'FeeModel | None' = None, latency_model: 'LatencyModel | None' = None, book_type: 'BookType' = <BookType.L1_MBP: 1>, routing: 'bool' = False, reject_stop_orders: 'bool' = True, support_gtd_orders: 'bool' = True, support_contingent_orders: 'bool' = True, oto_trigger_mode: 'OtoTriggerMode' = <OtoTriggerMode.PARTIAL: 0>, use_position_ids: 'bool' = True, use_random_ids: 'bool' = False, use_reduce_only: 'bool' = True, use_message_queue: 'bool' = True, use_market_order_acks: 'bool' = False, bar_execution: 'bool' = True, bar_adaptive_high_low_ordering: 'bool' = False, trade_execution: 'bool' = True, liquidity_consumption: 'bool' = False, queue_position: 'bool' = False, allow_cash_borrowing: 'bool' = False, frozen_account: 'bool' = False, price_protection_points=None, settlement_prices: 'dict[InstrumentId, float] | None' = None) -> 'None'
+doc:
+  BacktestEngine.add_venue(self, Venue venue: Venue, OmsType oms_type: OmsType, AccountType account_type: AccountType, list starting_balances: list[Money], Currency base_currency: Currency | None = None, default_leverage: Decimal | None = None, dict leverages: dict[InstrumentId, Decimal] | None = None, MarginModel margin_model: MarginModel = None, list modules: list[SimulationModule] | None = None, FillModel fill_model: FillModel | None = None, FeeModel fee_model: FeeModel | None = None, LatencyModel latency_model: LatencyModel | None = None, BookType book_type: BookType = BookType.L1_MBP, bool routing: bool = False, bool reject_stop_orders: bool = True, bool support_gtd_orders: bool = True, bool support_contingent_orders: bool = True, OtoTriggerMode oto_trigger_mode: OtoTriggerMode = OtoTriggerMode.PARTIAL, bool use_position_ids: bool = True, bool use_random_ids: bool = False, bool use_reduce_only: bool = True, bool use_message_queue: bool = True, bool use_market_order_acks: bool = False, bool bar_execution: bool = True, bool bar_adaptive_high_low_ordering: bool = False, bool trade_execution: bool = True, bool liquidity_consumption: bool = False, bool queue_position: bool = False, bool allow_cash_borrowing: bool = False, bool frozen_account: bool = False, price_protection_points=None, dict settlement_prices: dict[InstrumentId, float] | None = None) -> None
+
+  Add a `SimulatedExchange` with the given parameters to the backtest engine.
+
+  Parameters
+  ----------
+  venue : Venue
+      The venue ID.
+  oms_type : OmsType {``HEDGING``, ``NETTING``}
+      The order management system type for the exchange. If ``HEDGING`` will
+      generate new position IDs.
+  account_type : AccountType
+      The account type for the exchange.
+  starting_balances : list[Money]
+      The starting account balances (specify one for a single asset account).
+  base_currency : Currency, optional
+      The account base currency for the client. Use ``None`` for multi-currency accounts.
+  default_leverage : Decimal, optional
+      The account default leverage (for margin accounts).
+  leverages : dict[InstrumentId, Decimal], optional
+      The instrument specific leverage configuration (for margin accounts).
+  margin_model : MarginModelConfig, optional
+      The margin calculation model configuration. Default 'leveraged'.
+  modules : list[SimulationModule], optional
+
+## nautilus_trader.backtest.engine.BacktestEngine.run
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.run
+signature: (self, start: 'datetime | str | int | None' = None, end: 'datetime | str | int | None' = None, run_config_id: 'str | None' = None, streaming: 'bool' = False) -> 'None'
+doc:
+  BacktestEngine.run(self, start: datetime | str | int | None = None, end: datetime | str | int | None = None, str run_config_id: str | None = None, bool streaming: bool = False) -> None
+
+  Run a backtest.
+
+  When ``streaming`` is False (default), the run is finalized via
+  ``end()`` which stops all engines and produces results. When True,
+  the run pauses without finalizing so additional data batches can be
+  loaded. Timer advancement stops at data exhaustion to avoid producing
+  synthetic events (e.g. zero-volume bars) past the current batch.
+
+  For datasets larger than available memory, use ``streaming`` mode::
+
+      engine.add_strategy(strategy)
+
+      for batch in data_batches:
+          engine.add_data(batch)
+          engine.run(streaming=True)
+          engine.clear_data()
+
+      engine.end()
+
+  Parameters
+  ----------
+  start : datetime or str or int, optional
+
+## nautilus_trader.backtest.engine.BacktestEngine.reset
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.reset
+signature: (self) -> 'None'
+doc:
+  BacktestEngine.reset(self) -> None
+
+  Reset the backtest engine.
+
+  All stateful fields are reset to their initial value while loaded components,
+  data, instruments, and venues persist.
+
+  Notes
+  -----
+  Loaded actors, strategies, execution algorithms, data, and instruments are retained
+  across resets by default. Clear or remove loaded components before adding replacements.
+
+  See Also
+  --------
+  https://nautilustrader.io/docs/concepts/backtesting#repeated-runs
+
+## nautilus_trader.backtest.engine.BacktestEngine.get_result
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.get_result
+signature: (self)
+doc:
+  BacktestEngine.get_result(self)
+
+  Return the backtest result from the last run.
+
+  Returns
+  -------
+  BacktestResult
+
+## nautilus_trader.backtest.engine.BacktestEngine.add_data
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.add_data
+signature: (self, data, client_id=None, validate=True, sort=True) -> 'None'
+doc:
+  BacktestEngine.add_data(self, list data, ClientId client_id=None, bool validate=True, bool sort=True) -> None
+
+  Add the given `data` to the backtest engine.
+
+  Parameters
+  ----------
+  data : list[Data]
+      The data to add.
+  client_id : ClientId, optional
+      The client ID to associate with the data.
+  validate : bool, default True
+      If `data` should be validated
+      (recommended when adding data directly to the engine).
+  sort : bool, default True
+      If `data` should be sorted by `ts_init` with the rest of the stream after adding
+      (recommended when adding data directly to the engine).
+
+  Raises
+  ------
+  ValueError
+      If `data` is empty.
+  ValueError
+      If `data` contains objects which are not a type of `Data`.
+  ValueError
+
+## nautilus_trader.backtest.engine.BacktestEngine.add_instrument
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.add_instrument
+signature: (self, instrument) -> 'None'
+doc:
+  BacktestEngine.add_instrument(self, Instrument instrument) -> None
+
+  Add the instrument to the backtest engine.
+
+  The instrument must be valid for its associated venue. For instance,
+  derivative instruments which would trade on margin cannot be added to
+  a venue with a ``CASH`` account.
+
+  Parameters
+  ----------
+  instrument : Instrument
+      The instrument to add.
+
+  Raises
+  ------
+  InvalidConfiguration
+      If the venue for the `instrument` has not been added to the engine.
+  InvalidConfiguration
+      If `instrument` is not valid for its associated venue.
+
+## nautilus_trader.backtest.engine.BacktestEngine.add_strategy
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.add_strategy
+signature: (self, strategy: 'Strategy') -> 'None'
+doc:
+  BacktestEngine.add_strategy(self, Strategy strategy: Strategy) -> None
+
+  Add the given strategy to the backtest engine.
+
+  Parameters
+  ----------
+  strategy : Strategy
+      The strategy to add.
+
+## nautilus_trader.backtest.engine.BacktestEngine.clear_data
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.clear_data
+signature: (self) -> 'None'
+doc:
+  BacktestEngine.clear_data(self) -> None
+
+  Clear the engines internal data stream.
+
+  Does not clear added instruments.
+
+## nautilus_trader.backtest.engine.BacktestEngine.clear_strategies
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.clear_strategies
+signature: (self) -> 'None'
+doc:
+  BacktestEngine.clear_strategies(self) -> None
+
+  Clear all trading strategies from the engines internal trader.
+
+## nautilus_trader.backtest.engine.BacktestEngine.sort_data
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.sort_data
+signature: (self) -> 'None'
+doc:
+  BacktestEngine.sort_data(self) -> None
+
+  Sort the engines internal data stream.
+
+## nautilus_trader.backtest.engine.BacktestEngine.end
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.backtest.engine
+name: BacktestEngine.end
+signature: (self)
+doc:
+  BacktestEngine.end(self)
+
+  Manually end the backtest.
+
+  Notes
+  -----
+  Only required if you have previously been running with streaming.
+
+## nautilus_trader.config.BacktestEngineConfig
+type: <class 'msgspec._core.StructMeta'>
+module: nautilus_trader.backtest.config
+name: BacktestEngineConfig
+signature: (environment: nautilus_trader.common.Environment = <Environment.BACKTEST: 'backtest'>, trader_id: nautilus_trader.model.identifiers.TraderId = 'BACKTESTER-001', instance_id: nautilus_trader.core.uuid.UUID4 | None = None, cache: nautilus_trader.cache.config.CacheConfig | None = CacheConfig(database=None, encoding='msgpack', timestamps_as_iso8601=False, persist_account_events=True, buffer_interval_ms=None, bulk_read_batch_size=None, use_trader_prefix=True, use_instance_id=False, flush_on_start=False, drop_instruments_on_reset=False, tick_capacity=10000, bar_capacity=10000), message_bus: nautilus_trader.common.config.MessageBusConfig | None = None, data_engine: nautilus_trader.data.config.DataEngineConfig | None = DataEngineConfig(time_bars_interval_type='left-open', time_bars_timestamp_on_close=True, time_bars_skip_first_non_full_bar=False, time_bars_build_with_no_updates=True, time_bars_origin_offset=None, time_bars_build_delay=0, validate_data_sequence=False, buffer_deltas=False, emit_quotes_from_book=False, emit_quotes_from_book_depths=False, external_clients=None, debug=False), risk_engine: nautilus_trader.risk.config.RiskEngineConfig | None = RiskEngineConfig(bypass=False, max_order_submit_rate='100/00:00:01', max_order_modify_rate='100/00:00:01', max_notional_per_order={}, debug=False), exec_engine: nautilus_trader.execution.config.ExecEngineConfig | None = ExecEngineConfig(load_cache=True, manage_own_order_books=False, snapshot_orders=False, snapshot_positions=False, snapshot_positions_interval_secs=None, external_clients=None, allow_overfills=False, purge_closed_orders_interval_mins=None, purge_closed_orders_buffer_mins=None, purge_closed_positions_interval_mins=None, purge_closed_positions_buffer_mins=None, purge_account_events_interval_mins=None, purge_account_events_lookback_mins=None, purge_from_database=False, debug=False), portfolio: nautilus_trader.portfolio.config.PortfolioConfig | None = None, emulator: nautilus_trader.common.config.OrderEmulatorConfig | None = None, streaming: nautilus_trader.persistence.config.StreamingConfig | None = None, catalogs: list[nautilus_trader.persistence.config.DataCatalogConfig] = <factory>, actors: list[nautilus_trader.common.config.ImportableActorConfig] = <factory>, strategies: list[nautilus_trader.trading.config.ImportableStrategyConfig] = <factory>, exec_algorithms: list[nautilus_trader.execution.config.ImportableExecAlgorithmConfig] = <factory>, controller: nautilus_trader.trading.config.ImportableControllerConfig | None = None, load_state: bool = False, save_state: bool = False, loop_debug: bool = False, logging: nautilus_trader.common.config.LoggingConfig | None = None, timeout_connection: Annotated[float, msgspec.Meta(gt=0.0)] = 60.0, timeout_reconciliation: Annotated[float, msgspec.Meta(gt=0.0)] = 30.0, timeout_portfolio: Annotated[float, msgspec.Meta(gt=0.0)] = 10.0, timeout_disconnection: Annotated[float, msgspec.Meta(gt=0.0)] = 10.0, timeout_post_stop: Annotated[float, msgspec.Meta(gt=0.0)] = 10.0, timeout_shutdown: Annotated[float, msgspec.Meta(gt=0.0)] = 5.0, run_analysis: bool = True)
+doc:
+  Configuration for ``BacktestEngine`` instances.
+
+  Parameters
+  ----------
+  trader_id : TraderId
+      The trader ID for the node (must be a name and ID tag separated by a hyphen).
+  log_level : str, default "INFO"
+      The stdout log level for the node.
+  loop_debug : bool, default False
+      If the asyncio event loop should be in debug mode.
+  cache : CacheConfig, optional
+      The cache configuration.
+  data_engine : DataEngineConfig, optional
+      The live data engine configuration.
+  risk_engine : RiskEngineConfig, optional
+      The live risk engine configuration.
+  exec_engine : ExecEngineConfig, optional
+      The live execution engine configuration.
+  streaming : StreamingConfig, optional
+      The configuration for streaming to feather files.
+  strategies : list[ImportableStrategyConfig]
+      The strategy configurations for the kernel.
+  actors : list[ImportableActorConfig]
+      The actor configurations for the kernel.
+members:
+  actors, cache, catalogs, controller, data_engine, dict, emulator, environment, exec_algorithms, exec_engine, fully_qualified_name, id, instance_id, json, json_primitives, json_schema, load_state, logging, loop_debug, message_bus, parse, portfolio, risk_engine, run_analysis, save_state, strategies, streaming, timeout_connection, timeout_disconnection, timeout_portfolio, timeout_post_stop, timeout_reconciliation, timeout_shutdown, trader_id, validate
+
+## nautilus_trader.config.BacktestRunConfig
+type: <class 'msgspec._core.StructMeta'>
+module: nautilus_trader.backtest.config
+name: BacktestRunConfig
+signature: (venues: list[nautilus_trader.backtest.config.BacktestVenueConfig], data: list[nautilus_trader.backtest.config.BacktestDataConfig], engine: nautilus_trader.backtest.config.BacktestEngineConfig | None = None, chunk_size: int | None = None, raise_exception: bool = False, dispose_on_completion: bool = True, start: str | int | None = None, end: str | int | None = None, data_clients: dict[str, type[nautilus_trader.live.config.LiveDataClientConfig]] | None = None)
+doc:
+  Represents the configuration for one specific backtest run.
+
+  This includes a backtest engine with its actors and strategies, with the
+  external inputs of venues and data.
+
+  Parameters
+  ----------
+  venues : list[BacktestVenueConfig]
+      The venue configurations for the backtest run.
+  data : list[BacktestDataConfig]
+      The data configurations for the backtest run.
+  engine : BacktestEngineConfig
+      The backtest engine configuration (the core system kernel).
+  chunk_size : int, optional
+      The number of data points to process in each chunk during streaming mode.
+      If `None`, the backtest will run without streaming, loading all data at once.
+  raise_exception : bool, default False
+      If exceptions during an engine build or run should be raised to interrupt the nodes process.
+  dispose_on_completion : bool, default True
+      If the backtest engine should be disposed on completion of the run.
+      If True, then will drop data and all state.
+      If False, then will *only* drop data.
+  start : datetime or str or int, optional
+      The start datetime (UTC) for the backtest run.
+members:
+  chunk_size, data, data_clients, dict, dispose_on_completion, end, engine, fully_qualified_name, id, json, json_primitives, json_schema, parse, raise_exception, start, validate, venues
+
+## nautilus_trader.config.StrategyConfig
+type: <class 'msgspec._core.StructMeta'>
+module: nautilus_trader.trading.config
+name: StrategyConfig
+signature: (*, strategy_id: nautilus_trader.model.identifiers.StrategyId | None = None, order_id_tag: str | None = None, use_uuid_client_order_ids: bool = False, use_hyphens_in_client_order_ids: bool = True, oms_type: str | None = None, external_order_claims: list[nautilus_trader.model.identifiers.InstrumentId] | None = None, manage_contingent_orders: bool = False, manage_gtd_expiry: bool = False, manage_stop: bool = False, market_exit_interval_ms: Annotated[int, msgspec.Meta(gt=0)] = 100, market_exit_max_attempts: Annotated[int, msgspec.Meta(gt=0)] = 100, market_exit_time_in_force: nautilus_trader.core.rust.model.TimeInForce = <TimeInForce.GTC: 1>, market_exit_reduce_only: bool = True, log_events: bool = True, log_commands: bool = True, log_rejected_due_post_only_as_warning: bool = True)
+doc:
+  The base model for all trading strategy configurations.
+
+  Parameters
+  ----------
+  strategy_id : StrategyId, optional
+      The unique ID for the strategy. Will become the strategy ID if not None.
+  order_id_tag : str, optional
+      The unique order ID tag for the strategy. Must be unique
+      amongst all running strategies for a particular trader ID.
+  use_uuid_client_order_ids : bool, default False
+      If UUID4's should be used for client order ID values.
+  use_hyphens_in_client_order_ids : bool, default True
+      If hyphens should be used in generated client order ID values.
+  oms_type : OmsType, optional
+      The order management system type for the strategy. This will determine
+      how the `ExecutionEngine` handles position IDs.
+  external_order_claims : list[InstrumentId], optional
+      The external order claim instrument IDs.
+      External orders and reconciled position exposure for matching instrument IDs will be associated
+      with (claimed by) the strategy.
+  manage_contingent_orders : bool, default False
+      If OTO, OCO, and OUO **open** contingent orders should be managed automatically by the strategy.
+      Any emulated orders which are active local will be managed by the `OrderEmulator` instead.
+  manage_gtd_expiry : bool, default False
+members:
+  dict, external_order_claims, fully_qualified_name, id, json, json_primitives, json_schema, log_commands, log_events, log_rejected_due_post_only_as_warning, manage_contingent_orders, manage_gtd_expiry, manage_stop, market_exit_interval_ms, market_exit_max_attempts, market_exit_reduce_only, market_exit_time_in_force, oms_type, order_id_tag, parse, strategy_id, use_hyphens_in_client_order_ids, use_uuid_client_order_ids, validate
+
+## nautilus_trader.trading.strategy.Strategy
+type: <class 'type'>
+module: nautilus_trader.trading.strategy
+name: Strategy
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.trading.strategy.Strategy'>)
+doc:
+  Strategy(config: StrategyConfig | None = None)
+
+  The base class for all trading strategies.
+
+  This class allows traders to implement their own customized trading strategies.
+  A trading strategy can configure its own order management system type, which
+  determines how positions are handled by the `ExecutionEngine`.
+
+  Strategy OMS (Order Management System) types:
+   - ``UNSPECIFIED``: No specific type has been configured, will therefore
+     default to the native OMS type for each venue.
+   - ``HEDGING``: A position ID will be assigned for each new position which
+     is opened per instrument.
+   - ``NETTING``: There will only be a single position for the strategy per
+     instrument. The position ID naming convention is `{instrument_id}-{strategy_id}`.
+
+  Parameters
+  ----------
+  config : StrategyConfig, optional
+      The trading strategy configuration.
+
+  Raises
+  ------
+  TypeError
+members:
+  active_task_ids, add_synthetic, cache, cancel_all_orders, cancel_all_tasks, cancel_gtd_expiry, cancel_order, cancel_orders, cancel_task, change_id, change_order_id_tag, clock, close_all_positions, close_position, config, degrade, deregister_warning_event, dispose, external_order_claims, fault, fully_qualified_name, greeks, handle_bar, handle_data, handle_event, handle_funding_rate, handle_historical_bar, handle_historical_data, handle_historical_funding_rate, handle_historical_order_book_deltas, handle_historical_order_book_depth, handle_historical_quote_tick, handle_historical_trade_tick, handle_index_price, handle_instrument, handle_instrument_close, handle_instrument_status, handle_mark_price, handle_option_chain, handle_option_greeks, handle_order_book, handle_order_book_deltas, handle_order_book_depth, handle_quote_tick, handle_signal, handle_trade_tick, has_active_tasks, has_any_tasks, has_pending_requests, has_queued_tasks, id, indicators_initialized, is_degraded, is_disposed, is_exiting, is_faulted, is_initialized, is_pending_request, is_running, is_stopped, load, log, manage_contingent_orders, manage_gtd_expiry, market_exit, modify_order, msgbus, oms_type, on_bar, on_data, on_degrade, on_dispose, on_event, on_fault, on_funding_rate, on_historical_data, on_index_price, on_instrument, on_instrument_close, on_instrument_status
+
+## nautilus_trader.trading.strategy.Strategy.register_indicator_for_bars
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.common.actor
+name: Actor.register_indicator_for_bars
+signature: (self, bar_type, indicator)
+doc:
+  Actor.register_indicator_for_bars(self, BarType bar_type, Indicator indicator) -> void
+
+  Register the given indicator with the actor/strategy to receive bar data for the
+  given bar type.
+
+  Parameters
+  ----------
+  bar_type : BarType
+      The bar type for bar updates.
+  indicator : Indicator
+      The indicator to register.
+
+## nautilus_trader.persistence.wranglers.BarDataWrangler
+type: <class 'type'>
+module: nautilus_trader.persistence.wranglers
+name: BarDataWrangler
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.persistence.wranglers.BarDataWrangler'>)
+doc:
+  BarDataWrangler(BarType bar_type, Instrument instrument)
+
+  Provides a means of building lists of Nautilus `Bar` objects.
+
+  Parameters
+  ----------
+  bar_type : BarType
+      The bar type for the wrangler.
+  instrument : Instrument
+      The instrument for the wrangler.
+members:
+  bar_type, instrument, process
+
+## nautilus_trader.persistence.wranglers.BarDataWrangler.process
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.persistence.wranglers
+name: BarDataWrangler.process
+signature: (self, data: 'pd.DataFrame', default_volume: 'float' = 1000000.0, ts_init_delta: 'int' = 0)
+doc:
+  BarDataWrangler.process(self, data: pd.DataFrame, double default_volume: float = 1000000.0, int ts_init_delta: int = 0)
+
+  Process the given bar dataset into Nautilus `Bar` objects.
+
+  Expects columns ['open', 'high', 'low', 'close', 'volume'] with 'timestamp' index.
+  Note: The 'volume' column is optional, if one does not exist then will use the `default_volume`.
+
+  Parameters
+  ----------
+  data : pd.DataFrame
+      The data to process.
+  default_volume : float
+      The default volume for each bar (if not provided).
+  ts_init_delta : int
+      The difference in nanoseconds between the data timestamps and the
+      `ts_init` value. Can be used to represent/simulate latency between
+      the data source and the Nautilus system.
+
+  Returns
+  -------
+  list[Bar]
+
+  Raises
+  ------
+
+## nautilus_trader.persistence.catalog.ParquetDataCatalog
+type: <class 'nautilus_trader.persistence.catalog.base._CombinedMeta'>
+module: nautilus_trader.persistence.catalog.parquet
+name: ParquetDataCatalog
+signature: (*args, **kw)
+doc:
+  Provides a queryable data catalog persisted to files in Parquet (Arrow) format.
+
+  Parameters
+  ----------
+  path : PathLike[str] | str
+      The root path for this data catalog. Must exist and must be an absolute path.
+  fs_protocol : str, default 'file'
+      The filesystem protocol used by `fsspec` to handle file operations.
+      This determines how the data catalog interacts with storage, be it local filesystem,
+      cloud storage, or others. Common protocols include 'file' for local storage,
+      's3' for Amazon S3, and 'gcs' for Google Cloud Storage. If not provided, it defaults to 'file',
+      meaning the catalog operates on the local filesystem.
+  fs_storage_options : dict, optional
+      The fs storage options.
+  fs_rust_storage_options : dict[str, str], optional
+      Storage-specific configuration options for the rust backend.
+      Defaults to what is used for fs_storage_options if not specified.
+  max_rows_per_group : int, default 5000
+      The maximum number of rows per group. If the value is greater than 0,
+      then the dataset writer may split up large incoming batches into
+      multiple row groups.
+  show_query_paths : bool, default False
+      If globed query paths should be printed to stdout.
+
+members:
+  backend_session, bars, consolidate_catalog, consolidate_catalog_by_period, consolidate_data, consolidate_data_by_period, convert_stream_to_data, custom_data, delete_catalog_range, delete_data_range, extend_file_name, filter_files, from_env, from_uri, funding_rates, get_file_list_from_data_cls, get_intervals, get_missing_intervals_for_request, instrument_closes, instrument_status, instruments, list_backtest_runs, list_data_types, list_generic_data_types, list_live_runs, order_book_deltas, order_book_depth10, query, query_first_timestamp, query_last_timestamp, quote_ticks, read_backtest, read_live_run, reset_all_file_names, reset_data_file_names, trade_ticks, write_data
+
+## nautilus_trader.model.data.Bar
+type: <class 'type'>
+module: nautilus_trader.model.data
+name: Bar
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.data.Bar'>)
+doc:
+  Bar(BarType bar_type, Price open, Price high, Price low, Price close, Quantity volume, uint64_t ts_event, uint64_t ts_init, bool is_revision=False) -> None
+
+  Represents an aggregated bar.
+
+  Parameters
+  ----------
+  bar_type : BarType
+      The bar type for this bar.
+  open : Price
+      The bars open price.
+  high : Price
+      The bars high price.
+  low : Price
+      The bars low price.
+  close : Price
+      The bars close price.
+  volume : Quantity
+      The bars volume.
+  ts_event : uint64_t
+      UNIX timestamp (nanoseconds) when the data event occurred.
+  ts_init : uint64_t
+      UNIX timestamp (nanoseconds) when the data object was initialized.
+  is_revision : bool, default False
+      If this bar is a revision of a previous bar with the same `ts_event`.
+members:
+  bar_type, close, from_dict, from_pyo3, from_pyo3_list, from_raw, from_raw_arrays_to_list, fully_qualified_name, high, is_revision, is_signal, is_single_price, low, open, to_dict, to_pyo3, to_pyo3_list, ts_event, ts_init, volume
+
+## nautilus_trader.model.data.BarType
+type: <class 'type'>
+module: nautilus_trader.model.data
+name: BarType
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.data.BarType'>)
+doc:
+  BarType(InstrumentId instrument_id, BarSpecification bar_spec, AggregationSource aggregation_source=AggregationSource.EXTERNAL) -> None
+
+  Represents a bar type including the instrument ID, bar specification and
+  aggregation source.
+
+  Parameters
+  ----------
+  instrument_id : InstrumentId
+      The bar type's instrument ID.
+  bar_spec : BarSpecification
+      The bar type's specification.
+  aggregation_source : AggregationSource, default EXTERNAL
+      The bar type aggregation source. If ``INTERNAL`` the `DataEngine`
+      will subscribe to the necessary ticks and aggregate bars accordingly.
+      Else if ``EXTERNAL`` then bars will be subscribed to directly from
+      the venue / data provider.
+
+  Notes
+  -----
+  - Time aggregations support timedelta conversion
+  - Threshold aggregations (tick, volume, value) don't have fixed time intervals
+  - Information aggregations use complex algorithms for bar creation
+  - All bar aggregation methods can be internally aggregated
+  - String representation format: "{step}-{aggregation}-{price_type}"
+members:
+  aggregation_source, composite, from_str, id_spec_key, instrument_id, is_composite, is_externally_aggregated, is_internally_aggregated, is_standard, new_composite, spec, standard
+
+## nautilus_trader.model.data.BarType.from_str
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.model.data
+name: BarType.from_str
+signature: (value) -> 'BarType'
+doc:
+  BarType.from_str(str value) -> BarType
+
+  Return a bar type parsed from the given string.
+
+  Parameters
+  ----------
+  value : str
+      The bar type string to parse.
+
+  Returns
+  -------
+  BarType
+
+  Raises
+  ------
+  ValueError
+      If `value` is not a valid string.
+
+## nautilus_trader.model.objects.Price
+type: <class 'type'>
+module: nautilus_trader.model.objects
+name: Price
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.objects.Price'>)
+doc:
+  Price(double value, uint8_t precision) -> None
+
+  Represents a price in a market.
+
+  The number of decimal places may vary. For certain asset classes, prices may
+  have negative values. For example, prices for options instruments can be
+  negative under certain conditions.
+
+  Handles up to 16 decimals of precision (in high-precision mode).
+
+  - ``PRICE_MAX`` = 17_014_118_346_046
+  - ``PRICE_MIN`` = -17_014_118_346_046
+
+  Parameters
+  ----------
+  value : integer, float, string or Decimal
+      The value of the price.
+  precision : uint8_t
+      The precision for the price. Use a precision of 0 for whole numbers
+      (no fractional units).
+
+  Raises
+  ------
+  ValueError
+members:
+  as_decimal, as_double, from_decimal, from_int, from_raw, from_str, precision, raw, to_formatted_str
+
+## nautilus_trader.model.objects.Price.from_str
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.model.objects
+name: Price.from_str
+signature: (value) -> 'Price'
+doc:
+  Price.from_str(str value) -> Price
+
+  Return a price parsed from the given string.
+
+  Handles up to 16 decimals of precision (in high-precision mode).
+
+  Parameters
+  ----------
+  value : str
+      The value to parse.
+
+  Returns
+  -------
+  Price
+
+  Warnings
+  --------
+  The decimal precision will be inferred from the number of digits
+  following the '.' point (if no point then precision zero).
+
+  Raises
+  ------
+  ValueError
+      If inferred precision is greater than 16.
+
+## nautilus_trader.model.objects.Price.from_raw
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.model.objects
+name: Price.from_raw
+signature: (raw: 'int', precision) -> 'Price'
+doc:
+  Price.from_raw(int raw: int, uint8_t precision) -> Price
+
+  Return a price from the given `raw` fixed-point integer and `precision`.
+
+  Handles up to 16 decimals of precision (in high-precision mode).
+
+  .. warning::
+
+      This method is primarily for **internal use** and advanced scenarios.
+      Most users should use the standard constructor or ``from_str()`` instead.
+
+      The raw value **must** be a valid multiple of the scale factor for
+      the given precision (divisible by 10^(FIXED_PRECISION - precision)).
+      See the documentation for details:
+      https://nautilustrader.io/docs/nightly/concepts/data#fixed-point-precision-and-raw-values
+
+  Parameters
+  ----------
+  raw : int
+      The raw fixed-point price value. Must be a valid multiple of the
+      scale factor for the given precision.
+  precision : uint8_t
+      The precision for the price. Use a precision of 0 for whole numbers
+      (no fractional units).
+
+## nautilus_trader.model.objects.Quantity
+type: <class 'type'>
+module: nautilus_trader.model.objects
+name: Quantity
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.objects.Quantity'>)
+doc:
+  Quantity(double value, uint8_t precision) -> None
+
+  Represents a quantity with a non-negative value.
+
+  Capable of storing either a whole number (no decimal places) of 'contracts'
+  or 'shares' (instruments denominated in whole units) or a decimal value
+  containing decimal places for instruments denominated in fractional units.
+
+  Handles up to 16 decimals of precision (in high-precision mode).
+
+  - ``QUANTITY_MAX`` = 34_028_236_692_093
+  - ``QUANTITY_MIN`` = 0
+
+  Parameters
+  ----------
+  value : integer, float, string, Decimal
+      The value of the quantity.
+  precision : uint8_t
+      The precision for the quantity. Use a precision of 0 for whole numbers
+      (no fractional units).
+
+  Raises
+  ------
+  ValueError
+members:
+  as_decimal, as_double, from_decimal, from_int, from_raw, from_str, precision, raw, raw_to_f64, saturating_sub, to_formatted_str, zero
+
+## nautilus_trader.model.instruments.CurrencyPair
+type: <class 'type'>
+module: nautilus_trader.model.instruments.currency_pair
+name: CurrencyPair
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.instruments.currency_pair.CurrencyPair'>)
+doc:
+  CurrencyPair(InstrumentId instrument_id, Symbol raw_symbol, Currency base_currency, Currency quote_currency, int price_precision, int size_precision, Price price_increment, Quantity size_increment, uint64_t ts_event, uint64_t ts_init, multiplier=Quantity.from_int_c(1), Quantity lot_size: Quantity | None = None, Quantity max_quantity: Quantity | None = None, Quantity min_quantity: Quantity | None = None, Money max_notional: Money | None = None, Money min_notional: Money | None = None, Price max_price: Price | None = None, Price min_price: Price | None = None, margin_init: Decimal | None = None, margin_maint: Decimal | None = None, maker_fee: Decimal | None = None, taker_fee: Decimal | None = None, str tick_scheme_name=None, dict info=None) -> None
+
+  Represents a generic currency pair instrument in a spot/cash market.
+
+  Can represent both Fiat FX and Cryptocurrency pairs.
+
+  Parameters
+  ----------
+  instrument_id : InstrumentId
+      The instrument ID for the instrument.
+  raw_symbol : Symbol
+      The raw/local/native symbol for the instrument, assigned by the venue.
+  base_currency : Currency
+      The base currency.
+  quote_currency : Currency
+      The quote currency.
+  price_precision : int
+      The price decimal precision.
+  size_precision : int
+      The trading size decimal precision.
+  price_increment : Price
+      The minimum price increment (tick size).
+  size_increment : Quantity
+      The minimum size increment.
+members:
+  allows_negative_price, asset_class, base_currency, base_from_dict, base_to_dict, calculate_base_quantity, from_dict, from_pyo3, fully_qualified_name, get_base_currency, get_cost_currency, get_settlement_currency, id, info, instrument_class, is_inverse, is_signal, is_spread, legs, lot_size, make_price, make_qty, maker_fee, margin_init, margin_maint, max_notional, max_price, max_quantity, min_notional, min_price, min_quantity, multiplier, next_ask_price, next_ask_prices, next_bid_price, next_bid_prices, notional_value, price_increment, price_precision, quote_currency, raw_symbol, set_tick_scheme, size_increment, size_precision, symbol, taker_fee, tick_scheme_name, to_dict, ts_event, ts_init, venue
+
+## nautilus_trader.model.instruments.Equity
+type: <class 'type'>
+module: nautilus_trader.model.instruments.equity
+name: Equity
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.instruments.equity.Equity'>)
+doc:
+  Equity(InstrumentId instrument_id, Symbol raw_symbol, Currency currency, int price_precision, Price price_increment, Quantity lot_size, uint64_t ts_event, uint64_t ts_init, Quantity max_quantity: Quantity | None = None, Quantity min_quantity: Quantity | None = None, margin_init: Decimal | None = None, margin_maint: Decimal | None = None, maker_fee: Decimal | None = None, taker_fee: Decimal | None = None, str isin: str | None = None, str tick_scheme_name=None, dict info=None) -> None
+
+  Represents a generic equity instrument.
+
+  Parameters
+  ----------
+  instrument_id : InstrumentId
+      The instrument ID.
+  raw_symbol : Symbol
+      The raw/local/native symbol for the instrument, assigned by the venue.
+  currency : Currency
+      The futures contract currency.
+  price_precision : int
+      The price decimal precision.
+  price_increment : Decimal
+      The minimum price increment (tick size).
+  lot_size : Quantity
+      The rounded lot unit size (standard/board).
+  ts_event : uint64_t
+      UNIX timestamp (nanoseconds) when the data event occurred.
+  ts_init : uint64_t
+      UNIX timestamp (nanoseconds) when the data object was initialized.
+  margin_init : Decimal, optional
+      The initial (order) margin requirement in percentage of order value.
+members:
+  allows_negative_price, asset_class, base_from_dict, base_to_dict, calculate_base_quantity, from_dict, from_pyo3, fully_qualified_name, get_base_currency, get_cost_currency, get_settlement_currency, id, info, instrument_class, is_inverse, is_signal, is_spread, isin, legs, lot_size, make_price, make_qty, maker_fee, margin_init, margin_maint, max_notional, max_price, max_quantity, min_notional, min_price, min_quantity, multiplier, next_ask_price, next_ask_prices, next_bid_price, next_bid_prices, notional_value, price_increment, price_precision, quote_currency, raw_symbol, set_tick_scheme, size_increment, size_precision, symbol, taker_fee, tick_scheme_name, to_dict, ts_event, ts_init, venue
+
+## nautilus_trader.model.instruments.FuturesContract
+type: <class 'type'>
+module: nautilus_trader.model.instruments.futures_contract
+name: FuturesContract
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.model.instruments.futures_contract.FuturesContract'>)
+doc:
+  FuturesContract(InstrumentId instrument_id, Symbol raw_symbol, AssetClass asset_class, Currency currency, int price_precision, Price price_increment, Quantity multiplier, Quantity lot_size, str underlying, uint64_t activation_ns, uint64_t expiration_ns, uint64_t ts_event, uint64_t ts_init, margin_init: Decimal | None = None, margin_maint: Decimal | None = None, maker_fee: Decimal | None = None, taker_fee: Decimal | None = None, str exchange=None, str tick_scheme_name=None, dict info=None) -> None
+
+  Represents a generic deliverable futures contract instrument.
+
+  Parameters
+  ----------
+  instrument_id : InstrumentId
+      The instrument ID.
+  raw_symbol : Symbol
+      The raw/local/native symbol for the instrument, assigned by the venue.
+  asset_class : AssetClass
+      The futures contract asset class.
+  currency : Currency
+      The futures contract currency.
+  price_precision : int
+      The price decimal precision.
+  price_increment : Decimal
+      The minimum price increment (tick size).
+  multiplier : Quantity
+      The contract multiplier.
+  lot_size : Quantity
+      The rounded lot unit size (standard/board).
+  underlying : str
+      The underlying asset.
+members:
+  activation_ns, activation_utc, allows_negative_price, asset_class, base_from_dict, base_to_dict, calculate_base_quantity, exchange, expiration_ns, expiration_utc, from_dict, from_pyo3, fully_qualified_name, get_base_currency, get_cost_currency, get_settlement_currency, id, info, instrument_class, is_inverse, is_signal, is_spread, legs, lot_size, make_price, make_qty, maker_fee, margin_init, margin_maint, max_notional, max_price, max_quantity, min_notional, min_price, min_quantity, multiplier, next_ask_price, next_ask_prices, next_bid_price, next_bid_prices, notional_value, price_increment, price_precision, quote_currency, raw_symbol, set_tick_scheme, size_increment, size_precision, symbol, taker_fee, tick_scheme_name, to_dict, ts_event, ts_init, underlying, venue
+
+## nautilus_trader.common.factories.OrderFactory
+type: <class 'type'>
+module: nautilus_trader.common.factories
+name: OrderFactory
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.common.factories.OrderFactory'>)
+doc:
+  OrderFactory(TraderId trader_id, StrategyId strategy_id, Clock clock, CacheFacade cache: CacheFacade | None = None, bool use_uuid_client_order_ids=False, bool use_hyphens_in_client_order_ids=True) -> None
+
+  A factory class which provides different order types.
+
+  The `TraderId` tag and `StrategyId` tag will be inserted into all IDs generated.
+
+  Parameters
+  ----------
+  trader_id : TraderId
+      The trader ID (only numerical tag sent to venue).
+  strategy_id : StrategyId
+      The strategy ID (only numerical tag sent to venue).
+  clock : Clock
+      The clock for the factory.
+  cache : CacheFacade, optional
+      The cache facade for the order factory.
+  use_uuid_client_order_ids : bool, default False
+      If UUID4's should be used for client order ID values.
+  use_hyphens_in_client_order_ids : bool, default True
+      If hyphens should be used in generated client order ID values.
+members:
+  bracket, create_list, generate_client_order_id, generate_order_list_id, get_client_order_id_count, get_order_list_id_count, limit, limit_if_touched, market, market_if_touched, market_to_limit, reset, set_client_order_id_count, set_order_list_id_count, stop_limit, stop_market, strategy_id, trader_id, trailing_stop_limit, trailing_stop_market, use_hyphens_in_client_order_ids, use_uuid_client_order_ids
+
+## nautilus_trader.common.factories.OrderFactory.bracket
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.common.factories
+name: OrderFactory.bracket
+signature: (self, instrument_id, order_side, quantity, quote_quantity=False, emulation_trigger=<TriggerType.NO_TRIGGER: 0>, trigger_instrument_id=None, contingency_type=<ContingencyType.OUO: 3>, entry_order_type=<OrderType.MARKET: 1>, entry_price=None, entry_trigger_price=None, expire_time=None, time_in_force=<TimeInForce.GTC: 1>, entry_post_only=False, entry_exec_algorithm_id=None, entry_exec_algorithm_params=None, entry_tags=None, entry_client_order_id=None, tp_order_type=<OrderType.LIMIT: 2>, tp_price=None, tp_trigger_price=None, tp_trigger_type=<TriggerType.DEFAULT: 1>, tp_activation_price=None, tp_trailing_offset: 'Decimal' = None, tp_trailing_offset_type=<TrailingOffsetType.PRICE: 1>, tp_limit_offset: 'Decimal' = None, tp_time_in_force=<TimeInForce.GTC: 1>, tp_post_only=True, tp_exec_algorithm_id=None, tp_exec_algorithm_params=None, tp_tags=None, tp_client_order_id=None, sl_order_type=<OrderType.STOP_MARKET: 3>, sl_trigger_price=None, sl_trigger_type=<TriggerType.DEFAULT: 1>, sl_activation_price=None, sl_trailing_offset: 'Decimal' = None, sl_trailing_offset_type=<TrailingOffsetType.PRICE: 1>, sl_time_in_force=<TimeInForce.GTC: 1>, sl_exec_algorithm_id=None, sl_exec_algorithm_params=None, sl_tags=None, sl_client_order_id=None)
+doc:
+  OrderFactory.bracket(self, InstrumentId instrument_id, OrderSide order_side, Quantity quantity, bool quote_quantity=False, TriggerType emulation_trigger=TriggerType.NO_TRIGGER, InstrumentId trigger_instrument_id=None, ContingencyType contingency_type=ContingencyType.OUO, OrderType entry_order_type=OrderType.MARKET, Price entry_price=None, Price entry_trigger_price=None, datetime expire_time=None, TimeInForce time_in_force=TimeInForce.GTC, bool entry_post_only=False, ExecAlgorithmId entry_exec_algorithm_id=None, dict entry_exec_algorithm_params=None, list entry_tags=None, ClientOrderId entry_client_order_id=None, OrderType tp_order_type=OrderType.LIMIT, Price tp_price=None, Price tp_trigger_price=None, TriggerType tp_trigger_type=TriggerType.DEFAULT, Price tp_activation_price=None, tp_trailing_offset: Decimal = None, TrailingOffsetType tp_trailing_offset_type=TrailingOffsetType.PRICE, tp_limit_offset: Decimal = None, TimeInForce tp_time_in_force=TimeInForce.GTC, bool tp_post_only=True, ExecAlgorithmId tp_exec_algorithm_id=None, dict tp_exec_algorithm_params=None, list tp_tags=None, ClientOrderId tp_client_order_id=None, OrderType sl_order_type=OrderType.STOP_MARKET, Price sl_trigger_price=None, TriggerType sl_trigger_type=TriggerType.DEFAULT, Price sl_activation_price=None, sl_trailing_offset: Decimal = None, TrailingOffsetType sl_trailing_offset_type=TrailingOffsetType.PRICE, TimeInForce sl_time_in_force=TimeInForce.GTC, ExecAlgorithmId sl_exec_algorithm_id=None, dict sl_exec_algorithm_params=None, list sl_tags=None, ClientOrderId sl_client_order_id=None) -> OrderList
+
+  Create a bracket order with optional entry of take-profit order types.
+
+  The stop-loss order will always be ``STOP_MARKET``.
+
+  Parameters
+  ----------
+  instrument_id : InstrumentId
+      The orders instrument ID.
+  order_side : OrderSide {``BUY``, ``SELL``}
+      The entry orders side.
+  quantity : Quantity
+      The entry orders quantity (> 0).
+  quote_quantity : bool
+      If order quantity is denominated in the quote currency.
+  emulation_trigger : TriggerType, default ``NO_TRIGGER``
+      The type of market price trigger to use for local order emulation.
+      - ``NO_TRIGGER`` (default): Disables local emulation; orders are sent directly to the venue.
+      - ``DEFAULT`` (the same as ``BID_ASK``): Enables local order emulation by triggering orders based on bid/ask prices.
+      Additional trigger types are available. See the "Emulated Orders" section in the documentation for more details.
+  trigger_instrument_id : InstrumentId, optional
+      The emulation trigger instrument ID for the order (if ``None`` then will be the `instrument_id`).
+  contingency_type : ContingencyType, default ``OUO``
+
+## nautilus_trader.common.factories.OrderFactory.trailing_stop_market
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.common.factories
+name: OrderFactory.trailing_stop_market
+signature: (self, instrument_id, order_side, quantity, trailing_offset: 'Decimal', activation_price=None, trigger_price=None, trigger_type=<TriggerType.DEFAULT: 1>, trailing_offset_type=<TrailingOffsetType.PRICE: 1>, time_in_force=<TimeInForce.GTC: 1>, expire_time=None, reduce_only=False, quote_quantity=False, emulation_trigger=<TriggerType.NO_TRIGGER: 0>, trigger_instrument_id=None, exec_algorithm_id=None, exec_algorithm_params=None, tags=None, client_order_id=None)
+doc:
+  OrderFactory.trailing_stop_market(self, InstrumentId instrument_id, OrderSide order_side, Quantity quantity, trailing_offset: Decimal, Price activation_price=None, Price trigger_price=None, TriggerType trigger_type=TriggerType.DEFAULT, TrailingOffsetType trailing_offset_type=TrailingOffsetType.PRICE, TimeInForce time_in_force=TimeInForce.GTC, datetime expire_time=None, bool reduce_only=False, bool quote_quantity=False, TriggerType emulation_trigger=TriggerType.NO_TRIGGER, InstrumentId trigger_instrument_id=None, ExecAlgorithmId exec_algorithm_id=None, dict exec_algorithm_params=None, list tags=None, ClientOrderId client_order_id=None) -> TrailingStopMarketOrder
+
+  Create a new ``TRAILING_STOP_MARKET`` conditional order.
+
+  Parameters
+  ----------
+  instrument_id : InstrumentId
+      The orders instrument ID.
+  order_side : OrderSide {``BUY``, ``SELL``}
+      The orders side.
+  quantity : Quantity
+      The orders quantity (> 0).
+  trailing_offset : Decimal
+      The trailing offset for the trigger price (STOP).
+  activation_price : Price, optional
+      The price for the order to become active. If ``None`` then the order will be activated right after the order is accepted.
+  trigger_price : Price, optional
+      The order trigger price (STOP). If ``None`` then will typically default
+      to the delta of market price and `trailing_offset`.
+  trigger_type : TriggerType, default ``DEFAULT``
+      The order trigger type.
+  trailing_offset_type : TrailingOffsetType, default ``PRICE``
+      The order trailing offset type.
+  time_in_force : TimeInForce {``GTC``, ``IOC``, ``FOK``, ``GTD``, ``DAY``}, default ``GTC``
+
+## nautilus_trader.model.enums.OmsType
+type: <class 'enum.EnumType'>
+module: nautilus_trader.core.rust.model
+name: OmsType
+signature: (*values)
+doc:
+  Support for integer-based Flags
+members:
+  HEDGING, NETTING, UNSPECIFIED, as_integer_ratio, bit_count, bit_length, conjugate, denominator, from_bytes, imag, is_integer, numerator, real, to_bytes
+
+## nautilus_trader.model.enums.AccountType
+type: <class 'enum.EnumType'>
+module: nautilus_trader.core.rust.model
+name: AccountType
+signature: (*values)
+doc:
+  Support for integer-based Flags
+members:
+  BETTING, CASH, MARGIN, WALLET, as_integer_ratio, bit_count, bit_length, conjugate, denominator, from_bytes, imag, is_integer, numerator, real, to_bytes
+
+## nautilus_trader.backtest.models.FillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: FillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.FillModel'>)
+doc:
+  FillModel(double prob_fill_on_limit=1.0, double prob_slippage=0.0, int random_seed: int | None = None, config=None) -> None
+
+  Provides probabilistic modeling for order fill dynamics including probability
+  of fills and slippage by order type.
+
+  Parameters
+  ----------
+  prob_fill_on_limit : double
+      The probability of limit order filling if the market rests on its price.
+  prob_slippage : double
+      The probability of order fill prices slipping by one tick.
+  random_seed : int, optional
+      The random seed (if None then no random seed).
+  config : FillModelConfig, optional
+      The configuration for the model.
+
+  Raises
+  ------
+  ValueError
+      If any probability argument is not within range [0, 1].
+  TypeError
+      If `random_seed` is not None and not of type `int`.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.BestPriceFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: BestPriceFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.BestPriceFillModel'>)
+doc:
+  Fill model that executes all orders at the best available price.
+
+  This model simulates optimistic market conditions where every order gets filled
+  immediately at the best available price. Ideal for testing basic strategy logic.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.ThreeTierFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: ThreeTierFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.ThreeTierFillModel'>)
+doc:
+  Fill model with three-tier pricing for realistic market depth simulation.
+
+  Distributes 100-contract order fills across three price levels:
+  - 50 contracts at best price
+  - 30 contracts 1 tick worse
+  - 20 contracts 2 ticks worse
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.SizeAwareFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: SizeAwareFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.SizeAwareFillModel'>)
+doc:
+  Fill model that applies different execution models based on order size.
+
+  Small orders (<=10) get good liquidity at best prices. Large orders experience price
+  impact with partial fills at worse prices.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.TwoTierFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: TwoTierFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.TwoTierFillModel'>)
+doc:
+  Fill model with two-tier pricing: first 10 contracts at best price, remainder one tick worse.
+
+  This model simulates basic market depth behavior and provides realistic simulation
+  of basic market impact for small to medium orders.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.VolumeSensitiveFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: VolumeSensitiveFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.VolumeSensitiveFillModel'>)
+doc:
+  VolumeSensitiveFillModel(double prob_fill_on_limit=1.0, double prob_slippage=0.0, random_seed=None)
+
+  Fill model that adjusts liquidity based on recent trading volume.
+
+  Creates realistic market depth based on actual market activity by using recent bar
+  volume data to determine available liquidity.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage, set_recent_volume
+
+## nautilus_trader.backtest.models.MarketHoursFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: MarketHoursFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.MarketHoursFillModel'>)
+doc:
+  MarketHoursFillModel(double prob_fill_on_limit=1.0, double prob_slippage=0.0, random_seed=None)
+
+  Fill model that simulates varying market conditions based on time.
+
+  Implements wider spreads during low liquidity periods (e.g., outside market hours).
+  Essential for strategies that trade across different market sessions.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_low_liquidity_period, is_slipped, prob_fill_on_limit, prob_slippage, set_low_liquidity_period
+
+## nautilus_trader.backtest.models.OneTickSlippageFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: OneTickSlippageFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.OneTickSlippageFillModel'>)
+doc:
+  Fill model that forces exactly one tick of slippage for all orders.
+
+  This model demonstrates how to create deterministic slippage by setting zero volume
+  at best prices and unlimited volume one tick away.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.CompetitionAwareFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: CompetitionAwareFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.CompetitionAwareFillModel'>)
+doc:
+  CompetitionAwareFillModel(double prob_fill_on_limit=1.0, double prob_slippage=0.0, random_seed=None, double liquidity_factor=0.3)
+
+  Fill model that simulates market competition effects.
+
+  Makes only a percentage of visible liquidity actually available, reflecting
+  realistic conditions where multiple traders compete for the same liquidity.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.LimitOrderPartialFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: LimitOrderPartialFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.LimitOrderPartialFillModel'>)
+doc:
+  Fill model that simulates partial fills for limit orders.
+
+  When price touches the limit level, only fills maximum 5 contracts of the order
+  quantity, modeling typical limit order queue behavior.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.ProbabilisticFillModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fill
+name: ProbabilisticFillModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fill.ProbabilisticFillModel'>)
+doc:
+  Fill model that replicates the current probabilistic behavior.
+
+  This model demonstrates how to implement the existing FillModel's probabilistic
+  behavior using the new simulation approach: 50% chance of best price fill,
+  50% chance of one tick slippage.
+members:
+  fill_limit_inside_spread, get_orderbook_for_fill_simulation, is_limit_filled, is_slipped, prob_fill_on_limit, prob_slippage
+
+## nautilus_trader.backtest.models.MakerTakerFeeModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fee
+name: MakerTakerFeeModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fee.MakerTakerFeeModel'>)
+doc:
+  MakerTakerFeeModel(config=None) -> None
+
+  Provide a fee model for trades based on a maker/taker fee schedule
+  and notional value of the trade.
+
+  Parameters
+  ----------
+  config : MakerTakerFeeModelConfig, optional
+      The configuration for the fee model.
+members:
+  get_commission
+
+## nautilus_trader.backtest.models.FixedFeeModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fee
+name: FixedFeeModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fee.FixedFeeModel'>)
+doc:
+  FixedFeeModel(Money commission=None, bool charge_commission_once: bool = True, config=None) -> None
+
+  Provides a fixed fee model for trades.
+
+  Parameters
+  ----------
+  commission : Money, optional
+      The fixed commission amount for trades.
+  charge_commission_once : bool, default True
+      Whether to charge the commission once per order or per fill.
+  config : FixedFeeModelConfig, optional
+      The configuration for the model.
+
+  Raises
+  ------
+  ValueError
+      If both ``commission`` **and** ``config`` are provided, **or** if both are ``None`` (exactly one must be supplied).
+  ValueError
+      If `commission` is not a positive amount.
+members:
+  get_commission
+
+## nautilus_trader.backtest.models.PerContractFeeModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.fee
+name: PerContractFeeModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.fee.PerContractFeeModel'>)
+doc:
+  PerContractFeeModel(Money commission=None, config=None) -> None
+
+  Provides a fee model which charges a commission per contract traded.
+
+  Parameters
+  ----------
+  commission : Money, optional
+      The commission amount per contract.
+  config : PerContractFeeModelConfig, optional
+      The configuration for the model.
+
+  Raises
+  ------
+  ValueError
+      If both ``commission`` **and** ``config`` are provided, **or** if both are ``None`` (exactly one must be supplied).
+  ValueError
+      If `commission` is negative (< 0).
+members:
+  get_commission
+
+## nautilus_trader.backtest.models.LatencyModel
+type: <class 'type'>
+module: nautilus_trader.backtest.models.latency
+name: LatencyModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.backtest.models.latency.LatencyModel'>)
+doc:
+  LatencyModel(uint64_t base_latency_nanos=NANOSECONDS_IN_MILLISECOND, uint64_t insert_latency_nanos=0, uint64_t update_latency_nanos=0, uint64_t cancel_latency_nanos=0, config=None) -> None
+
+  Provides a latency model for simulated exchange message I/O.
+
+  Parameters
+  ----------
+  base_latency_nanos : int, default 1_000_000_000
+      The base latency (nanoseconds) for the model.
+  insert_latency_nanos : int, default 0
+      The order insert latency (nanoseconds) for the model.
+  update_latency_nanos : int, default 0
+      The order update latency (nanoseconds) for the model.
+  cancel_latency_nanos : int, default 0
+      The order cancel latency (nanoseconds) for the model.
+  config : FillModelConfig, optional
+      The configuration for the model.
+
+  Raises
+  ------
+  ValueError
+      If `base_latency_nanos` is negative (< 0).
+  ValueError
+      If `insert_latency_nanos` is negative (< 0).
+  ValueError
+members:
+  base_latency_nanos, cancel_latency_nanos, insert_latency_nanos, update_latency_nanos
+
+## nautilus_trader.backtest.models.MarginModel
+type: <class 'type'>
+module: nautilus_trader.accounting.margin_models
+name: MarginModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.accounting.margin_models.MarginModel'>)
+doc:
+  Abstract base class for margin calculation models.
+
+  Different venues and instrument types may have varying approaches to
+  calculating margin requirements. This abstraction allows for flexible
+  margin calculation strategies.
+members:
+  calculate_margin_init, calculate_margin_maint
+
+## nautilus_trader.backtest.models.StandardMarginModel
+type: <class 'type'>
+module: nautilus_trader.accounting.margin_models
+name: StandardMarginModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.accounting.margin_models.StandardMarginModel'>)
+doc:
+  Standard margin model that uses fixed percentages without leverage division.
+
+  This model matches traditional broker behavior (e.g., Interactive Brokers)
+  where margin requirements are fixed percentages of notional value regardless
+  of account leverage. Leverage affects buying power but not margin requirements.
+
+  Formula:
+  - Initial Margin = notional_value * instrument.margin_init
+  - Maintenance Margin = notional_value * instrument.margin_maint
+members:
+  calculate_margin_init, calculate_margin_maint
+
+## nautilus_trader.backtest.models.LeveragedMarginModel
+type: <class 'type'>
+module: nautilus_trader.accounting.margin_models
+name: LeveragedMarginModel
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.accounting.margin_models.LeveragedMarginModel'>)
+doc:
+  Leveraged margin model that divides margin requirements by leverage.
+
+  This model represents the current Nautilus behavior and may be appropriate
+  for certain crypto exchanges or specific trading scenarios where leverage
+  directly reduces margin requirements.
+
+  Formula:
+  - Initial Margin = (notional_value / leverage) * instrument.margin_init
+  - Maintenance Margin = (notional_value / leverage) * instrument.margin_maint
+members:
+  calculate_margin_init, calculate_margin_maint
+
+## nautilus_trader.cache.cache.Cache
+type: <class 'type'>
+module: nautilus_trader.cache.cache
+name: Cache
+signature: unavailable (ValueError: no signature found for builtin type <class 'nautilus_trader.cache.cache.Cache'>)
+doc:
+  Cache(CacheDatabaseFacade database: CacheDatabaseFacade | None = None, config: CacheConfig | None = None) -> None
+
+  Provides a common object cache for market and execution related data.
+
+  Parameters
+  ----------
+  database : CacheDatabaseFacade, optional
+      The database adapter for the cache. If ``None`` then will bypass persistence.
+  config : CacheConfig, optional
+      The cache configuration.
+
+  Raises
+  ------
+  TypeError
+      If `config` is not of type `CacheConfig`.
+members:
+  account, account_for_venue, account_id, accounts, actor_ids, add, add_account, add_bar, add_bars, add_currency, add_funding_rate, add_greeks, add_index_price, add_instrument, add_instrument_status, add_mark_price, add_order, add_order_book, add_order_list, add_own_order_book, add_position, add_position_id, add_quote_tick, add_quote_ticks, add_synthetic, add_trade_tick, add_trade_ticks, add_venue_order_id, add_yield_curve, audit_own_order_books, bar, bar_capacity, bar_count, bar_types, bars, book_update_count, build_index, cache_accounts, cache_all, cache_currencies, cache_general, cache_instruments, cache_order_lists, cache_orders, cache_positions, cache_synthetics, calculate_unrealized_pnl, check_integrity, check_residuals, clear_index, clear_mark_xrate, clear_mark_xrates, client_id, client_order_id, client_order_ids, client_order_ids_closed, client_order_ids_emulated, client_order_ids_inflight, client_order_ids_open, delete_actor, delete_strategy, dispose, exec_algorithm_ids, exec_spawn_total_filled_qty, exec_spawn_total_leaves_qty, exec_spawn_total_quantity, flush_db, force_remove_from_own_order_book, funding_rate, funding_rate_count, funding_rates, get, get_mark_xrate, get_xrate, greeks, has_backing, has_bars, has_funding_rates, has_index_prices, has_instrument_statuses
+
+## nautilus_trader.cache.cache.Cache.positions_closed
+type: <class '_cython_3_2_6.cython_function_or_method'>
+module: nautilus_trader.cache.cache
+name: Cache.positions_closed
+signature: (self, venue=None, instrument_id=None, strategy_id=None, account_id=None)
+doc:
+  Cache.positions_closed(self, Venue venue=None, InstrumentId instrument_id=None, StrategyId strategy_id=None, AccountId account_id=None) -> list
+
+  Return all closed positions with the given query filters.
+
+  *No particular order of list elements is guaranteed.*
+
+  Parameters
+  ----------
+  venue : Venue, optional
+      The venue ID query filter.
+  instrument_id : InstrumentId, optional
+      The instrument ID query filter.
+  strategy_id : StrategyId, optional
+      The strategy ID query filter.
+  account_id : AccountId, optional
+      The account ID query filter.
+
+  Returns
+  -------
+  list[Position]
+
+## nautilus_trader.backtest.results.BacktestResult
+type: <class 'type'>
+module: nautilus_trader.backtest.results
+name: BacktestResult
+signature: (trader_id: str, machine_id: str, run_config_id: str | None, instance_id: str, run_id: str, run_started: int | None, run_finished: int | None, backtest_start: int | None, backtest_end: int | None, elapsed_time: float, iterations: int, total_events: int, total_orders: int, total_positions: int, summary: dict[str, str], stats_pnls: dict[str, dict[str, float]], stats_returns: dict[str, float]) -> None
+doc:
+  Represents the results of a single complete backtest run.
+members:
+  
+
+## nautilus_trader.backtest.node.BacktestNode
+type: <class 'type'>
+module: nautilus_trader.backtest.node
+name: BacktestNode
+signature: (configs: list[nautilus_trader.backtest.config.BacktestRunConfig]) -> None
+doc:
+  Provides a node for orchestrating groups of backtest runs.
+
+  Parameters
+  ----------
+  configs : list[BacktestRunConfig]
+      The backtest run configurations.
+
+  Raises
+  ------
+  ValueError
+      If `configs` is ``None`` or empty.
+  ValueError
+      If `configs` contains a type other than `BacktestRunConfig`.
+members:
+  add_data_client_factory, build, configs, dispose, download_data, get_engine, get_engines, get_log_guard, load_catalog, load_data_config, log_backtest_exception, run, setup_download_engine
+
