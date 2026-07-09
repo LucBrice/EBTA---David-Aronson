@@ -108,7 +108,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/g_bias.json",
       "produced_by": "ebta_engine",
-      "sha256": "05B4CD0166C4E7B8DB3951C7C922856B48E7099526259EB5AF3571B2FDCC35F7",
+      "sha256": "A94FEC86DE708D411E6C0657D61E1D36E662E7BCA666482CE3594F1412B85D1B",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {

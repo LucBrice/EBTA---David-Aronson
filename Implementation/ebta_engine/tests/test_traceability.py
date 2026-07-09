@@ -17,8 +17,9 @@ class TraceabilityTests(unittest.TestCase):
             "adapters/backtrader_mapping.py",
             "data/local_ohlcv.py",
             "strategies/payloads.py",
-            "backtest/native_engine.py",
-            "package_builder/native_research_package.py",
+            "adapters/nautilus_mapping.py",
+            "adapters/nautilus_strategy_bridge.py",
+            "package_builder/nautilus_research_package.py",
         ]
         for artifact in required:
             self.assertIn(artifact, matrix)

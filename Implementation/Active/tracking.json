@@ -2,13 +2,13 @@
   "schema_version": "1.1.0",
   "created_at": "2026-06-26",
   "updated_at": "2026-07-09",
-  "status": "ACTIVE",
+  "status": "DONE",
   "runtime_version": "EBTA-ENGINE-0.1.x",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
   "hook_file": "Implementation/Active/HOOK.md",
   "current_step": "NAUTILUS_PHASE_6_CUTOVER",
-  "current_task_id": "NAUTILUS_P6_T2_PRE_CUTOVER_TAG",
-  "next_task_id": "NAUTILUS_P6_T3_REMOVE_NATIVE_CLUSTER",
+  "current_task_id": null,
+  "next_task_id": null,
   "active_scope": [
     ".ai/",
     ".ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
@@ -234,7 +234,7 @@
     {
       "id": "NAUTILUS_PHASE_6_CUTOVER",
       "title": "Bascule et retrait du moteur natif",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
       "objective": "Produce a full PASS research_package through Nautilus, then remove the native engine cluster in a dedicated reversible commit.",
       "entry_criteria": [
@@ -251,14 +251,14 @@
         {
           "id": "NAUTILUS_P6_T2_PRE_CUTOVER_TAG",
           "title": "Create annotated tag pre-nautilus-cutover before native removal",
-          "status": "TODO",
+          "status": "DONE",
           "classification": "GOVERNANCE",
           "blocked_by": "NAUTILUS_P6_T1_RESEARCH_PACKAGE_PASS"
         },
         {
           "id": "NAUTILUS_P6_T3_REMOVE_NATIVE_CLUSTER",
           "title": "Remove native engine cluster in a dedicated commit and verify revertability",
-          "status": "TODO",
+          "status": "DONE",
           "classification": "IMPLEMENTATION_DETAIL",
           "blocked_by": "NAUTILUS_P6_T2_PRE_CUTOVER_TAG"
         }
@@ -286,7 +286,8 @@
     { "id": "NAUTILUS_PHASE_2_SPIKE", "title": "Spike de faisabilite Nautilus", "completed_at": "2026-07-09", "tasks_done": 3 },
     { "id": "NAUTILUS_PHASE_3_N1_DATA", "title": "Brique N1 ingestion de donnees", "completed_at": "2026-07-09", "tasks_done": 2 },
     { "id": "NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS", "title": "Briques N2 et N3 strategie et couts", "completed_at": "2026-07-09", "tasks_done": 2 },
-    { "id": "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD", "title": "Briques N4 et N5 extraction et boucle multi-fold", "completed_at": "2026-07-09", "tasks_done": 3 }
+    { "id": "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD", "title": "Briques N4 et N5 extraction et boucle multi-fold", "completed_at": "2026-07-09", "tasks_done": 3 },
+    { "id": "NAUTILUS_PHASE_6_CUTOVER", "title": "Bascule et retrait du moteur natif", "completed_at": "2026-07-09", "tasks_done": 3 }
   ],
   "validation_commands": [
     {
@@ -312,7 +313,7 @@
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
       "purpose": "Runtime non-regression suite",
-      "last_result": "PASS - 2026-07-09 - 112 tests"
+      "last_result": "PASS - 2026-07-09 - 106 tests after native cluster removal"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
@@ -357,7 +358,7 @@
     {
       "command": ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
       "purpose": "Build full Nautilus-backed research_package",
-      "last_result": "PASS - 2026-07-09 - package status PASS"
+      "last_result": "PASS - 2026-07-09 - package status PASS before and after native removal"
     },
     {
       "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
@@ -368,6 +369,11 @@
       "command": "git diff --check -- .ai Implementation \"0 - HUMAN START HERE\"",
       "purpose": "Patch hygiene for Phase 0 cockpit sync",
       "last_result": "PASS - 2026-07-09 - CRLF/LF warnings only"
+    },
+    {
+      "command": "rg -n \"from ebta_engine\\.(backtest|package_builder\\.native_research_package|features|trading_signals|risk|metrics)|native_engine|native_research_package|run_native_backtest|build_native\" Implementation\\ebta_engine -g \"*.py\"",
+      "purpose": "Verify no active residual imports to removed native engine cluster",
+      "last_result": "PASS - 2026-07-09 - no Python matches (rg exit 1)"
     }
   ],
   "risk_register": [
@@ -397,9 +403,9 @@
     },
     {
       "id": "RISK_005",
-      "status": "OPEN",
+      "status": "CLOSED",
       "risk": "NASDAQ instrument construction is not yet empirically confirmed against the installed Nautilus API.",
-      "mitigation": "Phase 3 requires nautilus-docs-research plus tests/test_nautilus_instrument_nasdaq.py before real construction is accepted."
+      "mitigation": "Closed by Phase 3: tests/test_nautilus_instrument_nasdaq.py verifies NASDAQ.SIM as a Nautilus Cfd instrument with price/size round-trip."
     },
     {
       "id": "RISK_006",
@@ -410,7 +416,7 @@
   ],
   "latest_decision": {
     "date": "2026-07-09",
-    "decision": "NAUTILUS_P6_T1_RESEARCH_PACKAGE_PASS is complete: the injected builder test passes and the full Nautilus-backed research_package builds with status PASS under the dedicated Nautilus venv. Next action is the pre-nautilus-cutover tag before native cluster removal.",
+    "decision": "NAUTILUS_PHASE_6_CUTOVER is complete: full Nautilus-backed research_package PASS, pre-nautilus-cutover tag created, native engine cluster removed in the working tree for a dedicated reversible commit, and tests/packages remain PASS after removal.",
     "impact_protocole": "NONE"
   }
 }

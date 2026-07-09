@@ -80,6 +80,53 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-09 - Nautilus Phase 6 cutover et retrait natif
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / ADAPTER_MAPPING |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md` Phase 6 ; decision E5 |
+| Fichiers impactes | `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, retrait `backtest/native_engine.py`, `risk/sizing.py`, `features/causal_signals.py`, `trading_signals/decision_frame.py`, `metrics/performance.py`, `package_builder/native_research_package.py`, tests et docs de traceabilite |
+| Impact protocole | NONE |
+| Verification | `pre-nautilus-cutover` tag cree sur le commit pre-retrait ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 106 tests apres retrait ; `.\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package` -> PASS ; grep imports natifs -> aucune reference active |
+
+### Contexte
+
+Phase 6 devait prouver un paquet Nautilus complet avant tout retrait du moteur
+natif, poser un point de retour, puis supprimer le cluster natif dans un commit
+dedie et reversible.
+
+### Decision
+
+Ajouter `nautilus_research_package.py`, produire
+`Implementation/research_packages/nautilus_mvp` avec statut `PASS`, creer le
+tag annote `pre-nautilus-cutover`, puis retirer le cluster natif :
+
+- `backtest/native_engine.py` ;
+- `risk/sizing.py` ;
+- `features/causal_signals.py` ;
+- `trading_signals/decision_frame.py` ;
+- `metrics/performance.py` ;
+- `package_builder/native_research_package.py` ;
+- le test MVP natif associe.
+
+Les notebooks, README, carte et matrice de traceabilite pointent maintenant vers
+le builder Nautilus actif.
+
+### Impact
+
+NautilusTrader devient le moteur de simulation actif sous frontiere d'adapter.
+Le loader local OHLCV et les contrats EBTA restent conserves. BACKTRADER reste
+reference historique en lecture seule.
+
+### Suite
+
+Le chantier `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS` est complet du
+point de vue runtime. Toute evolution ulterieure doit partir du package
+Nautilus PASS et non restaurer le cluster natif.
+
 ## 2026-07-09 - Nautilus Phase 5 run_segment et extraction
 
 | Champ | Valeur |

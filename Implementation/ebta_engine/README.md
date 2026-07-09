@@ -40,13 +40,14 @@ le runtime bloque ou marque le controle comme `INCONCLUSIVE` /
 ## Etat courant
 
 `EBTA-ENGINE-0.1.x` est un banc de controle local pour paquets EBTA minimaux et
-un MVP de moteur natif. Il inclut schemas, fixtures, validateurs de paquet,
-manifestes, gates, invariants, persistance fichier, decomposition E-I, loader
-CSV local, backtest natif minimal et frontiere d'adaptateur BACKTRADER future.
+un runtime de simulation pilote via NautilusTrader. Il inclut schemas, fixtures,
+validateurs de paquet, manifestes, gates, invariants, persistance fichier,
+decomposition E-I, loader CSV local, frontiere d'adapter Nautilus et frontiere
+d'adaptateur BACKTRADER historique.
 
 BACKTRADER est reference historique en lecture seule, pas dependance runtime.
-Le chemin actif est la production d'un `research_package/` par le moteur EBTA
-natif puis la validation par `validate_package_dir()`.
+Le chemin actif est la production d'un `research_package/` par l'adapter
+Nautilus puis la validation par `validate_package_dir()`.
 
 ## Versions et compatibilite
 
@@ -91,7 +92,7 @@ Cette gate couvre:
 - rapports de gates;
 - hashes du protocole gele;
 - matrice de tracabilite;
-- MVP moteur natif E-I ;
+- adapter Nautilus E-I ;
 - frontiere d'adaptateur BACKTRADER future.
 
 ## Modele de paquet EBTA minimal
@@ -112,8 +113,8 @@ explicites.
 
 ## Frontiere de confiance
 
-Le moteur natif produit directement les artefacts EBTA et laisse le noyau
-valider le contrat. Un adaptateur futur devra lire les sorties externes comme
-non fiables, les mapper vers les artefacts EBTA, puis laisser le noyau valider.
-Il ne corrigera pas silencieusement les erreurs de mapping et n'importera pas
-les conventions du pipeline externe dans la norme EBTA.
+L'adapter Nautilus produit les series de simulation et laisse le noyau EBTA
+valider le contrat. Tout moteur externe reste traite comme une source non
+fiable : ses sorties sont mappees vers les artefacts EBTA, puis le noyau EBTA
+valide. Il ne corrigera pas silencieusement les erreurs de mapping et n'importera
+pas les conventions du pipeline externe dans la norme EBTA.

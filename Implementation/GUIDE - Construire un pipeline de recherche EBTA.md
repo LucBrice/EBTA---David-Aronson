@@ -17,8 +17,8 @@ utilisant ensemble :
 
 - `Protocole/` comme source normative scientifique ;
 - `Implementation/ebta_engine/` comme contrat executable et banc de controle ;
-- le moteur EBTA natif ou, plus tard, un adaptateur externe comme producteur
-  d'artefacts EBTA.
+- un adaptateur de simulation, actuellement NautilusTrader, comme producteur
+  subordonne de series et d'artefacts EBTA.
 
 Le pipeline de recherche ne doit pas seulement calculer une performance ni
 seulement produire des fichiers de sortie. Il doit mettre en place les blocs de
@@ -31,7 +31,7 @@ ces blocs ont fonctionne dans le bon ordre.
 | --- | --- | --- |
 | `Protocole/` | Definit les regles scientifiques : gates, SOP, decisions normatives, ordre Train/Test/OOS, WRC, OOS, live. | Ne doit pas etre modifie pour faciliter le code. |
 | `Implementation/ebta_engine/` | Encode les contrats machine-readable : schemas, validateurs, manifestes, invariants, gates, fixtures. | Ne doit pas inventer de nouvelle norme. |
-| Moteur natif EBTA / pipeline de recherche | Charge les donnees, construit les features, execute les strategies, calcule les resultats, produit les artefacts EBTA. | Ne doit pas contourner les validations EBTA. |
+| Adapter de simulation / pipeline de recherche | Charge les donnees, execute les strategies, calcule les resultats, produit les artefacts EBTA. | Ne doit pas contourner les validations EBTA. |
 | Adaptateur | Mappe un pipeline externe vers les artefacts EBTA. | Ne doit pas importer les conventions externes dans le noyau EBTA. |
 
 ## Idee centrale
@@ -197,14 +197,14 @@ verifie qu'un fichier n'a pas change apres generation du manifeste.
 - schemas et JSONL ;
 - paquet EBTA complet.
 
-### 4. Encadrer le moteur natif et les adaptateurs
+### 4. Encadrer les adaptateurs de simulation
 
-`Implementation/ebta_engine/package_builder/native_research_package.py` montre
-le chemin actif : le moteur natif produit un `research_package/` complet puis
-le noyau EBTA valide. `Implementation/ebta_engine/adapters/backtrader_mapping.py`
-reste une frontiere future : un pipeline externe fournit des sorties non
-fiables, l'adaptateur les mappe vers des artefacts EBTA, puis le noyau EBTA
-valide.
+`Implementation/ebta_engine/package_builder/nautilus_research_package.py`
+montre le chemin actif : NautilusTrader produit les simulations via l'adapter,
+puis le noyau EBTA valide le `research_package/` complet.
+`Implementation/ebta_engine/adapters/backtrader_mapping.py` reste une frontiere
+historique : un pipeline externe fournit des sorties non fiables, l'adaptateur
+les mappe vers des artefacts EBTA, puis le noyau EBTA valide.
 
 ## Workflow de construction recommande
 

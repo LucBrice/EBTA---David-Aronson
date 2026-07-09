@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-09",
+  "updated_at": "2026-07-09T12:03:31+02:00",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -124,7 +124,7 @@
     },
     {
       "id": "NEXT_NAUTILUS_PHASE_6_CUTOVER",
-      "status": "ACTIVE",
+      "status": "DONE",
       "title": "Phase 6 Nautilus - research_package PASS et retrait reversible du moteur natif",
       "classification": "IMPLEMENTATION_DETAIL",
       "non_goals": [
@@ -331,7 +331,7 @@
             {
                 "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
                 "purpose": "Runtime non-regression suite",
-                "last_result": "PASS - 112 tests - 2026-07-09"
+                "last_result": "PASS - 106 tests after native cluster removal - 2026-07-09"
             },
       {
         "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
@@ -371,7 +371,12 @@
             {
                 "command": ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
                 "purpose": "Build full Nautilus-backed research_package",
-                "last_result": "PASS - package status PASS - 2026-07-09"
+                "last_result": "PASS - package status PASS before and after native removal - 2026-07-09"
+            },
+            {
+                "command": "rg -n \"from ebta_engine\\.(backtest|package_builder\\.native_research_package|features|trading_signals|risk|metrics)|native_engine|native_research_package|run_native_backtest|build_native\" Implementation\\ebta_engine -g \"*.py\"",
+                "purpose": "Verify no active residual imports to removed native engine cluster",
+                "last_result": "PASS - no Python matches (rg exit 1) - 2026-07-09"
             },
       {
         "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
@@ -386,11 +391,6 @@
     ]
   },
   "session_log": [
-    {
-      "date": "2026-07-09",
-      "summary": "Completed Nautilus Phase 2 feasibility spike; setup script, deterministic golden case, and K x (M+1) measurement are versioned; Phase 3 data/instrument mapping is active",
-      "files_count": 9
-    },
     {
       "date": "2026-07-09",
       "summary": "Completed Nautilus Phase 3 data/instrument mapping; Cfd instruments and OHLCV to Bar mapping pass in the dedicated venv; Phase 4 strategy/cost mapping is active",
@@ -410,6 +410,11 @@
       "date": "2026-07-09",
       "summary": "Nautilus Phase 6 package gate passed; full Nautilus-backed research_package builds PASS under the dedicated venv; pre-cutover tag is next",
       "files_count": 3
+    },
+    {
+      "date": "2026-07-09",
+      "summary": "Completed Nautilus Phase 6 cutover; pre-cutover tag exists, native cluster removed, suite and Nautilus package pass after removal",
+      "files_count": 17
     }
   ],
   "risks": [

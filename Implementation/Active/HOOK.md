@@ -196,9 +196,9 @@ reversible. Avant tout nouvel appel reel a `nautilus_trader`, appliquer le skill
 ## Invariants du chantier
 
 - Ne pas modifier `Protocole/`.
-- Ne pas modifier `procedures/`, `validators/`, `governance/`, `manifests/` ou
-  `package_builder/`, sauf retrait final explicite de
-  `package_builder/native_research_package.py` en Phase 6.
+- Ne pas modifier `procedures/`, `validators/`, `governance/` ou `manifests/`.
+  Le retrait final explicite de `package_builder/native_research_package.py`
+  appartient a Phase 6 et a ete execute apres le PASS Nautilus.
 - Ne jamais importer `nautilus_trader` hors de `Implementation/ebta_engine/adapters/`
   et de l'environnement de verification `Implementation/adapters/nautilus_env/`.
 - Ne jamais laisser Nautilus savoir s'il execute Train, Test ou OOS.
