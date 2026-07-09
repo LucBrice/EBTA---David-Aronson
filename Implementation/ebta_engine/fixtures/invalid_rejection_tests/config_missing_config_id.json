@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "project_id": "PRJ-DEMO",
   "research_family_id": "FAM-DEMO",
   "hypothesis_id": "HYP-DEMO",
@@ -34,7 +34,9 @@
     }
   ],
   "candidate_space": {
-    "candidate_count": 10
+    "candidate_count": 10,
+    "complexity_definition": { "source": "fixture" },
+    "complexity_levels": [0, 1, 2]
   },
   "selection_rule": {
     "rule": "max_sharpe"
@@ -49,7 +51,17 @@
     "oos_mean_block_length": 5
   },
   "execution_model": {
-    "central_scenario": "central"
+    "central_scenario": "central",
+    "cost_model": {
+      "model_id": "fixture_costs",
+      "fill_model": "deterministic",
+      "fee_model": "fixed"
+    },
+    "instrument_config": {
+      "instrument_id": "FIXTURE.SIM",
+      "symbol": "FIXTURE",
+      "venue": "SIM"
+    }
   },
   "robustness_plan": {
     "required_before_oos": true

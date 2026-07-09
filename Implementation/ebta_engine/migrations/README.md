@@ -1,10 +1,13 @@
 # EBTA Engine Migrations
 
-La version de schema active est `1.0.0` pour `EBTA-ENGINE-0.1.0`.
+La version de schema active est `1.1.0` pour le pivot Nautilus.
 
-Aucune migration n'est requise tant qu'aucun artefact persistant cree sous une
-ancienne version supportee ne doit etre lu ou transforme. Toute future migration
-doit etre:
+Les migrations actuelles vivent dans `schema_migrations.py` :
+
+- `migrate_config_1_0_to_1_1()`;
+- `migrate_strategy_payload_1_0_to_1_1()`.
+
+Toute migration doit etre :
 
 - deterministe;
 - testee;

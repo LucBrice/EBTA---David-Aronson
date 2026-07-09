@@ -80,6 +80,205 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-09 - Nautilus Phase 5 run_segment et extraction
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | ADAPTER_MAPPING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md` Phase 5 |
+| Fichiers impactes | `Implementation/ebta_engine/adapters/nautilus_mapping.py`, `Implementation/ebta_engine/tests/test_nautilus_phase5_run_segment.py`, `Implementation/adapters/nautilus_env/NAUTILUS_API_NOTES.md`, cockpit actif |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase5_run_segment.py` -> PASS 3 tests ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 111 tests |
+
+### Contexte
+
+Phase 5 devait produire des `SimulationResult` fiables depuis Nautilus et les
+alimenter dans les procedures EBTA sans changer leurs signatures.
+
+### Decision
+
+Ajouter `run_segment()`, `extract_simulation_result()` et
+`run_multifold_segments()`. Le golden case Nautilus reproduit le resultat
+attendu, le cas `NO_MODEL` retourne une NAV plate, et l'orchestration multi-fold
+ne transmet pas de metadonnee Train/Test/OOS au runner.
+
+### Impact
+
+Les procedures EBTA continuent de consommer `SimulationResult` via
+`detrending_inputs()` et `economic_gate_evidence()`. Nautilus reste le moteur de
+simulation, pas une autorite de verdict.
+
+### Suite
+
+Executer `NAUTILUS_PHASE_6_CUTOVER` : produire un `research_package` Nautilus
+PASS, puis retirer le cluster moteur natif uniquement apres point de retour
+reversible.
+
+## 2026-07-09 - Nautilus Phase 4 strategie generique et couts
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | ADAPTER_MAPPING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md` Phase 4 |
+| Fichiers impactes | `Implementation/ebta_engine/adapters/nautilus_mapping.py`, `Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py`, `Implementation/ebta_engine/tests/test_nautilus_phase4_strategy_costs.py`, `Implementation/adapters/nautilus_env/NAUTILUS_API_NOTES.md`, cockpit actif |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase4_strategy_costs.py` -> PASS 2 tests ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 108 tests |
+
+### Contexte
+
+Phase 4 devait mapper les couts scelles EBTA vers les modeles Nautilus et
+introduire une seule classe de strategie pour toute la famille de candidates.
+
+### Decision
+
+Ajouter `map_cost_model_to_venue()` qui transmet explicitement a
+`BacktestEngine.add_venue()` les modeles declares : `FillModel`,
+`MakerTakerFeeModel` ou frais fixes supportes, `LatencyModel`,
+`LeveragedMarginModel`, `OmsType.HEDGING` et `AccountType.MARGIN`.
+
+Ajouter `GenericPayloadStrategyConfig` et `GenericPayloadStrategy`. La classe
+parse `StrategyPayload.from_dict()` et reste unique pour toutes les candidates ;
+les variations passent par `StrategyConfig`.
+
+### Impact
+
+Le runtime ne depend pas d'un `FillModel`, `FeeModel` ou `LatencyModel`
+implicite de Nautilus. La portabilite recherche-vers-live est preservee par une
+classe de strategie generique, sans classe Python par candidate.
+
+### Suite
+
+Executer `NAUTILUS_PHASE_5_N4_N5_MULTIFOLD` : `run_segment()`,
+`extract_simulation_result()` et orchestration multi-fold compatible avec les
+procedures EBTA existantes.
+
+## 2026-07-09 - Nautilus Phase 3 ingestion et instruments
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | ADAPTER_MAPPING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md` Phase 3 |
+| Fichiers impactes | `Implementation/ebta_engine/adapters/nautilus_mapping.py`, `Implementation/ebta_engine/tests/test_nautilus_instrument_nasdaq.py`, `Implementation/adapters/nautilus_env/NAUTILUS_API_NOTES.md`, cockpit actif |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_instrument_nasdaq.py` -> PASS 2 tests ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 106 tests |
+
+### Contexte
+
+Phase 3 devait verifier la construction effective des instruments NASDAQ et
+XAUUSD dans NautilusTrader et convertir les barres EBTA en barres Nautilus sans
+perte de precision ni fuite temporelle.
+
+### Decision
+
+Ajouter `nautilus_mapping.py` avec imports Nautilus paresseux, construire les
+instruments tradables via `Cfd` lorsque l'actif EBTA est un indice/commodity
+CFD, et convertir les `OhlcvBar` en `Bar` Nautilus via `BarDataWrangler`.
+
+`NASDAQ.SIM` est verifie comme `Cfd` sous-jacent `AssetClass.INDEX`.
+`XAUUSD.SIM` est verifie comme `Cfd` sous-jacent `AssetClass.COMMODITY`.
+Le mapping de timestamp utilise `ts_init_delta` afin que `ts_init` represente
+la cloture de la barre lorsque le timestamp source represente l'ouverture.
+
+### Impact
+
+La suite EBTA reste importable sans Nautilus dans le Python systeme. Les objets
+Nautilus reels sont construits uniquement dans l'adapter et verifies par la venv
+dediee.
+
+### Suite
+
+Executer `NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS` : mapper les couts scelles
+vers le venue et introduire une strategie generique unique pour toutes les
+candidates.
+
+## 2026-07-09 - Nautilus Phase 2 spike deterministe
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | ADAPTER_MAPPING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md` Phase 2 ; decisions E4, E6, E11 |
+| Fichiers impactes | `Implementation/adapters/nautilus_env/setup_env.ps1`, `requirements.txt`, `run_golden_case.py`, `PHASE2_SPIKE_MEASUREMENT.md`, `NAUTILUS_API_NOTES.md`, fixture et tests `nautilus_golden_case`, cockpit actif |
+| Impact protocole | NONE |
+| Verification | `.\Implementation\adapters\nautilus_env\setup_env.ps1 -VenvRelativePath "Implementation\adapters\nautilus_env\venv" -SkipInstall` -> PASS ; `.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe .\Implementation\adapters\nautilus_env\run_golden_case.py` -> PASS ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase2_golden_case.py` -> PASS 3 tests |
+
+### Contexte
+
+Phase 2 devait prouver que NautilusTrader tourne reellement dans l'environnement
+EBTA et peut produire un `SimulationResult` coherent avant d'investir dans les
+briques completes N1 a N5.
+
+### Decision
+
+Versionner le script de setup `nautilus_trader==1.230.0`, creer un cas jouet
+deterministe `GOLDEN.SIM`, construire explicitement un `CurrencyPair` a frais
+nuls, executer une strategie minimale dans `BacktestEngine`, puis comparer la
+sortie a un `expected_result()` stdlib calcule a la main.
+
+Le spike documente aussi la mesure `K x (M+1)` : le pilote courant declare
+`K=1`, la decision E11 fixe `M=16`, donc 17 runs. Le run isole mesure
+2.22464 s, soit environ 37.82 s en extrapolation sequentielle sans reutilisation
+d'etat ni parallelisation.
+
+### Impact
+
+Nautilus reste confine a `Implementation/adapters/nautilus_env/` pour le spike.
+Les verdicts EBTA restent produits par les contrats, procedures et validateurs
+EBTA ; les rapports et metriques Nautilus ne deviennent pas une autorite.
+
+### Suite
+
+Executer `NAUTILUS_PHASE_3_N1_DATA` : verifier les classes d'instruments
+NASDAQ/XAUUSD, puis implementer `map_ohlcv_to_bars()` et `build_instrument()`
+sans perte de precision ni lookahead.
+
+## 2026-07-09 - Nautilus Phase 1 contrats et schemas
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md` Phase 1 ; decisions E1, E2, E3, E10, E11, E12 |
+| Fichiers impactes | `Implementation/ebta_engine/strategies/contracts.py`, `Implementation/ebta_engine/strategies/payloads.py`, `Implementation/ebta_engine/strategies/payload_factory.py`, `Implementation/ebta_engine/migrations/schema_migrations.py`, `Implementation/ebta_engine/schema_validation.py`, schemas et fixtures 1.1.0, tests Phase 1, pilote minimal |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase1_contracts.py` -> PASS 8 tests ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 101 tests ; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` -> PASS |
+
+### Contexte
+
+La migration Nautilus exige un contrat EBTA stable avant tout import de
+`nautilus_trader`. Phase 1 devait donc creer les types stdlib, rendre les
+payloads reconstructibles, migrer les schemas et generer les familles de
+candidates sans toucher aux procedures, validateurs, manifestes ou gates.
+
+### Decision
+
+Ajouter les contrats `Candidate`, `CostModel`, `InstrumentConfig`,
+`SimulationResult` et `SegmentSimulator`, migrer `config` et `strategy_payload`
+vers `1.1.0`, structurer les criteres d'entree/sortie, et introduire
+`payload_factory.py` pour la grille `bias_filter x session x asset`. Un fake
+`SegmentSimulator` prouve que les sorties peuvent alimenter `detrending.py` et
+`economic_gate.py` sans changement de signature.
+
+### Impact
+
+Le runtime possede maintenant une frontiere de simulation claire pour Phase 2.
+Aucun verdict EBTA n'est delegue a Nautilus et aucun import Nautilus n'est
+introduit dans cette phase.
+
+### Suite
+
+Executer `NAUTILUS_PHASE_2_SPIKE` : environnement reproductible
+`nautilus_trader==1.230.0`, cas jouet deterministe, puis premier
+`SimulationResult` reel via adapter.
+
 ## 2026-07-02 - Moteur natif EBTA MVP jusqu'a Phase 8
 
 | Champ | Valeur |

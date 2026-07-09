@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "config_id": "CFG-DEMO-001",
   "project_id": "PRJ-DEMO",
   "research_family_id": "FAM-DEMO",
@@ -22,7 +22,11 @@
       "information_cutoff": "2022-12-31T23:59:59Z"
     }
   ],
-  "candidate_space": { "candidate_count": 1 },
+  "candidate_space": {
+    "candidate_count": 1,
+    "complexity_definition": { "source": "fixture" },
+    "complexity_levels": [0]
+  },
   "selection_rule": { "rule": "pre_registered_max_test_after_wrc_pass" },
   "statistical_plan": {
     "wrc_alpha": 0.05,
@@ -33,7 +37,19 @@
     "oos_seed": 23,
     "oos_mean_block_length": 2
   },
-  "execution_model": { "central_scenario": "tradable_net" },
+  "execution_model": {
+    "central_scenario": "tradable_net",
+    "cost_model": {
+      "model_id": "fixture_costs",
+      "fill_model": "deterministic",
+      "fee_model": "fixed"
+    },
+    "instrument_config": {
+      "instrument_id": "FIXTURE.SIM",
+      "symbol": "FIXTURE",
+      "venue": "SIM"
+    }
+  },
   "robustness_plan": { "required_before_oos": true },
   "oos_opening_gate": { "requires_pre_oos_sealed": true },
   "incubation_plan": { "requires_validation_ready": true },

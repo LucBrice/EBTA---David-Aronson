@@ -16,7 +16,16 @@ class ValidationError:
     message: str
 
 
-def validate(instance: Any, schema: dict[str, Any], path: str = "$") -> list[ValidationError]:
+def validate(
+    instance: Any,
+    schema: dict[str, Any],
+    path: str = "$",
+    *,
+    root_schema: dict[str, Any] | None = None,
+) -> list[ValidationError]:
+    root_schema = root_schema or schema
+    if "$ref" in schema:
+        schema = _resolve_ref(root_schema, schema["$ref"])
     errors: list[ValidationError] = []
     expected_type = schema.get("type")
     if expected_type and not _matches_type(instance, expected_type):
@@ -24,6 +33,16 @@ def validate(instance: Any, schema: dict[str, Any], path: str = "$") -> list[Val
 
     if "enum" in schema and instance not in schema["enum"]:
         errors.append(ValidationError(path, f"expected one of {schema['enum']}"))
+    if "const" in schema and instance != schema["const"]:
+        errors.append(ValidationError(path, f"expected constant {schema['const']}"))
+
+    if _schema_includes_type(expected_type, "string") and isinstance(instance, str):
+        min_length = schema.get("minLength")
+        max_length = schema.get("maxLength")
+        if min_length is not None and len(instance) < min_length:
+            errors.append(ValidationError(path, f"expected at least {min_length} characters"))
+        if max_length is not None and len(instance) > max_length:
+            errors.append(ValidationError(path, f"expected at most {max_length} characters"))
 
     if _schema_includes_type(expected_type, "object"):
         required = schema.get("required", [])
@@ -33,7 +52,7 @@ def validate(instance: Any, schema: dict[str, Any], path: str = "$") -> list[Val
         properties = schema.get("properties", {})
         for key, value in instance.items():
             if key in properties:
-                errors.extend(validate(value, properties[key], f"{path}.{key}"))
+                errors.extend(validate(value, properties[key], f"{path}.{key}", root_schema=root_schema))
             elif schema.get("additionalProperties") is False:
                 errors.append(ValidationError(f"{path}.{key}", "unexpected property"))
 
@@ -44,9 +63,19 @@ def validate(instance: Any, schema: dict[str, Any], path: str = "$") -> list[Val
         item_schema = schema.get("items")
         if item_schema:
             for index, value in enumerate(instance):
-                errors.extend(validate(value, item_schema, f"{path}[{index}]"))
+                errors.extend(validate(value, item_schema, f"{path}[{index}]", root_schema=root_schema))
 
     return errors
+
+
+def _resolve_ref(root_schema: dict[str, Any], ref: str) -> dict[str, Any]:
+    if not ref.startswith("#/$defs/"):
+        raise ValueError(f"unsupported schema ref: {ref}")
+    name = ref.removeprefix("#/$defs/")
+    try:
+        return root_schema["$defs"][name]
+    except KeyError as exc:
+        raise ValueError(f"unknown schema ref: {ref}") from exc
 
 
 def _schema_includes_type(expected_type: str | list[str] | None, json_type: str) -> bool:

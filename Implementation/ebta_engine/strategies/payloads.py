@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
+from typing import Any
 
 
 PAYLOAD_CODES = ("E", "F", "G", "H", "I")
@@ -23,11 +24,11 @@ class StrategyPayload:
     payload_code: str
     direction: str
     entry_level: str
-    entry_criterion: str
+    entry_criterion: str | dict[str, Any]
     bias_filter: str
     time_filter: str
     session: str
-    exit_criterion: str
+    exit_criterion: str | dict[str, Any]
     risk_model: str
     sizing_model: str
     parameters: dict
@@ -43,6 +44,22 @@ class StrategyPayload:
         payload["payload_hash"] = self.payload_hash
         return payload
 
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any]) -> "StrategyPayload":
+        payload = dict(payload)
+        supplied_hash = payload.pop("payload_hash", None)
+        allowed = {field.name for field in fields(cls)}
+        unexpected = sorted(set(payload) - allowed)
+        if unexpected:
+            raise ValueError(f"unexpected StrategyPayload fields: {unexpected}")
+        missing = sorted(name for name in allowed if name not in payload and name != "payload_version")
+        if missing:
+            raise ValueError(f"missing StrategyPayload fields: {missing}")
+        result = cls(**payload)
+        if supplied_hash is not None and supplied_hash != result.payload_hash:
+            raise ValueError("payload_hash does not match StrategyPayload content")
+        return result
+
 
 def payload_by_code(asset: str, code: str) -> StrategyPayload:
     if code not in PAYLOAD_CODES:
@@ -56,11 +73,19 @@ def payload_by_code(asset: str, code: str) -> StrategyPayload:
         payload_code=code,
         direction="long_short",
         entry_level="M15 liquidity levels",
-        entry_criterion="M1 liquidity sweep plus engulfing with strict M3 close confirmation",
+    entry_criterion={
+        "criterion_type": "entry",
+        "rule_id": "m1_liquidity_sweep_engulfing_m3_close_confirmation",
+        "parameters": {},
+    },
         bias_filter="directional_mtf_bias" if has_bias else "none",
         time_filter="session_window" if session != "all" else "none",
         session=session,
-        exit_criterion="fixed_horizon_10x3min_bars",
+        exit_criterion={
+            "criterion_type": "exit",
+            "rule_id": "fixed_horizon",
+            "parameters": {"horizon_bars": 10, "bar_minutes": 3},
+        },
         risk_model="fixed_fractional_native_mvp",
         sizing_model="unit_notional_native_mvp",
         parameters={

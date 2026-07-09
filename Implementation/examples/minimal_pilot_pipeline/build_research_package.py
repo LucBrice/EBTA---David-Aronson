@@ -112,7 +112,7 @@ def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
     atomic_write_json(
         package_dir / "config.json",
         {
-            "schema_version": "1.0.0",
+            "schema_version": "1.1.0",
             "config_id": identifiers["config_id"],
             "project_id": identifiers["project_id"],
             "research_family_id": identifiers["research_family_id"],
@@ -127,6 +127,11 @@ def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
                 "asset_selection_axis": candidate_space.get("asset_selection_axis"),
                 "asset_selection_rule": candidate_space.get("asset_selection_rule"),
                 "asset_candidate_count": search_space.get("asset_candidate_count"),
+                "complexity_definition": candidate_space.get("complexity_definition", {"source": "parameter_grid"}),
+                "complexity_levels": candidate_space.get(
+                    "complexity_levels",
+                    sorted({candidate.get("complexity", 0) for candidate in search_space["candidates"]}),
+                ),
             },
             "selection_rule": pilot_inputs["selection_rule"],
             "statistical_plan": pilot_inputs["statistical_plan"],

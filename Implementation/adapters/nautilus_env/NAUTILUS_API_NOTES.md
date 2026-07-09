@@ -24,10 +24,19 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   `Implementation/adapters/nautilus_env/setup_nautilus_env.ps1`, via `subst`
   sur `N:\venv`. Le mapping `N:` n'est pas persistant entre shells ; le chemin
   réel du venv fonctionne pour l'introspection.
+- **Vérifié empiriquement** : `Implementation/adapters/nautilus_env/setup_env.ps1
+  -VenvRelativePath "Implementation\adapters\nautilus_env\venv" -SkipInstall`
+  réutilise le venv existant, mappe `N:` sur la racine du repo, importe
+  `nautilus_trader==1.230.0`, instancie `BacktestEngine()` et expose
+  `type(engine.cache).__name__ == "Cache"`.
+- **Vérifié empiriquement** : la convention cible de `setup_env.ps1` cree par
+  defaut la venv courte sous `N:\Implementation\.venv-nautilus`; le spike
+  Phase 2 utilise explicitement le parametre de compatibilite ci-dessus pour ne
+  pas dupliquer une venv lourde deja installee.
 - **Preuve locale** :
   `Implementation/adapters/nautilus_env/introspect_nautilus_claims.py` et
   `Implementation/adapters/nautilus_env/INTROSPECTION_2026-07-08.txt`.
-- **Date** : 2026-07-08
+- **Date** : 2026-07-09
 
 ## Noyau & Architecture
 
@@ -111,6 +120,35 @@ Ce fichier est un cache technique, pas une source normative EBTA :
 - **Preuve locale** : `INTROSPECTION_2026-07-08.txt`, lignes 528-536.
 - **Date** : 2026-07-08
 
+### BarDataWrangler et buffers pandas/NumPy Windows [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : dans le spike Phase 2, un `DataFrame` pandas
+  construit directement depuis des listes Python a provoque
+  `ValueError: buffer source array is read-only` dans
+  `BarDataWrangler.process()`.
+- **Vérifié empiriquement** : construire les colonnes OHLCV depuis un
+  `np.array(..., dtype="float64").copy()`, puis forcer une copie profonde des
+  colonnes du `DataFrame`, permet a `BarDataWrangler.process()` de produire les
+  barres Nautilus attendues.
+- **Preuve locale** :
+  `Implementation/adapters/nautilus_env/run_golden_case.py`.
+- **Date** : 2026-07-09
+
+### Mapping OHLCV EBTA vers Bar Nautilus [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : `BarType.from_str("NASDAQ.SIM-1-MINUTE-LAST-EXTERNAL")`
+  est accepte par NautilusTrader 1.230.0.
+- **Vérifié empiriquement** : `map_ohlcv_to_bars()` produit des `Bar` Nautilus
+  depuis des `OhlcvBar` EBTA sans perte visible sur `open`, `close`,
+  `price_increment` ou `size_increment` dans le cas NASDAQ/XAUUSD Phase 3.
+- **Vérifié empiriquement** : lorsque le timestamp source est interprete comme
+  ouverture de barre 1 minute, `ts_init_delta=60_000_000_000` donne
+  `ts_init = ts_event + 60_000_000_000`, ce qui place l'initialisation a la
+  cloture et evite d'utiliser une barre avant sa disponibilite.
+- **Preuve locale** :
+  `Implementation/ebta_engine/tests/test_nautilus_instrument_nasdaq.py`.
+- **Date** : 2026-07-09
+
 ### Convention ts_init des barres [DOCUMENTÉ]
 
 - **Documenté** : pour l'exécution sur barres, `ts_init` doit représenter le
@@ -161,6 +199,40 @@ Ce fichier est un cache technique, pas une source normative EBTA :
 - **Preuve locale** : `INTROSPECTION_2026-07-08.txt`, lignes 810-816,
   843-849, 876-882.
 - **Date** : 2026-07-08
+
+### Cfd / IndexInstrument / Equity pour NASDAQ et XAUUSD [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : `nautilus_trader.model.instruments` expose
+  `Cfd`, `IndexInstrument` et `Equity`.
+- **Vérifié empiriquement** : `Cfd` accepte `AssetClass.INDEX` et
+  `AssetClass.COMMODITY`, `quote_currency`, `price_precision`,
+  `size_precision`, `price_increment`, `size_increment`, `margin_init`,
+  `margin_maint`, `maker_fee` et `taker_fee`.
+- **Vérifié empiriquement** : `IndexInstrument` represente un indice spot non
+  directement tradable d'apres sa docstring locale ; Phase 3 retient donc
+  `Cfd(..., AssetClass.INDEX, ...)` pour `NASDAQ.SIM`.
+- **Vérifié empiriquement** : `build_instrument()` construit `NASDAQ.SIM` comme
+  `Cfd` sous-jacent `INDEX` et `XAUUSD.SIM` comme `Cfd` sous-jacent
+  `COMMODITY`, avec round-trip des increments `price_increment` et
+  `size_increment`.
+- **Preuve locale** :
+  `Implementation/ebta_engine/adapters/nautilus_mapping.py` et
+  `Implementation/ebta_engine/tests/test_nautilus_instrument_nasdaq.py`.
+- **Date** : 2026-07-09
+
+### CurrencyPair zero-fee pour cas jouet deterministe [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : `CurrencyPair` accepte `margin_init=0`,
+  `margin_maint=0`, `maker_fee=0` et `taker_fee=0` pour l'instrument jouet
+  `GOLDEN.SIM`, ce qui permet un cas Phase 2 a cout total nul.
+- **Vérifié empiriquement** : les instruments de test preconstruits peuvent
+  porter des frais par defaut non nuls ; le cas EBTA deterministe doit donc
+  construire explicitement l'instrument au lieu de reutiliser un instrument de
+  fournisseur de test si l'attendu manuel exige `total_costs == 0.0`.
+- **Preuve locale** :
+  `Implementation/adapters/nautilus_env/run_golden_case.py` et
+  `Implementation/ebta_engine/tests/fixtures/nautilus_golden_case/expected_result.py`.
+- **Date** : 2026-07-09
 
 ### ParquetDataCatalog [VÉRIFIÉ EMPIRIQUEMENT]
 
@@ -260,12 +332,17 @@ Ce fichier est un cache technique, pas une source normative EBTA :
 - **Vérifié empiriquement** : `MakerTakerFeeModel()` et
   `LatencyModel(base_latency_nanos=1_000_000)` s'instancient ; la propriété
   `base_latency_nanos` vaut `1000000`.
+- **Vérifié empiriquement** : `map_cost_model_to_venue()` instancie
+  explicitement `FillModel`, `MakerTakerFeeModel`, `LatencyModel` et
+  `LeveragedMarginModel`, puis les transmet a `add_venue()` avec
+  `OmsType.HEDGING` et `AccountType.MARGIN`. Aucun modele Nautilus par defaut
+  implicite n'est utilise dans le test Phase 4.
 - **Source documentaire** :
   https://nautechsystems.github.io/nautilus_docs/python-api-latest/backtest.html
   et https://nautilustrader.io/docs/latest/concepts/backtesting/
 - **Preuve locale** : `INTROSPECTION_2026-07-08.txt`, lignes 107-109,
-  1190-1206, 1262-1275.
-- **Date** : 2026-07-08
+  1190-1206, 1262-1275 ; `Implementation/ebta_engine/tests/test_nautilus_phase4_strategy_costs.py`.
+- **Date** : 2026-07-09
 
 ## Comptabilité & Portefeuille
 
@@ -299,6 +376,11 @@ Ce fichier est un cache technique, pas une source normative EBTA :
 - **Vérifié empiriquement** : `BacktestResult` expose un constructeur avec
   `summary`, `stats_pnls` et `stats_returns`; `BacktestEngine.get_result()`
   existe.
+- **Vérifié empiriquement** : `run_segment()` peut executer un candidat EBTA
+  golden-case dans `BacktestEngine`, puis `extract_simulation_result()`
+  reconstruit `orders`, `fills`, `positions`, `nav`, `daily_returns` et
+  `daily_exposure` sous contrat EBTA. Un cas `NO_MODEL` sans trade retourne une
+  NAV plate et des expositions nulles.
 - **Limite EBTA** : la reconstruction de `daily_returns`/`daily_exposure`
   depuis ces surfaces reste à tester sur un vrai segment EBTA ; ces rapports
   ne deviennent jamais un verdict méthodologique prêt à consommer.
@@ -306,8 +388,8 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   https://nautechsystems.github.io/nautilus_docs/python-api-latest/cache.html
   et https://nautilustrader.io/docs/latest/concepts/reports/
 - **Preuve locale** : `INTROSPECTION_2026-07-08.txt`, lignes 1369-1377,
-  1396-1402.
-- **Date** : 2026-07-08
+  1396-1402 ; `Implementation/ebta_engine/tests/test_nautilus_phase5_run_segment.py`.
+- **Date** : 2026-07-09
 
 ### Modules d'indicateurs `averages`/`momentum`/`trend`/`volatility`/`volume` [VÉRIFIÉ EMPIRIQUEMENT]
 
@@ -346,12 +428,16 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   s'instancie normalement (`GenericPayloadStrategyConfig(payload={...})`) et
   toute tentative de mutation d'attribut après construction lève
   `AttributeError: immutable type: 'GenericPayloadStrategyConfig'`.
+- **Vérifié empiriquement** : `GenericPayloadStrategy` s'instancie avec deux
+  `GenericPayloadStrategyConfig` differents, issus de candidates differentes,
+  tout en conservant exactement la meme classe Python. Seule la config varie.
 - **Source documentaire** :
   https://nautechsystems.github.io/nautilus_docs/python-api-latest/config.html
 - **Preuve locale** : introspection complémentaire du 2026-07-08 (session
   d'audit) — construction réelle via le venv
-  `Implementation/adapters/nautilus_env/venv`.
-- **Date** : 2026-07-08
+  `Implementation/adapters/nautilus_env/venv` ;
+  `Implementation/ebta_engine/tests/test_nautilus_phase4_strategy_costs.py`.
+- **Date** : 2026-07-09
 
 ## Live & Intégrations
 

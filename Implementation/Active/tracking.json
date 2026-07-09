@@ -1,245 +1,416 @@
 {
   "schema_version": "1.1.0",
   "created_at": "2026-06-26",
-  "updated_at": "2026-07-02",
+  "updated_at": "2026-07-09",
   "status": "ACTIVE",
   "runtime_version": "EBTA-ENGINE-0.1.x",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
   "hook_file": "Implementation/Active/HOOK.md",
-  "current_step": "NATIVE_ENGINE_PHASE_8_COMPLETED",
-  "current_task_id": null,
-  "next_task_id": null,
+  "current_step": "NAUTILUS_PHASE_6_CUTOVER",
+  "current_task_id": "NAUTILUS_P6_T2_PRE_CUTOVER_TAG",
+  "next_task_id": "NAUTILUS_P6_T3_REMOVE_NATIVE_CLUSTER",
   "active_scope": [
     ".ai/",
+    ".ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
     "Implementation/",
     "Implementation/Active/",
-    ".ai/backlog/mainline/",
-    "BACKTRADER read-only reference audit after governance read",
-    "XAUUSD/NASDAQ data provenance",
-    "Native EBTA MVP engine through Phase 8"
+    "Implementation/adapters/nautilus_env/",
+    "Implementation/ebta_engine/adapters/",
+    "NautilusTrader adapter confined to EBTA runtime boundary"
   ],
   "non_goals": [
     "No Protocole/ change",
     "No BACKTRADER runtime dependency",
-    "No BACKTRADER modification before governance read",
-    "No further native-engine implementation before the generated package remains validator PASS",
-    "No deletion of historical material",
-    "No new EBTA gate, status, threshold, or methodology",
-    "No OOS opening before sealing"
+    "No BACKTRADER repository modification",
+    "No nautilus_trader import outside adapters/",
+    "No EBTA gate, status, threshold, or methodology change",
+    "No OOS opening before sealing and G-BIAS PASS",
+    "No Nautilus analyzer, tearsheet, or metric as EBTA verdict",
+    "No native-engine removal before Phase 6 PASS and dedicated reversible commit"
   ],
   "steps": [
     {
-      "id": "NATIVE_ENGINE_PHASE_MINUS_1_PREREQUISITES",
-      "title": "Deblocage des prerequis factuels du moteur natif",
+      "id": "NAUTILUS_PHASE_1_CONTRACTS_SCHEMA",
+      "title": "Contrat de types et migrations de schema",
       "status": "DONE",
-      "classification": "ADAPTER_MAPPING",
-      "objective": "Make the native EBTA backtest engine plan executable by documenting BACKTRADER read-only access/governance and XAUUSD/NASDAQ data provenance before any implementation phase starts.",
+      "classification": "CONTRACT_ENCODING",
+      "objective": "Create stdlib-only EBTA contracts and schema migrations required before any Nautilus-dependent code.",
+      "entry_criteria": [
+        "NAUTILUS_PHASE_0_COCKPIT_SYNC completed",
+        "Active plan read in full"
+      ],
       "tasks": [
         {
-          "id": "NATIVE_ENGINE_P-1_T1",
-          "title": "Trace explicit BACKTRADER read-only reference authorization and real path",
+          "id": "NAUTILUS_P1_T1_CONTRACTS",
+          "title": "Write SimulationResult, CostModel, InstrumentConfig, and Candidate in strategies/contracts.py",
           "status": "DONE",
-          "classification": "ADAPTER_MAPPING",
+          "classification": "CONTRACT_ENCODING",
+          "blocked_by": null,
           "deliverables": [
-            "Decision trace naming the authorized BACKTRADER path",
-            "Confirmation that BACKTRADER remains reference-only and non-runtime"
-          ],
-          "blocked_by": null
+            "Four distinct stdlib-only data contracts",
+            "No nautilus_trader import"
+          ]
         },
         {
-          "id": "NATIVE_ENGINE_P-1_T2",
-          "title": "Read BACKTRADER local governance before code inventory",
-                  "status": "DONE",
-          "classification": "ADAPTER_MAPPING",
-          "deliverables": [
-            "Governance entrypoints read",
-            "No BACKTRADER mutation performed"
-          ],
-          "blocked_by": "NATIVE_ENGINE_P-1_T1"
+          "id": "NAUTILUS_P1_T2_PAYLOAD_FROM_DICT",
+          "title": "Add StrategyPayload.from_dict() round-trip support",
+          "status": "DONE",
+          "classification": "CONTRACT_ENCODING",
+          "blocked_by": "NAUTILUS_P1_T1_CONTRACTS"
         },
         {
-          "id": "NATIVE_ENGINE_P-1_T3",
-          "title": "Document XAUUSD/NASDAQ source, format, licence, and available time coverage",
+          "id": "NAUTILUS_P1_T3_SCHEMA_MIGRATION_MECHANISM",
+          "title": "Design and test the migration mechanism before concrete schema migrations",
           "status": "DONE",
-          "classification": "ADAPTER_MAPPING",
-          "deliverables": [
-            "XAUUSD/NASDAQ data provenance note",
-            "Deterministic MVP subset constraints"
-          ],
-          "blocked_by": "NATIVE_ENGINE_P-1_T2"
+          "classification": "CONTRACT_ENCODING",
+          "blocked_by": "NAUTILUS_P1_T2_PAYLOAD_FROM_DICT"
+        },
+        {
+          "id": "NAUTILUS_P1_T4_SCHEMA_MIGRATIONS",
+          "title": "Migrate config and strategy payload schemas to 1.1.0 with explicit fixtures",
+          "status": "DONE",
+          "classification": "CONTRACT_ENCODING",
+          "blocked_by": "NAUTILUS_P1_T3_SCHEMA_MIGRATION_MECHANISM"
+        },
+        {
+          "id": "NAUTILUS_P1_T5_PAYLOAD_FACTORY",
+          "title": "Implement StructuralAxis, StrategyFamilySpec, and generate_family()",
+          "status": "DONE",
+          "classification": "CONTRACT_ENCODING",
+          "blocked_by": "NAUTILUS_P1_T4_SCHEMA_MIGRATIONS"
+        },
+        {
+          "id": "NAUTILUS_P1_T6_SEGMENT_SIMULATOR_FAKE",
+          "title": "Define SegmentSimulator and a lightweight fake test implementation",
+          "status": "DONE",
+          "classification": "TEST_FIXTURE",
+          "blocked_by": "NAUTILUS_P1_T5_PAYLOAD_FACTORY"
         }
       ],
       "exit_criteria": [
-        "BACKTRADER path and read-only/reference-only scope are traceable",
-        "BACKTRADER governance has been read before code inventory",
-        "XAUUSD/NASDAQ data provenance is documented",
-        "Phase 1 and Phase 2 can start without implicit assumptions"
+        "procedures/detrending.py and procedures/economic_gate.py consume a fake-produced SimulationResult without code changes",
+        "Unit tests for contracts, StrategyPayload.from_dict(), schema migrations, and payload_factory pass",
+        "Runtime suite passes with python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation"
       ]
     },
     {
-      "id": "NATIVE_ENGINE_PHASE_0BIS_GOVERNANCE_UNLOCK",
-      "title": "Levee du verrou de gouvernance pour le moteur natif",
+      "id": "NAUTILUS_PHASE_2_SPIKE",
+      "title": "Spike de faisabilite Nautilus",
       "status": "DONE",
-      "classification": "GOVERNANCE",
-      "objective": "Align AI governance and machine-readable cockpit state before implementation code changes in the native EBTA engine plan.",
+      "classification": "ADAPTER_MAPPING",
+      "objective": "Prove that NautilusTrader runs from the reproducible EBTA environment and produces a coherent SimulationResult on a deterministic toy case.",
       "entry_criteria": [
-        "NATIVE_ENGINE_PHASE_MINUS_1_PREREQUISITES exit criteria completed"
+        "NAUTILUS_PHASE_1_CONTRACTS_SCHEMA exit criteria completed"
       ],
       "tasks": [
         {
-          "id": "NATIVE_ENGINE_0BIS_T1",
-          "title": "Trace the explicit implementation authorization required by AI_MODIFICATION_CHECKLIST",
+          "id": "NAUTILUS_P2_T1_SETUP_ENV",
+          "title": "Version setup_env.ps1 and requirements.txt for nautilus_trader==1.230.0",
           "status": "DONE",
-          "classification": "GOVERNANCE",
-          "blocked_by": "NATIVE_ENGINE_P-1_T3"
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P1_T6_SEGMENT_SIMULATOR_FAKE"
         },
         {
-          "id": "NATIVE_ENGINE_0BIS_T2",
-          "title": "Finalize cockpit consistency after prerequisite evidence exists",
-                  "status": "DONE",
-          "classification": "GOVERNANCE",
-          "blocked_by": "NATIVE_ENGINE_0BIS_T1"
+          "id": "NAUTILUS_P2_T2_GOLDEN_FIXTURE",
+          "title": "Create deterministic golden-case fixture and expected_result()",
+          "status": "DONE",
+          "classification": "TEST_FIXTURE",
+          "blocked_by": "NAUTILUS_P2_T1_SETUP_ENV"
+        },
+        {
+          "id": "NAUTILUS_P2_T3_ONE_RUN_SPIKE",
+          "title": "Execute one candidate and one fold through a minimal run_segment path",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P2_T2_GOLDEN_FIXTURE"
         }
       ],
       "exit_criteria": [
-        "Implementation-code authorization is explicitly traceable",
-        ".ai/checkpoint.json, tracking.json, and HOOK.md remain schema-valid and coherent",
-          "Superseded BACKTRADER adapter plan remains closed as historical context"
-        ]
-      },
-      {
-        "id": "NATIVE_ENGINE_PHASE_0_TO_8_MVP",
-        "title": "Moteur natif EBTA MVP jusqu'a Phase 8",
-        "status": "DONE",
-        "classification": "IMPLEMENTATION_DETAIL",
-        "objective": "Produce a native EBTA MVP that loads local XAUUSD/NASDAQ CSV data, decomposes payloads E-I into candidates, runs deterministic native signals/backtests, generates a valid research_package, and exposes Jupyter orchestration notebooks.",
-        "entry_criteria": [
-          "User decision 3A authorized Implementation/ modifications through Phase 8 without Protocole/ changes"
-        ],
-        "tasks": [
-          {
-            "id": "NATIVE_ENGINE_PHASE_0_MAPPING",
-            "title": "Replace external-engine mapping with native-engine mapping",
-            "status": "DONE",
-            "classification": "ADAPTER_MAPPING",
-            "blocked_by": null
-          },
-          {
-            "id": "NATIVE_ENGINE_PHASE_1_AUDIT",
-            "title": "Document payload E-I and data-source audit",
-            "status": "DONE",
-            "classification": "ADAPTER_MAPPING",
-            "blocked_by": null
-          },
-          {
-            "id": "NATIVE_ENGINE_PHASE_2_TO_7_RUNTIME",
-            "title": "Implement native data, payload, signal, backtest, package-builder, and validation path",
-            "status": "DONE",
-            "classification": "IMPLEMENTATION_DETAIL",
-            "blocked_by": null
-          },
-          {
-            "id": "NATIVE_ENGINE_PHASE_8_NOTEBOOKS",
-            "title": "Add Jupyter cockpit notebooks that orchestrate runtime modules only",
-            "status": "DONE",
-            "classification": "IMPLEMENTATION_DETAIL",
-            "blocked_by": null
-          }
-        ],
-        "exit_criteria": [
-          "Implementation/research_packages/native_mvp validates PASS",
-          "93-test EBTA runtime suite passes",
-          "No Protocole/ modification",
-          "No BACKTRADER repository modification",
-          "BACKTRADER remains non-runtime reference only"
-        ]
-      }
-    ],
+        "BacktestEngine instantiates and runs from the reproducible environment",
+        "SimulationResult from Nautilus matches expected_result() within explicit tolerance",
+        "K x (M+1) execution extrapolation is documented with real M/K inputs"
+      ]
+    },
+    {
+      "id": "NAUTILUS_PHASE_3_N1_DATA",
+      "title": "Brique N1 ingestion de donnees",
+      "status": "DONE",
+      "classification": "ADAPTER_MAPPING",
+      "objective": "Load XAUUSD and NASDAQ bars into Nautilus without precision loss or lookahead, with verified instrument construction.",
+      "entry_criteria": [
+        "NAUTILUS_PHASE_2_SPIKE exit criteria completed"
+      ],
+      "tasks": [
+        {
+          "id": "NAUTILUS_P3_T1_API_CHECK",
+          "title": "Verify NASDAQ instrument class with nautilus-docs-research and mechanical tests",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P2_T3_ONE_RUN_SPIKE"
+        },
+        {
+          "id": "NAUTILUS_P3_T2_MAP_BARS",
+          "title": "Implement map_ohlcv_to_bars() and build_instrument()",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P3_T1_API_CHECK"
+        }
+      ],
+      "exit_criteria": [
+        "Round-trip price and quantity tests pass for XAUUSD and NASDAQ",
+        "ts_init represents close time without lookahead",
+        "tests/test_nautilus_instrument_nasdaq.py passes"
+      ]
+    },
+    {
+      "id": "NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS",
+      "title": "Briques N2 et N3 strategie et couts",
+      "status": "DONE",
+      "classification": "ADAPTER_MAPPING",
+      "objective": "Execute any EBTA candidate in Nautilus through one generic Strategy class and sealed execution costs.",
+      "entry_criteria": [
+        "NAUTILUS_PHASE_3_N1_DATA exit criteria completed"
+      ],
+      "tasks": [
+        {
+          "id": "NAUTILUS_P4_T1_COST_MODEL_TO_VENUE",
+          "title": "Implement map_cost_model_to_venue()",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P3_T2_MAP_BARS"
+        },
+        {
+          "id": "NAUTILUS_P4_T2_GENERIC_STRATEGY",
+          "title": "Implement GenericPayloadStrategy and GenericPayloadStrategyConfig",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P4_T1_COST_MODEL_TO_VENUE"
+        }
+      ],
+      "exit_criteria": [
+        "GenericPayloadStrategy is identical across candidates",
+        "add_venue() uses only sealed execution parameters",
+        "No default FillModel, FeeModel, or LatencyModel is used implicitly"
+      ]
+    },
+    {
+      "id": "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD",
+      "title": "Briques N4 et N5 extraction et boucle multi-fold",
+      "status": "DONE",
+      "classification": "ADAPTER_MAPPING",
+      "objective": "Produce reliable SimulationResult objects from Nautilus and feed existing EBTA procedures without signature changes.",
+      "entry_criteria": [
+        "NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS exit criteria completed"
+      ],
+      "tasks": [
+        {
+          "id": "NAUTILUS_P5_T1_RUN_SEGMENT",
+          "title": "Implement run_segment() without segment metadata leakage",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P4_T2_GENERIC_STRATEGY"
+        },
+        {
+          "id": "NAUTILUS_P5_T2_EXTRACT_RESULT",
+          "title": "Implement extract_simulation_result() and golden-case regression tests",
+          "status": "DONE",
+          "classification": "ADAPTER_MAPPING",
+          "blocked_by": "NAUTILUS_P5_T1_RUN_SEGMENT"
+        },
+        {
+          "id": "NAUTILUS_P5_T3_MULTIFOLD_ORCHESTRATION",
+          "title": "Implement strategy generation, robustness, economic metrics, and walk-forward runtime adapters",
+          "status": "DONE",
+          "classification": "IMPLEMENTATION_DETAIL",
+          "blocked_by": "NAUTILUS_P5_T2_EXTRACT_RESULT"
+        }
+      ],
+      "exit_criteria": [
+        "Detrending, WRC, OOS confidence interval, and economic gate run on Nautilus data without signature changes",
+        "tests/test_nautilus_golden_case.py passes on all variants",
+        "NO_MODEL handling and no segment metadata leakage tests pass"
+      ]
+    },
+    {
+      "id": "NAUTILUS_PHASE_6_CUTOVER",
+      "title": "Bascule et retrait du moteur natif",
+      "status": "IN_PROGRESS",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "objective": "Produce a full PASS research_package through Nautilus, then remove the native engine cluster in a dedicated reversible commit.",
+      "entry_criteria": [
+        "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD exit criteria completed"
+      ],
+      "tasks": [
+        {
+          "id": "NAUTILUS_P6_T1_RESEARCH_PACKAGE_PASS",
+          "title": "Generate and validate a full Nautilus-backed research_package",
+          "status": "DONE",
+          "classification": "IMPLEMENTATION_DETAIL",
+          "blocked_by": "NAUTILUS_P5_T3_MULTIFOLD_ORCHESTRATION"
+        },
+        {
+          "id": "NAUTILUS_P6_T2_PRE_CUTOVER_TAG",
+          "title": "Create annotated tag pre-nautilus-cutover before native removal",
+          "status": "TODO",
+          "classification": "GOVERNANCE",
+          "blocked_by": "NAUTILUS_P6_T1_RESEARCH_PACKAGE_PASS"
+        },
+        {
+          "id": "NAUTILUS_P6_T3_REMOVE_NATIVE_CLUSTER",
+          "title": "Remove native engine cluster in a dedicated commit and verify revertability",
+          "status": "TODO",
+          "classification": "IMPLEMENTATION_DETAIL",
+          "blocked_by": "NAUTILUS_P6_T2_PRE_CUTOVER_TAG"
+        }
+      ],
+      "exit_criteria": [
+        "validate_package_dir() returns PASS on the Nautilus-produced research_package",
+        "Runtime suite passes after native engine removal",
+        "No residual imports to the removed native engine cluster remain",
+        "The native-removal commit is mechanically revertable"
+      ]
+    }
+  ],
   "completed_steps_archive": [
-    { "id": "STEP_0_ARCHIVE_OBSOLETE",          "title": "Archivage controle des obsoletes",                 "completed_at": "2026-06-26", "tasks_done": 5 },
-    { "id": "STEP_1_CHECKPOINT",               "title": "Checkpoint du lot actuel",                        "completed_at": "2026-06-27", "tasks_done": 5 },
-    { "id": "STEP_2_LOCAL_PILOT_PIPELINE",      "title": "Pipeline pilote EBTA reel local",                 "completed_at": "2026-06-30", "tasks_done": 5 },
-    { "id": "STEP_2B_STRATEGIE_ACTIF_RUNTIME",  "title": "Encodage runtime de strategie x actif",           "completed_at": "2026-06-30", "tasks_done": 5 },
-    { "id": "ANNEXE_G_BIAS_RUNTIME_FOUNDATION", "title": "Socle runtime G-BIAS incidents et registre",      "completed_at": "2026-07-01", "tasks_done": 4 },
-    { "id": "ANNEXE_G_BIAS_RUNTIME_GATE",       "title": "Gate runtime G-BIAS complet",                     "completed_at": "2026-07-01", "tasks_done": 4 }
+    { "id": "STEP_0_ARCHIVE_OBSOLETE", "title": "Archivage controle des obsoletes", "completed_at": "2026-06-26", "tasks_done": 5 },
+    { "id": "STEP_1_CHECKPOINT", "title": "Checkpoint du lot actuel", "completed_at": "2026-06-27", "tasks_done": 5 },
+    { "id": "STEP_2_LOCAL_PILOT_PIPELINE", "title": "Pipeline pilote EBTA reel local", "completed_at": "2026-06-30", "tasks_done": 5 },
+    { "id": "STEP_2B_STRATEGIE_ACTIF_RUNTIME", "title": "Encodage runtime de strategie x actif", "completed_at": "2026-06-30", "tasks_done": 5 },
+    { "id": "ANNEXE_G_BIAS_RUNTIME_FOUNDATION", "title": "Socle runtime G-BIAS incidents et registre", "completed_at": "2026-07-01", "tasks_done": 4 },
+    { "id": "ANNEXE_G_BIAS_RUNTIME_GATE", "title": "Gate runtime G-BIAS complet", "completed_at": "2026-07-01", "tasks_done": 4 },
+    { "id": "NATIVE_ENGINE_PHASE_MINUS_1_PREREQUISITES", "title": "Deblocage des prerequis factuels du moteur natif", "completed_at": "2026-07-02", "tasks_done": 3 },
+    { "id": "NATIVE_ENGINE_PHASE_0BIS_GOVERNANCE_UNLOCK", "title": "Levee du verrou de gouvernance pour le moteur natif", "completed_at": "2026-07-02", "tasks_done": 2 },
+    { "id": "NATIVE_ENGINE_PHASE_0_TO_8_MVP", "title": "Moteur natif EBTA MVP jusqu'a Phase 8", "completed_at": "2026-07-02", "tasks_done": 4 },
+    { "id": "NAUTILUS_PHASE_0_COCKPIT_SYNC", "title": "Levee du verrou de gouvernance et synchronisation du cockpit", "completed_at": "2026-07-09", "tasks_done": 3 },
+    { "id": "NAUTILUS_PHASE_1_CONTRACTS_SCHEMA", "title": "Contrat de types et migrations de schema", "completed_at": "2026-07-09", "tasks_done": 6 },
+    { "id": "NAUTILUS_PHASE_2_SPIKE", "title": "Spike de faisabilite Nautilus", "completed_at": "2026-07-09", "tasks_done": 3 },
+    { "id": "NAUTILUS_PHASE_3_N1_DATA", "title": "Brique N1 ingestion de donnees", "completed_at": "2026-07-09", "tasks_done": 2 },
+    { "id": "NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS", "title": "Briques N2 et N3 strategie et couts", "completed_at": "2026-07-09", "tasks_done": 2 },
+    { "id": "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD", "title": "Briques N4 et N5 extraction et boucle multi-fold", "completed_at": "2026-07-09", "tasks_done": 3 }
   ],
   "validation_commands": [
     {
       "command": "python -m json.tool Implementation\\Active\\tracking.json",
       "purpose": "Validate task tracking JSON syntax",
-      "last_result": "PASS - 2026-07-02"
+      "last_result": "PASS - 2026-07-09"
+    },
+    {
+      "command": "python -m json.tool .ai\\checkpoint.json",
+      "purpose": "Validate relay checkpoint JSON syntax",
+      "last_result": "PASS - 2026-07-09"
+    },
+    {
+      "command": "python -c \"import json, jsonschema; jsonschema.validate(json.load(open('.ai/checkpoint.json', encoding='utf-8')), json.load(open('.ai/checkpoint.schema.json', encoding='utf-8')))\"",
+      "purpose": "Validate relay checkpoint against schema",
+      "last_result": "PASS - 2026-07-09"
+    },
+    {
+      "command": "python -c \"import json, jsonschema; jsonschema.validate(json.load(open('Implementation/Active/tracking.json', encoding='utf-8')), json.load(open('Implementation/Active/tracking.schema.json', encoding='utf-8')))\"",
+      "purpose": "Validate runtime tracking against schema",
+      "last_result": "PASS - 2026-07-09"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
-      "purpose": "Runtime non-divergence tests",
-        "last_result": "PASS - 93 tests - 2026-07-02"
+      "purpose": "Runtime non-regression suite",
+      "last_result": "PASS - 2026-07-09 - 112 tests"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
+      "purpose": "Nautilus Phase 1 contracts, migrations, payload factory, and fake simulator tests",
+      "last_result": "PASS - 2026-07-09 - 8 tests"
+    },
+    {
+      "command": ".\\Implementation\\adapters\\nautilus_env\\setup_env.ps1 -VenvRelativePath \"Implementation\\adapters\\nautilus_env\\venv\" -SkipInstall",
+      "purpose": "Nautilus Phase 2 reproducible setup smoke test using the installed compatibility venv",
+      "last_result": "PASS - 2026-07-09 - nautilus_trader 1.230.0 / Cache"
+    },
+    {
+      "command": ".\\Implementation\\adapters\\nautilus_env\\venv\\Scripts\\python.exe .\\Implementation\\adapters\\nautilus_env\\run_golden_case.py",
+      "purpose": "Nautilus Phase 2 direct golden-case runner",
+      "last_result": "PASS - 2026-07-09 - result_hash 0EA503650BF1D2D80F0C3C7853C2C1A12A2D6ACCA399FF1506F045A0043FAC43"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase2_golden_case.py",
+      "purpose": "Nautilus Phase 2 deterministic golden-case regression tests",
+      "last_result": "PASS - 2026-07-09 - 3 tests"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_instrument_nasdaq.py",
+      "purpose": "Nautilus Phase 3 NASDAQ/XAUUSD instrument and OHLCV bar mapping tests",
+      "last_result": "PASS - 2026-07-09 - 2 tests"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase4_strategy_costs.py",
+      "purpose": "Nautilus Phase 4 sealed cost model and generic strategy bridge tests",
+      "last_result": "PASS - 2026-07-09 - 2 tests"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase5_run_segment.py",
+      "purpose": "Nautilus Phase 5 run_segment, SimulationResult extraction, NO_MODEL, and multi-fold orchestration tests",
+      "last_result": "PASS - 2026-07-09 - 3 tests"
+    },
+    {
+      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_research_package.py",
+      "purpose": "Nautilus Phase 6 research_package builder test with injected segment runner",
+      "last_result": "PASS - 2026-07-09 - 1 test"
+    },
+    {
+      "command": ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
+      "purpose": "Build full Nautilus-backed research_package",
+      "last_result": "PASS - 2026-07-09 - package status PASS"
     },
     {
       "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
-      "purpose": "Minimal package generation smoke test",
-      "last_result": "PASS - package status PASS - 2026-07-01"
+      "purpose": "Minimal pilot research_package smoke test after schema 1.1.0 migration",
+      "last_result": "PASS - 2026-07-09 - package status PASS"
     },
     {
-      "command": "git diff --check -- Implementation Protocole",
-      "purpose": "Whitespace and patch hygiene",
-        "last_result": "PASS - 2026-07-02"
-      },
-      {
-        "command": "python -m ebta_engine.package_builder.native_research_package",
-        "purpose": "Build native XAUUSD/NASDAQ x E-I MVP research_package under Implementation/research_packages/native_mvp",
-        "last_result": "PASS - package status PASS - 2026-07-02"
-    },
-    {
-      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_governance_bias.py",
-      "purpose": "G-BIAS runtime schema, registry, incident logger, checkers, guard, and gate tests",
-      "last_result": "PASS - 20 tests - 2026-07-01"
-    },
-    {
-      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_package_validator.py",
-      "purpose": "Package validator compatibility and G-BIAS enforcement tests",
-      "last_result": "PASS - 6 tests - 2026-07-01"
-    },
-    {
-      "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_procedure_governance.py",
-      "purpose": "OOS access procedure tests including bias_gate_pass",
-      "last_result": "PASS - 8 tests - 2026-07-01"
+      "command": "git diff --check -- .ai Implementation \"0 - HUMAN START HERE\"",
+      "purpose": "Patch hygiene for Phase 0 cockpit sync",
+      "last_result": "PASS - 2026-07-09 - CRLF/LF warnings only"
     }
   ],
   "risk_register": [
     {
       "id": "RISK_001",
-      "status": "CLOSED",
-      "risk": "Archiving an active source could break the EBTA reading path.",
-      "mitigation": "Applications and completed hook/plan/json artifacts were archived only after reference updates; Notes remained active because SOPs cite it."
+      "status": "CONTROLLED",
+      "risk": "Relay files could become a competing EBTA source of truth.",
+      "mitigation": ".ai/checkpoint.json tracks macro workstream state only; runtime phase state lives in Implementation/Active/tracking.json."
     },
     {
       "id": "RISK_002",
-      "status": "CLOSED",
-      "risk": "Pipeline pilot work could accidentally add normative EBTA rules.",
-      "mitigation": "STEP_2 reste local a Implementation/, lit des inputs pilotes, ne modifie pas Protocole/ et conserve validate_package_dir comme gate d'acceptation."
+      "status": "CONTROLLED",
+      "risk": "NautilusTrader could become the source of EBTA verdicts instead of a simulation layer.",
+      "mitigation": "The hook and plan confine Nautilus to adapters and keep procedures, validators, gates, and package validation as EBTA-owned authorities."
     },
     {
       "id": "RISK_003",
       "status": "CONTROLLED",
-      "risk": "BACKTRADER reference mining could import external repo conventions into the native EBTA engine.",
-      "mitigation": "BACKTRADER governance was read first; reused ideas are documented as reference-only and rewritten as EBTA runtime contracts without becoming normative doctrine."
+      "risk": "Segment identity could leak into Nautilus and make Train/Test/OOS visible to the engine.",
+      "mitigation": "run_segment() and mapping tasks explicitly forbid segment metadata, and Phase 5 requires a regression test for this invariant."
     },
     {
       "id": "RISK_004",
       "status": "CONTROLLED",
-      "risk": "A multi-asset strategy search could omit losing assets from the WRC family.",
-      "mitigation": "INV-017, candidate_matrix asset coverage, and the multi-asset pilot rejection test fail packages with incomplete strategie x actif coverage."
+      "risk": "The native engine cluster could be removed before the Nautilus research_package is PASS.",
+      "mitigation": "Phase 6 is gated by validate_package_dir() PASS, full runtime PASS, pre-nautilus-cutover tag, and a dedicated reversible removal commit."
     },
     {
       "id": "RISK_005",
-      "status": "CONTROLLED",
-      "risk": "XAUUSD/NASDAQ data provenance could remain implicit and make the MVP non-reproducible.",
-      "mitigation": "User supplied data root D:\\TRADING\\ENTREPRISE\\0 - Phase de lancement\\Strategie de trading\\0 - Backtest\\Data; BACKTRADER_DATA_SOURCE_AUDIT.md documents CSV format, UTC convention, deterministic MVP window, temporal coverage, and the remaining licence/vendor gap."
+      "status": "OPEN",
+      "risk": "NASDAQ instrument construction is not yet empirically confirmed against the installed Nautilus API.",
+      "mitigation": "Phase 3 requires nautilus-docs-research plus tests/test_nautilus_instrument_nasdaq.py before real construction is accepted."
+    },
+    {
+      "id": "RISK_006",
+      "status": "CLOSED",
+      "risk": "The frozen protocol manifest hash test fails before Nautilus Phase 1 starts.",
+      "mitigation": "Resolved by correcting Protocole/MANIFESTE DE GEL EBTA.md to the SHA-256 of the already committed HISTORIQUE DES VERSIONS EBTA.md content; full runtime suite passes."
     }
   ],
   "latest_decision": {
-    "date": "2026-07-02",
-    "decision": "User answered 1A/2B/3A, then Phases -1 through 8 were executed in Implementation/: BACKTRADER read-only audit, data provenance, native mapping, native MVP modules, valid research_package generation, and Jupyter cockpit without Protocole/ or BACKTRADER modification.",
+    "date": "2026-07-09",
+    "decision": "NAUTILUS_P6_T1_RESEARCH_PACKAGE_PASS is complete: the injected builder test passes and the full Nautilus-backed research_package builds with status PASS under the dedicated Nautilus venv. Next action is the pre-nautilus-cutover tag before native cluster removal.",
     "impact_protocole": "NONE"
   }
 }

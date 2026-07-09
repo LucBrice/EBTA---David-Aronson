@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ebta.local/schemas/config.schema.json",
   "title": "EBTA preregistered configuration",
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "x_normative_source": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1; Protocole/TEMPLATE - Configuration préenregistrée d'une recherche EBTA.md",
   "x_translation_type": "CONTRACT_ENCODING",
   "type": "object",
@@ -28,7 +28,7 @@
     "document_hash"
   ],
   "properties": {
-    "schema_version": { "type": "string" },
+    "schema_version": { "type": "string", "const": "1.1.0" },
     "config_id": { "type": "string" },
     "project_id": { "type": "string" },
     "research_family_id": { "type": "string" },
@@ -81,9 +81,15 @@
     "candidate_space": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["candidate_count"],
+      "required": ["candidate_count", "complexity_definition", "complexity_levels"],
       "properties": {
         "candidate_count": { "type": "integer", "minimum": 1 },
+        "complexity_definition": { "type": "object", "additionalProperties": true },
+        "complexity_levels": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer" }
+        },
         "asset_universe": {
           "type": "array",
           "items": { "type": "string" },
@@ -130,9 +136,29 @@
     "execution_model": {
       "type": "object",
       "additionalProperties": true,
-      "required": ["central_scenario"],
+      "required": ["central_scenario", "cost_model", "instrument_config"],
       "properties": {
-        "central_scenario": { "type": "string" }
+        "central_scenario": { "type": "string" },
+        "cost_model": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["model_id", "fill_model", "fee_model"],
+          "properties": {
+            "model_id": { "type": "string", "minLength": 1 },
+            "fill_model": { "type": "string", "minLength": 1 },
+            "fee_model": { "type": "string", "minLength": 1 }
+          }
+        },
+        "instrument_config": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["instrument_id", "symbol", "venue"],
+          "properties": {
+            "instrument_id": { "type": "string", "minLength": 1 },
+            "symbol": { "type": "string", "minLength": 1 },
+            "venue": { "type": "string", "minLength": 1 }
+          }
+        }
       }
     },
     "robustness_plan": {

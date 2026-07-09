@@ -78,7 +78,32 @@
   },
   "execution_model": {
     "central_scenario": "tradable_net",
-    "slippage_model": "pilot_fixed_spread"
+    "slippage_model": "pilot_fixed_spread",
+    "cost_model": {
+      "model_id": "pilot_costs",
+      "fill_model": "deterministic",
+      "fee_model": "fixed",
+      "commission_per_lot": 0.0,
+      "slippage_bps": 0.0,
+      "financing_rate_daily": 0.0,
+      "impact_model": "none",
+      "latency_nanos": 0,
+      "prob_fill_on_limit": 1.0,
+      "prob_slippage": 0.0
+    },
+    "instrument_config": {
+      "instrument_id": "PILOT.SIM",
+      "symbol": "PILOT",
+      "venue": "SIM",
+      "price_precision": 5,
+      "size_precision": 2,
+      "price_increment": "0.00001",
+      "size_increment": "0.01",
+      "margin_init": "0",
+      "margin_maint": "0",
+      "maker_fee": "0",
+      "taker_fee": "0"
+    }
   },
   "robustness_plan": {
     "required_before_oos": true,
