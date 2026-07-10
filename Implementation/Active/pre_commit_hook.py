@@ -30,9 +30,20 @@ def get_staged_files():
     return set(result.stdout.splitlines())
 
 
-def get_last_commit_timestamp():
+def get_last_commit_date():
+    """Return the last commit's author date, truncated to yyyy-MM-dd.
+
+    checkpoint.json's updated_at field is date-only (see
+    .ai/tools/plan.ps1::Write-Checkpoint, which always writes
+    "yyyy-MM-dd"). Comparing it against a full ISO-8601 timestamp
+    (previous behavior, %aI) meant a date-only string is always treated
+    as "earlier" than any same-day timestamp in plain string comparison,
+    permanently blocking every commit after the first one made on a given
+    day. Truncating both sides to date granularity fixes that false
+    positive while still catching a genuinely stale (older-day) checkpoint.
+    """
     result = subprocess.run(
-        ["git", "log", "--format=%aI", "-n", "1"],
+        ["git", "log", "--format=%ad", "--date=short", "-n", "1"],
         capture_output=True,
         text=True,
     )
@@ -61,14 +72,14 @@ def main():
         return 1
 
     updated_at = checkpoint.get("updated_at", "")
-    last_commit = get_last_commit_timestamp()
+    last_commit_date = get_last_commit_date()
 
-    if last_commit and updated_at and updated_at <= last_commit:
+    if last_commit_date and updated_at and updated_at < last_commit_date:
         print()
         print("=" * 72)
         print("[EBTA pre-commit] BLOCKED: checkpoint.json is stale.")
         print(f"  checkpoint.updated_at : {updated_at}")
-        print(f"  last commit timestamp  : {last_commit}")
+        print(f"  last commit date       : {last_commit_date}")
         print()
         print("  Action requise: mettre a jour .ai/checkpoint.json avant")
         print("  de committer les fichiers du cockpit IA actif.")
