@@ -1,0 +1,74 @@
+{
+  "candidate_reports": [
+    {
+      "asset": "NASDAQ",
+      "candidate_id": "CONTROLLED-WINNER-NASDAQ",
+      "economic_failures": [],
+      "economic_status": "PASS",
+      "oos_mean_return": 0.00042886485315944483,
+      "robustness_scenarios": [
+        {
+          "blocking": true,
+          "classification": "CENTRAL",
+          "influential_variant": false,
+          "mean_return": 0.0004180022504795657,
+          "scenario_verdict": "PASS",
+          "stress_family": "controlled_central",
+          "stress_id": "CONTROLLED-CENTRAL",
+          "uses_observed_oos": false
+        },
+        {
+          "blocking": true,
+          "classification": "PLAUSIBLE_BASE",
+          "influential_variant": false,
+          "mean_return": 0.0004180022504795657,
+          "scenario_verdict": "PASS",
+          "stress_family": "controlled_plausible",
+          "stress_id": "CONTROLLED-PLAUSIBLE",
+          "uses_observed_oos": false
+        }
+      ],
+      "robustness_status": "PASS",
+      "test_mean_return": 0.0004180022504795657
+    },
+    {
+      "asset": "XAUUSD",
+      "candidate_id": "CONTROLLED-LOSER-XAUUSD",
+      "economic_failures": [
+        "return_hurdle_pass"
+      ],
+      "economic_status": "REJECTED_ECONOMIC",
+      "oos_mean_return": -0.0003734014743262745,
+      "robustness_scenarios": [
+        {
+          "blocking": true,
+          "classification": "CENTRAL",
+          "influential_variant": false,
+          "mean_return": -0.00038207337444350737,
+          "scenario_verdict": "REJECTED_ECONOMIC",
+          "stress_family": "controlled_central",
+          "stress_id": "CONTROLLED-CENTRAL",
+          "uses_observed_oos": false
+        },
+        {
+          "blocking": true,
+          "classification": "PLAUSIBLE_BASE",
+          "influential_variant": false,
+          "mean_return": -0.00038207337444350737,
+          "scenario_verdict": "REJECTED_ECONOMIC",
+          "stress_family": "controlled_plausible",
+          "stress_id": "CONTROLLED-PLAUSIBLE",
+          "uses_observed_oos": false
+        }
+      ],
+      "robustness_status": "FAIL",
+      "test_mean_return": -0.00038207337444350737
+    }
+  ],
+  "status": "PASS",
+  "thresholds": {
+    "maximum_drawdown": 0.02,
+    "maximum_total_costs": 0.0,
+    "minimum_mean_return": 0.0001
+  }
+}
