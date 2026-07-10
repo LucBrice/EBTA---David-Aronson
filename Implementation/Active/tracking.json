@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1.0",
   "created_at": "2026-06-26",
-  "updated_at": "2026-07-09",
+  "updated_at": "2026-07-10",
   "status": "DONE",
   "runtime_version": "EBTA-ENGINE-0.1.x",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
@@ -198,7 +198,7 @@
       "title": "Briques N4 et N5 extraction et boucle multi-fold",
       "status": "DONE",
       "classification": "ADAPTER_MAPPING",
-      "objective": "Produce reliable SimulationResult objects from Nautilus and feed existing EBTA procedures without signature changes.",
+      "objective": "Produce reliable SimulationResult objects from Nautilus and feed existing EBTA procedures without signature changes. REOPENED 2026-07-10 audit; completed by fix PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE with real WalkForwardSplitter, risk/robustness.py, and multi-fold Nautilus package PASS.",
       "entry_criteria": [
         "NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS exit criteria completed"
       ],
@@ -222,7 +222,14 @@
           "title": "Implement strategy generation, robustness, economic metrics, and walk-forward runtime adapters",
           "status": "DONE",
           "classification": "IMPLEMENTATION_DETAIL",
-          "blocked_by": "NAUTILUS_P5_T2_EXTRACT_RESULT"
+          "blocked_by": "NAUTILUS_P5_T2_EXTRACT_RESULT",
+          "deliverables": [
+            "DONE: run_multifold_segments() loop and SimulationResult.economic_gate_evidence() (relocations accepted, decision C1 2026-07-10)",
+            "DONE: data/walk_forward.py WalkForwardSplitter (SOP 04) exists and is tested",
+            "DONE: risk/robustness.py stress-scenario calculator (SOP 05) exists and is tested",
+            "DONE: real multi-fold walk-forward loop produces Implementation/research_packages/nautilus_mvp with K=2 folds and validate_package_dir() PASS",
+            "Remediation completed by .ai/backlog/fixes/PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE.md"
+          ]
         }
       ],
       "exit_criteria": [
@@ -286,8 +293,8 @@
     { "id": "NAUTILUS_PHASE_2_SPIKE", "title": "Spike de faisabilite Nautilus", "completed_at": "2026-07-09", "tasks_done": 3 },
     { "id": "NAUTILUS_PHASE_3_N1_DATA", "title": "Brique N1 ingestion de donnees", "completed_at": "2026-07-09", "tasks_done": 2 },
     { "id": "NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS", "title": "Briques N2 et N3 strategie et couts", "completed_at": "2026-07-09", "tasks_done": 2 },
-    { "id": "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD", "title": "Briques N4 et N5 extraction et boucle multi-fold", "completed_at": "2026-07-09", "tasks_done": 3 },
-    { "id": "NAUTILUS_PHASE_6_CUTOVER", "title": "Bascule et retrait du moteur natif", "completed_at": "2026-07-09", "tasks_done": 3 }
+    { "id": "NAUTILUS_PHASE_5_N4_N5_MULTIFOLD", "title": "Briques N4 et N5 extraction et boucle multi-fold reelle", "completed_at": "2026-07-10", "tasks_done": 3 },
+    { "id": "NAUTILUS_PHASE_6_CUTOVER", "title": "Bascule et retrait du moteur natif (retrait reel; package multi-fold K=2 depuis correction 2026-07-10)", "completed_at": "2026-07-09", "tasks_done": 3 }
   ],
   "validation_commands": [
     {
@@ -313,7 +320,7 @@
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
       "purpose": "Runtime non-regression suite",
-      "last_result": "PASS - 2026-07-09 - 106 tests after native cluster removal"
+      "last_result": "PASS - 2026-07-10 - 110 tests after Nautilus multi-fold correction"
     },
     {
       "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
@@ -412,11 +419,17 @@
       "status": "CLOSED",
       "risk": "The frozen protocol manifest hash test fails before Nautilus Phase 1 starts.",
       "mitigation": "Resolved by correcting Protocole/MANIFESTE DE GEL EBTA.md to the SHA-256 of the already committed HISTORIQUE DES VERSIONS EBTA.md content; full runtime suite passes."
+    },
+    {
+      "id": "RISK_007",
+      "status": "CONTROLLED",
+      "risk": "Machine state declared the Nautilus workstream fully DONE while WalkForwardSplitter (SOP 04) and risk/robustness.py (SOP 05) were absent and the research_package was single-fold, not the required real multi-fold walk-forward loop.",
+      "mitigation": "Discovered by 2026-07-10 audit; remediation completed by .ai/backlog/fixes/PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE.md with WalkForwardSplitter, risk/robustness.py, K=2 Nautilus package, runtime suite, and validate_package_dir() PASS."
     }
   ],
   "latest_decision": {
-    "date": "2026-07-09",
-    "decision": "NAUTILUS_PHASE_6_CUTOVER is complete: full Nautilus-backed research_package PASS, pre-nautilus-cutover tag created, native engine cluster removed in the working tree for a dedicated reversible commit, and tests/packages remain PASS after removal.",
+    "date": "2026-07-10",
+    "decision": "Nautilus correction completed: data/walk_forward.py WalkForwardSplitter (SOP 04), risk/robustness.py (SOP 05), and the real K=2 multi-fold Nautilus research_package loop are implemented and tested. Runtime suite PASS (110 tests), venv Nautilus package build PASS, validate_package_dir() PASS. Relocations C1 remain accepted: run_multifold_segments() and SimulationResult.economic_gate_evidence().",
     "impact_protocole": "NONE"
   }
 }

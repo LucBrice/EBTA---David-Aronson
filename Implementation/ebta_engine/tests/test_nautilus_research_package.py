@@ -11,6 +11,12 @@ from ebta_engine.strategies.contracts import SimulationResult
 
 class NautilusResearchPackageTests(unittest.TestCase):
     def test_nautilus_package_builder_validates_with_injected_segment_runner(self):
+        calls = []
+
+        def runner(**kwargs):
+            calls.append(kwargs)
+            return _fake_segment_runner(**kwargs)
+
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             data_root = _write_fixture_data(root / "data")
@@ -19,16 +25,26 @@ class NautilusResearchPackageTests(unittest.TestCase):
                 package_dir,
                 data_root=data_root,
                 assets=["NASDAQ"],
-                segment_runner=_fake_segment_runner,
+                segment_runner=runner,
             )
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
             search_space = json.loads((package_dir / "reports" / "search_space.json").read_text(encoding="utf-8"))
             execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
+            fold_schedule = json.loads((package_dir / "reports" / "fold_schedule.json").read_text(encoding="utf-8"))
+            oos_series = json.loads((package_dir / "series" / "oos_primary_returns.json").read_text(encoding="utf-8"))
         self.assertEqual(report["status"], "PASS")
+        self.assertEqual(len(config["walk_forward_schedule"]), 2)
+        self.assertEqual(fold_schedule["fold_count"], 2)
         self.assertEqual(config["candidate_space"]["asset_universe"], ["NASDAQ"])
         self.assertEqual(search_space["candidate_count"], 8)
         self.assertEqual(search_space["asset_candidate_count"], {"NASDAQ": 8})
         self.assertEqual(execution["engine"], "nautilus_trader")
+        self.assertEqual(len(oos_series["observations"]), 2)
+        self.assertGreater(len(calls), 8)
+        for call in calls:
+            self.assertNotIn("segment", call)
+            self.assertNotIn("segment_label", call)
+            self.assertNotIn("oos", call)
 
 
 def _fake_segment_runner(**kwargs) -> SimulationResult:
@@ -48,8 +64,8 @@ def _fake_segment_runner(**kwargs) -> SimulationResult:
 def _write_fixture_data(data_root: Path) -> Path:
     rows = []
     start = datetime(2020, 1, 1, tzinfo=timezone.utc)
-    for index in range(12):
-        timestamp = start + timedelta(minutes=index)
+    for index in range(5):
+        timestamp = start + timedelta(days=index)
         close = 100.0 + index * 0.5
         rows.append(
             {

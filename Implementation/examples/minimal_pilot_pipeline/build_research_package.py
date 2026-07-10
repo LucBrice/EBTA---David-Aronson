@@ -148,34 +148,37 @@ def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
 def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
     actor = pilot_inputs.get("actor", "minimal_pilot_pipeline")
-    for index, candidate in enumerate(_pilot_search_space(pilot_inputs)["candidates"], start=1):
-        append_jsonl(
-            package_dir / "registry.jsonl",
-            {
-                "schema_version": "1.0.0",
-                "event_id": f"EVT-PILOT-{index:03d}",
-                "timestamp": "2026-01-01T00:00:00Z",
-                "actor": actor,
-                "event_type": "REGISTER_CANDIDATE",
-                "project_id": identifiers["project_id"],
-                "research_family_id": identifiers["research_family_id"],
-                "candidate_id": candidate["candidate_id"],
-                "run_id": f"RUN-PILOT-{index:03d}",
-                "fold_id": pilot_inputs["walk_forward_schedule"][0]["fold_id"],
-                "data_snapshot_id": pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
-                "input_hashes": [
-                    f"config_hash:{identifiers['document_hash']}",
-                    f"data_hash:{pilot_inputs['data_snapshots'][0]['data_snapshot_id']}",
-                ],
-                "output_hashes": [
-                    f"code_hash:{pilot_inputs['reproduction_report']['environment']['code_commit_hash']}",
-                ],
-                "decision_status": "PASS",
-                "evidence_path": "reports/candidate_matrix.json",
-                "parent_event_id": "",
-                "chain_hash": f"CHAIN-PILOT-{index:03d}",
-            },
-        )
+    event_index = 1
+    for fold in pilot_inputs["walk_forward_schedule"]:
+        for candidate in _pilot_search_space(pilot_inputs)["candidates"]:
+            append_jsonl(
+                package_dir / "registry.jsonl",
+                {
+                    "schema_version": "1.0.0",
+                    "event_id": f"EVT-PILOT-{event_index:03d}",
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "actor": actor,
+                    "event_type": "REGISTER_CANDIDATE",
+                    "project_id": identifiers["project_id"],
+                    "research_family_id": identifiers["research_family_id"],
+                    "candidate_id": candidate["candidate_id"],
+                    "run_id": f"RUN-PILOT-{event_index:03d}",
+                    "fold_id": fold["fold_id"],
+                    "data_snapshot_id": pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
+                    "input_hashes": [
+                        f"config_hash:{identifiers['document_hash']}",
+                        f"data_hash:{pilot_inputs['data_snapshots'][0]['data_snapshot_id']}",
+                    ],
+                    "output_hashes": [
+                        f"code_hash:{pilot_inputs['reproduction_report']['environment']['code_commit_hash']}",
+                    ],
+                    "decision_status": "PASS",
+                    "evidence_path": "reports/candidate_matrix.json",
+                    "parent_event_id": "",
+                    "chain_hash": f"CHAIN-PILOT-{event_index:03d}",
+                },
+            )
+            event_index += 1
 
 
 def _write_oos_access_log(package_dir: Path, pilot_inputs: dict) -> None:
@@ -244,12 +247,18 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     }
     invariant_evidence = {
         "oos_segments": [
-            {"id": "OOS-001", "start": "2023-01-01", "end": "2023-12-31"},
-            {"id": "OOS-002", "start": "2024-01-01", "end": "2024-12-31"},
+            {"id": f"OOS-{index:03d}", "start": fold["oos"][0], "end": fold["oos"][1]}
+            for index, fold in enumerate(pilot_inputs["walk_forward_schedule"], start=1)
         ],
         "pre_oos_sealed_at": "2023-01-01T00:00:00Z",
-        "oos_access_log": [{"timestamp": "2023-01-02T00:00:00Z", "fold_id": "FOLD-001"}],
-        "oos_openings": [{"fold_id": "FOLD-001", "wrc_local_status": "PASS"}],
+        "oos_access_log": [
+            {"timestamp": event["timestamp"], "fold_id": event["fold_id"]}
+            for event in pilot_inputs["oos_access_log"]
+        ],
+        "oos_openings": [
+            {"fold_id": fold["fold_id"], "wrc_local_status": "PASS"}
+            for fold in pilot_inputs["walk_forward_schedule"]
+        ],
         "influential_candidates": candidate_ids,
         "registered_candidates": candidate_ids,
         "applicable_candidates": candidate_ids,
@@ -261,10 +270,10 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "decision_events": [
             {"decision_at": "2023-01-02T00:00:00Z", "data_available_at": "2023-01-01T00:00:00Z"}
         ],
-        "expected_oos_days": ["2023-01-02", "2023-01-03"],
+        "expected_oos_days": [row["date"] for row in pilot_inputs["oos_primary_returns"]],
         "oos_series_days": [
-            {"date": "2023-01-02", "status": "EXPOSED"},
-            {"date": "2023-01-03", "status": "NO_MODEL"},
+            {"date": row["date"], "status": row.get("status", "EXPOSED")}
+            for row in pilot_inputs["oos_primary_returns"]
         ],
         "bootstrap_sources": {"oos": "OOS_STATIONARY_BLOCK", "wrc_test": "WRC_JOINT_ZERO_CENTERED"},
         "gate_reports": {
@@ -339,7 +348,7 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
         influential_candidates=candidate_ids,
         asset_universe=search_space.get("asset_universe"),
         candidate_assets=search_space.get("candidate_asset_map"),
-        fold_id=pilot_inputs["walk_forward_schedule"][0]["fold_id"],
+        fold_id=_fold_scope_id(pilot_inputs["walk_forward_schedule"]),
     )
     ml_inputs = pilot_inputs["ml_manifest"]
     ml_manifest = build_ml_manifest(
@@ -484,13 +493,14 @@ def _registry_events(pilot_inputs: dict, candidate_ids: list[str]) -> list[dict[
     identifiers = pilot_inputs["identifiers"]
     return [
         {
-            "run_id": f"RUN-PILOT-{index:03d}",
+            "run_id": f"RUN-PILOT-{fold_index:03d}-{index:03d}",
             "candidate_id": candidate_id,
             "config_hash": identifiers["document_hash"],
             "code_hash": pilot_inputs["reproduction_report"]["environment"]["code_commit_hash"],
             "data_hash": pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
             "decision_status": "PASS",
         }
+        for fold_index, _fold in enumerate(pilot_inputs["walk_forward_schedule"], start=1)
         for index, candidate_id in enumerate(candidate_ids, start=1)
     ]
 
@@ -501,7 +511,7 @@ def _pilot_search_space(pilot_inputs: dict) -> dict:
     statistical_plan = pilot_inputs["statistical_plan"]
     return build_search_space_snapshot(
         identifiers["research_family_id"],
-        pilot_inputs["walk_forward_schedule"][0]["fold_id"],
+        _fold_scope_id(pilot_inputs["walk_forward_schedule"]),
         candidate_space["parameter_grid"],
         base_spec=candidate_space["base_spec"],
         universe_snapshot_id=pilot_inputs["data_snapshots"][0]["data_snapshot_id"],
@@ -518,6 +528,12 @@ def _pilot_search_space(pilot_inputs: dict) -> dict:
         stability_criteria=candidate_space["stability_criteria"],
         transfer_rule=candidate_space["transfer_rule"],
     )
+
+
+def _fold_scope_id(schedule: list[dict]) -> str:
+    if len(schedule) == 1:
+        return schedule[0]["fold_id"]
+    return "WF-" + "-".join(fold["fold_id"] for fold in schedule)
 
 
 def _scores_by_rank(keys: list[str], values: list) -> dict:

@@ -1,12 +1,12 @@
 {
   "schema_version": "1.2.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-09T12:03:31+02:00",
+  "updated_at": "2026-07-10",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
     "root": "D:/Livre/Trading/Trading algorithmic/EBTA - David Aronson",
-    "git_head_short": "e22b327",
+    "git_head_short": "fe23580",
     "git_status_policy": "Run git status live before relying on repo dirtiness; do not persist porcelain snapshots here.",
     "warning": "git status may emit permission warnings for C:/Users/liant/.config/git/ignore"
   },
@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -114,7 +114,7 @@
     {
       "id": "NEXT_NAUTILUS_PHASE_5_N4_N5_MULTIFOLD",
       "status": "DONE",
-      "title": "Phase 5 Nautilus - extraction SimulationResult et boucle multi-fold",
+      "title": "Phase 5 Nautilus - correction completed 2026-07-10: WalkForwardSplitter, risk/robustness.py, and real K=2 multi-fold Nautilus package PASS",
       "classification": "ADAPTER_MAPPING",
       "non_goals": [
         "No Train/Test/OOS segment metadata leakage into Nautilus",
@@ -283,22 +283,22 @@
       "id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS",
       "title": "Migration du moteur de backtest EBTA vers NautilusTrader",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
+      "source_path": ".ai/archive/20260710_PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260709_Implementation_plan_Nautilus.md",
       "active_runtime_path": "Implementation/Active/HOOK.md",
       "opened_at": "2026-07-09",
-      "last_moved_at": "2026-07-09",
+      "last_moved_at": "2026-07-10",
       "routing_decision": "mainline",
       "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Correction Nautilus multi-fold et robustesse terminee; package PASS, runtime suite PASS, validate_package_dir PASS.",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
@@ -328,11 +328,11 @@
         "purpose": "Patch hygiene for implementation, protocol, and AI cockpit files",
         "last_result": "PASS - 2026-07-09 - CRLF/LF warnings only"
       },
-            {
-                "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
-                "purpose": "Runtime non-regression suite",
-                "last_result": "PASS - 106 tests after native cluster removal - 2026-07-09"
-            },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+        "purpose": "Runtime non-regression suite",
+        "last_result": "PASS - 110 tests after Nautilus multi-fold correction - 2026-07-10"
+      },
       {
         "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
         "purpose": "Nautilus Phase 1 contracts, migrations, payload factory, and fake simulator tests",
@@ -343,41 +343,41 @@
         "purpose": "Nautilus Phase 2 setup smoke test",
         "last_result": "PASS - nautilus_trader 1.230.0 / Cache - 2026-07-09"
       },
-            {
-                "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase2_golden_case.py",
-                "purpose": "Nautilus Phase 2 deterministic golden-case regression tests",
-                "last_result": "PASS - 3 tests - 2026-07-09"
-            },
-            {
-                "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_instrument_nasdaq.py",
-                "purpose": "Nautilus Phase 3 NASDAQ/XAUUSD instrument and OHLCV bar mapping tests",
-                "last_result": "PASS - 2 tests - 2026-07-09"
-            },
-            {
-                "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase4_strategy_costs.py",
-                "purpose": "Nautilus Phase 4 sealed cost model and generic strategy bridge tests",
-                "last_result": "PASS - 2 tests - 2026-07-09"
-            },
-            {
-                "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase5_run_segment.py",
-                "purpose": "Nautilus Phase 5 run_segment, SimulationResult extraction, NO_MODEL, and multi-fold orchestration tests",
-                "last_result": "PASS - 3 tests - 2026-07-09"
-            },
-            {
-                "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_research_package.py",
-                "purpose": "Nautilus Phase 6 research_package builder test with injected segment runner",
-                "last_result": "PASS - 1 test - 2026-07-09"
-            },
-            {
-                "command": ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
-                "purpose": "Build full Nautilus-backed research_package",
-                "last_result": "PASS - package status PASS before and after native removal - 2026-07-09"
-            },
-            {
-                "command": "rg -n \"from ebta_engine\\.(backtest|package_builder\\.native_research_package|features|trading_signals|risk|metrics)|native_engine|native_research_package|run_native_backtest|build_native\" Implementation\\ebta_engine -g \"*.py\"",
-                "purpose": "Verify no active residual imports to removed native engine cluster",
-                "last_result": "PASS - no Python matches (rg exit 1) - 2026-07-09"
-            },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase2_golden_case.py",
+        "purpose": "Nautilus Phase 2 deterministic golden-case regression tests",
+        "last_result": "PASS - 3 tests - 2026-07-09"
+      },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_instrument_nasdaq.py",
+        "purpose": "Nautilus Phase 3 NASDAQ/XAUUSD instrument and OHLCV bar mapping tests",
+        "last_result": "PASS - 2 tests - 2026-07-09"
+      },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase4_strategy_costs.py",
+        "purpose": "Nautilus Phase 4 sealed cost model and generic strategy bridge tests",
+        "last_result": "PASS - 2 tests - 2026-07-09"
+      },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase5_run_segment.py",
+        "purpose": "Nautilus Phase 5 run_segment, SimulationResult extraction, NO_MODEL, and multi-fold orchestration tests",
+        "last_result": "PASS - 3 tests - 2026-07-09"
+      },
+      {
+        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_research_package.py",
+        "purpose": "Nautilus Phase 6 research_package builder test with injected segment runner",
+        "last_result": "PASS - 1 test - 2026-07-09"
+      },
+      {
+        "command": ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
+        "purpose": "Build full Nautilus-backed research_package",
+        "last_result": "PASS - package status PASS before and after native removal - 2026-07-09"
+      },
+      {
+        "command": "rg -n \"from ebta_engine\\.(backtest|package_builder\\.native_research_package|features|trading_signals|risk|metrics)|native_engine|native_research_package|run_native_backtest|build_native\" Implementation\\ebta_engine -g \"*.py\"",
+        "purpose": "Verify no active residual imports to removed native engine cluster",
+        "last_result": "PASS - no Python matches (rg exit 1) - 2026-07-09"
+      },
       {
         "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
         "purpose": "Build minimal pilot research_package after schema 1.1.0 migration",
@@ -391,11 +391,6 @@
     ]
   },
   "session_log": [
-    {
-      "date": "2026-07-09",
-      "summary": "Completed Nautilus Phase 3 data/instrument mapping; Cfd instruments and OHLCV to Bar mapping pass in the dedicated venv; Phase 4 strategy/cost mapping is active",
-      "files_count": 5
-    },
     {
       "date": "2026-07-09",
       "summary": "Completed Nautilus Phase 4 cost and strategy bridge; explicit venue models and one GenericPayloadStrategy class pass; Phase 5 extraction/multifold is active",
@@ -415,6 +410,11 @@
       "date": "2026-07-09",
       "summary": "Completed Nautilus Phase 6 cutover; pre-cutover tag exists, native cluster removed, suite and Nautilus package pass after removal",
       "files_count": 17
+    },
+    {
+      "date": "2026-07-10",
+      "summary": "Completed Nautilus correction fix: WalkForwardSplitter and risk/robustness.py added, package builder now runs K=2 walk-forward via Nautilus, runtime suite and validate_package_dir PASS",
+      "files_count": 8
     }
   ],
   "risks": [
@@ -465,6 +465,12 @@
       "status": "CONTROLLED",
       "risk": "The G-BIAS runtime layer could become a competing taxonomy",
       "control": "bias_registry.py, schemas, checkers, guard, and bias_gate.py cite SOP 13 and BIAS_RISK_REGISTER.md and are tracked as subordinate runtime contracts"
+    },
+    {
+      "id": "R9",
+      "status": "CONTROLLED",
+      "risk": "The Nautilus workstream was recorded DONE while two SOP-derived deliverables (WalkForwardSplitter, risk/robustness.py) were absent and the research_package was single-fold, not the required real multi-fold walk-forward loop",
+      "control": "2026-07-10 remediation completed: WalkForwardSplitter, risk/robustness.py, K=2 Nautilus research_package, runtime suite, and validate_package_dir all PASS"
     }
   ]
 }
