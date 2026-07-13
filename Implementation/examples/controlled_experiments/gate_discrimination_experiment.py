@@ -19,6 +19,7 @@ if str(IMPLEMENTATION_ROOT) not in sys.path:
 from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
 from ebta_engine.data.local_ohlcv import OhlcvBar, load_ohlcv_bars
 from ebta_engine.data.walk_forward import WalkForwardSplitter
+from ebta_engine.package_builder.economic_calibration import compute_economic_pass_flags, economic_observed_values
 from ebta_engine.package_builder.nautilus_research_package import _subprocess_segment_runner
 from ebta_engine.procedures.economic_gate import economic_gate_report
 from ebta_engine.procedures.robustness import pre_oos_robustness_verdict
@@ -41,42 +42,6 @@ ECONOMIC_THRESHOLDS = {
 }
 CAPACITY_GRID = [{"capital": 1000.0, "status": "PASS", "reason": "synthetic MVP capacity not stressed"}]
 DEFAULT_REPORT_PATH = Path(__file__).with_name("gate_discrimination_report.json")
-
-
-REQUIRED_ECONOMIC_THRESHOLDS = (
-    "minimum_mean_return",
-    "maximum_total_costs",
-    "maximum_drawdown",
-)
-
-
-def compute_economic_pass_flags(
-    result: SimulationResult,
-    *,
-    thresholds: dict[str, float],
-) -> dict[str, bool]:
-    """Compute the five booleans consumed by economic_gate_report()."""
-    missing = [key for key in REQUIRED_ECONOMIC_THRESHOLDS if key not in thresholds]
-    if missing:
-        raise ValueError(f"missing economic thresholds: {missing}")
-    mean_return = _mean(result.daily_returns)
-    max_drawdown = _max_drawdown(result.nav)
-    return {
-        "return_hurdle_pass": mean_return >= float(thresholds["minimum_mean_return"]),
-        "drawdown_pass": max_drawdown <= float(thresholds["maximum_drawdown"]),
-        "capacity_pass": True,
-        "costs_pass": result.total_costs <= float(thresholds["maximum_total_costs"]),
-        "execution_pass": True,
-    }
-
-
-def economic_observed_values(result: SimulationResult) -> dict[str, float]:
-    """Return the scalar observations used to justify economic pass flags."""
-    return {
-        "mean_return": _mean(result.daily_returns),
-        "total_costs": result.total_costs,
-        "max_drawdown": _max_drawdown(result.nav),
-    }
 
 
 def run_controlled_gate_experiment(
@@ -306,20 +271,6 @@ def _merge_results(candidate_id: str, results: list[SimulationResult]) -> Simula
 
 def _mean(values: list[float]) -> float:
     return sum(values) / len(values) if values else 0.0
-
-
-def _max_drawdown(nav: list[float]) -> float:
-    if not nav:
-        raise ValueError("nav must not be empty")
-    peak = nav[0]
-    max_drawdown = 0.0
-    for value in nav:
-        if value <= 0:
-            return float("inf")
-        if value > peak:
-            peak = value
-        max_drawdown = max(max_drawdown, (peak - value) / peak)
-    return max_drawdown
 
 
 def main() -> int:

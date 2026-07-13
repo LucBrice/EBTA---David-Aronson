@@ -21,9 +21,16 @@
 | Ce plan a-t-il besoin d'une decision humaine explicite pour lever un verrou avant d'etre routable via `/start` ? | Non. La seule decision de conception (C1 : sort des deux relocalisations) est **tranchee** le 2026-07-10 : relocalisations acceptees telles quelles, `metrics/` supprime (section 4, section 10). |
 | Ce plan remplace-t-il un document ou chantier existant ? | Non. Il complete `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS` (qui reste `ACTIVE`) et corrige `Implementation/Active/tracking.json` / `.ai/checkpoint.json` la ou ils affirment un `DONE` faux. |
 
-> Ce plan reste `TRIAGED` / `NON_DEMARRE` tant qu'il n'a pas ete passe a
-> `/evaluate` (code-architecture-evaluator) et que la decision C1 n'est pas
-> tranchee.
+> Ce plan est `DONE` : passe a `/evaluate` (code-architecture-evaluator) le
+> 2026-07-10 (corrections R1-R5, section 14), decision C1 tranchee (section
+> 10), Phases 0 a 4 executees et verifiees (section 13). Comme
+> `PLAN_EXPERIENCE_CONTROLEE_DISCRIMINATION_GATES.md` (meme precedent, note
+> ci-dessous), ce plan n'a jamais ete enregistre comme workstream independant
+> dans `.ai/checkpoint.json` : sa remediation est absorbee dans la
+> `closure_reason` du workstream parent
+> `PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS` (deja `DONE`) ; sa
+> cloture se fait entierement dans ce document, pas via
+> `.ai/tools/plan.ps1 close`.
 
 ---
 
@@ -44,7 +51,7 @@
 | Champ | Valeur |
 | --- | --- |
 | Track | fix |
-| Lifecycle | TRIAGED |
+| Lifecycle | DONE |
 | Scope | Livrer les deux briques methodologiques manquantes du pivot Nautilus (`data/walk_forward.py::WalkForwardSplitter` — SOP 04 ; `risk/robustness.py` calculateur de scenarios — SOP 05), transformer le `research_package` Nautilus mono-fold actuel en une vraie boucle multi-fold walk-forward avec split Train/Test/OOS reel via `run_segment()`, et reconcilier `Implementation/Active/tracking.json`/`.ai/checkpoint.json` pour qu'ils cessent de declarer `DONE` des livrables absents. |
 | Non-goals | Ne pas modifier `Protocole/`, `procedures/`, `validators/`, `governance/`, `manifests/` ; ne pas creer de seconde implementation d'une procedure existante ; ne pas reintroduire le cluster natif retire ; ne pas importer `nautilus_trader` hors `adapters/` ; ne pas ajouter de dependance (NumPy compris) ; ne pas ouvrir OOS avant scellement + G-BIAS PASS ; ne pas utiliser une metrique Nautilus comme verdict EBTA. |
 | Source | Audit d'implementation demande par l'humain le 2026-07-10 (« audite l'implementation du plan Nautilus, corrige si necessaire »), puis instruction « orchestre la correction via un plan de correction d'abord, que tu passeras a /evaluate ensuite ». |
@@ -54,9 +61,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | NON_DEMARRE |
+| Statut | DONE |
 | Date de creation | 2026-07-10 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-10 |
 | Autorite normative | `Protocole/` (`EBTA-DOC-1.1`), en particulier SOP 04, SOP 05, SOP 07, SOP 12, SOP 13 |
 | Autorite executable | `Implementation/ebta_engine/` (traduction subordonnee) |
 | Changement normatif attendu | Aucun |

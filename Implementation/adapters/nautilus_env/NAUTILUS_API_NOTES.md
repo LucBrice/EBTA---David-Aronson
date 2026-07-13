@@ -391,6 +391,48 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   1396-1402 ; `Implementation/ebta_engine/tests/test_nautilus_phase5_run_segment.py`.
 - **Date** : 2026-07-09
 
+### Extraction de performance réelle : Portfolio / PortfolioAnalyzer / Trader reports [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : `PortfolioAnalyzer`
+  (`nautilus_trader.analysis.analyzer`) expose `add_return`, `add_positions`,
+  `calculate_statistics`, `returns()`, `portfolio_returns()`,
+  `position_returns()`, `realized_pnls()`, `total_pnl()`,
+  `total_pnl_percentage()`, `get_performance_stats_pnls()`,
+  `get_performance_stats_returns()`,
+  `get_performance_stats_returns_vs_benchmark()`,
+  `register_statistic()` / `deregister_statistic()`.
+- **Vérifié empiriquement** : `Portfolio`
+  (`nautilus_trader.portfolio.portfolio`) expose les attributs/méthodes
+  `account`, `analyzer`, `equity`, `net_exposure`, `net_exposures`,
+  `realized_pnl`, `realized_pnls`, `unrealized_pnl`, `unrealized_pnls`,
+  `total_pnl`, `total_pnls`, `is_flat`, `is_completely_flat`, `is_net_long`,
+  `is_net_short`, `margins_init`, `margins_maint`, `mark_values`.
+- **Vérifié empiriquement** : `Trader`
+  (`nautilus_trader.trading.trader`) expose `generate_account_report(venue)`,
+  `generate_positions_report()`, `generate_order_fills_report()`,
+  `generate_fills_report()`, `generate_orders_report()`.
+- **Vérifié empiriquement** : `BacktestResult`
+  (`nautilus_trader.backtest.results`, retourné par
+  `BacktestEngine.get_result()`) porte `total_orders`, `total_positions`,
+  `total_events`, `stats_pnls: dict[str, dict[str, float]]`,
+  `stats_returns: dict[str, float]`, `summary: dict[str, str]`.
+- **Conséquence pour EBTA (R2)** : la NAV/PnL/coûts réels doivent être lus via
+  `engine.portfolio.analyzer` (returns, realized_pnls) et
+  `engine.trader.generate_positions_report()` (colonne commissions/realized
+  PnL), au lieu de la reconstruction manuelle actuelle de
+  `extract_simulation_result()` (buy-and-hold mark-to-market, `total_costs`
+  codé à 0). Une série NAV instantanée nécessite d'échantillonner
+  `portfolio.equity`/`account` par barre (via un snapshot dans la Strategy)
+  ou de dériver la NAV cumulée depuis `analyzer.returns()`.
+- **Source documentaire** :
+  https://nautechsystems.github.io/nautilus_docs/python-api-latest/analysis.html
+  et https://nautilustrader.io/docs/latest/concepts/reports/
+- **Preuve locale** : introspection du 2026-07-13 via
+  `scripts/introspect_nautilus.py` sur le venv
+  `Implementation/adapters/nautilus_env/venv` (PortfolioAnalyzer, Portfolio,
+  Trader, BacktestResult).
+- **Date** : 2026-07-13
+
 ### Modules d'indicateurs `averages`/`momentum`/`trend`/`volatility`/`volume` [VÉRIFIÉ EMPIRIQUEMENT]
 
 - **Documenté** : la référence API Python liste des indicateurs par
@@ -438,6 +480,155 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   `Implementation/adapters/nautilus_env/venv` ;
   `Implementation/ebta_engine/tests/test_nautilus_phase4_strategy_costs.py`.
 - **Date** : 2026-07-09
+
+### FeeModel "par défaut" (sans paramètre requis) pour un venue simulé [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Documenté** : `nautilus_trader.backtest.models` expose `FeeModel`
+  (classe abstraite), `MakerTakerFeeModel`, `FixedFeeModel` et
+  `PerContractFeeModel`.
+- **Vérifié empiriquement** : seul `MakerTakerFeeModel(config=None)` s'instancie
+  sans argument obligatoire — il dérive la commission du `maker_fee`/`taker_fee`
+  déjà présents sur l'instrument (`InstrumentConfig.maker_fee`/`taker_fee`,
+  `strategies/contracts.py`), et de la valeur notionnelle du trade.
+  `FixedFeeModel` et `PerContractFeeModel` lèvent `ValueError` si ni
+  `commission` ni `config` ne sont fournis (aucune valeur par défaut
+  implicite) — ils exigent donc une décision de calibration humaine
+  supplémentaire (montant de commission), contrairement à `MakerTakerFeeModel`.
+- **Vérifié empiriquement** : `BacktestEngine.add_venue(fee_model=None)`
+  (paramètre optionnel, défaut `None`) a été exercé (Phase 4,
+  `test_nautilus_phase4_strategy_costs.py`) en passant toujours un modèle
+  explicite (`MakerTakerFeeModel()`), jamais en laissant `fee_model=None` —
+  le comportement interne exact de `SimulatedExchange` quand `fee_model=None`
+  n'est pas exposé publiquement par l'API Python (pas d'attribut
+  `get_exchange()`/`exchanges` accessible sur `BacktestEngine` pour
+  l'inspecter directement) et n'a donc **pas** été vérifié empiriquement ici.
+- **Conséquence pour EBTA** : le "modèle de frais par défaut" le plus proche
+  d'un défaut Nautilus au sens propre (parameterless, pas de valeur à choisir
+  soi-même) est `MakerTakerFeeModel()`. Il reste néanmoins **sans effet tant
+  que `maker_fee`/`taker_fee` valent `"0"`** sur l'instrument — c'est le cas
+  actuel de `_instrument_config()` dans
+  `package_builder/nautilus_research_package.py`. Rendre `costs_pass`
+  non-trivial exige donc soit de fixer des `maker_fee`/`taker_fee` non nuls
+  (nouvelle décision de calibration humaine), soit d'accepter explicitement
+  des coûts nuls comme hypothèse MVP tracée.
+- **Source documentaire** :
+  https://nautechsystems.github.io/nautilus_docs/python-api-latest/backtest.html
+- **Preuve locale** : introspection interactive du 2026-07-10 via
+  `Implementation/adapters/nautilus_env/venv` (`MakerTakerFeeModel()`,
+  `FixedFeeModel.__doc__`, `PerContractFeeModel.__doc__` — `ValueError` si
+  `commission`/`config` absents pour ces deux dernières classes).
+- **Date** : 2026-07-10
+
+### BacktestNode / BacktestRunConfig — absence de recherche paramétrique native [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Documenté** : `concepts/backtesting` décrit `BacktestNode` comme
+  orchestrant plusieurs `BacktestEngine`, chacun défini par un
+  `BacktestRunConfig` : « Multiple configurations can be bundled into a list
+  and processed by the node in one run. » Aucune mention de parameter sweep,
+  grid search, optimisation automatique ou exécution parallèle/distribuée
+  dans cette page.
+- **Vérifié empiriquement** : `BacktestNode(configs: list[BacktestRunConfig])`
+  et `BacktestRunConfig(venues, data, engine=None, chunk_size=None,
+  raise_exception=False, dispose_on_completion=True, start=None, end=None,
+  data_clients=None)` — confirmés par introspection de signature.
+- **Vérifié empiriquement** : le code source de `BacktestNode.run()` est une
+  simple boucle `for config in self._configs.values(): ... self._run(...)`,
+  strictement **séquentielle** (docstring : « will synchronously execute the
+  list of loaded backtest run configs »). Aucun multiprocessing, aucun thread,
+  aucune dépendance à `ray`/`dask`/`joblib` dans les imports de
+  `nautilus_trader.backtest.node` ni installée dans le venv.
+- **Vérifié empiriquement** : recherche exhaustive de tous les sous-modules de
+  `nautilus_trader` (`pkgutil.walk_packages`) pour toute correspondance
+  `optim`/`sweep`/`grid`/`search`/`param` — seul résultat :
+  `nautilus_trader.examples.strategies.grid_market_maker`, qui est une
+  stratégie d'exemple de market-making en grille de prix, **sans rapport**
+  avec un grid search de paramètres. Aucun module d'optimisation/exploration
+  de variantes n'existe dans `nautilus_trader==1.230.0`.
+- **Précision (2026-07-13, suite à une carte marketing du site nautilustrader.io
+  « Iterate faster — Run high-throughput backtests across large parameter
+  spaces without changing strategy logic », lien « Learn more » vérifié
+  pointant exactement vers `concepts/configuration/`)** : cette page,
+  entièrement relue, ne décrit que l'architecture des structs de configuration
+  typées (defaults, champs optionnels, rejet de champs inconnus à la
+  désérialisation) — **aucun mécanisme de génération automatique de variantes
+  depuis un espace de paramètres n'y est décrit**. La promesse réelle et
+  vérifiée est plus étroite que le slogan : parce que toute la paramétrisation
+  d'une stratégie passe par un `StrategyConfig`/`BacktestRunConfig` typé et
+  sérialisable, on peut faire varier les paramètres **sans modifier le code de
+  la classe `Strategy`** — et `BacktestNode` peut traiter une grande liste de
+  ces configs en un seul appel, chaque run bénéficiant du cœur Rust pour la
+  vitesse. Mais **construire la liste des configs (le balayage lui-même) reste
+  entièrement à la charge de l'appelant** ; il n'y a ni générateur de grille
+  ni parallélisme (cf. `BacktestNode.run()` ci-dessus, boucle séquentielle).
+- **Conséquence pour EBTA** : Nautilus est un moteur d'exécution
+  event-driven (backtest + live) dont l'architecture de configuration sert
+  bien la recherche à grande échelle (paramètres découplés du code de
+  stratégie, exécution rapide par run), mais qui n'est pas lui-même un outil
+  de recherche. Le balayage de grilles de candidats, la génération de
+  familles de payloads, et l'orchestration de campagnes massives de runs
+  restent entièrement à la charge d'EBTA (`strategies/payload_factory.py`,
+  `procedures/search_space.py`, et l'orchestrateur `package_builder/`), pas de
+  Nautilus lui-même. Le parallélisme éventuel (multiprocessing/distribution)
+  devra être construit côté EBTA au-dessus des runs
+  `BacktestNode`/`BacktestEngine` individuels, pas délégué à une capacité
+  native de Nautilus qui n'existe pas.
+- **Source documentaire** :
+  https://nautilustrader.io/docs/latest/concepts/backtesting
+- **Preuve locale** : introspection du 2026-07-13 via
+  `scripts/introspect_nautilus.py`, lecture directe du code source de
+  `BacktestNode.run()`, et recherche exhaustive de sous-modules, sur le venv
+  `Implementation/adapters/nautilus_env/venv`.
+- **Date** : 2026-07-13
+
+### Souscription multi-timeframe dans une seule Strategy [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : `Strategy.subscribe_bars(bar_type, client_id=None,
+  update_catalog=False, params=None)` peut être appelé plusieurs fois avec des
+  `BarType` différents (ex. M1, M3, M15, H1, H4, D1) dans `on_start()`.
+- **Vérifié empiriquement** (lecture du code source de l'exemple officiel
+  `nautilus_trader.examples.strategies.subscribe.SubscribeStrategy`) : une
+  **seule** méthode `on_bar(self, bar: Bar)` reçoit les barres de **tous** les
+  `BarType` souscrits — il n'existe pas de callback séparé par timeframe. Le
+  code de `on_bar()` doit donc discriminer explicitement via `bar.bar_type`
+  (comparé aux `BarType` construits pour chaque timeframe) pour router vers
+  la bonne logique d'état interne (M1 → détection sweep/engulfing, H1/H4/D1 →
+  mise à jour du biais MTF, etc.).
+- **Conséquence pour EBTA (R1, stratégie liquidity sweep)** : une seule
+  `GenericPayloadStrategy` (ou son successeur) peut souscrire à M1, M3,
+  M15/LQ, H1, H4, D1 simultanément et maintenir un état interne par timeframe
+  (dernier biais H1/H4/D1 connu, pools de liquidité M15 actifs, fenêtre de
+  bougies M1 récentes pour l'engulfing), mis à jour uniquement quand
+  `bar.bar_type` correspond.
+- **Source documentaire** : aucune page `concepts/` ne détaille explicitement
+  ce point de routage multi-timeframe ; confirmé uniquement par lecture directe
+  du code source de l'exemple officiel embarqué dans le package installé.
+- **Preuve locale** : introspection du 2026-07-13, lecture de
+  `nautilus_trader/examples/strategies/subscribe.py` sur le venv
+  `Implementation/adapters/nautilus_env/venv`.
+- **Date** : 2026-07-13
+
+### Bar.ts_event et conversion en timestamp [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : `Bar` (`nautilus_trader.model.data`) expose
+  `ts_event` et `ts_init` comme entiers nanosecondes Unix (attributs publics),
+  ainsi que `open`, `high`, `low`, `close`, `volume`, `bar_type`.
+- **Vérifié empiriquement** : `nautilus_trader.core.datetime.unix_nanos_to_dt(ts_event)`
+  retourne un `pandas.Timestamp` timezone-aware UTC (ex.
+  `unix_nanos_to_dt(1577880000000000000)` → `Timestamp('2020-01-01 12:00:00+0000',
+  tz='UTC')`).
+- **Conséquence pour EBTA (R1)** : dans `Strategy.on_bar(bar)`, la clé de
+  correspondance avec une série de décisions précalculée (pandas, indexée par
+  timestamp) doit être `unix_nanos_to_dt(bar.ts_event).isoformat()` (ou
+  l'objet `Timestamp` lui-même), jamais un recalcul manuel de date depuis
+  `ts_event`.
+- **Source documentaire** :
+  https://nautechsystems.github.io/nautilus_docs/python-api-latest/model/data.html
+  et https://nautechsystems.github.io/nautilus_docs/python-api-latest/core.html
+- **Preuve locale** : introspection du 2026-07-13 via
+  `scripts/introspect_nautilus.py` et appel direct de
+  `unix_nanos_to_dt` sur le venv
+  `Implementation/adapters/nautilus_env/venv`.
+- **Date** : 2026-07-13
 
 ## Live & Intégrations
 

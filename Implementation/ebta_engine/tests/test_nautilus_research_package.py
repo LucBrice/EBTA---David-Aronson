@@ -9,6 +9,33 @@ from ebta_engine.package_builder.nautilus_research_package import build_nautilus
 from ebta_engine.strategies.contracts import SimulationResult
 
 
+class NautilusEconomicGateProductionTests(unittest.TestCase):
+    """Non-regression proof for PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION.
+
+    Proves, on the real production path (not the isolated experiment
+    module), that a known-losing candidate is rejected by the economic
+    gate — the exact failure the hardcoded True booleans could never
+    produce.
+    """
+
+    def test_known_loser_is_rejected_by_real_economic_gate_in_production(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            report = build_nautilus_research_package(
+                package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=_losing_segment_runner,
+            )
+            economic = json.loads((package_dir / "reports" / "economic.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["status"], "PASS")
+        self.assertEqual(economic["economic_status"], "REJECTED_ECONOMIC")
+        self.assertIn("return_hurdle_pass", economic["failures"])
+        self.assertIn("costs_pass", economic["failures"])
+
+
 class NautilusResearchPackageTests(unittest.TestCase):
     def test_nautilus_package_builder_validates_with_injected_segment_runner(self):
         calls = []
@@ -45,6 +72,27 @@ class NautilusResearchPackageTests(unittest.TestCase):
             self.assertNotIn("segment", call)
             self.assertNotIn("segment_label", call)
             self.assertNotIn("oos", call)
+
+
+def _losing_segment_runner(**kwargs) -> SimulationResult:
+    bars = kwargs["bars"]
+    starting_nav = kwargs.get("starting_nav", 1000.0)
+    returns = [-0.01 for _ in bars]
+    nav = []
+    current_nav = starting_nav
+    for value in returns:
+        current_nav *= 1.0 + value
+        nav.append(current_nav)
+    return SimulationResult(
+        candidate_id=kwargs["candidate"].candidate_id,
+        instrument_id=kwargs["instrument_config"].instrument_id,
+        timestamps=[bar.timestamp.isoformat().replace("+00:00", "Z") for bar in bars],
+        daily_returns=returns,
+        daily_exposure=[0.1 for _ in bars],
+        nav=nav,
+        total_costs=0.0,
+        metadata={"source": "fake_nautilus_losing_test_runner"},
+    )
 
 
 def _fake_segment_runner(**kwargs) -> SimulationResult:

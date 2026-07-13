@@ -14,6 +14,7 @@ from typing import Any, Callable
 from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
 from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars
 from ebta_engine.data.walk_forward import WalkForwardSplitter
+from ebta_engine.package_builder.economic_calibration import compute_economic_pass_flags, economic_observed_values
 from ebta_engine.risk.robustness import compute_robustness_scenarios
 from ebta_engine.strategies.contracts import Candidate, CostModel, InstrumentConfig, SimulationResult
 from ebta_engine.strategies.payload_factory import generate_family, liquidity_sweep_family_spec
@@ -24,6 +25,21 @@ PILOT_SCRIPT = IMPLEMENTATION_ROOT / "examples" / "minimal_pilot_pipeline" / "bu
 DEFAULT_NAUTILUS_ASSETS = ["NASDAQ", "XAUUSD"]
 DEFAULT_NAUTILUS_START = "2020-01-01T00:00:00Z"
 DEFAULT_NAUTILUS_END = "2020-01-10T23:59:00Z"
+
+# SOP 08 production thresholds for the Nautilus MVP perimeter (NASDAQ,
+# XAUUSD, liquidity-sweep family), calibrated by the human on 2026-07-10 (see
+# .ai/backlog/fixes/PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION.md section
+# 10): annualized return must be strictly positive net of costs (a positive
+# per-period mean return is equivalent, since annualization is a monotonic
+# positive scaling); max drawdown 20% relative to the running high-water
+# mark. capacity_pass and execution_pass remain documented constants
+# (True) — no production target_capital or execution stress grid has been
+# calibrated yet; costs_pass has no separate absolute cap and is derived
+# from the net-of-costs return (see economic_calibration.compute_economic_pass_flags).
+NAUTILUS_ECONOMIC_THRESHOLDS = {
+    "minimum_mean_return": 0.0,
+    "maximum_drawdown": 0.20,
+}
 
 
 SegmentRunner = Callable[..., SimulationResult]
@@ -231,20 +247,17 @@ def build_nautilus_inputs(
         scenario_grid=_nautilus_robustness_grid(),
     )
     selected_oos = _merge_results(selected_candidate_id, oos_results)
+    economic_flags = compute_economic_pass_flags(selected_oos, thresholds=NAUTILUS_ECONOMIC_THRESHOLDS)
     inputs["economic_gate"] = selected_oos.economic_gate_evidence(
         statistical_status="PASS",
-        thresholds=inputs["economic_gate"]["thresholds"],
+        thresholds=NAUTILUS_ECONOMIC_THRESHOLDS,
         observed_values={
-            **inputs["economic_gate"]["observed_values"],
+            **economic_observed_values(selected_oos),
             "mean_oos_return": _mean(oos_returns),
             "fold_count": len(reference_folds),
         },
         capacity_grid=inputs["economic_gate"]["capacity_grid"],
-        return_hurdle_pass=True,
-        drawdown_pass=True,
-        capacity_pass=True,
-        costs_pass=True,
-        execution_pass=True,
+        **economic_flags,
     )
     inputs["oos_access_log"] = [
         {
@@ -295,10 +308,16 @@ def _payloads_by_axis(assets: list[str], research_family_id: str, fold_id: str) 
 
 
 def _nautilus_cost_model() -> CostModel:
+    # Indicative maker/taker fee rates (2026-07-10 calibration decision, see
+    # .ai/backlog/fixes/PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION.md
+    # section 10): generic retail CFD-style rates, not yet sourced from a
+    # real broker. maker_fee/taker_fee live on InstrumentConfig
+    # (_instrument_config) and are consumed by Nautilus's MakerTakerFeeModel
+    # via fee_model="maker_taker" below (nautilus_mapping.py::_fee_model()).
     return CostModel(
-        model_id="NAUTILUS-ZERO-FEE-DETERMINISTIC",
+        model_id="NAUTILUS-MAKER-TAKER-INDICATIVE",
         fill_model="deterministic",
-        fee_model="zero_fee",
+        fee_model="maker_taker",
         commission_per_lot=0.0,
         latency_nanos=0,
         prob_fill_on_limit=1.0,
@@ -318,8 +337,8 @@ def _instrument_config(asset: str) -> InstrumentConfig:
             size_increment="0.01",
             margin_init="0",
             margin_maint="0",
-            maker_fee="0",
-            taker_fee="0",
+            maker_fee="0.0002",
+            taker_fee="0.0005",
             base_currency="XAU",
             quote_currency="USD",
             asset_class="CFD",
@@ -336,8 +355,8 @@ def _instrument_config(asset: str) -> InstrumentConfig:
             size_increment="1",
             margin_init="0",
             margin_maint="0",
-            maker_fee="0",
-            taker_fee="0",
+            maker_fee="0.0002",
+            taker_fee="0.0005",
             asset_class="CFD",
             metadata={"underlying_asset_class": "INDEX"},
         )
