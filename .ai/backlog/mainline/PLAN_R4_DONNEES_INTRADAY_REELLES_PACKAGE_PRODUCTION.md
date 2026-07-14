@@ -20,7 +20,7 @@
 - [x] Ce plan a ete ECRIT COMME NOUVEAU FICHIER dans `.ai/backlog/mainline/` ; le brouillon original reste intact dans `0 - HUMAN START HERE/` jusqu'a l'archivage mecanique par `plan.ps1 start`.
 - [x] Chantier classe `mainline` — c'est la suite directe, sur le meme fichier de production, du chantier mainline `PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS`.
 - [x] Autorite normative applicable identifiee : `Protocole/` (SOP 04 walk-forward, SOP 08 gate economique) prime ; `Implementation/ebta_engine/` est la traduction executable ; ce plan ne modifie aucune regle protocolaire.
-- [x] Perimetre de fichiers/dossiers autorises et interdits explicite (section 1).
+- [x] Perimetre de fichiers/dossiers autorises et interdits explicite (section 5, "Perimetre de fichiers explicite").
 - [x] Aucune modification hors perimetre requise pour activer le chantier.
 - [x] Prerequis factuels verifies : donnees M1 reelles presentes sur disque pour XAUUSD et NASDAQ (`D:\TRADING\ENTREPRISE\0 - Phase de lancement\Stratégie de trading\0 - Backtest\Data\{XAUUSD 1m,NASDAQ 1m}`, fichiers mensuels 2020-01 a 2025-12, format `timestamp,open,high,low,close,volume`).
 - [x] Etat des lieux (section 4) verifie directement dans le code (pas suppose) pour eviter de dupliquer une brique deja existante — la brique de mapping multi-timeframe Nautilus (`_map_multitimeframe_bars`) et le resampler causal (`resample_ohlcv`) existent deja et sont deja testes ; ce plan les reutilise, il ne les recree pas.
@@ -214,6 +214,40 @@ Implementation/ebta_engine/
     test_incremental_parity_ghi.py      # nouveau sous-test bias_filter="none" pour G/H/I
 ```
 
+### Perimetre de fichiers explicite (autorises / interdits)
+
+Liste fermee — toute modification hors de la colonne "Autorises" est hors
+perimetre de ce plan et doit etre escaladee (section 10), pas decidee
+silencieusement par l'executant.
+
+**Autorises (creer ou modifier)** :
+
+```text
+Implementation/ebta_engine/package_builder/nautilus_research_package.py   [MODIFIER - Phase 1]
+Implementation/ebta_engine/strategies/incremental/payload_f.py           [MODIFIER - Phase 2]
+Implementation/ebta_engine/strategies/incremental/payload_ghi.py         [MODIFIER - Phase 2]
+Implementation/ebta_engine/tests/test_incremental_parity_ghi.py         [MODIFIER - Phase 2]
+Implementation/ebta_engine/tests/test_nautilus_research_package.py      [MODIFIER SI NECESSAIRE - Phase 3, sans changer l'intention de preuve]
+Implementation/research_packages/nautilus_mvp/                          [REGENERER - Phase 3]
+```
+
+**Interdits (ne jamais modifier dans ce chantier)** :
+
+```text
+Protocole/                                                      [NORME - intouchable]
+Implementation/ebta_engine/procedures/                          [INTOUCHABLE]
+Implementation/ebta_engine/validators/                          [INTOUCHABLE]
+Implementation/ebta_engine/governance/                          [INTOUCHABLE]
+Implementation/ebta_engine/manifests/                           [INTOUCHABLE]
+Implementation/ebta_engine/strategies/contracts.py              [CONTRAT GELE]
+Implementation/ebta_engine/strategies/payloads.py               [CONTRAT GELE - StrategyPayload]
+Implementation/ebta_engine/data/walk_forward.py                 [CONSERVER TEL QUEL - contrat SOP 04]
+Implementation/ebta_engine/adapters/nautilus_mapping.py         [CONSERVER TEL QUEL - deja cable pour M1]
+Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py [CONSERVER TEL QUEL]
+Implementation/ebta_engine/strategies/incremental/payload_e.py  [CONSERVER TEL QUEL]
+.ai/checkpoint.json                                             [METTRE A JOUR UNIQUEMENT via plan.ps1]
+```
+
 ---
 
 ## 6. Decoupage en phases
@@ -395,6 +429,60 @@ python -c "from pathlib import Path; from ebta_engine.validators.package_validat
 Phase 1 - _day_boundary_index + _slice_bars_by_date_range + interval_unit MINUTE
 ```
 
+### Execution sans interruption
+
+Ce plan est concu pour etre execute integralement (Phases 1 a 3) sans
+retour vers l'humain entre les phases. Les deux seules decisions humaines
+que ce chantier pouvait requerir sont deja tranchees (section 10). Les
+seules causes d'arret legitimes en cours d'execution sont :
+
+1. Un blocage technique impossible a resoudre sans information externe non
+   disponible dans ce plan (ex. donnees M1 absentes de `DEFAULT_DATA_ROOT`,
+   venv Nautilus corrompu ou introuvable).
+2. Une decision hors du perimetre deja tranche a la section 10 apparait
+   necessaire (ex. le perimetre de fichiers de la section 5 s'avere
+   insuffisant pour atteindre un critere de sortie).
+3. Les 3 phases sont terminees, verifiees, et le Definition of Done
+   (section 12) est entierement coche.
+
+En dehors de ces trois cas, ne pas s'arreter apres une implementation
+partielle tant qu'une action de ce plan reste realisable. Si un blocage
+technique survient (cause 1), termine d'abord toutes les actions de ce plan
+qui ne dependent pas du blocage, puis documente precisement quel blocage,
+son impact exact, et la commande ou l'action restante pour le lever.
+
+### Autorite decisionnelle accordee
+
+En dehors des decisions qui necessitent une levee de gouvernance (section
+10) ou qui elargissent le perimetre de fichiers (section 5), l'IA qui
+execute ce plan est autorisee a decider seule les details d'implementation
+(ex. nom exact d'une variable intermediaire, ordre interne des sous-etapes
+d'une phase), corriger les incoherences mineures rencontrees, et resoudre
+les problemes techniques rencontres — sans demander de confirmation
+humaine — tant que l'objectif (Triage), le perimetre (section 5) et les
+invariants (section 8) restent respectes.
+
+### Interdiction des raccourcis (aucun faux succes)
+
+Rappel direct du constat critique de la section 4 : ce chantier existe
+precisement parce qu'un `status: PASS` a deja masque une strategie a zero
+trade sur ce meme fichier de production. Lorsqu'une verification (section
+9) echoue :
+
+- identifier la cause racine, ne jamais la masquer ;
+- ne jamais desactiver, skipper ou affaiblir un test genant pour le faire
+  passer (y compris `test_nautilus_research_package.py` ou
+  `test_incremental_parity_ghi.py`) ;
+- ne jamais remplacer une logique reelle par un stub, un mock, ou une
+  valeur codee en dur en dehors des fixtures de test explicitement
+  designees comme telles ;
+- ne corriger un test que si le test lui-meme est objectivement errone,
+  et documenter alors pourquoi (section 14) ;
+- en particulier pour ce plan : ne jamais se contenter d'un
+  `status: PASS` du research_package regenere sans verifier explicitement
+  `total_orders > 0` (exit criterion 5, critere de sortie Phase 3) — c'est
+  exactement le piege deja documente en section 4.
+
 ---
 
 ## 10. Journal des decisions humaines (autorisations)
@@ -424,6 +512,7 @@ Phase 1 - _day_boundary_index + _slice_bars_by_date_range + interval_unit MINUTE
 - [ ] Aucune regression sur la suite de tests existante.
 - [ ] Checklist post-modification du projet executee (`.ai/governance/AI_MODIFICATION_CHECKLIST.md`).
 - [ ] `.agents/skills/bug-hunter/SKILL.md` applique sur les fichiers touches avant de considerer le chantier termine.
+- [ ] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne subsiste comme substitut a une brique prevue par ce plan (`_day_boundary_index`, `_slice_bars_by_date_range`, `apply_mtf_bias_filter`, ou le sous-test `bias_filter="none"` de la Phase 2). Une brique reellement non terminee est signalee comme telle (section 11 ou 13), jamais presentee comme terminee.
 
 ---
 

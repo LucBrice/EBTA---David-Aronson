@@ -21,16 +21,29 @@
 > qui existe deja et ne doit pas etre duplique, quel est l'etat final
 > observable, comment verifier chaque etape, que faire en cas de blocage.
 >
-> Ce gabarit est enrichi a partir de deux chantiers reels de ce depot :
+> Ce gabarit est enrichi a partir de trois chantiers reels de ce depot :
 > `.ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md`
-> (execute avec succes, phases -1 a 8) et
+> (execute avec succes, phases -1 a 8),
 > `0 - HUMAN START HERE/implementation_plan - 1.md` (audit d'architecture qui
 > a corrige un brouillon proposant de dupliquer des modules deja existants et
-> testes). Les deux lecons principales qu'il encode : (1) une phase de
+> testes), et `PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION.md`
+> (2026-07-14, premiere execution reelle de la boucle `/evaluate` avant
+> `/continue`). Les trois lecons principales qu'il encode : (1) une phase de
 > deblocage de prerequis/gouvernance doit exister *avant* toute phase de
 > code des que le chantier touche un verrou actif ; (2) l'etat des lieux doit
 > explicitement dire quoi reutiliser, pas seulement quoi construire, sous
-> peine de creer une seconde source de verite concurrente pour le meme calcul.
+> peine de creer une seconde source de verite concurrente pour le meme calcul ;
+> (3) un plan qui pretend etre autosuffisant pour un `/continue` sans
+> intervention humaine doit porter lui-meme, en liste fermee, le perimetre de
+> fichiers autorises/interdits (section 5), la regle explicite d'execution
+> sans interruption avec l'autorite decisionnelle qui va avec, et
+> l'interdiction explicite des raccourcis/faux succes (section 9) — sinon
+> l'IA qui l'execute finit par re-improviser ces garde-fous dans un prompt
+> d'execution separe, ce qui recree une seconde source de verite concurrente
+> avec le plan lui-meme. L'interdiction des raccourcis n'est pas theorique :
+> ce depot a deja produit des gates codes en dur a `True`, une strategie de
+> reference reduite a un stub buy-and-hold, et une reduction de donnees
+> masquant une strategie a zero trade derriere un `status: PASS`.
 
 ---
 
@@ -69,7 +82,9 @@ Cette section est obligatoire avant qu'un plan puisse passer de `INTAKE` a
 - [ ] Chantier classe (`mainline` / `annexe` / `fix`) et justification donnee.
 - [ ] Autorite(s) normative(s) applicable(s) identifiee(s) (quel document,
       quelle regle, ne prime sur quoi).
-- [ ] Perimetre de fichiers/dossiers autorises et interdits explicite.
+- [ ] Perimetre de fichiers/dossiers autorises et interdits explicite sous
+      forme de liste fermee (section 5, "Perimetre de fichiers explicite"),
+      pas seulement deductible des non-objectifs ou de la structure cible.
 - [ ] Aucune modification hors perimetre n'est requise pour activer le
       chantier (ou, si oui, elle est listee et justifiee separement).
 - [ ] Prerequis factuels (donnees, acces, decisions humaines) identifies et
@@ -245,6 +260,31 @@ justification — a distinguer du journal des autorisations humaines (section
   [module_1]/
   [module_2]/
   [module_existant]/          # existe deja, conserver
+```
+
+### Perimetre de fichiers explicite (autorises / interdits)
+
+> Obligatoire pour qu'une IA puisse executer ce plan de bout en bout sans
+> repasser par l'humain pour verifier chaque fichier touche. Une liste
+> fermee, pas une deduction laissee a l'IA a partir des non-objectifs ou de
+> la structure cible ci-dessus : toute modification hors de la colonne
+> "Autorises" est hors perimetre de ce plan et doit etre escaladee (section
+> 10), jamais decidee silencieusement par l'executant.
+
+**Autorises (creer ou modifier)** :
+
+```text
+[chemin/vers/fichier_ou_dossier_1.py]   [CREER | MODIFIER - Phase N]
+[chemin/vers/fichier_ou_dossier_2.py]   [CREER | MODIFIER - Phase N]
+```
+
+**Interdits (ne jamais modifier dans ce chantier)** :
+
+```text
+Protocole/                              [NORME - intouchable, sauf si ce chantier est explicitement normatif]
+[contrat gele specifique au projet]     [CONTRAT GELE - raison]
+[module a conserver tel quel]           [CONSERVER TEL QUEL - deja suffisant, cf. section 4]
+.ai/checkpoint.json                     [METTRE A JOUR UNIQUEMENT via plan.ps1]
 ```
 
 ---
@@ -424,6 +464,71 @@ apres validation de ce plan) :
 [nom du premier lot, ex. "Audit cible + inventaire des donnees"]
 ```
 
+### Execution sans interruption
+
+> Obligatoire pour qu'un simple `/continue` suffise a executer ce plan de
+> bout en bout sans repasser par l'humain. Si l'IA qui execute ce plan
+> estime devoir s'arreter pour une raison absente de la liste ci-dessous,
+> c'est que ce plan (ou son gabarit) est incomplet — corriger le plan avant
+> de reprendre, ne jamais combler le manque par une decision ad hoc non
+> tracee.
+
+Ce plan est concu pour etre execute integralement (toutes les phases de la
+section 6) sans retour vers l'humain entre les phases. Toute decision
+humaine necessaire a son execution doit deja etre tranchee et journalisee
+en section 10 avant le debut de l'implementation — pas decouverte en cours
+de route. Les seules causes d'arret legitimes en cours d'execution sont :
+
+1. Un blocage technique impossible a resoudre sans information externe non
+   disponible dans ce plan (ex. donnee/acces manquant, dependance externe
+   indisponible ou cassee). Dans ce cas : termine d'abord toutes les
+   actions de ce plan qui ne dependent pas du blocage, puis documente
+   precisement quel blocage, son impact exact, et la commande ou l'action
+   restante pour le lever — ne t'arrete jamais sur l'ensemble du plan des
+   la premiere difficulte externe si une partie reste realisable.
+2. Une decision hors du perimetre deja tranche en section 10 s'avere
+   necessaire (ex. le perimetre de fichiers de la section 5 s'avere
+   insuffisant pour atteindre un critere de sortie).
+3. Toutes les phases sont terminees, verifiees, et la Definition of Done
+   (section 12) est entierement cochee.
+
+En dehors de ces trois cas, ne pas s'arreter apres une implementation
+partielle tant qu'une action de ce plan reste realisable.
+
+### Autorite decisionnelle accordee
+
+En dehors des decisions qui necessitent une levee de gouvernance (section
+10) ou qui elargissent le perimetre de fichiers (section 5), l'IA qui
+execute ce plan est autorisee a decider seule les details d'implementation,
+corriger les incoherences mineures rencontrees, creer les fichiers prevus
+par une brique, et resoudre les problemes techniques rencontres — sans
+demander de confirmation humaine — tant que l'objectif (Triage), le
+perimetre (section 5) et les invariants (section 8) restent respectes. Ne
+demander une clarification humaine que pour l'une des causes d'arret
+listees ci-dessus.
+
+### Interdiction des raccourcis (aucun faux succes)
+
+> Regle directement justifiee par l'historique de ce depot : gates codes en
+> dur a `True`, strategie de reference reduite a un stub buy-and-hold, et
+> reduction de donnees masquant une strategie a zero trade derriere un
+> `status: PASS` — trois incidents reels, pas un risque theorique generique
+> (voir `.ai/checkpoint.json::risks` et les memoires de session archivees).
+
+Lorsqu'une verification (section 9) echoue :
+
+- identifier la cause racine, ne jamais la masquer ;
+- ne jamais desactiver, skipper ou affaiblir un test genant pour le faire
+  passer ;
+- ne jamais remplacer une logique reelle par un stub, un mock, ou une
+  valeur codee en dur en dehors des fixtures de test explicitement
+  designees comme telles ;
+- ne corriger un test que si le test lui-meme est objectivement errone,
+  et documenter alors pourquoi ;
+- ne jamais declarer une phase terminee sans la preuve executable exigee
+  par la section 9 — un `status: PASS` qui ne prouve rien n'est pas une
+  preuve.
+
 ---
 
 ## 10. Journal des decisions humaines (autorisations)
@@ -458,6 +563,10 @@ jamais deduire une autorisation implicite.
 - [ ] Checklist post-modification du projet executee (fichiers modifies et
       pourquoi, fichiers volontairement non modifies, conflits non resolus,
       decisions humaines restantes).
+- [ ] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne
+      subsiste comme substitut a une brique prevue par ce plan. Une brique
+      reellement non terminee est signalee comme telle (section 11 ou 13),
+      jamais presentee comme terminee.
 
 ---
 
