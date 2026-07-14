@@ -56,8 +56,9 @@ Rules that follow from this:
 Conversational commands the user may type — these drive `.ai/tools/plan.ps1`, the mechanical backend for backlog state (it does not do semantic audit; the AI must audit/structure first):
 
 - `/start "0 - HUMAN START HERE/PLAN.md"` — audit a raw human draft, structure it if needed, route it to `.ai/backlog/mainline|annexes|fixes/`, then call `.ai/tools/plan.ps1 start -Audited` (this requires the plan to already have `Track`, `Lifecycle`, `Scope`, `Non-goals`, `Source`, `Exit criteria` sections).
+- Between `/start` and `/continue`: run an architecture-refinement loop on the plan via `code-architecture-evaluator` (`/evaluate`) — fix what it flags, re-run, repeat up to 3-4 passes max, then commit the refined plan as a pre-implementation baseline (topic-scoped commit matching this repo's existing style, e.g. commit `184b013`). Only then does `/continue` begin implementation.
 - `/continue PLAN_ID` — resume a workstream (`.ai/tools/plan.ps1 continue`).
-- `/close PLAN_ID` — close and archive a workstream (`.ai/tools/plan.ps1 close`).
+- `/close PLAN_ID` — first apply `.agents/skills/bug-hunter/SKILL.md` on the workstream's touched files and `.agents/skills/plan-conformance-audit/SKILL.md` against its Exit criteria; only close and archive with `.ai/tools/plan.ps1 close` if bug-hunter reports zero open confirmed bugs and no Exit criterion is reported missing.
 
 Workstream lifecycle: `INTAKE -> TRIAGED -> PLANNED -> ACTIVE -> BLOCKED/DONE/REJECTED/SUPERSEDED -> ARCHIVED`. Files dropped in `0 - HUMAN START HERE/` are always `INTAKE` and not executable until audited and routed.
 
@@ -130,3 +131,4 @@ Check `.ai/checkpoint.json` for the live answer — do not trust this section on
 - JSON project-state files (`.ai/checkpoint.json`, `Implementation/Active/tracking.json`) are schema-constrained (`checkpoint.schema.json`, `tracking.schema.json`) — validate against the schema after any manual edit, not just JSON syntax.
 - Two append-only logs exist by contract (`registry.jsonl`, `oos_access_log.jsonl`) — the runtime treats them as untrusted input and validates them with `registry_append_only_validator.py`; never rewrite or truncate them to "fix" data.
 - After any change touching `Implementation/`, `Protocole/`, or `.ai/`, follow the post-modification checklist in `.ai/governance/AI_MODIFICATION_CHECKLIST.md`: summarize files changed and why, list files deliberately left unchanged, list unresolved conflicts, list remaining human decisions, and run the relevant validation commands above.
+- Before declaring any `Implementation/ebta_engine/` code change done, apply `.agents/skills/bug-hunter/SKILL.md` on the touched files (Pyrefly is installed as a dev CLI in `Implementation/adapters/nautilus_env/venv`). A confirmed real bug it finds must be fixed or explicitly escalated before the task counts as complete.

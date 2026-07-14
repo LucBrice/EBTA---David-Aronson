@@ -22,7 +22,7 @@ Before any substantive action, read in this order:
 - `.ai/governance/` contains AI modification governance; it is procedural, not scientific authority.
 - `0 - HUMAN START HERE/` is the human intake area for raw drafts.
 - `Implementation/Active/` contains the micro runtime cockpit: active hook and tracking state.
-- `.agents/` is historical/tooling support only; it is not a project-state authority.
+- `.agents/` is historical/tooling support only; it is not a project-state authority. It also hosts `.agents/skills/`, a cross-AI catalog of playbooks (SKILL.md files) usable by any AI working on this repo, not only Claude — see Operating Rules.
 - `.codex/` is a Codex adapter area only; it is not normative.
 
 ## Operating Rules
@@ -34,6 +34,9 @@ Before any substantive action, read in this order:
 - Keep `AGENTS.md` thin. Put AI project state in `.ai/`, not in parallel state folders.
 - Human drafts enter through `0 - HUMAN START HERE/` and are never executable by default.
 - If active hook or tracking paths change, update `.ai/checkpoint.json` first; update `.ai/README.md` only when stable cockpit rules change.
+- Consult `.agents/skills/` for specialized playbooks. Each `SKILL.md` documents its own trigger; when a task's shape matches one, read and follow it, regardless of which AI or tool is operating. In particular:
+  - After implementing or modifying code under `Implementation/ebta_engine/` (or adjacent adapters/examples), and before declaring the task done, apply `.agents/skills/bug-hunter/SKILL.md` on the touched files. A confirmed real bug it finds must be fixed (or explicitly escalated to the human) before the task counts as complete.
+  - Before calling `.ai/tools/plan.ps1 close` (see `/close` below), apply both `.agents/skills/bug-hunter/SKILL.md` (full sweep of the workstream's touched files, not just the last diff) and `.agents/skills/plan-conformance-audit/SKILL.md`. Do not call `plan.ps1 close` if either reports an open confirmed bug or a missing Exit criterion.
 
 ## Conversational Commands
 
@@ -55,9 +58,27 @@ to manage a plan. These are the human-facing commands.
   the folder matching `-Track` — if it throws, fix the rewritten file (never
   paste the template verbatim) and retry, do not treat the rejection as a
   formatting nuisance to route around.
+- After `/start` writes the plan and before `/continue` begins real
+  implementation, run an architecture-refinement loop on the plan: invoke
+  `code-architecture-evaluator` (`/evaluate`), fix what it flags, re-run
+  `/evaluate`, and repeat until no major blind spot remains — cap at 3-4
+  passes total; if issues are still surfacing after that, the plan itself
+  needs human input, not another automated pass. Once the loop converges,
+  commit the current state (the refined plan plus any `/evaluate`-driven
+  fixes) as a clean pre-implementation baseline, matching this repo's
+  existing commit style (topic-scoped `type(scope): summary` title, a body
+  itemizing what changed and why per file/section, a test-suite status
+  line, `Co-Authored-By`). This baseline exists so implementation starts
+  from a reviewed, revertible point — see e.g. commit `184b013` for the
+  expected shape. Only then does `/continue` begin implementation.
 - `/continue` resumes an existing workstream with `.ai/tools/plan.ps1 continue`.
-- `/close` closes and archives an existing workstream with
-  `.ai/tools/plan.ps1 close`.
+- `/close` first applies `.agents/skills/bug-hunter/SKILL.md` on the
+  workstream's touched files and `.agents/skills/plan-conformance-audit/SKILL.md`
+  against its Exit criteria. Only if bug-hunter reports zero open confirmed
+  bugs AND the conformance audit reports no missing criterion does `/close`
+  proceed to close and archive the workstream with `.ai/tools/plan.ps1 close`.
+  Otherwise report what is open (bugs and/or missing criteria) and do not
+  call `plan.ps1 close` until the human decides how to proceed.
 
 `.ai/tools/plan.ps1` is a mechanical backend. It can refuse unsafe promotion,
 but it does not replace the AI audit and structuring step.
