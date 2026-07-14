@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Pre-commit hook: detect stale .ai/checkpoint.json before committing.
 
 Install as .git/hooks/pre-commit (see Implementation/Active/INSTALL_GIT_HOOK.md).
@@ -66,7 +66,7 @@ def main():
         return 0
 
     try:
-        checkpoint = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
+        checkpoint = json.loads(CHECKPOINT.read_text(encoding="utf-8-sig"))
     except json.JSONDecodeError as e:
         print(f"[EBTA pre-commit] ERROR: .ai/checkpoint.json is not valid JSON: {e}")
         return 1
