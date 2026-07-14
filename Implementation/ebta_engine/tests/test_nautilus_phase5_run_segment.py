@@ -144,7 +144,8 @@ class NautilusPhase5RunSegmentTests(unittest.TestCase):
             for actual_value, expected_value in zip(actual[field_name], expected[field_name]):
                 self.assertAlmostEqual(actual_value, expected_value, places=9)
         self.assertEqual(actual["total_costs"], 0.0)
-        self.assertEqual(actual["positions"][0]["realized_pnl"], 2.0)
+        self.assertEqual(actual["positions"], [])
+        self.assertTrue(actual["metadata"]["no_m1_signal"])
         self.assertNotIn("segment", actual["metadata"])
 
     def test_dedicated_venv_run_segment_handles_no_model_without_trades(self):
@@ -203,7 +204,7 @@ class NautilusPhase5RunSegmentTests(unittest.TestCase):
         )
         payload = self._run_venv_json(script)
         no_model = payload["no_model"]
-        self.assertEqual(no_model["metadata"]["status"], "NO_MODEL")
+        self.assertTrue(no_model["metadata"]["no_m1_signal"])
         self.assertEqual(no_model["nav"], [1000.0, 1000.0, 1000.0])
         self.assertEqual(no_model["daily_exposure"], [0.0, 0.0, 0.0])
 

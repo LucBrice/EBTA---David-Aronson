@@ -23,7 +23,6 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
             from decimal import Decimal
 
             from nautilus_trader.model.currencies import USD
-            from nautilus_trader.model.data import BarType
             from nautilus_trader.model.identifiers import InstrumentId
             from nautilus_trader.model.objects import Money
 
@@ -59,13 +58,13 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
             config_a = GenericPayloadStrategyConfig(
                 payload=payload_by_code("NASDAQ", "E").to_dict(),
                 instrument_id=InstrumentId.from_str("NASDAQ.SIM"),
-                bar_type=BarType.from_str("NASDAQ.SIM-1-MINUTE-LAST-EXTERNAL"),
+                bar_types=["NASDAQ.SIM-1-MINUTE-LAST-EXTERNAL", "NASDAQ.SIM-3-MINUTE-LAST-EXTERNAL"],
                 trade_size=Decimal("1"),
             )
             config_b = GenericPayloadStrategyConfig(
                 payload=payload_by_code("XAUUSD", "G").to_dict(),
                 instrument_id=InstrumentId.from_str("XAUUSD.SIM"),
-                bar_type=BarType.from_str("XAUUSD.SIM-1-MINUTE-LAST-EXTERNAL"),
+                bar_types=["XAUUSD.SIM-1-MINUTE-LAST-EXTERNAL", "XAUUSD.SIM-3-MINUTE-LAST-EXTERNAL"],
                 trade_size=Decimal("1"),
             )
             strategy_a = GenericPayloadStrategy(config_a)
@@ -84,6 +83,8 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
                 "payload_a": strategy_a.payload_code,
                 "payload_b": strategy_b.payload_code,
                 "session_b": strategy_b.session,
+                "bar_types_count": len(strategy_a.config.bar_types),
+                "has_nav_snapshots": hasattr(strategy_a, "_nav_snapshots"),
             }, sort_keys=True))
             """
         )
@@ -108,6 +109,8 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
         self.assertEqual(actual["strategy_class_b"], "GenericPayloadStrategy")
         self.assertNotEqual(actual["payload_a"], actual["payload_b"])
         self.assertEqual(actual["session_b"], "asia")
+        self.assertEqual(actual["bar_types_count"], 2)
+        self.assertTrue(actual["has_nav_snapshots"])
 
 
 if __name__ == "__main__":

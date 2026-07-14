@@ -27,9 +27,15 @@ if str(IMPLEMENTATION_ROOT) not in sys.path:
     sys.path.insert(0, str(IMPLEMENTATION_ROOT))
 
 from ebta_engine.strategies.contracts import SimulationResult  # noqa: E402
+from ebta_engine.adapters.nautilus_mapping import run_segment  # noqa: E402
+from ebta_engine.data.local_ohlcv import OhlcvBar  # noqa: E402
+from ebta_engine.strategies.contracts import Candidate  # noqa: E402
+from ebta_engine.strategies.payloads import payload_by_code  # noqa: E402
 from ebta_engine.tests.fixtures.nautilus_golden_case.expected_result import (  # noqa: E402
     STARTING_NAV,
     QUANTITY,
+    deterministic_cost_model,
+    deterministic_instrument_config,
     expected_result,
     load_bars,
 )
@@ -65,34 +71,39 @@ class OneTradeStrategy(Strategy):
 
 def run_golden_case(candidate_id: str = "CAND-GOLDEN") -> SimulationResult:
     bars_fixture = load_bars()
-    instrument = _golden_instrument()
-    bar_type = BarType.from_str("GOLDEN.SIM-1-DAY-LAST-EXTERNAL")
-    bars = BarDataWrangler(bar_type, instrument).process(_bars_dataframe(bars_fixture))
-    engine = BacktestEngine(config=BacktestEngineConfig(logging=LoggingConfig(log_level="ERROR")))
-    try:
-        engine.add_venue(
-            venue=Venue("SIM"),
-            oms_type=OmsType.NETTING,
-            account_type=AccountType.MARGIN,
-            starting_balances=[Money(STARTING_NAV, USD)],
-            base_currency=USD,
-            default_leverage=Decimal(1),
+    bars = [
+        OhlcvBar(
+            "GOLDEN",
+            pd.Timestamp(row["timestamp"]).to_pydatetime(),
+            row["open"],
+            row["high"],
+            row["low"],
+            row["close"],
+            row["volume"],
         )
-        engine.add_instrument(instrument)
-        engine.add_data(bars)
-        engine.add_strategy(
-            OneTradeStrategy(
-                OneTradeConfig(
-                    instrument_id=instrument.id,
-                    bar_type=bar_type,
-                    trade_size=Decimal(str(QUANTITY)),
-                )
-            )
-        )
-        engine.run()
-        return _extract_result(candidate_id, bars_fixture, engine)
-    finally:
-        engine.dispose()
+        for row in bars_fixture
+    ]
+    payload = payload_by_code("GOLDEN", "E").to_dict()
+    payload["exit_criterion"]["parameters"]["horizon_bars"] = 2
+    payload.pop("payload_hash", None)
+    return run_segment(
+        Candidate(
+            candidate_id=candidate_id,
+            research_family_id="FAM-GOLDEN",
+            payload=payload,
+            asset="GOLDEN",
+            complexity=1,
+        ),
+        bars,
+        deterministic_cost_model(),
+        deterministic_instrument_config(),
+        seed=17,
+        starting_nav=STARTING_NAV,
+        trade_size=str(QUANTITY),
+        interval_value=1,
+        interval_unit="DAY",
+        timestamp_is_close=True,
+    )
 
 
 def assert_matches_expected(actual: SimulationResult, tolerance: float = 1e-9) -> None:
@@ -114,8 +125,8 @@ def assert_matches_expected(actual: SimulationResult, tolerance: float = 1e-9) -
                 raise AssertionError(f"{field_name}[{index}] mismatch: {actual_value} != {expected_value}")
     if abs(actual.total_costs - expected.total_costs) > tolerance:
         raise AssertionError(f"total_costs mismatch: {actual.total_costs} != {expected.total_costs}")
-    if abs(actual.positions[0]["realized_pnl"] - expected.positions[0]["realized_pnl"]) > tolerance:
-        raise AssertionError("realized_pnl mismatch")
+    if actual.positions != expected.positions:
+        raise AssertionError("positions mismatch")
 
 
 def _golden_instrument() -> CurrencyPair:

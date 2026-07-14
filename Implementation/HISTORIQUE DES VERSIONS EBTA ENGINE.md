@@ -80,6 +80,50 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-13 - R1 moteur de signaux reel et R2 extraction Nautilus reelle
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / ADAPTER_MAPPING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; plan `.ai/backlog/mainline/PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS.md` |
+| Fichiers impactes | `Implementation/ebta_engine/data/resample.py`, `Implementation/ebta_engine/strategies/signals/`, `Implementation/ebta_engine/strategies/registry.py`, `Implementation/ebta_engine/strategies/incremental/`, `Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py`, `Implementation/ebta_engine/adapters/nautilus_mapping.py`, tests R1/R2, fixture golden-case, `Implementation/adapters/nautilus_env/NAUTILUS_API_NOTES.md` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 139 tests ; `.\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package` -> PASS ; `validate_package_dir(Path('research_packages/nautilus_mvp'))` -> PASS ; hardcoded checks `OrderSide.BUY`/`total_costs=0.0` -> False |
+
+### Contexte
+
+Le plan R1/R2 corrige deux limites bloquantes du pivot Nautilus : le bridge
+achetait encore de facon deterministe sans moteur de signaux reel, et
+`extract_simulation_result()` reconstruisait les series de performance a la
+main avec `total_costs` nul.
+
+### Decision
+
+Ajouter un resampling causal multi-timeframe, un oracle vectorise de parite
+issu du port lecture seule de BACKTRADER, un registry de strategies
+incrementales, et des state machines E/F/G/H/I bar-by-bar. Refactoriser
+`GenericPayloadStrategy` pour deleguer au registry, souscrire plusieurs
+`BarType`, emettre des ordres BUY/SELL depuis la state machine, et capturer les
+snapshots NAV uniquement sur M1.
+
+Recrire l'extraction R2 pour lire les snapshots NAV, les commissions des fills
+et les positions depuis les rapports Nautilus. Le golden-case daily est
+recalibre en cas `no_m1_signal`, sans faux trade.
+
+### Impact
+
+Nautilus reste une couche d'execution/simulation sous frontiere d'adapter. Les
+procedures, validateurs, manifests, governance et contrats EBTA restent
+inchanges. Le package Nautilus reconstruit reste `PASS`.
+
+### Suite
+
+Le branchement production intraday reste hors scope de ce chantier : R4 doit
+retirer le `_daily_sample` et fournir de vraies barres M1 avant qu'une recherche
+reelle puisse consommer le moteur de signaux sans `no_m1_signal`.
+
 ## 2026-07-09 - Nautilus Phase 6 cutover et retrait natif
 
 | Champ | Valeur |

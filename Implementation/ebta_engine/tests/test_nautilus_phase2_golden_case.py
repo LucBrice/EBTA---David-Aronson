@@ -17,12 +17,12 @@ class NautilusPhase2GoldenCaseTests(unittest.TestCase):
         result = expected_result()
         self.assertEqual(len(bars), 3)
         self.assertEqual(result.instrument_id, "GOLDEN.SIM")
-        self.assertEqual(result.nav, [1000.0, 1001.0, 1002.0])
+        self.assertEqual(result.nav, [1000.0, 1000.0, 1000.0])
         self.assertEqual(result.total_costs, 0.0)
         self.assertAlmostEqual(result.daily_returns[0], 0.0, places=12)
-        self.assertAlmostEqual(result.daily_returns[1], 1.0 / 1000.0, places=12)
-        self.assertAlmostEqual(result.daily_returns[2], 1.0 / 1001.0, places=12)
-        self.assertEqual(result.positions[0]["realized_pnl"], 2.0)
+        self.assertAlmostEqual(result.daily_returns[1], 0.0, places=12)
+        self.assertAlmostEqual(result.daily_returns[2], 0.0, places=12)
+        self.assertEqual(result.positions, [])
 
     def test_golden_case_execution_contract_is_degenerate_and_manual(self):
         cost_model = deterministic_cost_model()
@@ -57,9 +57,10 @@ class NautilusPhase2GoldenCaseTests(unittest.TestCase):
             for actual_value, expected_value in zip(actual[field_name], expected[field_name]):
                 self.assertAlmostEqual(actual_value, expected_value, places=9)
         self.assertEqual(actual["total_costs"], expected["total_costs"])
-        self.assertEqual(actual["positions"][0]["realized_pnl"], expected["positions"][0]["realized_pnl"])
-        self.assertEqual(actual["metadata"]["total_orders"], 2)
-        self.assertEqual(actual["metadata"]["total_positions"], 1)
+        self.assertEqual(actual["positions"], [])
+        self.assertEqual(actual["metadata"]["total_orders"], 0)
+        self.assertEqual(actual["metadata"]["total_positions"], 0)
+        self.assertTrue(actual["metadata"]["no_m1_signal"])
 
 
 if __name__ == "__main__":

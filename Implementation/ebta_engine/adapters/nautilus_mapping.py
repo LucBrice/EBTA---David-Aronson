@@ -11,6 +11,7 @@ from decimal import Decimal
 from typing import Any, Sequence
 
 from ebta_engine.data.local_ohlcv import OhlcvBar
+from ebta_engine.data.resample import resample_ohlcv
 from ebta_engine.strategies.contracts import Candidate, CostModel, InstrumentConfig, SimulationResult
 
 
@@ -220,6 +221,7 @@ def run_segment(
     interval_value: int = 1,
     interval_unit: str = "MINUTE",
     timestamp_is_close: bool = False,
+    warmup_bars: Sequence[OhlcvBar] | None = None,
     engine: Any | None = None,
 ) -> SimulationResult:
     """Run one opaque EBTA segment through Nautilus and return EBTA output."""
@@ -227,16 +229,16 @@ def run_segment(
         raise ValueError("bars must not be empty")
     classes = _nautilus_engine_classes()
     instrument = build_instrument(instrument_config)
-    nautilus_bars = map_ohlcv_to_bars(
-        bars,
+    active_bars = list(warmup_bars or []) + list(bars)
+    warmup_bar_count = len(warmup_bars or [])
+    mapped_series = _map_multitimeframe_bars(
+        active_bars,
         instrument,
-        interval_value=interval_value,
-        interval_unit=interval_unit,
+        source_interval_value=interval_value,
+        source_interval_unit=interval_unit,
         timestamp_is_close=timestamp_is_close,
     )
-    bar_type = classes["BarType"].from_str(
-        bar_type_string(str(instrument.id), interval_value=interval_value, interval_unit=interval_unit)
-    )
+    bar_types = [bar_type_string(str(instrument.id), interval_value=value, interval_unit=unit) for value, unit, _ in mapped_series]
     eng = engine or classes["BacktestEngine"](
         config=classes["BacktestEngineConfig"](logging=classes["LoggingConfig"](log_level="ERROR"))
     )
@@ -251,12 +253,14 @@ def run_segment(
             base_currency=instrument_config.quote_currency,
         )
         eng.add_instrument(instrument)
-        eng.add_data(nautilus_bars)
+        for _, _, nautilus_bars in mapped_series:
+            eng.add_data(nautilus_bars)
         strategy_config = classes["GenericPayloadStrategyConfig"](
             payload=dict(candidate.payload),
             instrument_id=instrument.id,
-            bar_type=bar_type,
+            bar_types=bar_types,
             trade_size=Decimal(trade_size),
+            warmup_bar_count=warmup_bar_count,
         )
         eng.add_strategy(classes["GenericPayloadStrategy"](strategy_config))
         eng.run()
@@ -284,30 +288,21 @@ def extract_simulation_result(
 ) -> SimulationResult:
     fills = engine.trader.generate_order_fills_report()
     positions = engine.trader.generate_positions_report()
-    if fills.empty:
+    strategy = _strategy_from_engine(engine)
+    nav_series = _extract_nav_series(strategy)
+    if _is_flat(engine.portfolio) and _report_empty(fills) and not nav_series:
         return _flat_simulation_result(candidate_id, instrument_id, source_bars, starting_nav)
 
-    entry_fill = fills.iloc[0]
-    exit_fill = fills.iloc[-1]
-    entry_price = float(entry_fill["avg_px"])
-    exit_price = float(exit_fill["avg_px"])
-    timestamps: list[str] = []
-    nav: list[float] = []
-    daily_returns: list[float] = []
-    daily_exposure: list[float] = []
-    previous_nav = starting_nav
-    for index, bar in enumerate(source_bars):
-        mark_price = float(bar.close)
-        current_nav = starting_nav + (mark_price - entry_price) * quantity
-        timestamps.append(_timestamp_to_z(bar.timestamp))
-        nav.append(current_nav)
-        daily_returns.append((current_nav - previous_nav) / previous_nav if previous_nav else 0.0)
-        daily_exposure.append(0.0 if index == len(source_bars) - 1 else (mark_price * quantity) / current_nav)
-        previous_nav = current_nav
+    if nav_series:
+        timestamps = [item[0] for item in nav_series]
+        nav = [item[1] for item in nav_series]
+        daily_exposure = [(item[2] / item[1]) if item[1] else 0.0 for item in nav_series]
+    else:
+        timestamps = [_timestamp_to_z(bar.timestamp) for bar in source_bars]
+        nav = [starting_nav for _ in source_bars]
+        daily_exposure = [0.0 for _ in source_bars]
 
-    realized_pnl = (exit_price - entry_price) * quantity
-    if not positions.empty and "realized_pnl" in positions:
-        realized_pnl = float(str(positions.iloc[0]["realized_pnl"]).split()[0])
+    daily_returns = _returns_from_nav(nav)
 
     return SimulationResult(
         candidate_id=candidate_id,
@@ -316,21 +311,15 @@ def extract_simulation_result(
         daily_returns=daily_returns,
         daily_exposure=daily_exposure,
         nav=nav,
-        total_costs=0.0,
+        total_costs=_extract_costs(fills),
         orders=_fills_to_records(fills, "avg_px", "quantity", "ts_init"),
         fills=_fills_to_records(fills, "avg_px", "filled_qty", "ts_last"),
-        positions=[
-            {
-                "quantity": quantity,
-                "entry_price": entry_price,
-                "exit_price": exit_price,
-                "realized_pnl": realized_pnl,
-            }
-        ],
+        positions=_extract_positions(positions),
         metadata={
             "source": "nautilus_trader",
             "total_orders": int(engine.get_result().total_orders),
             "total_positions": int(engine.get_result().total_positions),
+            **dict(getattr(strategy, "_metadata", {})),
         },
     )
 
@@ -358,6 +347,7 @@ def run_multifold_segments(
             interval_value=item.get("interval_value", 1),
             interval_unit=item.get("interval_unit", "MINUTE"),
             timestamp_is_close=item.get("timestamp_is_close", False),
+            warmup_bars=item.get("warmup_bars"),
         )
         outputs.append(
             {
@@ -383,9 +373,132 @@ def _flat_simulation_result(
         daily_returns=[0.0 for _ in source_bars],
         daily_exposure=[0.0 for _ in source_bars],
         nav=[starting_nav for _ in source_bars],
-        total_costs=0.0,
+        total_costs = 0.0,
         metadata={"source": "nautilus_trader", "status": "NO_MODEL"},
     )
+
+
+def _extract_nav_series(strategy: Any) -> list[tuple[str, float, float]]:
+    snapshots = list(getattr(strategy, "_nav_snapshots", []) or [])
+    series: list[tuple[str, float, float]] = []
+    for ts_event_nanos, equity, net_exposure in snapshots:
+        timestamp = _nanos_to_z(int(ts_event_nanos))
+        series.append((timestamp, float(equity), float(net_exposure)))
+    return series
+
+
+def _extract_costs(fills_report: Any) -> float:
+    if _report_empty(fills_report) or "commission" not in fills_report:
+        return 0.0
+    return sum(_money_float(value) for value in fills_report["commission"])
+
+
+def _extract_positions(positions_report: Any) -> list[dict[str, Any]]:
+    if _report_empty(positions_report):
+        return []
+    records: list[dict[str, Any]] = []
+    for _, row in positions_report.iterrows():
+        records.append(
+            {
+                "quantity": _row_float(row, "quantity", "signed_qty", "size", default=0.0),
+                "entry_price": _row_float(row, "avg_px_open", "entry_price", "avg_px", default=0.0),
+                "exit_price": _row_float(row, "avg_px_close", "exit_price", default=0.0),
+                "realized_pnl": _row_float(row, "realized_pnl", "realized_return", default=0.0),
+            }
+        )
+    return records
+
+
+def _strategy_from_engine(engine: Any) -> Any:
+    trader = getattr(engine, "trader", None)
+    strategies = getattr(trader, "strategies", None)
+    if callable(strategies):
+        strategies = strategies()
+    if strategies:
+        return strategies[0]
+    strategies = getattr(engine, "strategies", None)
+    if callable(strategies):
+        strategies = strategies()
+    if strategies:
+        return strategies[0]
+    return None
+
+
+def _returns_from_nav(nav: list[float]) -> list[float]:
+    returns: list[float] = []
+    previous: float | None = None
+    for value in nav:
+        if previous is None:
+            returns.append(0.0)
+        else:
+            returns.append((value - previous) / previous if previous else 0.0)
+        previous = value
+    return returns
+
+
+def _is_flat(portfolio: Any) -> bool:
+    value = getattr(portfolio, "is_flat", False)
+    try:
+        return bool(value()) if callable(value) else bool(value)
+    except Exception:
+        return False
+
+
+def _report_empty(report: Any) -> bool:
+    return report is None or bool(getattr(report, "empty", False))
+
+
+def _row_float(row: Any, *names: str, default: float) -> float:
+    for name in names:
+        if name in row:
+            return _money_float(row[name])
+    return default
+
+
+def _money_float(value: Any) -> float:
+    try:
+        return float(value)
+    except Exception:
+        return float(str(value).split()[0])
+
+
+def _map_multitimeframe_bars(
+    bars: Sequence[OhlcvBar],
+    instrument: Any,
+    *,
+    source_interval_value: int,
+    source_interval_unit: str,
+    timestamp_is_close: bool,
+) -> list[tuple[int, str, list[Any]]]:
+    unit = source_interval_unit.upper()
+    if source_interval_value == 1 and unit == "MINUTE":
+        series: list[tuple[int, str, list[OhlcvBar]]] = [
+            (1, "MINUTE", list(bars)),
+            (3, "MINUTE", resample_ohlcv(list(bars), 3)),
+            (15, "MINUTE", resample_ohlcv(list(bars), 15)),
+            (1, "HOUR", resample_ohlcv(list(bars), 60)),
+            (4, "HOUR", resample_ohlcv(list(bars), 240)),
+            (1, "DAY", resample_ohlcv(list(bars), 1440)),
+        ]
+    else:
+        series = [(source_interval_value, unit, list(bars))]
+    mapped: list[tuple[int, str, list[Any]]] = []
+    for value, unit, source in series:
+        source_timestamp_is_close = timestamp_is_close if value == 1 and unit == "MINUTE" else True
+        mapped.append(
+            (
+                value,
+                unit,
+                map_ohlcv_to_bars(
+                    source,
+                    instrument,
+                    interval_value=value,
+                    interval_unit=unit,
+                    timestamp_is_close=source_timestamp_is_close,
+                ),
+            )
+        )
+    return mapped
 
 
 def _fills_to_records(fills: Any, price_column: str, quantity_column: str, timestamp_column: str) -> list[dict[str, Any]]:
@@ -404,6 +517,12 @@ def _fills_to_records(fills: Any, price_column: str, quantity_column: str, times
 
 def _timestamp_to_z(value: Any) -> str:
     return value.isoformat().replace("+00:00", "Z")
+
+
+def _nanos_to_z(value: int) -> str:
+    from datetime import datetime, timezone
+
+    return datetime.fromtimestamp(value / 1_000_000_000, timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _interval_to_nanos(interval_value: int, interval_unit: str) -> int:

@@ -52,69 +52,21 @@ def deterministic_instrument_config() -> InstrumentConfig:
 
 def expected_result(candidate_id: str = "CAND-GOLDEN") -> SimulationResult:
     bars = load_bars()
-    entry_price = float(bars[0]["close"])
-    exit_price = float(bars[-1]["close"])
-    timestamps: list[str] = []
-    nav: list[float] = []
-    daily_returns: list[float] = []
-    daily_exposure: list[float] = []
-    previous_nav = STARTING_NAV
-
-    for index, bar in enumerate(bars):
-        mark_price = float(bar["close"])
-        current_nav = STARTING_NAV + (mark_price - entry_price) * QUANTITY
-        timestamps.append(str(bar["timestamp"]))
-        nav.append(current_nav)
-        daily_returns.append((current_nav - previous_nav) / previous_nav)
-        daily_exposure.append(0.0 if index == len(bars) - 1 else (mark_price * QUANTITY) / current_nav)
-        previous_nav = current_nav
 
     return SimulationResult(
         candidate_id=candidate_id,
         instrument_id=deterministic_instrument_config().instrument_id,
-        timestamps=timestamps,
-        daily_returns=daily_returns,
-        daily_exposure=daily_exposure,
-        nav=nav,
+        timestamps=[str(bar["timestamp"]) for bar in bars],
+        daily_returns=[0.0 for _ in bars],
+        daily_exposure=[0.0 for _ in bars],
+        nav=[STARTING_NAV for _ in bars],
         total_costs=0.0,
-        orders=[
-            {
-                "side": "BUY",
-                "quantity": QUANTITY,
-                "price": entry_price,
-                "timestamp": bars[0]["timestamp"],
-            },
-            {
-                "side": "SELL",
-                "quantity": QUANTITY,
-                "price": exit_price,
-                "timestamp": bars[-1]["timestamp"],
-            },
-        ],
-        fills=[
-            {
-                "side": "BUY",
-                "quantity": QUANTITY,
-                "price": entry_price,
-                "timestamp": bars[0]["timestamp"],
-            },
-            {
-                "side": "SELL",
-                "quantity": QUANTITY,
-                "price": exit_price,
-                "timestamp": bars[-1]["timestamp"],
-            },
-        ],
-        positions=[
-            {
-                "quantity": QUANTITY,
-                "entry_price": entry_price,
-                "exit_price": exit_price,
-                "realized_pnl": (exit_price - entry_price) * QUANTITY,
-            }
-        ],
+        orders=[],
+        fills=[],
+        positions=[],
         metadata={
             "fixture": "nautilus_golden_case",
-            "calculation": "stdlib_independent_expected_result",
+            "calculation": "r2_recalibrated_no_m1_signal_expected_result",
+            "no_m1_signal": True,
         },
     )

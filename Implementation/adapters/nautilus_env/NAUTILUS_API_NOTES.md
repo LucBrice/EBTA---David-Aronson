@@ -433,6 +433,26 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   Trader, BacktestResult).
 - **Date** : 2026-07-13
 
+### Recalibration R2 du golden-case EBTA [VÉRIFIÉ EMPIRIQUEMENT]
+
+- **Vérifié empiriquement** : après le refactoring R1/R2, le chemin
+  `run_segment()` ne fabrique plus d'ordre sur une source déclarée `DAY` et ne
+  la traite plus comme du M1. Le golden-case `GOLDEN.SIM-1-DAY-LAST-EXTERNAL`
+  devient donc un cas visible `no_m1_signal` : aucun ordre, aucun fill, aucune
+  position, NAV plate à `1000.0`.
+- **Vérifié empiriquement** : le nouveau `result_hash` du golden-case
+  `run_segment()` recalibré est
+  `F057B2EBD53F22A922AB21130A8038D4893DC6AC550D18EA62C2D43ADDDF9A77`.
+- **Conséquence pour EBTA (R2)** : `extract_simulation_result()` consomme les
+  snapshots NAV M1 de `GenericPayloadStrategy._nav_snapshots` quand ils
+  existent ; sinon, une source non-M1 reste explicitement tracée par
+  `metadata.no_m1_signal` au lieu de produire un faux trade.
+- **Preuve locale** :
+  `Implementation/ebta_engine/tests/test_nautilus_phase5_run_segment.py`,
+  `Implementation/ebta_engine/tests/test_r2_extraction.py`, et exécution
+  directe via le venv `Implementation/adapters/nautilus_env/venv`.
+- **Date** : 2026-07-13
+
 ### Modules d'indicateurs `averages`/`momentum`/`trend`/`volatility`/`volume` [VÉRIFIÉ EMPIRIQUEMENT]
 
 - **Documenté** : la référence API Python liste des indicateurs par
