@@ -61,7 +61,7 @@ def build_candidate_matrix(
     for row_index, date in enumerate(dates):
         rows.append({"date": date, "values": {candidate_id: candidate_series[candidate_id][row_index] for candidate_id in columns}})
 
-    payload = {
+    payload: dict[str, Any] = {
         "artifact_type": "candidate_matrix",
         "fold_id": fold_id,
         "candidate_ids": columns,
@@ -70,6 +70,7 @@ def build_candidate_matrix(
         "complete_family": True,
     }
     if active_asset_axis:
+        assert asset_universe is not None and candidate_assets is not None
         payload["asset_universe"] = sorted(asset_universe)
         payload["candidate_assets"] = {candidate_id: candidate_assets[candidate_id] for candidate_id in columns}
     payload["matrix_id"] = stable_id("MATRIX", payload, 16)

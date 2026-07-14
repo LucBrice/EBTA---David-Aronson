@@ -139,7 +139,10 @@ class NautilusPhase1ContractTests(unittest.TestCase):
         restored = type(payload_by_code("NASDAQ", "E")).from_dict(migrated)
         errors = validate(restored.to_dict(), load_schema("strategy_payload.schema.json"))
         self.assertEqual(errors, [])
-        self.assertEqual(restored.entry_criterion["rule_id"], "legacy_entry")
+        entry_criterion = restored.entry_criterion
+        self.assertIsInstance(entry_criterion, dict)
+        assert isinstance(entry_criterion, dict)
+        self.assertEqual(entry_criterion["rule_id"], "legacy_entry")
 
     def test_payload_factory_generates_full_independent_bias_session_asset_grid(self):
         generated = generate_family(

@@ -22,8 +22,8 @@ def detect_engulfing_components(df: pd.DataFrame) -> dict[str, pd.Series]:
     low = df["low"]
     open_ = df["open"]
     close = df["close"]
-    body_high = pd.Series(np.maximum(open_, close), index=df.index)
-    body_low = pd.Series(np.minimum(open_, close), index=df.index)
+    body_high = pd.concat([open_, close], axis=1).max(axis=1)
+    body_low = pd.concat([open_, close], axis=1).min(axis=1)
 
     bull_2 = (low < low.shift(1)) & (close > body_high.shift(1))
     bull_3 = (low.shift(1) < low.shift(2)) & (close.shift(1) <= body_high.shift(2)) & (
@@ -34,10 +34,10 @@ def detect_engulfing_components(df: pd.DataFrame) -> dict[str, pd.Series]:
         close < body_low.shift(1)
     )
 
-    pivot_bull_2 = pd.Series(np.minimum(low, low.shift(1)), index=df.index)
-    pivot_bull_3 = pd.Series(np.minimum(low, np.minimum(low.shift(1), low.shift(2))), index=df.index)
-    pivot_bear_2 = pd.Series(np.maximum(high, high.shift(1)), index=df.index)
-    pivot_bear_3 = pd.Series(np.maximum(high, np.maximum(high.shift(1), high.shift(2))), index=df.index)
+    pivot_bull_2 = pd.concat([low, low.shift(1)], axis=1).min(axis=1)
+    pivot_bull_3 = pd.concat([low, low.shift(1), low.shift(2)], axis=1).min(axis=1)
+    pivot_bear_2 = pd.concat([high, high.shift(1)], axis=1).max(axis=1)
+    pivot_bear_3 = pd.concat([high, high.shift(1), high.shift(2)], axis=1).max(axis=1)
 
     return {
         "engulf_bull": (bull_2 | bull_3).fillna(False).astype(bool),

@@ -1,4 +1,7 @@
 import unittest
+from typing import cast
+
+import pandas as pd
 
 from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, load_ohlcv_bars
 from ebta_engine.data.resample import resample_ohlcv
@@ -19,7 +22,10 @@ class IncrementalParityETests(unittest.TestCase):
             strategy.should_enter()
 
         oracle = compute_entry_signals(frame_from_bars(bars), frame_from_bars(resample_ohlcv(bars, 3)))
-        expected = [(ts.to_pydatetime(), "BUY" if value > 0 else "SELL") for ts, value in oracle[oracle != 0].items()]
+        expected = [
+            (cast(pd.Timestamp, ts).to_pydatetime(), "BUY" if value > 0 else "SELL")
+            for ts, value in oracle[oracle != 0].items()
+        ]
         actual = [(decision.timestamp, decision.side) for decision in strategy.decisions]
         self.assertEqual(actual, expected)
 

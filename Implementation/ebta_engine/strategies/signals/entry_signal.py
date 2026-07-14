@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import pandas as pd
 
 from ebta_engine.strategies.signals.engulfing import detect_engulfing_components
 from ebta_engine.strategies.signals.liquidity import compute_liquidity_pools, latest_levels
+
+_FloatArray = Any
+_BoolArray = Any
 
 
 def compute_entry_signals(
@@ -89,7 +94,7 @@ def _directional_signal(
         m3_start = max(0, m3_index.searchsorted(m1_index[birth_index], side="right") - 1)
         m3_end = min(len(m3_index), m3_start + window_m3)
         closes = m3_close[m3_start:m3_end]
-        hits = np.where(closes > pivot)[0] if side == 1 else np.where(closes < pivot)[0]
+        hits = np.flatnonzero(closes > pivot) if side == 1 else np.flatnonzero(closes < pivot)
         if len(hits) == 0:
             continue
         confirm_index = m3_start + int(hits[0])
@@ -98,7 +103,7 @@ def _directional_signal(
     return output
 
 
-def _sweep_indices(highs: np.ndarray, lows: np.ndarray, levels: np.ndarray, side: int) -> list[int]:
+def _sweep_indices(highs: _FloatArray, lows: _FloatArray, levels: _FloatArray, side: int) -> list[int]:
     indices: list[int] = []
     active = False
     previous_level = np.nan
@@ -124,8 +129,8 @@ def _sweep_indices(highs: np.ndarray, lows: np.ndarray, levels: np.ndarray, side
 
 def _nearest_engulf(
     sweep_index: int,
-    engulf_mask: np.ndarray,
-    pivots: np.ndarray,
+    engulf_mask: _BoolArray,
+    pivots: _FloatArray,
     window_back: int,
     window_fwd: int,
 ) -> tuple[float, int] | None:

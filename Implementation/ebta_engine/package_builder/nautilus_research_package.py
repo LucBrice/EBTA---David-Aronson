@@ -47,6 +47,7 @@ SegmentRunner = Callable[..., SimulationResult]
 
 def _load_pilot_module():
     spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+    assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

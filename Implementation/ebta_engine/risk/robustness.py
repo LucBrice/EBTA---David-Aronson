@@ -66,7 +66,7 @@ def _row(
     *,
     mean_return: float | None,
 ) -> dict[str, Any]:
-    row = {
+    row: dict[str, Any] = {
         "stress_id": stress_id,
         "classification": classification,
         "scenario_verdict": scenario_verdict,

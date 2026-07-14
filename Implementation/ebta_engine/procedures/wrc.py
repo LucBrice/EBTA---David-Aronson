@@ -236,7 +236,7 @@ def romano_wolf_stepdown(
             "role": "SECONDARY_IDENTIFICATION_AFTER_GLOBAL_REJECTION",
             "cannot_override_wrc": True,
         }
-    ordered = sorted(observed_candidate_statistics, key=observed_candidate_statistics.get, reverse=True)
+    ordered = sorted(observed_candidate_statistics, key=lambda candidate_id: observed_candidate_statistics[candidate_id], reverse=True)
     remaining = list(ordered)
     rows = []
     previous_adjusted = 0.0

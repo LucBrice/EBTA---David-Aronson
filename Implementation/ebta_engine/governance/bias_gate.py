@@ -17,7 +17,7 @@ OPEN_STATUSES = {"OPEN", "FAIL", "INCONCLUSIVE", "BURNED"}
 
 def evaluate_bias_gate(
     *,
-    candidate_registry: list[dict[str, Any]] | dict[str, Any] | None,
+    candidate_registry: list[dict[str, Any]] | None,
     statistical_family_matrix: dict[str, Any] | None,
     preregistration_manifest: dict[str, Any] | None,
     executed_configuration: dict[str, Any] | None,

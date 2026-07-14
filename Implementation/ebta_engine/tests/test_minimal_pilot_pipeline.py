@@ -13,6 +13,7 @@ PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_pa
 class MinimalPilotPipelineTests(unittest.TestCase):
     def test_minimal_pilot_pipeline_builds_valid_package(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -72,6 +73,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
     def test_minimal_pilot_contract_requires_package_shape(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -81,6 +83,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
     def test_minimal_pilot_fails_on_preregistered_oos_replication_drift(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -95,6 +98,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
     def test_minimal_pilot_fails_when_wrc_omits_evaluated_asset(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 

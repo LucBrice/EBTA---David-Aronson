@@ -409,19 +409,18 @@ def _extract_positions(positions_report: Any) -> list[dict[str, Any]]:
     return records
 
 
+def _first_strategy(strategies: Any) -> Any:
+    if callable(strategies):
+        strategies = strategies()
+    return strategies[0] if strategies else None
+
+
 def _strategy_from_engine(engine: Any) -> Any:
     trader = getattr(engine, "trader", None)
-    strategies = getattr(trader, "strategies", None)
-    if callable(strategies):
-        strategies = strategies()
-    if strategies:
-        return strategies[0]
-    strategies = getattr(engine, "strategies", None)
-    if callable(strategies):
-        strategies = strategies()
-    if strategies:
-        return strategies[0]
-    return None
+    strategy = _first_strategy(getattr(trader, "strategies", None))
+    if strategy is not None:
+        return strategy
+    return _first_strategy(getattr(engine, "strategies", None))
 
 
 def _returns_from_nav(nav: list[float]) -> list[float]:

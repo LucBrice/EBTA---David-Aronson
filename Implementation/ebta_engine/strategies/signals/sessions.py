@@ -2,10 +2,18 @@
 
 from __future__ import annotations
 
+from typing import TypedDict
+
 import pandas as pd
 
 
-_SESSION_CONFIG = {
+class _SessionWindow(TypedDict):
+    tz: str
+    open: float
+    close: float
+
+
+_SESSION_CONFIG: dict[str, _SessionWindow] = {
     "asia": {"tz": "Asia/Tokyo", "open": 9.0, "close": 18.0},
     "london": {"tz": "Europe/London", "open": 8.0, "close": 17.0},
     "us": {"tz": "America/New_York", "open": 9.5, "close": 16.0},

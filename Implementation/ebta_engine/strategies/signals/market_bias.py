@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
 
@@ -25,8 +24,8 @@ def compute_market_bias(df: pd.DataFrame, tf_minutes: int) -> pd.Series:
     open_2 = open_.shift(2)
     close_1 = close.shift(1)
     close_2 = close.shift(2)
-    body_high_2 = pd.Series(np.maximum(open_2, close_2), index=df.index)
-    body_low_2 = pd.Series(np.minimum(open_2, close_2), index=df.index)
+    body_high_2 = pd.concat([open_2, close_2], axis=1).max(axis=1)
+    body_low_2 = pd.concat([open_2, close_2], axis=1).min(axis=1)
 
     engulf = (high_1 > high_2) & (low_1 < low_2)
     engulf_bull = engulf & (close_1 > body_high_2)

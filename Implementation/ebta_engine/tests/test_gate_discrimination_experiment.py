@@ -12,6 +12,7 @@ EXPERIMENT_PATH = IMPLEMENTATION_ROOT / "examples" / "controlled_experiments" / 
 
 def _load_experiment_module():
     spec = importlib.util.spec_from_file_location("gate_discrimination_experiment", EXPERIMENT_PATH)
+    assert spec is not None and spec.loader is not None, f"cannot load spec for {EXPERIMENT_PATH}"
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

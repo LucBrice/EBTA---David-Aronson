@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from typing import Any
 from pathlib import Path
 
 from ebta_engine import SUPPORTED_PROTOCOL_VERSIONS
@@ -291,7 +292,7 @@ def _required_oos_flags() -> tuple[str, ...]:
 
 
 def _bias_gate_report(**overrides: object) -> dict[str, object]:
-    kwargs = {
+    kwargs: dict[str, Any] = {
         "candidate_registry": [_registry_event("RUN-001", "CAND-001"), _registry_event("RUN-002", "CAND-002")],
         "statistical_family_matrix": _family_matrix(["CAND-001", "CAND-002"]),
         "preregistration_manifest": _decision_lock(),

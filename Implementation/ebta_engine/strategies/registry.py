@@ -13,6 +13,10 @@ from typing import Any, Protocol, runtime_checkable
 class IncrementalSignalStrategy(Protocol):
     """Stable interface consumed by the Nautilus strategy bridge."""
 
+    def __init__(self, payload: dict[str, Any] | None = None, *, warmup_bar_count: int = 0) -> None:
+        """Match the constructor shape every registered strategy must expose."""
+        ...
+
     def on_bar(self, bar: Any) -> None:
         """Update internal state from one closed bar."""
         ...

@@ -22,15 +22,18 @@ def build_daily_return_series(observations: list[dict[str, Any]]) -> dict[str, A
         if adjusted_close <= 0:
             raise ValueError("adjusted nav_close must be positive for log-return calculation")
         log_return = math.log(adjusted_close / nav_open)
+        gross_pnl = float(observation.get("gross_pnl", 0.0))
+        costs = float(observation.get("costs", 0.0))
+        net_pnl = float(observation.get("net_pnl", gross_pnl - costs))
         rows.append(
             {
                 "date": observation["date"],
                 "nav_open": nav_open,
                 "nav_close": nav_close,
                 "external_flow": external_flow,
-                "gross_pnl": float(observation.get("gross_pnl", 0.0)),
-                "costs": float(observation.get("costs", 0.0)),
-                "net_pnl": float(observation.get("net_pnl", observation.get("gross_pnl", 0.0) - observation.get("costs", 0.0))),
+                "gross_pnl": gross_pnl,
+                "costs": costs,
+                "net_pnl": net_pnl,
                 "economic_log_return": log_return,
                 "economic_simple_return": math.exp(log_return) - 1.0,
                 "status": observation.get("status", "EXPOSED"),
