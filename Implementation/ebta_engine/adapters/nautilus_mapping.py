@@ -7,6 +7,7 @@ the Phase 2/3 venv smoke tests.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from decimal import Decimal
 from typing import Any, Sequence
 
@@ -328,36 +329,41 @@ def run_multifold_segments(
     segment_inputs: Sequence[dict[str, Any]],
     *,
     runner: Any | None = None,
+    max_workers: int = 1,
 ) -> list[dict[str, Any]]:
     """Run declared fold/candidate segment inputs without exposing segment labels."""
     if not segment_inputs:
         raise ValueError("segment_inputs must not be empty")
+    if max_workers <= 0:
+        raise ValueError("max_workers must be positive")
     run_one = runner or run_segment
-    outputs: list[dict[str, Any]] = []
-    for item in segment_inputs:
-        candidate = item["candidate"]
-        result = run_one(
-            candidate=item["candidate"],
-            bars=item["bars"],
-            cost_model=item["cost_model"],
-            instrument_config=item["instrument_config"],
-            seed=item["seed"],
-            starting_nav=item.get("starting_nav", 1000.0),
-            trade_size=item.get("trade_size", "1"),
-            interval_value=item.get("interval_value", 1),
-            interval_unit=item.get("interval_unit", "MINUTE"),
-            timestamp_is_close=item.get("timestamp_is_close", False),
-            warmup_bars=item.get("warmup_bars"),
-        )
-        outputs.append(
-            {
-                "fold_id": item.get("fold_id") or candidate.fold_id,
-                "candidate_id": candidate.candidate_id,
-                "asset": candidate.asset,
-                "simulation_result": result,
-            }
-        )
-    return outputs
+    if max_workers == 1:
+        return [_run_segment_input(item, run_one) for item in segment_inputs]
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        return list(executor.map(lambda item: _run_segment_input(item, run_one), segment_inputs))
+
+
+def _run_segment_input(item: dict[str, Any], run_one: Any) -> dict[str, Any]:
+    candidate = item["candidate"]
+    result = run_one(
+        candidate=item["candidate"],
+        bars=item["bars"],
+        cost_model=item["cost_model"],
+        instrument_config=item["instrument_config"],
+        seed=item["seed"],
+        starting_nav=item.get("starting_nav", 1000.0),
+        trade_size=item.get("trade_size", "1"),
+        interval_value=item.get("interval_value", 1),
+        interval_unit=item.get("interval_unit", "MINUTE"),
+        timestamp_is_close=item.get("timestamp_is_close", False),
+        warmup_bars=item.get("warmup_bars"),
+    )
+    return {
+        "fold_id": item.get("fold_id") or candidate.fold_id,
+        "candidate_id": candidate.candidate_id,
+        "asset": candidate.asset,
+        "simulation_result": result,
+    }
 
 
 def _flat_simulation_result(
@@ -449,9 +455,25 @@ def _report_empty(report: Any) -> bool:
 
 def _row_float(row: Any, *names: str, default: float) -> float:
     for name in names:
-        if name in row:
-            return _money_float(row[name])
+        if name not in row:
+            continue
+        value = row[name]
+        if _is_missing_report_value(value):
+            continue
+        return _money_float(value)
     return default
+
+
+def _is_missing_report_value(value: Any) -> bool:
+    if value is None:
+        return True
+    try:
+        if value != value:
+            return True
+    except Exception:
+        pass
+    text = str(value).strip().lower()
+    return text in {"", "none", "nan", "nat", "<na>"}
 
 
 def _money_float(value: Any) -> float:

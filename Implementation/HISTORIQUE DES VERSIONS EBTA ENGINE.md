@@ -80,6 +80,47 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-15 - R4 donnees M1 reelles et package Nautilus production
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / ADAPTER_MAPPING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/` gele en EBTA-DOC-1.1 ; SOP 04 ; SOP 08 ; plan `.ai/backlog/mainline/PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION.md` |
+| Fichiers impactes | `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/ebta_engine/adapters/nautilus_mapping.py`, `Implementation/ebta_engine/strategies/incremental/payload_f.py`, `Implementation/ebta_engine/strategies/incremental/payload_ghi.py`, tests R2/R4 |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS 143 tests ; Pyrefly bug-hunter -> 0 erreurs ; `.\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package` -> PASS ; `validate_package_dir(Path('research_packages/nautilus_mvp'))` -> PASS ; `reports/execution.json` -> `total_orders=29`, `oos_total_orders=1` |
+
+### Contexte
+
+Le package Nautilus de production consommait encore un index quotidien au lieu
+des barres M1 reelles. Les strategies G/H/I appliquaient aussi le filtre de
+biais directionnel meme lorsque le candidate space demandait
+`bias_filter="none"`.
+
+### Decision
+
+Conserver un index journalier uniquement pour les bornes de walk-forward, puis
+trancher les segments train/test/OOS dans les barres M1 brutes. Mutualiser le
+filtre MTF de F et ne l'appliquer dans G/H/I que lorsque le payload le demande.
+Corriger l'extraction des positions Nautilus ouvertes en traitant
+`avg_px_close=None` comme valeur manquante couverte par le `default` existant.
+
+### Impact
+
+Le runtime execute maintenant les segments de production a resolution M1 et le
+package regenere prouve que le `PASS` n'est plus un package inerte sans ordre.
+Le parallelisme `subprocess` du builder ne change pas la semantique des
+segments ; il rend la validation R4 praticable apres timeout du mode sequentiel.
+Aucun seuil, statut, ordre de gate ou contrat normatif n'est modifie.
+
+### Suite
+
+Traiter dans des chantiers separes une fenetre de donnees plus longue,
+`warmup_bars` inter-fold, et une eventuelle migration du candidate space vers
+les codes E/F/G/H/I purs.
+
 ## 2026-07-13 - R1 moteur de signaux reel et R2 extraction Nautilus reelle
 
 | Champ | Valeur |

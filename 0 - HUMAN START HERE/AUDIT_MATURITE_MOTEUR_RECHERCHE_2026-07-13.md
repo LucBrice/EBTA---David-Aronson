@@ -6,6 +6,28 @@
 > Ce fichier reste `INTAKE`, non executable, tant qu'un humain ne l'a pas
 > audite et route vers `.ai/backlog/`.
 
+## Mise a jour de contexte — 2026-07-15
+
+Cette note reste une **photo d'audit du 2026-07-13**. Depuis cet audit, trois
+blocs critiques ont ete traites et clotures dans le cockpit `.ai/` :
+
+- `PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS` est `DONE` : moteur de signaux
+  incremental reel, bridge Nautilus delegue au registry, extraction R2 depuis
+  snapshots NAV/fills/positions, package Nautilus `PASS`.
+- `PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION` est `DONE` :
+  segments de production alimentes en M1 reel, `bias_filter="none"` respecte
+  par G/H/I, package regenere `PASS`, `validate_package_dir()` `PASS`,
+  `execution.json::total_orders = 29`, `oos_total_orders = 1`.
+- Le bug Nautilus observe sur une position ouverte (`avg_px_close=None`) a ete
+  corrige dans l'adapter et couvert par test de non-regression.
+
+Les sections ci-dessous conservent leur valeur historique : elles expliquent
+pourquoi R1/R2/R4 etaient necessaires. Elles ne doivent plus etre lues comme
+l'etat courant exact de ces trois points. Les risques restants a transformer en
+plans separes sont surtout : preuve vs attestation, qualite des donnees longues,
+warm-up inter-fold, realisme couts/slippage/latence, stress de robustesse reel,
+scalabilite du runner et edge cases Nautilus.
+
 ## Avertissement
 
 L'etat machine (`.ai/checkpoint.json`, `Implementation/Active/tracking.json`)
@@ -181,6 +203,56 @@ Composants manquants, par gravite decroissante :
 - **R10 — Rendre la boucle post-OOS reelle** (seulement quand une strategie
   survit reellement a l'OOS).
 
+### Etat post-R1/R2/R4 — 2026-07-15
+
+| Item de la roadmap initiale | Etat courant | Commentaire |
+| --- | --- | --- |
+| R1 — Vrai moteur de signaux | TRAITE / DONE | Le bridge Nautilus execute maintenant des strategies incrementales E/F/G/H/I via registry. |
+| R2 — Extraction performance Nautilus | TRAITE / DONE | Extraction via snapshots NAV, fills, positions ; cas position ouverte couvert. |
+| R3 — Preuve vs attestation | A PLANIFIER | Reste un sujet d'architecture : les verdicts de package doivent deriver des preuves, pas d'auto-attestations. |
+| R4 — Vrai volume M1 | TRAITE / DONE pour fenetre actuelle | M1 reel branche dans le package de production ; reste a tester sur horizon long. |
+| R5 — Realisme couts/slippage/latence | A PLANIFIER | Necessite sources et calibration, pas seulement un code path. |
+| R6 — Robustesse stressee | A PLANIFIER | Les scenarios doivent appliquer de vrais chocs. |
+| R7 — Reproductibilite operationnelle | A PLANIFIER | Data root parametrable, hash config reel, venv hors depot, doc d'autorite a realigner. |
+| R8 — Performance/scalabilite | A PLANIFIER | R4 a ajoute un parallelisme subprocess controle ; un benchmark long reste necessaire. |
+
+### Note a garder dans un coin — futurs plans de durcissement
+
+Ces points ne sont pas a executer directement depuis ce fichier. Ils doivent
+etre transformes plus tard en plans `0 - HUMAN START HERE/` puis routes via
+`/start` si l'humain decide de les prioriser.
+
+1. **Warm-up inter-fold / lookback**
+   Verifier que les segments test/OOS recoivent assez de contexte historique
+   pour les payloads qui utilisent une fenetre de lookback. C'est un risque
+   technique concret, pas une regle normative nouvelle.
+
+2. **Benchmark donnees longues / scalabilite**
+   Tester 1 mois, 3 mois, puis 1 an sur NASDAQ/XAUUSD, avec budget temps,
+   memoire, timeouts, nombre d'ordres, `validate_package_dir()` et package
+   `PASS`. Le `PASS` R4 actuel prouve la fenetre courte, pas l'echelle.
+
+3. **Validateur qualite CSV M1**
+   Ajouter des controles sur timestamps monotones UTC, doublons, trous,
+   coherence OHLC, volumes invalides, journees partielles et changements de
+   format. Ces controles doivent etre en amont de toute recherche longue.
+
+4. **Edge cases Nautilus**
+   Ajouter des tests cibles : position ouverte, rapport vide, zero fill, fill
+   partiel, ordre rejete/annule, precision prix/quantite, commissions absentes
+   ou non numeriques.
+
+5. **Invariant `PASS` non inerte**
+   R4 impose deja `total_orders > 0`. A renforcer plus tard avec
+   `oos_total_orders > 0`, exposition non nulle, NAV non plate, couts presents
+   si le modele de frais le requiert, et coherence entre fills/positions/NAV.
+
+6. **Frontiere bug-hunter vs validation scientifique**
+   `bug-hunter` doit rester le filet mecanique (typage, contrats Python,
+   Optional non gardes, regressions testables). Les risques de robustesse,
+   puissance statistique, realisme economique et qualite de recherche doivent
+   devenir des plans de validation dedies, pas des heuristiques de bug-hunter.
+
 ---
 
 ## 6. Vision globale
@@ -232,7 +304,15 @@ moteur vectoriel leger suffirait a ce stade.
 
 ## Suite proposee
 
-Un plan d'implementation detaille pour R1 (moteur de signaux) + R2 (extraction
-reelle Nautilus), avec points d'API concrets, est depose separement :
-`0 - HUMAN START HERE/PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS_2026-07-13.md`.
-Il reste `INTAKE` jusqu'a `/start`.
+Les plans R1/R2 et R4 ont ete routes, executes et clotures apres cet audit.
+La suite utile n'est donc plus de relancer ces chantiers, mais de creer un ou
+plusieurs plans separes pour les risques encore ouverts :
+
+- preuve vs attestation (`R3`) ;
+- realisme couts/slippage/latence (`R5`) ;
+- robustesse vraiment stressee (`R6`) ;
+- reproductibilite operationnelle (`R7`) ;
+- durcissement donnees longues / warm-up / edge cases Nautilus (note ci-dessus).
+
+Ce document reste volontairement en `INTAKE` : il sert de reservoir de constats
+et de futurs plans, pas de source executable.

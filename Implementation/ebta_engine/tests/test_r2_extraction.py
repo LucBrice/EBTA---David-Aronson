@@ -54,6 +54,27 @@ class R2ExtractionTests(unittest.TestCase):
 
         self.assertEqual(result.total_costs, 2.0)
 
+    def test_open_position_missing_close_price_uses_default_exit_price(self):
+        positions = _positions(realized_pnl=0.0)
+        positions.loc[0, "avg_px_close"] = None
+        engine = _Engine(
+            strategy=_Strategy([(_nanos("2026-01-01T00:00:00Z"), 1000.0, 100.0)]),
+            fills=_fills(commission=[0.0, 0.0]),
+            positions=positions,
+            is_flat=False,
+        )
+
+        result = extract_simulation_result(
+            candidate_id="CAND",
+            instrument_id="XAUUSD.SIM",
+            source_bars=_bars(),
+            engine=engine,
+            starting_nav=1000.0,
+            quantity=1.0,
+        )
+
+        self.assertEqual(result.positions[0]["exit_price"], 0.0)
+
     def test_no_model_requires_flat_portfolio_empty_fills_and_no_nav_snapshots(self):
         engine = _Engine(
             strategy=_Strategy([]),

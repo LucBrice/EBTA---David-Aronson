@@ -66,12 +66,17 @@ class NautilusResearchPackageTests(unittest.TestCase):
         self.assertEqual(search_space["candidate_count"], 8)
         self.assertEqual(search_space["asset_candidate_count"], {"NASDAQ": 8})
         self.assertEqual(execution["engine"], "nautilus_trader")
-        self.assertEqual(len(oos_series["observations"]), 2)
+        self.assertGreater(execution["total_orders"], 0)
+        self.assertGreater(execution["oos_total_orders"], 0)
+        self.assertEqual(len(oos_series["observations"]), 6)
         self.assertGreater(len(calls), 8)
         for call in calls:
             self.assertNotIn("segment", call)
             self.assertNotIn("segment_label", call)
             self.assertNotIn("oos", call)
+            self.assertEqual(call["interval_value"], 1)
+            self.assertEqual(call["interval_unit"], "MINUTE")
+            self.assertEqual(len(call["bars"]), 3)
 
 
 def _losing_segment_runner(**kwargs) -> SimulationResult:
@@ -91,7 +96,7 @@ def _losing_segment_runner(**kwargs) -> SimulationResult:
         daily_exposure=[0.1 for _ in bars],
         nav=nav,
         total_costs=0.0,
-        metadata={"source": "fake_nautilus_losing_test_runner"},
+        metadata={"source": "fake_nautilus_losing_test_runner", "total_orders": 2},
     )
 
 
@@ -105,7 +110,7 @@ def _fake_segment_runner(**kwargs) -> SimulationResult:
         daily_exposure=[0.1 for _ in bars],
         nav=[1000.0 + index for index, _ in enumerate(bars)],
         total_costs=0.0,
-        metadata={"source": "fake_nautilus_test_runner"},
+        metadata={"source": "fake_nautilus_test_runner", "total_orders": 2},
     )
 
 
@@ -113,18 +118,19 @@ def _write_fixture_data(data_root: Path) -> Path:
     rows = []
     start = datetime(2020, 1, 1, tzinfo=timezone.utc)
     for index in range(5):
-        timestamp = start + timedelta(days=index)
-        close = 100.0 + index * 0.5
-        rows.append(
-            {
-                "timestamp": timestamp.isoformat().replace("+00:00", "Z"),
-                "open": close - 0.1,
-                "high": close + 0.2,
-                "low": close - 0.2,
-                "close": close,
-                "volume": 1.0 + index,
-            }
-        )
+        for minute_offset in range(3):
+            timestamp = start + timedelta(days=index, minutes=minute_offset)
+            close = 100.0 + index * 0.5 + minute_offset * 0.01
+            rows.append(
+                {
+                    "timestamp": timestamp.isoformat().replace("+00:00", "Z"),
+                    "open": close - 0.1,
+                    "high": close + 0.2,
+                    "low": close - 0.2,
+                    "close": close,
+                    "volume": 1.0 + index + minute_offset,
+                }
+            )
     _write_asset_csv(data_root / "NASDAQ 1m", "USATECH.IDXUSD-m1-bid-2020-01-01-2020-01-31.csv", rows)
     return data_root
 

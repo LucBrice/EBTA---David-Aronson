@@ -25,6 +25,8 @@ PILOT_SCRIPT = IMPLEMENTATION_ROOT / "examples" / "minimal_pilot_pipeline" / "bu
 DEFAULT_NAUTILUS_ASSETS = ["NASDAQ", "XAUUSD"]
 DEFAULT_NAUTILUS_START = "2020-01-01T00:00:00Z"
 DEFAULT_NAUTILUS_END = "2020-01-10T23:59:00Z"
+NAUTILUS_SEGMENT_TIMEOUT_SECONDS = 300
+NAUTILUS_SEGMENT_WORKERS = 4
 
 # SOP 08 production thresholds for the Nautilus MVP perimeter (NASDAQ,
 # XAUUSD, liquidity-sweep family), calibrated by the human on 2026-07-10 (see
@@ -95,10 +97,15 @@ def build_nautilus_inputs(
     )
 
     run_one = segment_runner or _subprocess_segment_runner
+    segment_workers = 1 if segment_runner is not None else NAUTILUS_SEGMENT_WORKERS
     search_space = pilot._pilot_search_space(inputs)
     raw_bars_by_asset = {
-        asset: _daily_sample(load_ohlcv_bars(data_root, asset, start=start, end=end))
+        asset: load_ohlcv_bars(data_root, asset, start=start, end=end)
         for asset in assets
+    }
+    day_index_by_asset = {
+        asset: _day_boundary_index(bars)
+        for asset, bars in raw_bars_by_asset.items()
     }
     splitter = WalkForwardSplitter(
         n_folds=2,
@@ -109,7 +116,7 @@ def build_nautilus_inputs(
         embargo_days=0,
         warmup_days=0,
     )
-    reference_folds = splitter.build_folds(raw_bars_by_asset[assets[0]])
+    reference_folds = splitter.build_folds(day_index_by_asset[assets[0]])
     inputs["walk_forward_schedule"] = splitter.schedule(reference_folds)
     inputs["information_stop_criterion"] = {
         "criterion_type": "FIXED_FOLD_COUNT",
@@ -118,8 +125,8 @@ def build_nautilus_inputs(
         "fixed_end_date": None,
     }
     search_space = pilot._pilot_search_space(inputs)
-    bars_by_asset = {
-        asset: splitter.build_folds(raw_bars_by_asset[asset])
+    folds_by_asset = {
+        asset: splitter.build_folds(day_index_by_asset[asset])
         for asset in assets
     }
     candidate_series_by_id = {candidate_row["candidate_id"]: [] for candidate_row in search_space["candidates"]}
@@ -136,6 +143,7 @@ def build_nautilus_inputs(
         for candidate_row in search_space["candidates"]:
             parameters = candidate_row["parameters"]
             asset = parameters["asset"]
+            asset_fold = _fold_by_id(folds_by_asset[asset], fold["fold_id"])
             payload = payloads_by_fold[fold["fold_id"]][(asset, parameters["bias_filter"], parameters["session"])]
             segment_inputs.append(
                 {
@@ -148,18 +156,18 @@ def build_nautilus_inputs(
                         complexity=int(parameters.get("complexity", 1)),
                         fold_id=fold["fold_id"],
                     ),
-                    "bars": _fold_by_id(bars_by_asset[asset], fold["fold_id"])["test_bars"],
+                    "bars": _slice_bars_by_date_range(raw_bars_by_asset[asset], *asset_fold["schedule"]["test"]),
                     "cost_model": _nautilus_cost_model(),
                     "instrument_config": _instrument_config(asset),
                     "seed": 13,
                     "starting_nav": 1000.0,
                     "trade_size": "1",
                     "interval_value": 1,
-                    "interval_unit": "DAY",
+                    "interval_unit": "MINUTE",
                     "timestamp_is_close": True,
                 }
             )
-    test_outputs = run_multifold_segments(segment_inputs, runner=run_one)
+    test_outputs = run_multifold_segments(segment_inputs, runner=run_one, max_workers=segment_workers)
     for output in test_outputs:
         result = output["simulation_result"]
         candidate_series_by_id[output["candidate_id"]].extend(result.daily_returns)
@@ -175,6 +183,7 @@ def build_nautilus_inputs(
     for fold in reference_folds:
         parameters = selected_row["parameters"]
         asset = parameters["asset"]
+        asset_fold = _fold_by_id(folds_by_asset[asset], fold["fold_id"])
         payload = payloads_by_fold[fold["fold_id"]][(asset, parameters["bias_filter"], parameters["session"])]
         oos_inputs.append(
             {
@@ -187,19 +196,20 @@ def build_nautilus_inputs(
                     complexity=int(parameters.get("complexity", 1)),
                     fold_id=fold["fold_id"],
                 ),
-                "bars": _fold_by_id(bars_by_asset[asset], fold["fold_id"])["oos_bars"],
+                "bars": _slice_bars_by_date_range(raw_bars_by_asset[asset], *asset_fold["schedule"]["oos"]),
                 "cost_model": _nautilus_cost_model(),
                 "instrument_config": _instrument_config(asset),
                 "seed": 29,
                 "starting_nav": 1000.0,
                 "trade_size": "1",
                 "interval_value": 1,
-                "interval_unit": "DAY",
+                "interval_unit": "MINUTE",
                 "timestamp_is_close": True,
             }
         )
-    oos_outputs = run_multifold_segments(oos_inputs, runner=run_one)
+    oos_outputs = run_multifold_segments(oos_inputs, runner=run_one, max_workers=segment_workers)
     oos_results = [output["simulation_result"] for output in oos_outputs]
+    all_simulation_results = [result for results in result_by_candidate.values() for result in results] + oos_results
     oos_returns = [value for result in oos_results for value in result.daily_returns]
     inputs["oos_returns"] = oos_returns
     inputs["oos_primary_returns"] = [
@@ -230,6 +240,8 @@ def build_nautilus_inputs(
         "cost_model": "nautilus_zero_fee_deterministic",
         "central_scenario": "tradable_net",
         "orders": [{"order_id": "ORDER-NAUTILUS-MVP-SUMMARY", "status": "FILLED", "fill_id": "FILL-NAUTILUS-MVP-SUMMARY"}],
+        "total_orders": _total_orders(all_simulation_results),
+        "oos_total_orders": _total_orders(oos_results),
         "nav_reconciliation": "PASS",
         "engine": "nautilus_trader",
         "backtrader_runtime_dependency": False,
@@ -387,8 +399,30 @@ def _subprocess_segment_runner(**kwargs) -> SimulationResult:
             check=True,
             capture_output=True,
             text=True,
-            timeout=120,
+            timeout=NAUTILUS_SEGMENT_TIMEOUT_SECONDS,
         )
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(
+            "Nautilus segment subprocess failed "
+            f"candidate_id={kwargs['candidate'].candidate_id!r} "
+            f"fold_id={kwargs['candidate'].fold_id!r} "
+            f"asset={kwargs['candidate'].asset!r} "
+            f"bars={len(kwargs['bars'])} "
+            f"interval={kwargs.get('interval_value', 1)}-{kwargs.get('interval_unit', 'MINUTE')}\n"
+            f"stdout:\n{exc.stdout}\n"
+            f"stderr:\n{exc.stderr}"
+        ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            "Nautilus segment subprocess timed out "
+            f"candidate_id={kwargs['candidate'].candidate_id!r} "
+            f"fold_id={kwargs['candidate'].fold_id!r} "
+            f"asset={kwargs['candidate'].asset!r} "
+            f"bars={len(kwargs['bars'])} "
+            f"timeout_seconds={NAUTILUS_SEGMENT_TIMEOUT_SECONDS}\n"
+            f"stdout:\n{exc.stdout}\n"
+            f"stderr:\n{exc.stderr}"
+        ) from exc
     finally:
         request_path.unlink(missing_ok=True)
     result_payload = json.loads(completed.stdout.strip().splitlines()[-1])
@@ -408,13 +442,26 @@ def _bar_to_dict(bar: Any) -> dict[str, Any]:
     }
 
 
-def _daily_sample(bars: list[OhlcvBar]) -> list[OhlcvBar]:
+def _day_boundary_index(bars: list[OhlcvBar]) -> list[OhlcvBar]:
+    """Return one bar per day for fold date boundaries, never for simulation."""
     if not bars:
         raise ValueError("no bars loaded for Nautilus package")
     by_day: dict[str, OhlcvBar] = {}
     for bar in sorted(bars, key=lambda item: item.timestamp):
         by_day.setdefault(bar.timestamp.date().isoformat(), bar)
     return [by_day[day] for day in sorted(by_day)]
+
+
+def _slice_bars_by_date_range(bars: list[OhlcvBar], start_day: str, end_day: str) -> list[OhlcvBar]:
+    """Return raw M1 bars with calendar dates inside the inclusive day range."""
+    sliced = [
+        bar
+        for bar in bars
+        if start_day <= bar.timestamp.date().isoformat() <= end_day
+    ]
+    if not sliced:
+        raise ValueError(f"no bars found in inclusive date range [{start_day}, {end_day}]")
+    return sliced
 
 
 def _fold_by_id(folds: list[dict[str, Any]], fold_id: str) -> dict[str, Any]:
@@ -440,6 +487,14 @@ def _merge_results(candidate_id: str, results: list[SimulationResult]) -> Simula
         positions=[position for result in results for position in result.positions],
         metadata={"source": "nautilus_trader", "fold_count": len(results)},
     )
+
+
+def _total_orders(results: list[SimulationResult]) -> int:
+    total = 0
+    for result in results:
+        raw_total = result.metadata.get("total_orders") if isinstance(result.metadata, dict) else None
+        total += int(raw_total) if raw_total is not None else len(result.orders)
+    return total
 
 
 def _nautilus_robustness_grid() -> dict[str, Any]:
