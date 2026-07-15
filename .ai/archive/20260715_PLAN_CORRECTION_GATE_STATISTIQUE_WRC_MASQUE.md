@@ -501,12 +501,12 @@ exigee par la section 9.
 
 ## 12. Definition of Done
 
-- [ ] Phases 1 et 2 validees individuellement (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre (section Triage / Non-goals).
-- [ ] Aucune regression sur la suite de tests existante.
-- [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee.
-- [ ] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne subsiste comme substitut a une brique prevue par ce plan.
+- [x] Phases 1 et 2 validees individuellement (section 9).
+- [x] Exit criteria de la section Triage atteint et verifiable.
+- [x] Aucune modification hors perimetre (section Triage / Non-goals).
+- [x] Aucune regression sur la suite de tests existante.
+- [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee.
+- [x] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne subsiste comme substitut a une brique prevue par ce plan.
 
 ---
 
@@ -516,19 +516,19 @@ A remplir au moment de `/close`.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir] |
-| Ecarts par rapport au plan initial | [a remplir] |
+| Resultat final | DONE — le verdict WRC reel (`wrc["verdict"]`) alimente maintenant le `statistical_status` du gate economique et du gate d'incubation. Un WRC `FAIL` reel produit `economic.global_status == "FAIL"` et `incubation_gate.status == "FAIL"` sur le chemin `build_nautilus_research_package()` avec runner synthetique. |
+| Ecarts par rapport au plan initial | Aucun ecart de scope fonctionnel. Le build Nautilus reel complet sans runner injecte a ete tente mais a timeoute apres 240 s ; la preuve de non-regression de production reste fournie par le test injecte prevu en Phase 2. Le `status` global de `validate_package_dir()` reste volontairement hors perimetre et insensible a cette correction tant que le futur chantier `validators/` n'est pas execute. |
 | Suites a prevoir (hors perimetre de ce plan) | **Priorite la plus haute, decouverte par l'audit `/evaluate` de ce plan (2026-07-15)** : corriger `validators/gate_validator.py::validate_gates()` (verification de presence/verite Python, jamais de valeur, sur les 15 gates G0-G14 — pas seulement G4/WRC) et `validators/package_validator.py` (ne lit jamais `reports/incubation_gate.json` ni `economic.json.global_status`/`.statistical_status`) pour que le `status` global de `validate_package_dir()` puisse enfin refleter un WRC `FAIL` ou tout autre gate reellement en echec — sans cette correction, le present plan rend les artefacts JSON individuels honnetes mais le verdict global du package reste insensible a leur contenu. Necessite une decision humaine explicite avant de toucher `validators/` (module a plus haute autorite que `package_builder/`). Ensuite, dans un ordre de priorite moindre : refonte des ~35 autres booleens auto-attestes de `gates.json`/`invariant_evidence.json` (attestations de gouvernance necessitant un mecanisme de decision humaine reel, ex. `kill_switch_tested`, `live_approval`, `independent_pre_oos_approval`) ; realisme couts/slippage/latence (R5 de l'audit) ; robustesse reellement stressee (R6) ; reproductibilite operationnelle (R7, venv commite, data root en dur, hash de config placeholder). |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [a remplir] |
-| Phases executees | [a remplir] |
-| Artefact produit | [a remplir] |
-| Validation | [a remplir] |
-| Ecart par rapport au plan | [a remplir] |
+| Date | 2026-07-15 |
+| Phases executees | Phase 1 et Phase 2 implementees : `wrc["verdict"]` est propage vers `economic_gate_report()` et `incubation_gate()`, le `PASS` mort de la fixture pilote est retire, et un test de production Nautilus prouve qu'un WRC `FAIL` reel atteint les deux gates. |
+| Artefact produit | Code modifie dans `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, test ajoute dans `Implementation/ebta_engine/tests/test_nautilus_research_package.py`, trace runtime dans `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`. |
+| Validation | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py` PASS (3 tests) ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS (144 tests) ; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS ; Pyrefly cible `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` : 0 errors ; `python -m json.tool .ai\checkpoint.json` PASS ; `python -m json.tool Implementation\Active\tracking.json` PASS. |
+| Ecart par rapport au plan | Le build Nautilus reel sans runner injecte a ete tente depuis la racine (echec `ModuleNotFoundError`, `ebta_engine` hors `PYTHONPATH`) puis depuis `Implementation/` ; la seconde tentative a depasse 240 s et a ete interrompue par timeout. La preuve de production demandee est couverte par `build_nautilus_research_package()` avec `segment_runner` synthetique dans le test, comme prevu par la Phase 2. |
 
 ---
 

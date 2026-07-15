@@ -80,6 +80,44 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-15 - Propagation du verdict WRC reel vers gates economique et incubation
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | SOP 02 (WRC), SOP 08 (gate economique), SOP 11 (incubation) |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` (PASS, 144 tests); `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` (PASS); `Implementation/adapters/nautilus_env/venv/Scripts/python.exe -m pyrefly check ... --output-format min-text` (0 errors) |
+
+### Contexte
+
+Le rapport WRC etait calcule dans `_procedure_reports()`, mais son verdict
+etait masque ensuite par un `statistical_status` fixe a `PASS` dans le gate
+economique et le gate d'incubation.
+
+### Decision
+
+Faire circuler `wrc["verdict"]` vers `economic_gate_report()` et
+`incubation_gate()`, retirer le `PASS` mort de la fixture pilote, et marquer
+dans le builder Nautilus que le statut statistique initial n'est qu'un
+placeholder ecrase par l'assemblage pilote.
+
+### Impact
+
+Les rapports `economic.json` et `incubation_gate.json` peuvent maintenant
+refleter un WRC `FAIL` reel. Le `status` global de `validate_package_dir()`
+reste volontairement hors perimetre de ce correctif, conformement au plan actif
+qui reporte la correction des validateurs a un chantier separe.
+
+### Suite
+
+Traiter separement `validators/gate_validator.py` et
+`validators/package_validator.py` si l'humain autorise le chantier plus large
+sur le verdict global du package.
+
 ## 2026-07-15 - R4 donnees M1 reelles et package Nautilus production
 
 | Champ | Valeur |

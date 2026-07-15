@@ -262,7 +262,9 @@ def build_nautilus_inputs(
     selected_oos = _merge_results(selected_candidate_id, oos_results)
     economic_flags = compute_economic_pass_flags(selected_oos, thresholds=NAUTILUS_ECONOMIC_THRESHOLDS)
     inputs["economic_gate"] = selected_oos.economic_gate_evidence(
-        statistical_status="PASS",
+        # Placeholder only: the pilot assembly overwrites this with the real
+        # WRC verdict before building economic.json.
+        statistical_status="PENDING_WRC",
         thresholds=NAUTILUS_ECONOMIC_THRESHOLDS,
         observed_values={
             **economic_observed_values(selected_oos),

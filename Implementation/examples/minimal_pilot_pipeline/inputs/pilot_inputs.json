@@ -190,7 +190,6 @@
     { "available_at": "2019-12-31T00:00:00Z", "decision_at": "2020-01-01T00:00:00Z" }
   ],
   "economic_gate": {
-    "statistical_status": "PASS",
     "return_hurdle_pass": true,
     "drawdown_pass": true,
     "capacity_pass": true,

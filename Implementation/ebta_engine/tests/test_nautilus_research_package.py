@@ -6,6 +6,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from ebta_engine.package_builder.nautilus_research_package import build_nautilus_research_package
+from ebta_engine.procedures.economic_gate import economic_gate_report
+from ebta_engine.procedures.lifecycle import incubation_gate
 from ebta_engine.strategies.contracts import SimulationResult
 
 
@@ -34,6 +36,65 @@ class NautilusEconomicGateProductionTests(unittest.TestCase):
         self.assertEqual(economic["economic_status"], "REJECTED_ECONOMIC")
         self.assertIn("return_hurdle_pass", economic["failures"])
         self.assertIn("costs_pass", economic["failures"])
+
+
+class NautilusStatisticalGateProductionTests(unittest.TestCase):
+    """Non-regression proof for PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE."""
+
+    def test_real_wrc_fail_reaches_economic_and_incubation_gates(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            report = build_nautilus_research_package(
+                package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=_statistical_fail_segment_runner,
+            )
+            config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
+            wrc = json.loads((package_dir / "reports" / "wrc.json").read_text(encoding="utf-8"))
+            economic = json.loads((package_dir / "reports" / "economic.json").read_text(encoding="utf-8"))
+            incubation = json.loads((package_dir / "reports" / "incubation_gate.json").read_text(encoding="utf-8"))
+            robustness = json.loads((package_dir / "reports" / "robustness.json").read_text(encoding="utf-8"))
+            execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
+            reproduction = json.loads(
+                (package_dir / "reports" / "reproduction_validation.json").read_text(encoding="utf-8")
+            )
+
+        self.assertEqual(report["status"], "PASS")
+        self.assertEqual(wrc["verdict"], "FAIL")
+        self.assertEqual(economic["statistical_status"], "FAIL")
+        self.assertEqual(economic["economic_status"], "PASS")
+        self.assertEqual(economic["global_status"], "FAIL")
+        self.assertEqual(incubation["status"], "FAIL")
+        self.assertIn("statistical_status", incubation["failures"])
+
+        old_economic = economic_gate_report(
+            {
+                "statistical_status": "PASS",
+                "return_hurdle_pass": True,
+                "drawdown_pass": True,
+                "capacity_pass": True,
+                "costs_pass": True,
+                "execution_pass": True,
+                "thresholds": economic["thresholds"],
+                "observed_values": economic["observed_values"],
+                "capacity_grid": economic["capacity_grid"],
+            }
+        )
+        old_incubation = incubation_gate(
+            {
+                "statistical_status": "PASS",
+                "economic_status": old_economic["economic_status"],
+                "robustness_status": robustness["status"],
+                "execution_status": execution["status"],
+                "package_stage": config["reproducibility_manifest"]["package_stage"],
+                "reproduction_status": reproduction["status"],
+            }
+        )
+        self.assertEqual(old_economic["global_status"], "PASS")
+        self.assertEqual(old_incubation["status"], "PASS")
 
 
 class NautilusResearchPackageTests(unittest.TestCase):
@@ -97,6 +158,30 @@ def _losing_segment_runner(**kwargs) -> SimulationResult:
         nav=nav,
         total_costs=0.0,
         metadata={"source": "fake_nautilus_losing_test_runner", "total_orders": 2},
+    )
+
+
+def _statistical_fail_segment_runner(**kwargs) -> SimulationResult:
+    bars = kwargs["bars"]
+    starting_nav = kwargs.get("starting_nav", 1000.0)
+    if kwargs["seed"] == 13:
+        returns = [0.0 for _ in bars]
+    else:
+        returns = [0.01 for _ in bars]
+    nav = []
+    current_nav = starting_nav
+    for value in returns:
+        current_nav *= 1.0 + value
+        nav.append(current_nav)
+    return SimulationResult(
+        candidate_id=kwargs["candidate"].candidate_id,
+        instrument_id=kwargs["instrument_config"].instrument_id,
+        timestamps=[bar.timestamp.isoformat().replace("+00:00", "Z") for bar in bars],
+        daily_returns=returns,
+        daily_exposure=[0.1 for _ in bars],
+        nav=nav,
+        total_costs=0.0,
+        metadata={"source": "fake_nautilus_statistical_fail_runner", "total_orders": 2},
     )
 
 

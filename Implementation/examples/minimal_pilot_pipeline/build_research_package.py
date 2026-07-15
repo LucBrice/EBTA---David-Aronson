@@ -382,7 +382,11 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
         mean_block_length=statistical_plan["oos_mean_block_length"],
         seed=statistical_plan["oos_seed"],
     )
-    economic = economic_gate_report(pilot_inputs["economic_gate"])
+    economic_gate_evidence = {
+        **pilot_inputs["economic_gate"],
+        "statistical_status": wrc["verdict"],
+    }
+    economic = economic_gate_report(economic_gate_evidence)
     robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
     sealing = validate_pre_oos_seal(**pilot_inputs["pre_oos_seal"])
     g_bias = _g_bias_report(pilot_inputs, search_space, candidate_matrix, robustness)
@@ -401,7 +405,7 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
     )
     incubation_gate_report = incubation_gate(
         {
-            "statistical_status": "PASS",
+            "statistical_status": wrc["verdict"],
             "economic_status": economic["economic_status"],
             "robustness_status": robustness["status"],
             "execution_status": pilot_inputs["execution_report"]["status"],
