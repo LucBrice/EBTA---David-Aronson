@@ -34,6 +34,22 @@ Before any substantive action, read in this order:
 - Keep `AGENTS.md` thin. Put AI project state in `.ai/`, not in parallel state folders.
 - Human drafts enter through `0 - HUMAN START HERE/` and are never executable by default.
 - If active hook or tracking paths change, update `.ai/checkpoint.json` first; update `.ai/README.md` only when stable cockpit rules change.
+- Every commit touching this repo (by any AI or human) follows the detailed
+  commit-message shape already in this repo's history — see e.g. `94338b6` or
+  `184b013` as reference examples, not a one-off style. Minimum shape: a
+  `type(scope): summary` title (French scope/summary matching this repo's
+  convention), then a body with (1) the why — which audit/plan/finding drove
+  the change, not just what changed; (2) numbered root causes/changes if more
+  than one distinct thing is fixed; (3) a "Fichiers modifies" section listing
+  each changed file with the reason it changed; (4) a "Non touches" section
+  naming what was deliberately left alone (e.g. `Protocole/`, `validators/`)
+  to prove scope was respected; (5) a "Validation" section with the actual
+  commands run and their real result (tests, schema validation, package
+  build, pre-commit hook), not generic claims; (6) a `Co-Authored-By` footer
+  naming the authoring AI. A short one-line commit message is not acceptable
+  for changes under `Implementation/`, `Protocole/`, or `.ai/` — rewrite it
+  (amend, since not yet pushed) before moving on if the first draft is too
+  thin.
 - Consult `.agents/skills/` for specialized playbooks. Each `SKILL.md` documents its own trigger; when a task's shape matches one, read and follow it, regardless of which AI or tool is operating. In particular:
   - After implementing or modifying code under `Implementation/ebta_engine/` (or adjacent adapters/examples), and before declaring the task done, apply `.agents/skills/bug-hunter/SKILL.md` on the touched files. A confirmed real bug it finds must be fixed (or explicitly escalated to the human) before the task counts as complete.
   - Before calling `.ai/tools/plan.ps1 close` (see `/close` below), apply both `.agents/skills/bug-hunter/SKILL.md` (full sweep of the workstream's touched files, not just the last diff) and `.agents/skills/plan-conformance-audit/SKILL.md`. Do not call `plan.ps1 close` if either reports an open confirmed bug or a missing Exit criterion.
