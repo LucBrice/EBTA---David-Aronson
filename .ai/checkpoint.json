@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-15",
+  "updated_at": "2026-07-16",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -446,6 +446,26 @@
       "closure_reason": "Correction validators statut global package terminee; bug-hunter PASS; conformance audit PASS; runtime suite PASS; minimal pilot package PASS",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
+      "title": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATE_ROBUSTESSE_G5_FIGE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-16",
+      "last_moved_at": "2026-07-16",
+      "routing_decision": "fix",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
