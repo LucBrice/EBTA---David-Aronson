@@ -1,6 +1,6 @@
 import unittest
 
-from ebta_engine.validators.gate_validator import validate_gates
+from ebta_engine.validators.gate_validator import GATE_REQUIREMENTS, validate_gates
 
 
 class GateTests(unittest.TestCase):
@@ -17,6 +17,31 @@ class GateTests(unittest.TestCase):
         self.assertEqual(results["G0"].status, "PASS")
         self.assertEqual(results["G1"].status, "INCONCLUSIVE")
         self.assertEqual(results["G1"].missing, ["data_snapshots", "availability_timestamps", "anti_leakage_report"])
+
+    def test_gate_report_rejects_non_pass_wrc_verdict(self):
+        evidence = _complete_evidence()
+        evidence["wrc_status"] = "FAIL"
+
+        results = {result.gate_id: result for result in validate_gates(evidence)}
+
+        self.assertNotEqual(results["G4"].status, "PASS")
+        self.assertIn("wrc_status", results["G4"].missing)
+
+    def test_gate_report_rejects_non_pass_robustness_verdict(self):
+        evidence = _complete_evidence()
+        evidence["pre_oos_robustness_verdict"] = "FAIL"
+
+        results = {result.gate_id: result for result in validate_gates(evidence)}
+
+        self.assertNotEqual(results["G5"].status, "PASS")
+        self.assertIn("pre_oos_robustness_verdict", results["G5"].missing)
+
+
+def _complete_evidence() -> dict[str, object]:
+    evidence: dict[str, object] = {name: True for requirements in GATE_REQUIREMENTS.values() for name in requirements}
+    evidence["wrc_status"] = "PASS"
+    evidence["pre_oos_robustness_verdict"] = "PASS"
+    return evidence
 
 
 if __name__ == "__main__":

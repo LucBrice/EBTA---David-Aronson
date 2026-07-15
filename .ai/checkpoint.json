@@ -430,21 +430,22 @@
       "id": "PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE",
       "title": "Statut global de package reflete un gate reellement en echec",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
+      "source_path": ".ai/archive/20260715_PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260715_OBSERVATION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-15",
       "last_moved_at": "2026-07-15",
       "routing_decision": "fix",
-      "routing_reason": "R3 preuve vs attestation: validate_gates value-check + package_validator lit incubation_gate/economic.global_status; source OBSERVATION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md, demande humaine 2026-07-15",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Correction validators statut global package terminee; bug-hunter PASS; conformance audit PASS; runtime suite PASS; minimal pilot package PASS",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {

@@ -510,12 +510,12 @@ phase terminee sans la preuve executable exigee par la section 9.
 
 ## 12. Definition of Done
 
-- [ ] Phases 1, 2 et 3 validees individuellement (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre (section Triage / Non-goals).
-- [ ] Aucune regression sur la suite de tests existante.
-- [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee.
-- [ ] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne subsiste comme substitut a une brique prevue par ce plan.
+- [x] Phases 1, 2 et 3 validees individuellement (section 9).
+- [x] Exit criteria de la section Triage atteint et verifiable.
+- [x] Aucune modification hors perimetre (section Triage / Non-goals).
+- [x] Aucune regression sur la suite de tests existante.
+- [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee.
+- [x] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne subsiste comme substitut a une brique prevue par ce plan.
 
 ---
 
@@ -525,13 +525,26 @@ A remplir au moment de `/close`.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir |
-| Ecarts par rapport au plan initial | A remplir |
+| Resultat final | DONE — `validate_gates()` ne compte plus un verdict connu comme satisfait sauf s'il vaut `PASS`; `validate_package_dir()` requiert et lit `reports/incubation_gate.json`, lit `economic.global_status`, et fait basculer le statut global du package quand ces gates reels ne sont pas `PASS`. Les deux preuves production Nautilus qui documentaient l'ancien defaut R3 attendent maintenant `report["status"] == "FAIL"` pour les scenarios a WRC/economic/incubation en echec. |
+| Ecarts par rapport au plan initial | Aucun ecart fonctionnel. Ajout d'une trace runtime dans `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` pour respecter la gouvernance EBTA Engine. Les artefacts generes du package pilote ont ete executes pour preuve (`status: PASS`) puis remis hors diff car ils ne font pas partie du perimetre de ce plan. |
 | Suites a prevoir (hors perimetre de ce plan) | **Priorite la plus haute, deja identifiee a la redaction de ce plan** : corriger le defaut de **contenu** du gate robustesse — `Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_write_reports()` ligne 215 fige `"pre_oos_robustness_verdict": "PASS"` au lieu d'appeler `procedures/robustness.py::pre_oos_robustness_verdict()` (fonction deja correcte, deja testee, jamais branchee a cet endroit) — exactement le meme patron que le defaut WRC deja corrige, applique au gate de robustesse (G5) plutot qu'au gate statistique (G4). A traiter par un plan `fix` dedie suivant le gabarit de `PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE`. Ensuite, dans un ordre de priorite moindre (deja identifie par l'audit R3 et non affecte par ce plan) : refonte des ~35 autres booleens auto-attestes de `gates.json`/`invariant_evidence.json` (attestations de gouvernance necessitant un mecanisme de decision humaine reel) ; realisme couts/slippage/latence (R5) ; robustesse reellement stressee (R6) ; reproductibilite operationnelle (R7). |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
-A remplir au moment de l'execution.
+2026-07-15 — Execution completee et auditee avant `/close`.
+
+- `Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m pyrefly check Implementation\ebta_engine\validators\gate_validator.py Implementation\ebta_engine\validators\package_validator.py Implementation\ebta_engine\tests\test_gates.py Implementation\ebta_engine\tests\test_package_validator.py Implementation\ebta_engine\tests\test_nautilus_research_package.py --output-format min-text` -> PASS, 0 errors.
+- `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_gates.py` -> PASS, 3 tests.
+- `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_package_validator.py` -> PASS, 10 tests.
+- `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py` -> PASS, 3 tests.
+- `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` -> PASS, 150 tests.
+- `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` -> PASS, package status `PASS`.
+- `python -m json.tool .ai\checkpoint.json` et validation JSON schema -> PASS.
+- `git diff --check -- .ai Implementation` -> PASS.
+
+Audit `bug-hunter` : PASS, aucun bug confirme ouvert.
+
+Audit `plan-conformance-audit` : PASS, tous les Exit criteria sont IMPLEMENTE ou couverts par preuve executable; aucun Non-goal viole.
 
 ---
 

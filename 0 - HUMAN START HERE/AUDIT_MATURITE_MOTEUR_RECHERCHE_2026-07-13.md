@@ -23,7 +23,7 @@ Lecture rapide : la source la plus actuelle de ce fichier est la table
 
 ## Etat courant resume — ACTUEL 2026-07-15
 
-Cette note reste une **photo d'audit du 2026-07-13**. Depuis cet audit, quatre
+Cette note reste une **photo d'audit du 2026-07-13**. Depuis cet audit, cinq
 blocs critiques ont ete traites et clotures dans le cockpit `.ai/` :
 
 - `PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS` est `DONE` : moteur de signaux
@@ -39,21 +39,30 @@ blocs critiques ont ete traites et clotures dans le cockpit `.ai/` :
   reel alimente maintenant `reports/economic.json::statistical_status` /
   `global_status` et `reports/incubation_gate.json::status`. Un WRC `FAIL`
   reel n'est donc plus masque par un `PASS` code en dur a ce niveau.
+- `PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE` est `DONE` : le statut
+  global du package n'ignore plus les gates reels en echec. `validate_gates()`
+  exige maintenant `PASS` pour les champs de verdict connus
+  (`PASS`/`FAIL`/`INCONCLUSIVE`), `validate_package_dir()` requiert et lit
+  `reports/incubation_gate.json`, et `economic.json::global_status` fait
+  echouer le package s'il est different de `PASS`.
 
 Les sections ci-dessous conservent leur valeur historique : elles expliquent
-pourquoi R1/R2/R4 et le defaut WRC masque etaient necessaires. Elles ne doivent
-plus etre lues comme l'etat courant exact de ces points. Les risques restants a
-transformer en plans separes sont surtout : preuve vs attestation au niveau du
-verdict global de package, qualite des donnees longues, warm-up inter-fold,
-realisme couts/slippage/latence, stress de robustesse reel, scalabilite du
-runner et edge cases Nautilus.
+pourquoi R1/R2/R4, le defaut WRC masque et le defaut de statut global package
+etaient necessaires. Elles ne doivent plus etre lues comme l'etat courant exact
+de ces points. Les risques restants a transformer en plans separes sont surtout
+: auto-attestations restantes dans `gates.json` / `invariant_evidence.json`,
+defaut de contenu du gate robustesse G5 (`pre_oos_robustness_verdict` encore
+fige a `PASS` dans le builder pilote), qualite des donnees longues, warm-up
+inter-fold, realisme couts/slippage/latence, stress de robustesse reel,
+scalabilite du runner et edge cases Nautilus.
 
-Limite importante de la correction WRC : elle rend les artefacts JSON
-individuels honnetes, mais ne corrige pas encore le verdict global
-`validate_package_dir()["status"]`. Les modules `validators/gate_validator.py`
-et `validators/package_validator.py` restent a traiter par un plan separe :
-ils verifient encore insuffisamment les valeurs effectives des gates et ne
-consomment pas toutes les sorties individuelles corrigees.
+Limite importante apres les corrections WRC + validators : le verdict global de
+package reflete maintenant les sorties WRC/economic/incubation en echec, mais
+cela ne transforme pas encore toutes les attestations du package en preuves
+derivees. Les sujets residuels sont des plans separes : brancher le vrai verdict
+de robustesse G5 dans `_write_reports()`, puis remplacer progressivement les
+booleens auto-attestes restants de `gates.json` et `invariant_evidence.json` par
+des sorties derivees de preuves.
 
 ## Avertissement initial — HISTORIQUE 2026-07-13
 
@@ -65,9 +74,9 @@ extraction -> statistiques -> gates -> validation.
 
 Mise a jour 2026-07-15 : cet avertissement reste utile comme principe de
 lecture, mais certains exemples qui l'ont motive ont ete corriges depuis
-(R1/R2/R4 et WRC masque). Le risque residuel porte surtout sur le statut global
-de package, les validators de gates/package, les attestations restantes et la
-validation scientifique longue.
+(R1/R2/R4, WRC masque et validators/statut global package). Le risque residuel
+porte surtout sur les attestations restantes, le verdict de robustesse G5 encore
+fige dans le builder pilote, et la validation scientifique longue.
 
 ---
 
@@ -130,9 +139,11 @@ gouvernance est reelle ; le contenu simule ne l'est pas.
 - `procedures/detrending.py` (formule SOP 07 correcte, mais alimentee par des
   donnees canned — voir 3).
 - `validators/*`, `schema_validation.py`, `schemas/` : rigoureux sur la
-  structure et de nombreuses coherences croisees. Nuance 2026-07-15 : les
-  validators de gates/package restent insuffisants pour faire refleter un WRC
-  `FAIL` dans le `status` global du package.
+  structure et de nombreuses coherences croisees. Mise a jour 2026-07-15 :
+  `validate_gates()` et `validate_package_dir()` font maintenant refleter les
+  echecs WRC/economic/incubation dans le statut global du package ; les
+  attestations residuelles de `gates.json` / `invariant_evidence.json` restent
+  a traiter separement.
 - `manifests/` : notarisation SHA-256 reelle et testee.
 - `governance/` (G-BIAS, SOP 13) : checkers reels.
 - `data/local_ohlcv.py`, `data/walk_forward.py` : reels et corrects.
@@ -155,7 +166,10 @@ gouvernance est reelle ; le contenu simule ne l'est pas.
   `LIVE_LIMITED_STARTED`), `manifest_hash_failures: []`. Le validateur valide
   une auto-attestation, pas une preuve derivee. Mise a jour 2026-07-15 : le
   cas precis du verdict WRC masque dans les gates economique/incubation est
-  corrige ; le reste du sujet d'auto-attestation demeure ouvert.
+  corrige, et le statut global du package consomme maintenant ces echecs via
+  les validators ; le reste du sujet d'auto-attestation demeure ouvert
+  (`gates.json` / `invariant_evidence.json`, notamment G5 robustesse encore
+  fige a `PASS` dans le builder pilote).
 - `procedures/incubation_report.py`, `monitoring.py`, `lifecycle.py`,
   `reproduction_report.py` : valident des rapports fournis en entree statique.
   Tout le cycle post-OOS (incubation -> paper trading -> deploiement -> live ->
@@ -257,13 +271,14 @@ la liste courante des prochains travaux.
 | --- | --- | --- |
 | R1 — Vrai moteur de signaux | TRAITE / DONE | Le bridge Nautilus execute maintenant des strategies incrementales E/F/G/H/I via registry. |
 | R2 — Extraction performance Nautilus | TRAITE / DONE | Extraction via snapshots NAV, fills, positions ; cas position ouverte couvert. |
-| R3 — Preuve vs attestation | PARTIELLEMENT TRAITE / RESTE A PLANIFIER | Le bug WRC masque est corrige dans `economic.json` et `incubation_gate.json`. Reste le sujet d'architecture : `validate_package_dir()["status"]`, `gates.json` et `invariant_evidence.json` doivent deriver des preuves, pas d'auto-attestations. |
+| R3 — Preuve vs attestation | PARTIELLEMENT TRAITE / RESIDUEL A PLANIFIER | Le bug WRC masque est corrige dans `economic.json` et `incubation_gate.json`, et `PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE` a corrige `validate_gates()` + `validate_package_dir()` pour que le statut global du package bascule quand WRC/economic/incubation echouent. Reste le sujet d'architecture : `gates.json` / `invariant_evidence.json` contiennent encore des attestations a deriver de preuves, et le gate robustesse G5 reste fige a `PASS` dans le builder pilote. |
 | R4 — Vrai volume M1 | TRAITE / DONE pour fenetre actuelle | M1 reel branche dans le package de production ; reste a tester sur horizon long. |
 | R5 — Realisme couts/slippage/latence | A PLANIFIER | Necessite sources et calibration, pas seulement un code path. |
 | R6 — Robustesse stressee | A PLANIFIER | Les scenarios doivent appliquer de vrais chocs. |
 | R7 — Reproductibilite operationnelle | A PLANIFIER | Data root parametrable, hash config reel, venv hors depot, doc d'autorite a realigner. |
 | R8 — Performance/scalabilite | A PLANIFIER | R4 a ajoute un parallelisme subprocess controle ; un benchmark long reste necessaire. |
-| Correction WRC masque | TRAITE / DONE | Le verdict WRC reel atteint les gates economique et incubation ; le verdict global de package reste un risque residuel cote validators. |
+| Correction WRC masque | TRAITE / DONE | Le verdict WRC reel atteint les gates economique et incubation. |
+| Correction statut global package | TRAITE / DONE | `validate_gates()` et `validate_package_dir()` ne laissent plus un package global `PASS` quand les gates WRC/economic/incubation reels echouent. |
 
 ### Note a garder dans un coin — futurs plans de durcissement
 
@@ -330,7 +345,7 @@ maturite initiale, pas comme un score courant exact.
 Etat 2026-07-15 : R1, R2 et R4 ne doivent plus etre lus comme des bloquants
 ouverts pour la fenetre de production courte. Les bloquants restants sont :
 
-1. Gates/verdict global encore partiellement auto-attestes (R3 residuel).
+1. Gates/invariants encore partiellement auto-attestes (R3 residuel hors statut global package).
 2. Realisme couts/slippage/latence non calibre (R5).
 3. Robustesse non stressee par de vrais chocs (R6).
 4. Reproductibilite operationnelle incomplete (R7).
@@ -347,13 +362,16 @@ pire resultat pour un cadre dont toute la valeur est l'honnetete statistique.
 
 La decision la plus risquee a long terme n'est pas Nautilus, c'est la
 **porosite entre la couche qui calcule les preuves et celle qui les declare**.
-Le pilote ecrit `gates.json` / `invariant_evidence.json` comme des documents
-"tout est vrai", et le validateur les relit. C'est inverse : les gates
+Le pilote ecrit encore une partie de `gates.json` / `invariant_evidence.json`
+comme des documents "tout est vrai", puis les validateurs relisent ces
+artefacts. C'est inverse : les gates
 devraient etre des **sorties** produites par les procedures a partir des
 artefacts de simulation, jamais des **entrees** redigees par le constructeur du
-paquet. Mise a jour 2026-07-15 : le premier vrai signal existe maintenant ; le
-sujet restant est donc a traiter cote gates, validators et statut global, pas
-comme un prealable au signal.
+paquet. Mise a jour 2026-07-15 : le premier vrai signal existe maintenant et le
+statut global package consomme desormais les echecs WRC/economic/incubation ; le
+sujet restant est donc a traiter cote contenu des attestations residuelles
+(`gates.json`, `invariant_evidence.json`, G5 robustesse), pas comme un prealable
+au signal.
 
 Second point : avoir choisi Nautilus (moteur event-driven lourd) puis
 contourner sa comptabilite revient a payer le cout sans le benefice. Soit on
@@ -364,13 +382,15 @@ moteur vectoriel leger suffirait a ce stade.
 
 ## Suite proposee
 
-Les plans R1/R2, R4 et la correction ciblee du WRC masque ont ete routes,
-executes et clotures apres cet audit. La suite utile n'est donc plus de
-relancer ces chantiers, mais de creer un ou plusieurs plans separes pour les
-risques encore ouverts :
+Les plans R1/R2, R4, la correction ciblee du WRC masque et la correction du
+statut global de package ont ete routes, executes et clotures apres cet audit.
+La suite utile n'est donc plus de relancer ces chantiers, mais de creer un ou
+plusieurs plans separes pour les risques encore ouverts :
 
-- preuve vs attestation residuelle (`R3`) : validators de gates/package,
-  `gates.json`, `invariant_evidence.json`, statut global de package ;
+- preuve vs attestation residuelle (`R3`) : corriger le contenu du gate
+  robustesse G5 (`pre_oos_robustness_verdict` fige a `PASS`), puis deriver
+  progressivement `gates.json` et `invariant_evidence.json` de preuves plutot
+  que d'attestations ;
 - realisme couts/slippage/latence (`R5`) ;
 - robustesse vraiment stressee (`R6`) ;
 - reproductibilite operationnelle (`R7`) ;

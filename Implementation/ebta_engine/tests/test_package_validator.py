@@ -77,6 +77,77 @@ class PackageValidatorTests(unittest.TestCase):
             self.assertEqual(report["status"], "FAIL")
             self.assertIn("reports/search_space.json", report["missing_paths"])
 
+    def test_missing_incubation_gate_report_fails_package_status(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+            (package_dir / "reports" / "incubation_gate.json").unlink()
+            manifest = build_manifest(
+                package_dir,
+                sorted(
+                    path
+                    for path in REQUIRED_PACKAGE_PATHS
+                    if path not in {"manifests/reproducibility_manifest.json", "reports/incubation_gate.json"}
+                ),
+                "VALIDATION_READY",
+            )
+            atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+            report = validate_package_dir(package_dir)
+            self.assertEqual(report["status"], "FAIL")
+            self.assertIn("reports/incubation_gate.json", report["missing_paths"])
+
+    def test_failed_incubation_gate_report_fails_package_status(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+            atomic_write_json(
+                package_dir / "reports" / "incubation_gate.json",
+                {"artifact_type": "incubation_gate", "status": "FAIL", "failures": ["statistical_status"]},
+            )
+            manifest = build_manifest(
+                package_dir,
+                sorted(path for path in REQUIRED_PACKAGE_PATHS if path != "manifests/reproducibility_manifest.json"),
+                "VALIDATION_READY",
+            )
+            atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+            report = validate_package_dir(package_dir)
+            self.assertEqual(report["status"], "FAIL")
+            self.assertIn("incubation_gate status is FAIL", report["semantic_errors"])
+
+    def test_failed_economic_global_status_fails_package_status(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+            economic = json.loads((package_dir / "reports" / "economic.json").read_text(encoding="utf-8"))
+            economic["global_status"] = "FAIL"
+            atomic_write_json(package_dir / "reports" / "economic.json", economic)
+            manifest = build_manifest(
+                package_dir,
+                sorted(path for path in REQUIRED_PACKAGE_PATHS if path != "manifests/reproducibility_manifest.json"),
+                "VALIDATION_READY",
+            )
+            atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+            report = validate_package_dir(package_dir)
+            self.assertEqual(report["status"], "FAIL")
+            self.assertIn("economic global_status is FAIL", report["semantic_errors"])
+
+    def test_rejected_economic_global_status_fails_package_status(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+            economic = json.loads((package_dir / "reports" / "economic.json").read_text(encoding="utf-8"))
+            economic["global_status"] = "REJECTED_ECONOMIC"
+            atomic_write_json(package_dir / "reports" / "economic.json", economic)
+            manifest = build_manifest(
+                package_dir,
+                sorted(path for path in REQUIRED_PACKAGE_PATHS if path != "manifests/reproducibility_manifest.json"),
+                "VALIDATION_READY",
+            )
+            atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+            report = validate_package_dir(package_dir)
+            self.assertEqual(report["status"], "FAIL")
+            self.assertIn("economic global_status is REJECTED_ECONOMIC", report["semantic_errors"])
+
     def test_present_g_bias_report_must_pass_when_available(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             package_dir = Path(temp_dir) / "package"

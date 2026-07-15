@@ -32,7 +32,8 @@ class NautilusEconomicGateProductionTests(unittest.TestCase):
                 segment_runner=_losing_segment_runner,
             )
             economic = json.loads((package_dir / "reports" / "economic.json").read_text(encoding="utf-8"))
-        self.assertEqual(report["status"], "PASS")
+        # The old R3 defect kept the package PASS despite a real economic gate failure.
+        self.assertEqual(report["status"], "FAIL")
         self.assertEqual(economic["economic_status"], "REJECTED_ECONOMIC")
         self.assertIn("return_hurdle_pass", economic["failures"])
         self.assertIn("costs_pass", economic["failures"])
@@ -62,7 +63,8 @@ class NautilusStatisticalGateProductionTests(unittest.TestCase):
                 (package_dir / "reports" / "reproduction_validation.json").read_text(encoding="utf-8")
             )
 
-        self.assertEqual(report["status"], "PASS")
+        # The old R3 defect kept the package PASS despite a real statistical gate failure.
+        self.assertEqual(report["status"], "FAIL")
         self.assertEqual(wrc["verdict"], "FAIL")
         self.assertEqual(economic["statistical_status"], "FAIL")
         self.assertEqual(economic["economic_status"], "PASS")

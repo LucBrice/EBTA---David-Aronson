@@ -34,15 +34,23 @@ GATE_REQUIREMENTS = {
     "G14": ["lifecycle_archive", "incident_log", "retention_policy"],
 }
 
+VERDICT_VALUES = {"PASS", "FAIL", "INCONCLUSIVE"}
+
 
 def validate_gates(evidence: dict) -> list[GateResult]:
     results: list[GateResult] = []
     for gate_id, requirements in GATE_REQUIREMENTS.items():
-        missing = [name for name in requirements if not evidence.get(name)]
-        present = [name for name in requirements if evidence.get(name)]
+        missing = [name for name in requirements if not _requirement_satisfied(evidence.get(name))]
+        present = [name for name in requirements if _requirement_satisfied(evidence.get(name))]
         status = "PASS" if not missing else "INCONCLUSIVE"
         results.append(GateResult(gate_id, status, missing, present))
     return results
+
+
+def _requirement_satisfied(value: object) -> bool:
+    if value in VERDICT_VALUES:
+        return value == "PASS"
+    return bool(value)
 
 
 def gate_report(evidence: dict) -> dict:

@@ -80,6 +80,54 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-15 - Statut global de package sensible aux gates reels en echec
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 3, 5, 6; SOP 02; SOP 05; SOP 08; SOP 11 |
+| Fichiers impactes | `Implementation/ebta_engine/validators/gate_validator.py`, `Implementation/ebta_engine/validators/package_validator.py`, `Implementation/ebta_engine/fixtures/valid_minimal/reports/incubation_gate.json`, `Implementation/ebta_engine/tests/test_gates.py`, `Implementation/ebta_engine/tests/test_package_validator.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py` |
+| Impact protocole | NONE |
+| Verification | `Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m pyrefly check ... --output-format min-text`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_gates.py`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_package_validator.py`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py`; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation`; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` |
+
+### Contexte
+
+Le plan `PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE` corrigeait le
+risque R3 "preuve vs attestation" : les rapports individuels pouvaient deja
+porter un WRC, un gate economique ou une incubation en echec, tandis que le
+statut global du package restait `PASS` parce que les validateurs aval lisaient
+la presence ou la verite Python des champs plutot que leur valeur.
+
+### Decision
+
+Durcir la lecture des validateurs sans modifier `Protocole/` :
+
+- `validate_gates()` traite les valeurs de verdict connues
+  `PASS`/`FAIL`/`INCONCLUSIVE` comme satisfaites uniquement si elles valent
+  exactement `PASS` ;
+- `validate_package_dir()` requiert `reports/incubation_gate.json` et fait
+  echouer le package si `incubation_gate.status` ou `economic.global_status`
+  est present et different de `PASS` ;
+- la fixture minimale et les tests prouvent les cas `FAIL` et
+  `REJECTED_ECONOMIC`, ainsi que les deux bascules de statut global sur le
+  chemin `build_nautilus_research_package()`.
+
+### Impact
+
+Le statut global du package redevient subordonne aux gates EBTA deja calcules.
+Aucun seuil, ordre de gate, statut EBTA ou SOP n'est modifie. Les procedures,
+le protocole, la gouvernance, les manifests et les adaptateurs restent hors
+perimetre.
+
+### Suite
+
+Traiter dans un plan separe le defaut de contenu du gate robustesse deja
+documente : `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`
+fige encore `pre_oos_robustness_verdict` a `PASS` au lieu d'appeler le calcul
+runtime existant.
+
 ## 2026-07-15 - Propagation du verdict WRC reel vers gates economique et incubation
 
 | Champ | Valeur |

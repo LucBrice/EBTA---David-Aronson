@@ -24,6 +24,7 @@ REQUIRED_PACKAGE_PATHS = {
     "reports/robustness.json",
     "reports/oos.json",
     "reports/economic.json",
+    "reports/incubation_gate.json",
     "reports/execution.json",
     "reports/reproduction.json",
     "reports/invariant_evidence.json",
@@ -177,6 +178,7 @@ def _semantic_consistency_errors(package_dir: Path) -> list[str]:
     wrc = _load_json(reports_dir / "wrc.json", default={})
     oos = _load_json(reports_dir / "oos.json", default={})
     economic = _load_json(reports_dir / "economic.json", default={})
+    incubation_gate = _load_json(reports_dir / "incubation_gate.json", default={})
     fold_schedule = _load_json(reports_dir / "fold_schedule.json", default={})
 
     configured_count = config.get("candidate_space", {}).get("candidate_count")
@@ -209,6 +211,10 @@ def _semantic_consistency_errors(package_dir: Path) -> list[str]:
 
     if fold_schedule and fold_schedule.get("status") != "PASS":
         errors.append(f"fold_schedule status is {fold_schedule.get('status')}")
+    if incubation_gate and incubation_gate.get("status") != "PASS":
+        errors.append(f"incubation_gate status is {incubation_gate.get('status')}")
+    if economic and economic.get("global_status") is not None and economic.get("global_status") != "PASS":
+        errors.append(f"economic global_status is {economic.get('global_status')}")
     if economic and economic.get("economic_status") == "PASS":
         for key in ["thresholds", "observed_values", "capacity_grid"]:
             if key not in economic:

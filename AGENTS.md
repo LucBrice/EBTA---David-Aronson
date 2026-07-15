@@ -77,10 +77,13 @@ to manage a plan. These are the human-facing commands.
 - After `/start` writes the plan and before `/continue` begins real
   implementation, run an architecture-refinement loop on the plan: invoke
   `code-architecture-evaluator` (`/evaluate`), fix what it flags, re-run
-  `/evaluate`, and repeat until no major blind spot remains — cap at 3-4
-  passes total; if issues are still surfacing after that, the plan itself
-  needs human input, not another automated pass. Once the loop converges,
-  commit the current state (the refined plan plus any `/evaluate`-driven
+  `/evaluate`. Minimum 2 passes — a single clean pass is not proof of
+  convergence. The loop only ends on genuine convergence (a pass surfaces
+  no new major blind spot), hard-capped at 5-6 passes total as a safety
+  valve; if issues are still surfacing at the cap, stop and escalate to the
+  human — the plan itself needs a decision, not another automated pass.
+  Once the loop converges, commit the current state (the refined plan plus
+  any `/evaluate`-driven
   fixes) as a clean pre-implementation baseline, matching this repo's
   existing commit style (topic-scoped `type(scope): summary` title, a body
   itemizing what changed and why per file/section, a test-suite status
