@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -493,10 +493,10 @@
       "id": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
       "title": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE.md",
+      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATES_ATTESTATIONS_RESIDUELLES.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-16",
@@ -506,9 +506,9 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "G9 OOS statistique branche sur statistical_gate reel; bug-hunter PASS; conformance audit PASS; suite runtime PASS",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
