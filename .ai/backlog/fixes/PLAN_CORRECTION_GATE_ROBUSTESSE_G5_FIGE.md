@@ -507,23 +507,22 @@ la section 9.
 
 ## 13. Cloture
 
-A remplir au moment de `/close`.
+Chantier non cloture au 2026-07-16. La correction ciblee G5 est livree, mais
+la procedure `/close` reste bloquee par un critere de verification production
+du plan initial : le build Nautilus reel ne retourne plus un timeout, il
+termine, mais le package produit est `FAIL` a cause du WRC primaire reel.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a la cloture] |
-| Ecarts par rapport au plan initial | [a remplir a la cloture] |
-| Suites a prevoir (hors perimetre de ce plan) | Couverture de catalogue preregistre (`preregistered_catalogue` sur `pre_oos_robustness_verdict()`, DN-030) ; realisme des scenarios de robustesse (R6 — CENTRAL/PLAUSIBLE/EXTREME recoivent aujourd'hui les memes donnees, aucun choc reel applique) ; realisme couts/slippage/latence (R5) ; reproductibilite operationnelle (R7) ; refonte des ~35 autres booleens auto-attestes de `gates.json`/`invariant_evidence.json`. |
+| Resultat final | NON CLOTURE au 2026-07-16. Correction G5 implementee et verifiee localement, mais `/close` non appele car le critere production "package Nautilus PASS avant/apres" n'est pas satisfait. |
+| Ecarts par rapport au plan initial | Ecart d'execution assume apres demande utilisateur "Corrige dans ce cas" : stabilisation technique hors coeur G5 pour lever le timeout du build Nautilus M1 (`nautilus_mapping.py`, `nautilus_strategy_bridge.py`, `nautilus_research_package.py`, test dedie phase 5). Cette stabilisation a transforme le blocage de timeout en verdict EBTA exploitable, mais revele un `FAIL` WRC primaire reel. |
+| Suites a prevoir (hors perimetre de ce plan) | MIS A JOUR le 2026-07-16 apres decision humaine explicite (voir `0 - HUMAN START HERE/OBSERVATION_WRC_PRIMAIRE_PACKAGE_NAUTILUS_M1_FAIL.md`, section 3) : l'incoherence historique "R4 package PASS" vs build courant `FAIL` (`reports/wrc.json::verdict = "FAIL"`, `wrc_pvalue ~= 0.395`, `exceedance_count = 1974`, `replications = 5000`) est **tranchee, pas ouverte**. Le mecanisme est confirme (le `PASS` R4 reposait sur une NAV degenerescente, `_call_float()` sans gestion du mapping `{Currency: Money}` au commit `3bcfe35`, corrige par le commit `ebff49d`) et la decision de gouvernance est prise : (1) ajouter une entree tracee actant que le `PASS` R4 etait un artefact, sans reecrire son `closure_reason` archive ; (2) documenter le `FAIL` primaire courant comme verdict de recherche legitime (la famille M1 n'a pas d'edge demontrable sur ce segment) et clore sur ce constat — **pas de chantier de recherche distinct sur la famille de candidats**. Ne pas forcer `wrc_status = PASS`, ne pas calibrer un seuil silencieusement, ne pas modifier `Protocole/`. Reste a executer (chantier de portee minimale, section 4 de l'observation) : Phase 1 (preuve de reproduction depuis `3bcfe35`), Phase 2bis (entree `HISTORIQUE...md` documentant R4 + FAIL), Phase 3 (reconciliation/`/close` de ce plan G5). Autres suites maintenues, distinctes et non affectees par cette decision : couverture de catalogue preregistre (`preregistered_catalogue` sur `pre_oos_robustness_verdict()`, DN-030) ; realisme des scenarios de robustesse (R6 — CENTRAL/PLAUSIBLE/EXTREME recoivent aujourd'hui les memes donnees, aucun choc reel applique) ; realisme couts/slippage/latence (R5) ; reproductibilite operationnelle (R7) ; refonte des ~35 autres booleens auto-attestes de `gates.json`/`invariant_evidence.json`. |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
-| Champ | Valeur |
-| --- | --- |
-| Date | [a remplir] |
-| Phases executees | [a remplir] |
-| Artefact produit | [a remplir] |
-| Validation | [a remplir] |
-| Ecart par rapport au plan | [a remplir] |
+| Date | Phases executees | Artefact produit | Validation | Ecart par rapport au plan |
+| --- | --- | --- | --- | --- |
+| 2026-07-16 | Correction G5 + stabilisation du build Nautilus M1 apres blocage de `/close` | Code modifie et tests ajoutes dans `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py`, `Implementation/ebta_engine/adapters/nautilus_mapping.py`, `Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py`, `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_phase5_run_segment.py`, historique moteur. | PASS : `test_nautilus_phase5_run_segment.py` (4 tests), `test_nautilus_research_package.py` (4 tests), `test_procedure_wrc.py` (6 tests), suite runtime complete (152 tests), minimal pilot package PASS, pyrefly 0 errors sur les fichiers touches, checkpoint JSON/schema PASS, `git diff --check -- .ai Implementation Protocole` PASS avec avertissements CRLF seulement. BLOQUANT : `cd Implementation ; .\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package` termine mais retourne `{'status': 'FAIL'}` ; validation package : `gate_failures = ["G4 INCONCLUSIVE: missing ['wrc_status']"]`, erreurs semantiques `incubation_gate status is FAIL` et `economic global_status is FAIL` ; `reports/wrc.json::verdict = "FAIL"` avec `wrc_pvalue ~= 0.394921`. | Le timeout initial du build production a ete corrige, mais le critere production du plan ne peut pas etre coche : l'etat reel actuel du package est un WRC primaire `FAIL`. Le chantier G5 ne doit pas masquer ce resultat statistique. |
 
 ---
 

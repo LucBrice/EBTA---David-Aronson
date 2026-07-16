@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -451,8 +451,8 @@
       "id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
       "title": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "IMPLEMENTATION_DETAIL",
       "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATE_ROBUSTESSE_G5_FIGE.md",
@@ -465,7 +465,8 @@
       "blocks_mainline": false,
       "advances_mainline": false,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": true
     }
   ],
   "validation": {
