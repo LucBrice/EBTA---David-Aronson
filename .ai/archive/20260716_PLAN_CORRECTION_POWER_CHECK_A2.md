@@ -65,6 +65,7 @@
 | SOP 01 | Autorite normative de l'estimation OOS, de la puissance cible et de la variance long terme pre-OOS. |
 | `oos_confidence_interval.py` | Procedure executable qui doit produire le rapport OOS et `power_check`. |
 | `build_research_package.py` | Assemble le paquet pilote et transmet les inputs economiques/pre-OOS a la procedure. |
+| `nautilus_research_package.py` | Adapte les seuils Nautilus vers le paquet pilote sans perdre le seuil annuel deja preenregistre. |
 | `test_procedure_oos_ci.py` | Preuve unitaire du calcul et de ses refus. |
 | `test_minimal_pilot_pipeline.py` | Preuve d'integration du mapping vers `gates.json`. |
 | Ce plan | Carte d'implementation du Lot A2. |
@@ -124,6 +125,7 @@ Les autres champs G9 (`oos_report`, `concatenated_oos_series`,
 | `_statistical_verdict()` | `oos_confidence_interval.py` | Rend `INCONCLUSIVE` si la puissance fournie est < 80 %. | Oui, a alimenter avec la puissance calculee. |
 | `_procedure_reports()` | `build_research_package.py` | Appelle `oos_confidence_interval()` sans `power=`. | A etendre pour transmettre les inputs de puissance. |
 | `pilot_inputs.json` | `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json` | Contient `economic_gate.thresholds.min_annualized_return` et `oos_returns`. | A etendre : aucune serie pre-OOS explicite n'existe aujourd'hui. |
+| `build_nautilus_inputs()` | `Implementation/ebta_engine/package_builder/nautilus_research_package.py` | Remplace les thresholds du template pilote par `NAUTILUS_ECONOMIC_THRESHOLDS`. | A ajuster pour preserver `min_annualized_return` deja preenregistre. |
 
 ### Ce qui manque reellement
 
@@ -183,6 +185,7 @@ Autorises :
 Implementation/ebta_engine/procedures/oos_confidence_interval.py       MODIFIER
 Implementation/examples/minimal_pilot_pipeline/build_research_package.py MODIFIER
 Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json MODIFIER
+Implementation/ebta_engine/package_builder/nautilus_research_package.py MODIFIER - preservation du seuil annuel preexistant
 Implementation/ebta_engine/tests/test_procedure_oos_ci.py              MODIFIER
 Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py        MODIFIER
 ```
@@ -193,7 +196,6 @@ Interdits :
 Protocole/                                                     [NORME - intouchable]
 Implementation/ebta_engine/procedures/bootstrap.py             [CONTRAT SUFFISANT - reutiliser]
 Implementation/ebta_engine/validators/gate_validator.py        [CONTRAT SUFFISANT - ne pas modifier]
-Implementation/ebta_engine/package_builder/nautilus_research_package.py [HORS PERIMETRE]
 .ai/checkpoint.json                                            [METTRE A JOUR UNIQUEMENT via plan.ps1]
 ```
 
@@ -341,12 +343,12 @@ EBTA valide, pas un echec du chantier.
 
 ## 12. Definition of Done
 
-- [ ] Phases 1 et 2 terminees.
-- [ ] Exit criteria du Triage atteints.
-- [ ] Aucun fichier hors perimetre modifie.
-- [ ] Suite runtime complete `PASS`.
-- [ ] Bug-hunter cible `PASS`.
-- [ ] Plan-conformance-audit `PASS`.
+- [x] Phases 1 et 2 terminees.
+- [x] Exit criteria du Triage atteints.
+- [x] Aucun fichier hors perimetre modifie.
+- [x] Suite runtime complete `PASS`.
+- [x] Bug-hunter cible `PASS`.
+- [x] Plan-conformance-audit `PASS`.
 
 ---
 
@@ -378,3 +380,4 @@ EBTA valide, pas un echec du chantier.
 | 2026-07-16 | Brouillon passe 2 : distinction entre verdict statistique global et `power_check.status` pour `gates["power_report"]`. | Eviter que Lot A1 masque un `power_check` reellement `INCONCLUSIVE`. |
 | 2026-07-16 | Plan route passe 1 : clarification que le pipeline pilote doit rester `PASS`; seul un package de production reel peut etre documente `INCONCLUSIVE` comme verdict EBTA legitime hors fixture. | Eviter qu'une fixture insuffisante fasse passer un chantier incomplet pour une cloture acceptable. |
 | 2026-07-16 | Plan route passe 2 : convergence confirmee ; pas de nouveau verrou humain, pas de dependance nouvelle, perimetre de fichiers ferme et exit criteria binaires. | Autoriser la baseline pre-implementation avant `/continue`. |
+| 2026-07-16 | Implementation : la suite complete a montre que le builder Nautilus supprimait `min_annualized_return` en remplacant les thresholds du template pilote. Le perimetre autorise maintenant `nautilus_research_package.py` uniquement pour preserver ce seuil preexistant. | Corriger un raccord d'adaptateur sans inventer de nouveau seuil ni modifier le Protocole. |

@@ -78,8 +78,9 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         self.assertEqual(wrc["replications"], config["statistical_plan"]["wrc_bootstrap_replications"])
         self.assertEqual(oos["replications"], pilot_inputs["statistical_plan"]["oos_bootstrap_replications"])
         expected_g9_gate_value = module._g9_gate_value(oos["statistical_gate"])
-        for field in ("oos_report", "concatenated_oos_series", "oos_bootstrap_report", "power_report"):
+        for field in ("oos_report", "concatenated_oos_series", "oos_bootstrap_report"):
             self.assertEqual(gates[field], expected_g9_gate_value)
+        self.assertEqual(gates["power_report"], module._g9_gate_value(oos["power_check"]["status"]))
         expected_lot_c_gate_values = {
             "data_snapshots": procedure_reports["data_availability.json"]["status"],
             "availability_timestamps": procedure_reports["data_availability.json"]["status"],

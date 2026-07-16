@@ -264,12 +264,16 @@ def build_nautilus_inputs(
         scenario_grid=_nautilus_robustness_grid(),
     )
     selected_oos = _merge_results(selected_candidate_id, oos_results)
-    economic_flags = compute_economic_pass_flags(selected_oos, thresholds=NAUTILUS_ECONOMIC_THRESHOLDS)
+    economic_thresholds = dict(NAUTILUS_ECONOMIC_THRESHOLDS)
+    min_annualized_return = inputs["economic_gate"].get("thresholds", {}).get("min_annualized_return")
+    if min_annualized_return is not None:
+        economic_thresholds["min_annualized_return"] = min_annualized_return
+    economic_flags = compute_economic_pass_flags(selected_oos, thresholds=economic_thresholds)
     inputs["economic_gate"] = selected_oos.economic_gate_evidence(
         # Placeholder only: the pilot assembly overwrites this with the real
         # WRC verdict before building economic.json.
         statistical_status="PENDING_WRC",
-        thresholds=NAUTILUS_ECONOMIC_THRESHOLDS,
+        thresholds=economic_thresholds,
         observed_values={
             **economic_observed_values(selected_oos),
             "mean_oos_return": _mean(oos_returns),

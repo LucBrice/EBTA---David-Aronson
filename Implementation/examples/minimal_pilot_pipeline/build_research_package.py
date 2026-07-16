@@ -10,6 +10,7 @@ write BACKTRADER and does not create methodological rules.
 from __future__ import annotations
 
 import json
+import math
 import shutil
 import sys
 from hashlib import sha256
@@ -192,11 +193,21 @@ def _g9_gate_value(statistical_gate: str) -> str:
     return "INCONCLUSIVE"
 
 
+def _min_annualized_return_threshold(economic_gate: dict, *, sessions_per_year: int = 252) -> float:
+    thresholds = economic_gate.get("thresholds", {})
+    if "min_annualized_return" in thresholds:
+        return float(thresholds["min_annualized_return"])
+    if "minimum_mean_return" in thresholds:
+        return math.expm1(sessions_per_year * float(thresholds["minimum_mean_return"]))
+    raise KeyError("economic_gate.thresholds must define min_annualized_return or minimum_mean_return")
+
+
 def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
     procedure_reports = _procedure_reports(pilot_inputs)
     candidate_ids = procedure_reports["candidate_matrix"]["candidate_ids"]
     oos_gate_value = _g9_gate_value(procedure_reports["oos"]["statistical_gate"])
+    power_gate_value = _g9_gate_value(procedure_reports["oos"]["power_check"]["status"])
     data_availability_status = procedure_reports["data_availability"]["status"]
     sealing_status = procedure_reports["sealing"]["status"]
     reproduction_status = procedure_reports["reproduction_validation"]["status"]
@@ -241,7 +252,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "oos_report": oos_gate_value,
         "concatenated_oos_series": oos_gate_value,
         "oos_bootstrap_report": oos_gate_value,
-        "power_report": oos_gate_value,
+        "power_report": power_gate_value,
         "economic_report": True,
         "statistical_gate_report": True,
         "economic_gate_report": True,
@@ -396,6 +407,8 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
         replications=statistical_plan["oos_bootstrap_replications"],
         mean_block_length=statistical_plan["oos_mean_block_length"],
         seed=statistical_plan["oos_seed"],
+        pre_oos_development_returns=pilot_inputs["pre_oos_development_returns"],
+        min_annualized_return=_min_annualized_return_threshold(pilot_inputs["economic_gate"]),
     )
     economic_gate_evidence = {
         **pilot_inputs["economic_gate"],

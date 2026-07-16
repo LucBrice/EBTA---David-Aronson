@@ -556,10 +556,10 @@
       "id": "PLAN_CORRECTION_POWER_CHECK_A2",
       "title": "Lot A2 - Calcul reel de puissance atteinte G9 power_check",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_POWER_CHECK_A2.md",
+      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_POWER_CHECK_A2.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260716_PLAN_CORRECTION_POWER_CHECK_A2.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-16",
@@ -569,8 +569,9 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Lot A2 termine : power_check calcule depuis rendements pre-OOS et seuil economique annuel ; power_report branche sur power_check.status ; suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {
