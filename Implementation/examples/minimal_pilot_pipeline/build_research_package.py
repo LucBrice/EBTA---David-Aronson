@@ -197,6 +197,13 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     procedure_reports = _procedure_reports(pilot_inputs)
     candidate_ids = procedure_reports["candidate_matrix"]["candidate_ids"]
     oos_gate_value = _g9_gate_value(procedure_reports["oos"]["statistical_gate"])
+    data_availability_status = procedure_reports["data_availability"]["status"]
+    sealing_status = procedure_reports["sealing"]["status"]
+    reproduction_status = procedure_reports["reproduction_validation"]["status"]
+    monitoring_plan_status = procedure_reports["monitoring_plan"]["status"]
+    monitoring_consultation_status = procedure_reports["monitoring_consultation_log"]["status"]
+    incubation_report_status = procedure_reports["incubation_report"]["status"]
+    deployment_gate_status = procedure_reports["deployment_gate"]["status"]
     gates = {
         "config_id": identifiers["config_id"],
         "project_id": identifiers["project_id"],
@@ -204,9 +211,9 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "hypothesis_id": identifiers["hypothesis_id"],
         "process_version_id": identifiers["process_version_id"],
         "template_hash": identifiers["template_hash"],
-        "data_snapshots": True,
-        "availability_timestamps": True,
-        "anti_leakage_report": True,
+        "data_snapshots": data_availability_status,
+        "availability_timestamps": data_availability_status,
+        "anti_leakage_report": data_availability_status,
         "registry_initialized": True,
         "candidate_catalog": True,
         "local_matrix": True,
@@ -224,8 +231,8 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "cost_model": True,
         "capacity_grid": True,
         "nav_reconciliation": True,
-        "pre_oos_manifest": True,
-        "frozen_config": True,
+        "pre_oos_manifest": sealing_status,
+        "frozen_config": sealing_status,
         "test_reports": True,
         "independent_pre_oos_approval": True,
         "oos_access_log": True,
@@ -238,13 +245,13 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "economic_report": True,
         "statistical_gate_report": True,
         "economic_gate_report": True,
-        "validation_ready_manifest": True,
-        "reproduction_report": True,
-        "incubation_approval": True,
-        "incubation_report": True,
-        "paper_trading_log": True,
-        "monitoring_plan": True,
-        "deployment_certified_manifest": True,
+        "validation_ready_manifest": reproduction_status,
+        "reproduction_report": reproduction_status,
+        "incubation_approval": reproduction_status,
+        "incubation_report": incubation_report_status,
+        "paper_trading_log": monitoring_consultation_status,
+        "monitoring_plan": monitoring_plan_status,
+        "deployment_certified_manifest": deployment_gate_status,
         "live_version_id": "LIVE-PILOT-001",
         "kill_switch": True,
         "live_approval": True,

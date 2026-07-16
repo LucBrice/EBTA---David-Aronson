@@ -528,27 +528,29 @@
       "blocks_mainline": false,
       "advances_mainline": false,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": false
     },
     {
       "id": "PLAN_CORRECTION_GATES_MECANIQUES_LOT_C",
       "title": "Lot C - Brancher les attestations mecaniques (G1/G7/G11/G12/G13)",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
+      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260716_PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-16",
       "last_moved_at": "2026-07-16",
       "routing_decision": "fix",
-      "routing_reason": "Sous-chantier 1/3 de EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES : branchements mecaniques surs, aucune decision humaine requise",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Lot C termine : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; tests ciblés, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {

@@ -46,6 +46,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             procedure_reports = {
                 name: json.loads((reports_dir / name).read_text(encoding="utf-8"))
                 for name in [
+                    "data_availability.json",
                     "sealing.json",
                     "oos_access_decision.json",
                     "monitoring_plan.json",
@@ -79,6 +80,23 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         expected_g9_gate_value = module._g9_gate_value(oos["statistical_gate"])
         for field in ("oos_report", "concatenated_oos_series", "oos_bootstrap_report", "power_report"):
             self.assertEqual(gates[field], expected_g9_gate_value)
+        expected_lot_c_gate_values = {
+            "data_snapshots": procedure_reports["data_availability.json"]["status"],
+            "availability_timestamps": procedure_reports["data_availability.json"]["status"],
+            "anti_leakage_report": procedure_reports["data_availability.json"]["status"],
+            "pre_oos_manifest": procedure_reports["sealing.json"]["status"],
+            "frozen_config": procedure_reports["sealing.json"]["status"],
+            "validation_ready_manifest": procedure_reports["reproduction_validation.json"]["status"],
+            "reproduction_report": procedure_reports["reproduction_validation.json"]["status"],
+            "incubation_approval": procedure_reports["reproduction_validation.json"]["status"],
+            "incubation_report": procedure_reports["incubation_report.json"]["status"],
+            "paper_trading_log": procedure_reports["monitoring_consultation_log.json"]["status"],
+            "monitoring_plan": procedure_reports["monitoring_plan.json"]["status"],
+            "deployment_certified_manifest": procedure_reports["deployment_gate.json"]["status"],
+        }
+        for field, expected_status in expected_lot_c_gate_values.items():
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], expected_status)
         manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
         self.assertEqual(manifest_paths, set(package_shape["artifact_paths"]))
         self.assertTrue(all("artifact_role" in artifact for artifact in manifest["artifacts"]))
