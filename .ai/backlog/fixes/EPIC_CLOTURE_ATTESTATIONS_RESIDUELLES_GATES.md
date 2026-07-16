@@ -230,7 +230,7 @@ Actions :
 
 Livrables :
 
-- Workstream `fix` Lot A2 `DONE` dans `.ai/checkpoint.json`.
+- Workstream `fix` Lot A2 `DONE` dans `.ai/checkpoint.json` (`1a7ed30`).
 
 Critere de sortie :
 
@@ -238,6 +238,9 @@ Critere de sortie :
 - `power_check.status` derive d'une puissance reellement estimee depuis
   l'echantillon, jamais du parametre `power` par defaut renvoye a
   lui-meme.
+
+Statut 2026-07-16 : `DONE` — cloture mecanique effectuee par
+`.ai/tools/plan.ps1 close`, commit `1a7ed30`.
 
 ### Phase 3 - Lot B : execution_report / nav_reconciliation (G6) — PAUSE OBLIGATOIRE
 
@@ -339,10 +342,10 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Regle transversale bloquante** : la suite runtime complete doit rester
 `PASS` avant de demarrer chaque phase suivante (chaque sous-chantier).
 
-**Premier lot executable propose** :
+**Prochaine etape executable proposee** :
 
 ```text
-Phase 2 - Lot A2 : fonction de puissance atteinte reelle (G9 power_check)
+Phase 3 - Lot B : PAUSE obligatoire pour decision humaine de seuil execution/NAV
 ```
 
 ### Execution sans interruption
@@ -377,6 +380,7 @@ methode a la place de l'humain.
 | 2026-07-16 | Ordre revise en session : Lot C avant Lot A2 (inversion de l'ordre initialement propose), suite a la decouverte que A2 necessite un calcul manquant et non un simple branchement. | Remplace l'ordre initial. |
 | 2026-07-16 | Lot A2 : methode actee — reutiliser le bootstrap stationnaire par blocs deja normatif (`procedures/bootstrap.py`) applique aux rendements pre-OOS de developpement pour estimer l'erreur type de la puissance atteinte. | Autorise la redaction et l'implementation du sous-chantier Lot A2 avec cette methode precise, sans nouvelle consultation humaine sur ce point. |
 | 2026-07-16 | Lot C cloture en `DONE` par commit `4e568c5` : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; suite runtime, build pilote, pyrefly, bug-hunter et audit de conformite `PASS`. | Autorise la reprise de la boucle sur le sous-chantier suivant : Lot A2. |
+| 2026-07-16 | Lot A2 cloture en `DONE` par commit `1a7ed30` : `power_check` calcule une puissance atteinte depuis rendements pre-OOS et seuil annuel, `power_report` derive de `power_check.status`, suite runtime, build pilote, pyrefly, bug-hunter et audit de conformite `PASS`. | Termine les lots autorises sans nouvelle consultation ; impose maintenant la pause Lot B pour decision humaine de seuil execution/NAV. |
 
 ---
 
@@ -384,7 +388,7 @@ methode a la place de l'humain.
 
 | Risque | Impact | Mitigation / condition de deblocage |
 | --- | --- | --- |
-| Le Lot A2 fait basculer `power_check.status`/G9 a `INCONCLUSIVE` sur le package M1 de production reel si la puissance estimee est insuffisante | Attendu, documenter comme decouverte legitime (meme clause que WRC/G5/G9 deja actees), jamais comme regression | Documenter en cloture du sous-chantier Lot A2 dans `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Le Lot A2 fait basculer `power_check.status`/G9 a `INCONCLUSIVE` sur le package M1 de production reel si la puissance estimee est insuffisante | Risque clos pour ce sous-chantier : la logique A2 est implementee et testee ; tout `INCONCLUSIVE` futur est un verdict EBTA legitime, pas un masquage | Cloture Lot A2 commit `1a7ed30` ; aucun contournement de puissance insuffisante |
 | Le Lot B reste bloque indefiniment si l'humain ne tranche jamais la decision de seuil | Ce chantier mere ne peut pas se clore | Demander explicitement la decision au debut de la Phase 3, ne pas la contourner |
 
 ---
@@ -392,10 +396,10 @@ methode a la place de l'humain.
 ## 12. Definition of Done
 
 - [x] Lot C `DONE`.
-- [ ] Lot A2 `DONE`.
+- [x] Lot A2 `DONE`.
 - [ ] Lot B `DONE` ou explicitement differe par decision humaine documentee (section 10).
-- [ ] Aucune modification hors perimetre par ce document lui-meme (section 5).
-- [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier.
+- [x] Aucune modification hors perimetre par ce document lui-meme (section 5).
+- [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier C/A2.
 
 ---
 
@@ -416,3 +420,4 @@ A remplir au moment de `/close` du chantier mere (apres cloture des trois sous-c
 | Date de l'audit | Ce qui a ete corrige | Pourquoi |
 | --- | --- | --- |
 | 2026-07-16 | Verification directe du code du Lot A2 (`oos_confidence_interval.py:22,43`) contredisant l'hypothese initiale "le plus urgent... calcul reel" de l'observation source : `power_check` est en realite un calcul manquant, pas un branchement. Ordre des phases revise (C avant A2) en consequence, avant toute redaction de sous-chantier. | Eviter d'ecrire un plan Lot A2 qui traiterait a tort ce lot comme un branchement mecanique, ce qui aurait recree exactement le piege deja identifie (`power` renvoye a lui-meme = `PASS` par construction). |
+| 2026-07-16 | Actualisation apres cloture Lot A2 : commit `1a7ed30`, DoD partiel C/A2 coche, prochaine etape requalifiee en pause Lot B. | Eviter de laisser l'EPIC pointer vers un sous-chantier deja clos et rappeler que Lot B reste interdit sans decision humaine de seuil execution/NAV. |
