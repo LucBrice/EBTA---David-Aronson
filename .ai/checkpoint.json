@@ -467,6 +467,26 @@
       "closure_reason": null,
       "non_goals": [],
       "is_active": true
+    },
+    {
+      "id": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
+      "title": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/fixes/PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_WRC_PRIMAIRE_PACKAGE_NAUTILUS_M1_FAIL.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-16",
+      "last_moved_at": "2026-07-16",
+      "routing_decision": "fix",
+      "routing_reason": "Suite designee par section 13 de PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE + decisions humaines 2026-07-16 : documenter l'artefact PASS R4 (NAV degenerescente) et le FAIL WRC primaire legitime, debloquer la cloture de G5.",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
