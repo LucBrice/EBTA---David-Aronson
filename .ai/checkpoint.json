@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -488,6 +488,27 @@
       "closure_reason": "Artefact R4 PASS et FAIL WRC M1 documentes append-only dans l'historique moteur; G5 clos apres audits et validations; aucun Protocole ni calcul WRC modifie",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
+      "title": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
+      "track": "fix",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATES_ATTESTATIONS_RESIDUELLES.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-16",
+      "last_moved_at": "2026-07-16",
+      "routing_decision": "fix",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "is_active": true
     }
   ],
   "validation": {
