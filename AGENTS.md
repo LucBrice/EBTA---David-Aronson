@@ -59,6 +59,20 @@ Before any substantive action, read in this order:
 When the user sends `/start`, `/continue`, or `/close`, treat it as a request
 to manage a plan. These are the human-facing commands.
 
+- Before `/start` audits and restructures a raw draft, run an
+  architecture-refinement loop on the draft as-is, in place under
+  `0 - HUMAN START HERE/`: invoke `code-architecture-evaluator` (`/evaluate`),
+  fix what it flags directly in the draft file, re-run `/evaluate`. Same
+  convergence rule as the post-structuring loop below — minimum 2 passes, ends
+  on genuine convergence (no new major blind spot), hard-capped at 5-6 passes
+  with escalation to the human if still surfacing issues at the cap. This
+  catches a fundamentally unsound idea before time is spent structuring it.
+  Only once this intake-stage loop converges does `/start` proceed to audit
+  and restructure the (now-refined) draft. This is in addition to, not a
+  replacement for, the second evaluate loop that runs on the normalized plan
+  after `/start` writes it (see below) — a draft that looked sound at intake
+  can still surface new blind spots once it is fully structured against the
+  template.
 - `/start` never moves or rewrites the human draft in place. It audits the
   draft, then WRITES A NEW FILE in the target backlog folder
   (`mainline`/`annexes`/`fixes`) fully restructured per
@@ -97,7 +111,15 @@ to manage a plan. These are the human-facing commands.
   bugs AND the conformance audit reports no missing criterion does `/close`
   proceed to close and archive the workstream with `.ai/tools/plan.ps1 close`.
   Otherwise report what is open (bugs and/or missing criteria) and do not
-  call `plan.ps1 close` until the human decides how to proceed.
+  call `plan.ps1 close` until the human decides how to proceed. Once
+  `plan.ps1 close` succeeds, validate any JSON project-state file it touched
+  (`.ai/checkpoint.json` against `.ai/checkpoint.schema.json`,
+  `Implementation/Active/tracking.json` against its schema if touched) and,
+  only if validation passes, create a commit automatically — never a push —
+  scoped to exactly the files the close touched (archived workstream file,
+  updated `checkpoint.json`/`tracking.json`, any backlog file moved), using
+  this repo's mandatory commit-message shape (see Operating Rules above). If
+  validation fails, do not commit; report the failure to the human instead.
 
 `.ai/tools/plan.ps1` is a mechanical backend. It can refuse unsafe promotion,
 but it does not replace the AI audit and structuring step.

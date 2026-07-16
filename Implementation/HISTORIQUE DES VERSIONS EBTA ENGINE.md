@@ -80,6 +80,67 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-16 - Acquittement gouvernance du PASS R4 artefactuel et du FAIL WRC M1
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | GOVERNANCE |
+| Statut | ACCEPTED |
+| Source normative | SOP 02 (WRC primaire), SOP 08 (NAV et rendements de reference), registre des decisions normatives EBTA |
+| Fichiers impactes | `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Impact protocole | NONE |
+| Verification | `git show 3bcfe35:Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py` (confirme `_call_float()` sans gestion du mapping `{Currency: Money}`); lecture de `Implementation/research_packages/nautilus_mvp/reports/wrc.json` (verdict `FAIL`, `wrc_pvalue` 0.39492101579684064, `exceedance_count` 1974, `replications` 5000, 11/16 candidats a moyenne negative); entree precedente "2026-07-16 - Stabilisation du build Nautilus M1 et extraction NAV" (suite runtime 152 tests PASS, build Nautilus reel termine avec `status: FAIL` sur WRC primaire reel) |
+
+### Contexte
+
+Le plan R4 cloture le 2026-07-15 au commit `3bcfe35` annoncait un package
+Nautilus M1 `PASS` avec `total_orders > 0`. L'archeologie du commit montre
+toutefois que `GenericPayloadStrategy.record_nav_snapshot()` utilisait
+`_call_float(self.portfolio, "equity", self._venue)`, et que `_call_float()`
+convertissait uniquement `float(str(result).split()[0])`. Cette version ne
+gerait pas le retour Nautilus sous forme de mapping `{Currency: Money}`.
+
+Le correctif ulterieur `ebff49d` a ajoute cette gestion, stabilise le build M1
+reel et revele une NAV exploitable. Le package courant ne reste donc pas en
+`FAIL` a cause d'un timeout ni d'une absence d'ordres : il echoue parce que le
+WRC primaire reel ne rejette pas l'hypothese nulle sur la famille M1 courante.
+
+### Decision
+
+Acter que le `PASS` R4 du commit `3bcfe35` etait un artefact de NAV
+degenerescente, et non une preuve d'edge. L'archive R4 et son `closure_reason`
+ne sont pas reecrits : la correction de narration est append-only dans cet
+historique runtime.
+
+Acter aussi que le `FAIL` WRC primaire courant du package Nautilus M1 est un
+verdict EBTA legitime : `wrc.json::verdict` vaut `FAIL`, la p-value WRC vaut
+environ 0.395, 1974 tirages sur 5000 excedent la statistique observee, et 11
+des 16 candidats ont une moyenne observee negative. Conformement a SOP 02, ce
+resultat signifie que la famille M1 testee ne demontre pas d'edge sur ce
+segment ; il ne doit pas etre force en `PASS`, masque, ni contourne par une
+calibration silencieuse.
+
+### Impact
+
+Le chantier de documentation ne modifie aucun calcul, aucun seuil, aucun statut
+EBTA, et aucun fichier `Protocole/`. Il ferme seulement le trou d'audit entre
+l'archive R4, qui reste une trace historique, et l'etat runtime courant, qui
+produit un `FAIL` WRC primaire honnete sur des rendements non degenerescents.
+
+La lecon operationnelle est que `total_orders > 0` etait necessaire mais
+insuffisant pour prouver la validite R4 : une preuve "NAV varie" et "rendements
+non nuls" etait requise. Cette preuve existe maintenant dans la suite de tests
+issue de `ebff49d`, notamment le test dedie au segment M1 qui verifie une NAV
+reelle plutot qu'un faux `NO_M1`.
+
+### Suite
+
+Clore `PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE` sur ses exit criteria formels
+de propagation du verdict G5, en documentant que le package Nautilus M1 reste
+`FAIL` pour une raison exogene a G5 : le WRC primaire reel. Ne pas ouvrir de
+chantier de recherche sur la famille M1 dans ce plan.
+
 ## 2026-07-16 - Stabilisation du build Nautilus M1 et extraction NAV
 
 | Champ | Valeur |

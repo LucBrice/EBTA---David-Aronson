@@ -389,7 +389,7 @@ En dehors des levees de gouvernance (section 10) et de l'elargissement du perime
 | 2026-07-16 | Archive R4 -> **ajouter une entree tracee** actant que le `PASS` reposait sur une NAV degenerescente, sans reecrire son `closure_reason`. | Autorise la Phase 2 (acquittement Q1) ; interdit toute reecriture de l'archive R4. |
 | 2026-07-16 | `FAIL` WRC primaire courant -> **documenter et clore** comme verdict de recherche legitime, sans chantier de recherche sur la famille de candidats. | Autorise la Phase 2 (Q2) et fixe la portee minimale du chantier ; interdit d'ouvrir une investigation sur la famille M1. |
 | 2026-07-16 | **Commiter** (plutot que reverter) les 4 fichiers hors perimetre G5. | Execute : commit `ebff49d`. Ferme la Phase 0. |
-| [a confirmer en Phase 3] | Accepter de clore G5 sur son perimetre livre, independamment du `FAIL` WRC primaire (G5 = gate robustesse, distinct de G4 = WRC). | Conditionne l'issue de `plan.ps1 close` sur G5 (`DONE` vs `BLOCKED`). A tracer ici avant d'agir. |
+| 2026-07-16 | Accepter de clore G5 sur son perimetre livre, independamment du `FAIL` WRC primaire (G5 = gate robustesse, distinct de G4 = WRC), apres acquittement documentaire du `FAIL` dans l'historique moteur. | Execute en Phase 3 : G5 peut etre clos `DONE` parce que ses Exit criteria formels sont atteints et que le `FAIL` WRC courant est exogene au perimetre G5, documente comme verdict EBTA legitime, jamais force en `PASS`. |
 
 ---
 
@@ -405,35 +405,33 @@ En dehors des levees de gouvernance (section 10) et de l'elargissement du perime
 
 ## 12. Definition of Done
 
-- [ ] Phases 1, 2, 3 validees individuellement (section 9) ; Phase 0 deja close.
-- [ ] Exit criteria de la section Triage atteint et verifiable (entree `HISTORIQUE...md` presente ; G5 clos ; tests 152 `PASS` ; aucun fichier interdit modifie).
-- [ ] Aucune modification hors perimetre (section 5).
-- [ ] Aucune regression sur la suite de tests existante (152 tests, inchange).
-- [ ] `bug-hunter` (fichiers touches par G5) et `plan-conformance-audit` (Exit criteria de G5) executes avant la cloture de G5, zero bug confirme.
-- [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee (fichiers modifies et pourquoi, fichiers volontairement non modifies, conflits, decisions humaines restantes).
-- [ ] Aucun stub/placeholder ; le `FAIL` est documente tel quel, jamais masque.
+- [x] Phases 1, 2, 3 validees individuellement (section 9) ; Phase 0 deja close.
+- [x] Exit criteria de la section Triage atteint et verifiable (entree `HISTORIQUE...md` presente ; G5 clos ; tests 152 `PASS` ; aucun fichier interdit modifie).
+- [x] Aucune modification hors perimetre (section 5).
+- [x] Aucune regression sur la suite de tests existante (152 tests, inchange).
+- [x] `bug-hunter` (fichiers touches par G5) et `plan-conformance-audit` (Exit criteria de G5) executes avant la cloture de G5, zero bug confirme.
+- [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee (fichiers modifies et pourquoi, fichiers volontairement non modifies, conflits, decisions humaines restantes).
+- [x] Aucun stub/placeholder ; le `FAIL` est documente tel quel, jamais masque.
 
 ---
 
 ## 13. Cloture
 
-A remplir au moment de `/close`.
-
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a la cloture] |
-| Ecarts par rapport au plan initial | [a remplir a la cloture] |
-| Suites a prevoir (hors perimetre de ce plan) | [a remplir — ex. suites deja listees par G5 : DN-030, R6, R5, R7, refonte des booleens auto-attestes de `gates.json`] |
+| Resultat final | DONE au 2026-07-16. Le `PASS` R4 du commit `3bcfe35` est trace comme artefact de NAV degenerescente ; le `FAIL` WRC primaire courant du package Nautilus M1 est trace comme verdict EBTA legitime ; G5 est reconciliable et clos sur ses Exit criteria formels. |
+| Ecarts par rapport au plan initial | Aucun ecart de fond. La reproduction lourde depuis `3bcfe35` est restee non executee car facultative ; le mecanisme est etabli par `git show`, l'entree historique precedente, et le `wrc.json` courant. Les artefacts generes par le build minimal de validation ont ete remis hors diff, car ils ne font pas partie du perimetre documentaire. |
+| Suites a prevoir (hors perimetre de ce plan) | Maintenir hors de ce chantier les suites deja identifiees : couverture de catalogue preregistre DN-030, realisme des scenarios de robustesse R6, realisme couts/slippage/latence R5, reproductibilite operationnelle R7, refonte des autres booleens auto-attestes de `gates.json`/`invariant_evidence.json`. Ne pas ouvrir ici de chantier de recherche sur la famille M1 et ne jamais forcer `wrc_status = PASS`. |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [a remplir] |
-| Phases executees | [a remplir] |
-| Artefact produit | [a remplir] |
-| Validation | [a remplir] |
-| Ecart par rapport au plan | [a remplir] |
+| Date | 2026-07-16 |
+| Phases executees | Phase 1 (preuve artefact R4 par `git show 3bcfe35` + historique existant), Phase 2 (entree d'acquittement dans `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`), Phase 3 (audit G5 + cloture G5 et de ce chantier). |
+| Artefact produit | Nouvelle entree `2026-07-16 - Acquittement gouvernance du PASS R4 artefactuel et du FAIL WRC M1` dans l'historique moteur ; section 13 de G5 mise a jour avant archivage ; checkpoint mis a jour via `plan.ps1`. |
+| Validation | PASS : bug-hunter Pyrefly sur les fichiers G5 (`0 errors`) ; plan-conformance-audit manuel des Exit criteria G5 (aucun manquant) ; `test_nautilus_research_package.py` (4 tests OK) ; `test_nautilus_phase5_run_segment.py` (4 tests OK) ; suite runtime complete (152 tests OK) ; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` (PASS) ; `.ai/checkpoint.json` JSON/schema PASS ; `git diff --check -- .ai Implementation Protocole` PASS avec avertissements CRLF seulement ; aucun diff dans `Protocole/` ni `Implementation/ebta_engine/procedures/wrc.py`. |
+| Ecart par rapport au plan | Aucun changement de calcul, seuil, SOP, archive R4 ou `closure_reason` R4. Le `FAIL` WRC est documente tel quel, jamais masque. |
 
 ---
 

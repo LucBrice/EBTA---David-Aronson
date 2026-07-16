@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -451,10 +451,10 @@
       "id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
       "title": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE.md",
+      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATE_ROBUSTESSE_G5_FIGE.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-16",
@@ -464,29 +464,30 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Exit criteria G5 formels atteints; bug-hunter et audit de conformite PASS; FAIL WRC M1 courant documente comme verdict EBTA legitime et exogene a G5 dans PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     },
     {
       "id": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
       "title": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/fixes/PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1.md",
+      "source_path": ".ai/archive/20260716_PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_WRC_PRIMAIRE_PACKAGE_NAUTILUS_M1_FAIL.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-16",
       "last_moved_at": "2026-07-16",
       "routing_decision": "fix",
-      "routing_reason": "Suite designee par section 13 de PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE + decisions humaines 2026-07-16 : documenter l'artefact PASS R4 (NAV degenerescente) et le FAIL WRC primaire legitime, debloquer la cloture de G5.",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Artefact R4 PASS et FAIL WRC M1 documentes append-only dans l'historique moteur; G5 clos apres audits et validations; aucun Protocole ni calcul WRC modifie",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {
