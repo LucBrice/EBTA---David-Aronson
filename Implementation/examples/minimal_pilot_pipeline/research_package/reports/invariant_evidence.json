@@ -67,7 +67,7 @@
   "oos_access_log": [
     {
       "fold_id": "FOLD-001",
-      "timestamp": "2023-01-02T00:00:00Z"
+      "timestamp": "2026-01-02T00:00:00Z"
     }
   ],
   "oos_openings": [
@@ -81,11 +81,6 @@
       "end": "2023-12-31",
       "id": "OOS-001",
       "start": "2023-01-01"
-    },
-    {
-      "end": "2024-12-31",
-      "id": "OOS-002",
-      "start": "2024-01-01"
     }
   ],
   "oos_series_days": [

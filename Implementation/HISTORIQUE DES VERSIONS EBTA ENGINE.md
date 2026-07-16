@@ -80,6 +80,69 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-16 - Propagation du verdict OOS reel vers le gate G9
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | SOP 01 sections 3, 4, 7, 8, 10, 13, 15, 20; DN-019 a DN-022 |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/tests/test_gates.py`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/examples/minimal_pilot_pipeline/research_package/reports/gates.json`, `Implementation/examples/minimal_pilot_pipeline/research_package/manifests/reproducibility_manifest.json`, `Implementation/examples/minimal_pilot_pipeline/research_package/reports/g_bias.json`, `Implementation/examples/minimal_pilot_pipeline/research_package/reports/invariant_evidence.json`, `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_gates.py` (PASS, 5 tests); `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_minimal_pilot_pipeline.py` (PASS, 5 tests); `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` (PASS, 155 tests); `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` (PASS); `.\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package` depuis `Implementation/` (termine en ~115 s avec `status: FAIL`, attendu car verdicts reels non PASS) |
+
+### Contexte
+
+Le plan `PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE` a identifie que
+`_write_reports()` calculait deja le rapport `oos.json` via
+`oos_confidence_interval()`, mais alimentait les quatre champs du gate G9
+(`oos_report`, `concatenated_oos_series`, `oos_bootstrap_report`,
+`power_report`) avec des litteraux `True`.
+
+Ce comportement masquait un verdict OOS reel `FAIL`, `INCONCLUSIVE` ou
+`NOT_VALIDATED` et permettait au gate G9 de rester vert par attestation. Le
+validateur global n'est pas modifie : il exige deja `PASS` exact pour
+`PASS`/`FAIL`/`INCONCLUSIVE`, mais traiterait une chaine brute
+`NOT_VALIDATED` comme truthy si elle lui etait transmise telle quelle.
+
+### Decision
+
+Ajouter `_g9_gate_value()` au point d'assemblage du package, puis alimenter les
+quatre champs G9 avec `oos["statistical_gate"]` normalise :
+
+- `PASS` reste `PASS` ;
+- toute autre valeur, y compris `FAIL`, `INCONCLUSIVE`, `NOT_VALIDATED` ou une
+  valeur future inconnue, devient `INCONCLUSIVE`.
+
+Le calcul OOS (`procedures/oos_confidence_interval.py`) et l'agregateur de
+gates (`validators/gate_validator.py`) restent inchanges. Les artefacts suivis
+du package pilote ont ete regeneres par le pipeline pilote apres correction :
+`gates.json` porte maintenant `"PASS"` pour les quatre champs G9 parce que la
+fixture pilote produit un verdict OOS reel `PASS`, et les hashes derives du
+manifeste ont ete actualises.
+
+### Impact
+
+Le package Nautilus M1 courant expose maintenant le verdict OOS reel au gate
+G9 : `oos.json::statistical_gate` vaut `FAIL` (`estimate=0.0`,
+`lower_95_one_sided=0.0`, `replications=5000`) et les quatre champs G9 de
+`gates.json` valent `INCONCLUSIVE`. Ce n'est pas une regression : c'est le
+gate qui cesse de masquer un verdict deja calcule.
+
+Le package M1 reste aussi en echec WRC (`gates.json::wrc_status == "FAIL"`),
+deja documente dans l'entree de gouvernance precedente. Les deux constats sont
+des verdicts EBTA legitimes ; ils ne doivent pas etre forces en `PASS` par une
+calibration silencieuse.
+
+### Suite
+
+Ne pas ouvrir l'OOS ni presenter le package Nautilus M1 courant comme un edge
+valide tant que les gates statistiques reels ne sont pas verts. Traiter dans un
+chantier separe les lots explicitement exclus de ce plan : `power_check.status`
+(A2), `execution_report`/`nav_reconciliation` (B), et
+`independent_registry_review` (G2).
+
 ## 2026-07-16 - Acquittement gouvernance du PASS R4 artefactuel et du FAIL WRC M1
 
 | Champ | Valeur |

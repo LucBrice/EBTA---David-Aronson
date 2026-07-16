@@ -566,11 +566,11 @@ A remplir au moment de `/close`.
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [A remplir] |
-| Phases executees | [A remplir] |
-| Artefact produit | [A remplir] |
-| Validation | [A remplir] |
-| Ecart par rapport au plan | [A remplir] |
+| Date | 2026-07-16 |
+| Phases executees | Phase 1 et Phase 2 executees : `_g9_gate_value()` ajoute, quatre champs G9 branches sur `oos["statistical_gate"]`, tests 2a/2b/2c ajoutes, package pilote regenere. |
+| Artefact produit | `gates.json` pilote : quatre champs G9 a `"PASS"` car `oos.json::statistical_gate == "PASS"` sur la fixture pilote ; package Nautilus M1 courant : quatre champs G9 a `"INCONCLUSIVE"` car `oos.json::statistical_gate == "FAIL"`. |
+| Validation | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_gates.py` PASS (5 tests) ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_minimal_pilot_pipeline.py` PASS (5 tests) ; `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` PASS (155 tests) ; `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` PASS ; `.\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package` depuis `Implementation/` termine en `status: FAIL` attendu ; `pyrefly check` cible PASS (0 errors) ; `git diff --check -- Implementation` PASS avec avertissements CRLF attendus sur artefacts JSON regeneres. |
+| Ecart par rapport au plan | Aucun ecart fonctionnel. Artefacts suivis du package pilote regeneres par le pipeline pour refléter `gates.json` et ses hashes derives ; `Protocole/`, `procedures/`, `validators/`, `package_builder/` restent non modifies. |
 
 ---
 

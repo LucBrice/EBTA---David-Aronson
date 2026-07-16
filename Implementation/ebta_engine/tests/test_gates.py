@@ -36,6 +36,26 @@ class GateTests(unittest.TestCase):
         self.assertNotEqual(results["G5"].status, "PASS")
         self.assertIn("pre_oos_robustness_verdict", results["G5"].missing)
 
+    def test_gate_report_rejects_non_pass_oos_gate(self):
+        for verdict in ("FAIL", "INCONCLUSIVE"):
+            with self.subTest(verdict=verdict):
+                evidence = _complete_evidence()
+                evidence["oos_report"] = verdict
+
+                results = {result.gate_id: result for result in validate_gates(evidence)}
+
+                self.assertNotEqual(results["G9"].status, "PASS")
+                self.assertIn("oos_report", results["G9"].missing)
+
+    def test_gate_report_would_accept_raw_not_validated_oos_gate(self):
+        evidence = _complete_evidence()
+        evidence["oos_report"] = "NOT_VALIDATED"
+
+        results = {result.gate_id: result for result in validate_gates(evidence)}
+
+        self.assertEqual(results["G9"].status, "PASS")
+        self.assertIn("oos_report", results["G9"].present)
+
 
 def _complete_evidence() -> dict[str, object]:
     evidence: dict[str, object] = {name: True for requirements in GATE_REQUIREMENTS.values() for name in requirements}

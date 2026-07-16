@@ -186,10 +186,17 @@ def _write_oos_access_log(package_dir: Path, pilot_inputs: dict) -> None:
         append_jsonl(package_dir / "oos_access_log.jsonl", event)
 
 
+def _g9_gate_value(statistical_gate: str) -> str:
+    if statistical_gate == "PASS":
+        return "PASS"
+    return "INCONCLUSIVE"
+
+
 def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
     procedure_reports = _procedure_reports(pilot_inputs)
     candidate_ids = procedure_reports["candidate_matrix"]["candidate_ids"]
+    oos_gate_value = _g9_gate_value(procedure_reports["oos"]["statistical_gate"])
     gates = {
         "config_id": identifiers["config_id"],
         "project_id": identifiers["project_id"],
@@ -224,10 +231,10 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "oos_access_log": True,
         "opening_authorization": True,
         "single_oos_execution_log": True,
-        "oos_report": True,
-        "concatenated_oos_series": True,
-        "oos_bootstrap_report": True,
-        "power_report": True,
+        "oos_report": oos_gate_value,
+        "concatenated_oos_series": oos_gate_value,
+        "oos_bootstrap_report": oos_gate_value,
+        "power_report": oos_gate_value,
         "economic_report": True,
         "statistical_gate_report": True,
         "economic_gate_report": True,

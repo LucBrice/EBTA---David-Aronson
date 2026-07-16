@@ -11,6 +11,17 @@ PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_pa
 
 
 class MinimalPilotPipelineTests(unittest.TestCase):
+    def test_g9_gate_value_only_passes_pass(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertEqual(module._g9_gate_value("PASS"), "PASS")
+        for verdict in ("FAIL", "INCONCLUSIVE", "NOT_VALIDATED", "UNKNOWN"):
+            with self.subTest(verdict=verdict):
+                self.assertEqual(module._g9_gate_value(verdict), "INCONCLUSIVE")
+
     def test_minimal_pilot_pipeline_builds_valid_package(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
         assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
@@ -29,6 +40,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
             wrc = json.loads((reports_dir / "wrc.json").read_text(encoding="utf-8"))
             oos = json.loads((reports_dir / "oos.json").read_text(encoding="utf-8"))
+            gates = json.loads((reports_dir / "gates.json").read_text(encoding="utf-8"))
             search_space = json.loads((reports_dir / "search_space.json").read_text(encoding="utf-8"))
             candidate_matrix = json.loads((reports_dir / "candidate_matrix.json").read_text(encoding="utf-8"))
             procedure_reports = {
@@ -64,6 +76,9 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         self.assertEqual(set(candidate_matrix["candidate_assets"].values()), {"EURUSD", "XAUUSD"})
         self.assertEqual(wrc["replications"], config["statistical_plan"]["wrc_bootstrap_replications"])
         self.assertEqual(oos["replications"], pilot_inputs["statistical_plan"]["oos_bootstrap_replications"])
+        expected_g9_gate_value = module._g9_gate_value(oos["statistical_gate"])
+        for field in ("oos_report", "concatenated_oos_series", "oos_bootstrap_report", "power_report"):
+            self.assertEqual(gates[field], expected_g9_gate_value)
         manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
         self.assertEqual(manifest_paths, set(package_shape["artifact_paths"]))
         self.assertTrue(all("artifact_role" in artifact for artifact in manifest["artifacts"]))

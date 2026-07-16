@@ -108,7 +108,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/g_bias.json",
       "produced_by": "ebta_engine",
-      "sha256": "A94FEC86DE708D411E6C0657D61E1D36E662E7BCA666482CE3594F1412B85D1B",
+      "sha256": "CAF3524ABDD2DB4ABA4146C0AD4F88950875392D7ED6F96535210ECF9315038F",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -117,7 +117,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/gates.json",
       "produced_by": "ebta_engine",
-      "sha256": "DC6FEB945233101CF8DD392F7A74182E9D86D008DDF6DEB629DB2C0174B71AD3",
+      "sha256": "DA4B754BD93CD16B3DEE85B26A1523BCCA765B29EE3519FA2A86CE67F009DDE4",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -144,7 +144,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/invariant_evidence.json",
       "produced_by": "ebta_engine",
-      "sha256": "A1481D0B9196DD19EB28CCE7E75D5546501E208E36F3FA4383A2EAB96C987DDD",
+      "sha256": "64709E88A3266BB3BCF601F370996B04C704507125D9EEEC9CF154AD0408854E",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
