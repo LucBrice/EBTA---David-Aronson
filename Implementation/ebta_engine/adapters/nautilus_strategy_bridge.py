@@ -23,6 +23,7 @@ class GenericPayloadStrategyConfig(StrategyConfig, frozen=True):
     bar_types: list[str]
     trade_size: Decimal
     warmup_bar_count: int = 0
+    precomputed_decisions: list[tuple[int, str]] | None = None
 
 
 class GenericPayloadStrategy(Strategy):
@@ -31,8 +32,14 @@ class GenericPayloadStrategy(Strategy):
     def __init__(self, config: GenericPayloadStrategyConfig) -> None:
         super().__init__(config)
         self._payload = StrategyPayload.from_dict(config.payload)
-        strategy_cls = get_strategy(_registry_code(self._payload))
-        self._signal_strategy = strategy_cls(dict(config.payload), warmup_bar_count=config.warmup_bar_count)
+        if config.precomputed_decisions is None:
+            strategy_cls = get_strategy(_registry_code(self._payload))
+            self._signal_strategy = strategy_cls(dict(config.payload), warmup_bar_count=config.warmup_bar_count)
+        else:
+            self._signal_strategy = _PrecomputedDecisionStrategy(
+                dict(config.payload),
+                config.precomputed_decisions,
+            )
         self._m1_bar_count = 0
         self._seen_bar_count = 0
         self._entry_bar: int | None = None
@@ -60,7 +67,11 @@ class GenericPayloadStrategy(Strategy):
         if is_m1:
             self._m1_bar_count += 1
             self._record_nav_snapshot(bar)
-        elif self._seen_bar_count > self.config.warmup_bar_count and not self._warned_no_m1:
+        elif (
+            self._m1_bar_count == 0
+            and self._seen_bar_count > self.config.warmup_bar_count
+            and not self._warned_no_m1
+        ):
             logging.warning("[EBTA] No M1 bar received after warm-up — strategy is in NO_SIGNAL mode")
             self._metadata["no_m1_signal"] = True
             self._warned_no_m1 = True
@@ -84,6 +95,31 @@ class GenericPayloadStrategy(Strategy):
         equity = _call_float(self.portfolio, "equity", self._venue)
         exposure = _call_float(self.portfolio, "net_exposure", self.config.instrument_id)
         self._nav_snapshots.append((int(bar.ts_event), equity, exposure))
+
+
+class _PrecomputedDecisionStrategy:
+    def __init__(self, payload: dict[str, Any], decisions: list[tuple[int, str]]) -> None:
+        self.payload = payload
+        self._decisions = {int(ts_event): side for ts_event, side in decisions}
+        self._pending_side: str | None = None
+        self._exit_horizon_bars = _horizon_bars(payload.get("exit_criterion", payload))
+
+    def on_bar(self, bar: Bar) -> None:
+        if not _is_m1_bar(bar):
+            return
+        side = self._decisions.get(int(bar.ts_event))
+        if side is not None:
+            self._pending_side = side
+
+    def should_enter(self) -> tuple[bool, str | None]:
+        if self._pending_side is None:
+            return False, None
+        side = self._pending_side
+        self._pending_side = None
+        return True, side
+
+    def should_exit(self, bar_count_since_entry: int) -> bool:
+        return bar_count_since_entry >= self._exit_horizon_bars
 
 
 def _horizon_bars(criterion: str | dict) -> int:
@@ -131,6 +167,8 @@ def _call_float(obj: Any, name: str, argument: Any) -> float:
     except Exception:
         return 0.0
     try:
+        if isinstance(result, dict) and len(result) == 1:
+            result = next(iter(result.values()))
         return float(str(result).split()[0])
     except Exception:
         return 0.0

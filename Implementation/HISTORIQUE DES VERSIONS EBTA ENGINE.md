@@ -80,6 +80,89 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-16 - Stabilisation du build Nautilus M1 et extraction NAV
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | ADAPTER_MAPPING / IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | SOP 02 (WRC primaire), SOP 08 (NAV et rendements de reference), SOP 09B (execution/fills) |
+| Fichiers impactes | `Implementation/ebta_engine/adapters/nautilus_mapping.py`, `Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py`, `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_phase5_run_segment.py` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase5_run_segment.py` (PASS, 4 tests); `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py` (PASS, 4 tests); `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_procedure_wrc.py` (PASS, 6 tests); `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` (PASS, 152 tests); `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` (PASS); `pyrefly check` sur les fichiers touches (0 errors); build Nautilus reel via venv termine en ~97 s mais retourne `status: FAIL` car le WRC primaire reel du package M1 est `FAIL` (`wrc_pvalue` ~= 0.395), non a cause d'un timeout |
+
+### Contexte
+
+La cloture du plan G5 a revele un blocage hors perimetre initial : le build
+Nautilus reel depassait le timeout subprocess sur des segments M1 de 1440
+barres, puis la construction des rapports devenait trop couteuse avec les
+diagnostics secondaires WRC sur des series M1 longues.
+
+### Decision
+
+Precalculer une seule fois les decisions causales du payload pour chaque
+segment et laisser `GenericPayloadStrategy` soumettre les ordres Nautilus aux
+timestamps M1 correspondants. Conserver l'isolation subprocess par segment mais
+executer ces subprocess sequentiellement sous Windows. Corriger l'extraction de
+`portfolio.equity(venue)` lorsque Nautilus retourne un mapping `{Currency:
+Money}` afin que la NAV ne soit plus convertie en `0.0`. Rendre l'execution des
+diagnostics secondaires WRC pilotable par `statistical_plan` et la declarer
+`NOT_RUN` pour le package Nautilus M1 long ; le WRC primaire conserve ses 5000
+replications.
+
+### Impact
+
+Le build Nautilus ne reste plus bloque et les fills produisent des rendements
+non nuls dans `SimulationResult`. Le package courant reste toutefois un echec
+EBTA legitime : le WRC primaire reel est `FAIL`, donc G4 est
+`INCONCLUSIVE`/non-PASS et `validate_package_dir()` retourne `FAIL`.
+
+### Suite
+
+Ne pas forcer `wrc_status` a `PASS`. Une decision humaine ou un chantier
+dedie est requis pour traiter le fait que le package Nautilus M1 courant ne
+passe pas le WRC primaire.
+
+## 2026-07-16 - Propagation du verdict de robustesse pre-OOS reel vers G5
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | SOP 05 (robustesse pre-OOS, DN-030) |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py` |
+| Impact protocole | NONE |
+| Verification | `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py` (PASS, 4 tests); `python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation` (PASS, 152 tests apres stabilisation Nautilus M1); `python Implementation\examples\minimal_pilot_pipeline\build_research_package.py` (PASS); `python -m json.tool .ai\checkpoint.json` (PASS); `python -m json.tool Implementation\Active\tracking.json` (PASS); schemas `.ai/checkpoint.json` + `Implementation/Active/tracking.json` (PASS); `pyrefly check` sur les fichiers Python touches (0 errors); `git diff --check -- .ai Implementation Protocole` (PASS, warnings CRLF uniquement); build Nautilus reel via venv termine mais retourne `status: FAIL` sur WRC primaire reel du package M1, hors champ G5 |
+
+### Contexte
+
+Le rapport de robustesse pre-OOS etait deja calcule par
+`robustness_verdict()`, puis reutilise honnetement par `robustness.json` et
+`incubation_gate.json`. En revanche, `gates.json` continuait a fixer
+`pre_oos_robustness_verdict` a `PASS`, ce qui pouvait masquer un echec reel du
+gate G5.
+
+### Decision
+
+Faire circuler `procedure_reports["robustness"]["status"]` vers
+`gates.json::pre_oos_robustness_verdict`, sans modifier SOP 05, les seuils de
+robustesse, les validateurs, ni les calculateurs `procedures/` et `risk/`.
+Ajouter une preuve de non-regression sur le chemin
+`build_nautilus_research_package()` avec un runner synthetique qui force un
+scenario bloquant sous `minimum_mean_return`.
+
+### Impact
+
+G5 reflete maintenant le verdict de robustesse pre-OOS deja calcule. Aucun
+nouveau statut, seuil, gate ou ordre de processus EBTA n'est introduit.
+
+### Suite
+
+Les sujets de couverture du catalogue preregistre DN-030 et de realisme des
+scenarios de robustesse restent hors perimetre de ce correctif.
+
 ## 2026-07-15 - Statut global de package sensible aux gates reels en echec
 
 | Champ | Valeur |

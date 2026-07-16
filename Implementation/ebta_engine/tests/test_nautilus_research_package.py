@@ -9,6 +9,7 @@ from ebta_engine.package_builder.nautilus_research_package import build_nautilus
 from ebta_engine.procedures.economic_gate import economic_gate_report
 from ebta_engine.procedures.lifecycle import incubation_gate
 from ebta_engine.strategies.contracts import SimulationResult
+from ebta_engine.validators.gate_validator import gate_report
 
 
 class NautilusEconomicGateProductionTests(unittest.TestCase):
@@ -99,6 +100,39 @@ class NautilusStatisticalGateProductionTests(unittest.TestCase):
         self.assertEqual(old_incubation["status"], "PASS")
 
 
+class NautilusRobustnessGateProductionTests(unittest.TestCase):
+    """Non-regression proof for PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE."""
+
+    def test_real_robustness_fail_reaches_g5_gate(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            report = build_nautilus_research_package(
+                package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=_robustness_fail_segment_runner,
+            )
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+            robustness = json.loads((package_dir / "reports" / "robustness.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(robustness["status"], "FAIL")
+        self.assertEqual(gates["pre_oos_robustness_verdict"], "FAIL")
+
+        honest_gate_report = gate_report(gates)
+        g5 = _gate_by_id(honest_gate_report, "G5")
+        self.assertEqual(g5["status"], "INCONCLUSIVE")
+        self.assertIn("pre_oos_robustness_verdict", g5["missing"])
+
+        old_hardcoded_gates = dict(gates)
+        old_hardcoded_gates["pre_oos_robustness_verdict"] = "PASS"
+        old_g5 = _gate_by_id(gate_report(old_hardcoded_gates), "G5")
+        self.assertEqual(old_g5["status"], "PASS")
+        self.assertEqual(robustness["status"], "FAIL")
+
+
 class NautilusResearchPackageTests(unittest.TestCase):
     def test_nautilus_package_builder_validates_with_injected_segment_runner(self):
         calls = []
@@ -187,6 +221,27 @@ def _statistical_fail_segment_runner(**kwargs) -> SimulationResult:
     )
 
 
+def _robustness_fail_segment_runner(**kwargs) -> SimulationResult:
+    bars = kwargs["bars"]
+    starting_nav = kwargs.get("starting_nav", 1000.0)
+    returns = [-1.5 for _ in bars]
+    nav = []
+    current_nav = starting_nav
+    for value in returns:
+        current_nav *= 1.0 + value
+        nav.append(current_nav)
+    return SimulationResult(
+        candidate_id=kwargs["candidate"].candidate_id,
+        instrument_id=kwargs["instrument_config"].instrument_id,
+        timestamps=[bar.timestamp.isoformat().replace("+00:00", "Z") for bar in bars],
+        daily_returns=returns,
+        daily_exposure=[0.1 for _ in bars],
+        nav=nav,
+        total_costs=0.0,
+        metadata={"source": "fake_nautilus_robustness_fail_runner", "total_orders": 2},
+    )
+
+
 def _fake_segment_runner(**kwargs) -> SimulationResult:
     bars = kwargs["bars"]
     return SimulationResult(
@@ -220,6 +275,13 @@ def _write_fixture_data(data_root: Path) -> Path:
             )
     _write_asset_csv(data_root / "NASDAQ 1m", "USATECH.IDXUSD-m1-bid-2020-01-01-2020-01-31.csv", rows)
     return data_root
+
+
+def _gate_by_id(report: dict, gate_id: str) -> dict:
+    for gate in report["gates"]:
+        if gate["gate_id"] == gate_id:
+            return gate
+    raise AssertionError(f"missing gate {gate_id}")
 
 
 def _write_asset_csv(folder: Path, filename: str, rows: list[dict]) -> None:

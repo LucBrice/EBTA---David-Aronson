@@ -212,7 +212,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "wrc_family_matrix": True,
         "robustness_report": True,
         "robustness_matrix": True,
-        "pre_oos_robustness_verdict": "PASS",
+        "pre_oos_robustness_verdict": procedure_reports["robustness"]["status"],
         "execution_report": True,
         "cost_model": True,
         "capacity_grid": True,
@@ -375,6 +375,7 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
         mean_block_length=statistical_plan["wrc_mean_block_length"],
         seed=statistical_plan["wrc_seed"],
         alpha=statistical_plan["wrc_alpha"],
+        run_secondary=statistical_plan.get("wrc_run_secondary", True),
     )
     oos = oos_confidence_interval(
         pilot_inputs["oos_returns"],

@@ -208,6 +208,85 @@ class NautilusPhase5RunSegmentTests(unittest.TestCase):
         self.assertEqual(no_model["nav"], [1000.0, 1000.0, 1000.0])
         self.assertEqual(no_model["daily_exposure"], [0.0, 0.0, 0.0])
 
+    def test_dedicated_venv_m1_segment_records_real_nav_without_false_no_m1(self):
+        script = textwrap.dedent(
+            """
+            import json
+
+            from ebta_engine.adapters.nautilus_mapping import run_segment
+            from ebta_engine.package_builder import nautilus_research_package as pkg
+            from ebta_engine.strategies.contracts import Candidate
+
+            assets = sorted(pkg.DEFAULT_NAUTILUS_ASSETS)
+            pilot = pkg._load_pilot_module()
+            inputs = pilot.load_pilot_inputs()
+            inputs["candidate_space"].update(
+                {
+                    "asset_universe": assets,
+                    "asset_selection_axis": "asset",
+                    "asset_selection_rule": "evaluate_all_declared_assets",
+                    "parameter_grid": {
+                        "asset": assets,
+                        "bias_filter": ["none", "directional_mtf_bias"],
+                        "session": ["all", "asia", "london", "us"],
+                    },
+                    "budget": {"max_candidates": len(assets) * 8, "max_train_evaluations": len(assets) * 8},
+                }
+            )
+            search_space = pilot._pilot_search_space(inputs)
+            raw = pkg.load_ohlcv_bars(
+                pkg.DEFAULT_DATA_ROOT,
+                "NASDAQ",
+                start=pkg.DEFAULT_NAUTILUS_START,
+                end=pkg.DEFAULT_NAUTILUS_END,
+            )
+            folds = pkg.WalkForwardSplitter(
+                n_folds=2,
+                train_size=2,
+                test_size=1,
+                oos_size=1,
+                purge_days=0,
+                embargo_days=0,
+                warmup_days=0,
+            ).build_folds(pkg._day_boundary_index(raw))
+            fold = folds[0]
+            payloads = pkg._payloads_by_axis(assets, inputs["identifiers"]["research_family_id"], fold["fold_id"])
+            row = next(
+                candidate
+                for candidate in search_space["candidates"]
+                if candidate["parameters"] == {"asset": "NASDAQ", "bias_filter": "none", "session": "all"}
+            )
+            params = row["parameters"]
+            payload = payloads[(params["asset"], params["bias_filter"], params["session"])]
+            result = run_segment(
+                Candidate(
+                    candidate_id=row["candidate_id"],
+                    research_family_id=inputs["identifiers"]["research_family_id"],
+                    payload=payload.to_dict(),
+                    asset="NASDAQ",
+                    complexity=int(params.get("complexity", 1)),
+                    fold_id=fold["fold_id"],
+                ),
+                pkg._slice_bars_by_date_range(raw, *fold["schedule"]["test"]),
+                pkg._nautilus_cost_model(),
+                pkg._instrument_config("NASDAQ"),
+                seed=13,
+                starting_nav=1000.0,
+                trade_size="1",
+                interval_value=1,
+                interval_unit="MINUTE",
+                timestamp_is_close=True,
+            )
+            print(json.dumps(result.to_dict(), sort_keys=True))
+            """
+        )
+        actual = self._run_venv_json(script)
+        self.assertGreater(actual["metadata"]["total_orders"], 0)
+        self.assertNotIn("no_m1_signal", actual["metadata"])
+        self.assertGreater(max(actual["nav"]), 0.0)
+        self.assertLess(min(actual["nav"]), max(actual["nav"]))
+        self.assertGreater(sum(1 for value in actual["daily_returns"] if value != 0.0), 0)
+
     def _run_venv_json(self, script: str) -> dict:
         implementation_root = Path(__file__).resolve().parents[2]
         python_exe = implementation_root / "adapters" / "nautilus_env" / "venv" / "Scripts" / "python.exe"

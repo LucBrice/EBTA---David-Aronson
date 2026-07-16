@@ -8,11 +8,17 @@ the Phase 2/3 venv smoke tests.
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any, Sequence
 
 from ebta_engine.data.local_ohlcv import OhlcvBar
 from ebta_engine.data.resample import resample_ohlcv
+from ebta_engine.strategies.incremental.payload_e import _signal_parameters, frame_from_bars
+from ebta_engine.strategies.payloads import StrategyPayload
+from ebta_engine.strategies.signals.entry_signal import compute_entry_signals
+from ebta_engine.strategies.signals.market_bias import align_mtf_filter
+from ebta_engine.strategies.signals.sessions import filter_session
 from ebta_engine.strategies.contracts import Candidate, CostModel, InstrumentConfig, SimulationResult
 
 
@@ -262,6 +268,11 @@ def run_segment(
             bar_types=bar_types,
             trade_size=Decimal(trade_size),
             warmup_bar_count=warmup_bar_count,
+            precomputed_decisions=_precomputed_decisions(
+                candidate.payload,
+                active_bars,
+                warmup_bar_count=warmup_bar_count,
+            ),
         )
         eng.add_strategy(classes["GenericPayloadStrategy"](strategy_config))
         eng.run()
@@ -478,6 +489,8 @@ def _is_missing_report_value(value: Any) -> bool:
 
 def _money_float(value: Any) -> float:
     try:
+        if isinstance(value, dict) and len(value) == 1:
+            value = next(iter(value.values()))
         return float(value)
     except Exception:
         return float(str(value).split()[0])
@@ -520,6 +533,82 @@ def _map_multitimeframe_bars(
             )
         )
     return mapped
+
+
+def _precomputed_decisions(
+    payload_dict: dict[str, Any],
+    bars: Sequence[OhlcvBar],
+    *,
+    warmup_bar_count: int,
+) -> list[tuple[int, str]]:
+    if not bars:
+        return []
+    payload = StrategyPayload.from_dict(dict(payload_dict))
+    code = _strategy_code(payload)
+    bars_m1 = list(bars)
+    frame_m1 = frame_from_bars(bars_m1)
+    frame_m3 = frame_from_bars(resample_ohlcv(bars_m1, 3))
+    if frame_m3.empty:
+        return []
+    signal = compute_entry_signals(frame_m1, frame_m3, **_signal_parameters(dict(payload_dict)))
+    if code == "F" or (code in {"G", "H", "I"} and payload.bias_filter == "directional_mtf_bias"):
+        bias = align_mtf_filter(
+            frame_m3,
+            frame_from_bars(resample_ohlcv(bars_m1, 60)),
+            frame_from_bars(resample_ohlcv(bars_m1, 240)),
+            frame_from_bars(resample_ohlcv(bars_m1, 1440)),
+        )
+        signal = signal.where(((signal > 0) & (bias > 0)) | ((signal < 0) & (bias < 0)), 0)
+    if code in {"G", "H", "I"}:
+        signal = signal.where(filter_session(frame_m3, _session_for_code(code)), 0)
+
+    warmup_cutoff = _warmup_cutoff(bars_m1, warmup_bar_count)
+    decisions: list[tuple[int, str]] = []
+    for timestamp, value in signal[signal != 0].items():
+        decision_time = _as_utc_datetime(timestamp)
+        if warmup_cutoff is not None and decision_time <= warmup_cutoff:
+            continue
+        decisions.append((_datetime_to_nanos(decision_time), "BUY" if int(value) > 0 else "SELL"))
+    return decisions
+
+
+def _strategy_code(payload: StrategyPayload) -> str:
+    if payload.payload_code in {"E", "F", "G", "H", "I"}:
+        return payload.payload_code
+    session = payload.session.lower()
+    if session == "asia":
+        return "G"
+    if session == "london":
+        return "H"
+    if session == "us":
+        return "I"
+    if payload.bias_filter != "none":
+        return "F"
+    return "E"
+
+
+def _session_for_code(code: str) -> str:
+    return {"G": "asia", "H": "london", "I": "us"}[code]
+
+
+def _warmup_cutoff(bars: Sequence[OhlcvBar], warmup_bar_count: int) -> datetime | None:
+    if warmup_bar_count <= 0:
+        return None
+    return bars[min(warmup_bar_count, len(bars)) - 1].timestamp.astimezone(timezone.utc)
+
+
+def _as_utc_datetime(value: Any) -> datetime:
+    if isinstance(value, datetime):
+        timestamp = value
+    else:
+        timestamp = value.to_pydatetime()
+    if timestamp.tzinfo is None:
+        raise ValueError(f"timestamp is not timezone-aware: {timestamp!r}")
+    return timestamp.astimezone(timezone.utc)
+
+
+def _datetime_to_nanos(value: datetime) -> int:
+    return int(value.timestamp() * 1_000_000_000)
 
 
 def _fills_to_records(fills: Any, price_column: str, quantity_column: str, timestamp_column: str) -> list[dict[str, Any]]:

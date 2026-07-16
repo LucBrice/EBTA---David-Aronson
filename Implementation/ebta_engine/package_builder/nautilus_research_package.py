@@ -26,7 +26,10 @@ DEFAULT_NAUTILUS_ASSETS = ["NASDAQ", "XAUUSD"]
 DEFAULT_NAUTILUS_START = "2020-01-01T00:00:00Z"
 DEFAULT_NAUTILUS_END = "2020-01-10T23:59:00Z"
 NAUTILUS_SEGMENT_TIMEOUT_SECONDS = 300
-NAUTILUS_SEGMENT_WORKERS = 4
+# Nautilus/Rust logging is process-global and the Windows venv is not reliable
+# under concurrent subprocess segment launches. Keep isolation per segment, but
+# run those subprocesses sequentially to avoid validation hangs.
+NAUTILUS_SEGMENT_WORKERS = 1
 
 # SOP 08 production thresholds for the Nautilus MVP perimeter (NASDAQ,
 # XAUUSD, liquidity-sweep family), calibrated by the human on 2026-07-10 (see
@@ -79,6 +82,7 @@ def build_nautilus_inputs(
     )
     snapshot = build_data_snapshot(data_root, assets, start=start, end=end)
     inputs["data_snapshots"] = [snapshot]
+    inputs["statistical_plan"]["wrc_run_secondary"] = False
     inputs["candidate_space"].update(
         {
             "base_spec": {"logic": "liquidity_sweep_confirmation", "engine": "nautilus_trader"},
