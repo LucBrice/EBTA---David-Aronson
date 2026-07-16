@@ -189,6 +189,9 @@ baseline, implementer, tester et clore le sous-chantier Lot C.
 
 Classification : IMPLEMENTATION_DETAIL
 
+Statut 2026-07-16 : `DONE` — cloture mecanique effectuee par
+`.ai/tools/plan.ps1 close`, commit `4e568c5`.
+
 Actions :
 
 - Rediger la note d'intake et le plan restructure du Lot C (document separe,
@@ -201,7 +204,7 @@ Actions :
 
 Livrables :
 
-- Workstream `fix` Lot C `DONE` dans `.ai/checkpoint.json`.
+- Workstream `fix` Lot C `DONE` dans `.ai/checkpoint.json` (`4e568c5`).
 
 Critere de sortie :
 
@@ -339,7 +342,7 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Premier lot executable propose** :
 
 ```text
-Phase 1 - Lot C : redaction et routage du sous-chantier
+Phase 2 - Lot A2 : fonction de puissance atteinte reelle (G9 power_check)
 ```
 
 ### Execution sans interruption
@@ -373,6 +376,7 @@ methode a la place de l'humain.
 | 2026-07-16 | Regrouper A2+B+C dans un seul chantier mere de suivi, avec enchainement automatique de C puis A2 sans repasser par l'humain, et pause obligatoire avant B. | Autorise la creation de ce document et le routage successif de Lot C puis Lot A2. N'autorise pas le routage du Lot B sans nouvelle decision. |
 | 2026-07-16 | Ordre revise en session : Lot C avant Lot A2 (inversion de l'ordre initialement propose), suite a la decouverte que A2 necessite un calcul manquant et non un simple branchement. | Remplace l'ordre initial. |
 | 2026-07-16 | Lot A2 : methode actee — reutiliser le bootstrap stationnaire par blocs deja normatif (`procedures/bootstrap.py`) applique aux rendements pre-OOS de developpement pour estimer l'erreur type de la puissance atteinte. | Autorise la redaction et l'implementation du sous-chantier Lot A2 avec cette methode precise, sans nouvelle consultation humaine sur ce point. |
+| 2026-07-16 | Lot C cloture en `DONE` par commit `4e568c5` : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; suite runtime, build pilote, pyrefly, bug-hunter et audit de conformite `PASS`. | Autorise la reprise de la boucle sur le sous-chantier suivant : Lot A2. |
 
 ---
 
@@ -387,7 +391,7 @@ methode a la place de l'humain.
 
 ## 12. Definition of Done
 
-- [ ] Lot C `DONE`.
+- [x] Lot C `DONE`.
 - [ ] Lot A2 `DONE`.
 - [ ] Lot B `DONE` ou explicitement differe par decision humaine documentee (section 10).
 - [ ] Aucune modification hors perimetre par ce document lui-meme (section 5).
