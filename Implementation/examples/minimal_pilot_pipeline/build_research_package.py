@@ -193,6 +193,39 @@ def _g9_gate_value(statistical_gate: str) -> str:
     return "INCONCLUSIVE"
 
 
+def _gate_verdict(value: object) -> str:
+    if value == "PASS":
+        return "PASS"
+    if value == "FAIL":
+        return "FAIL"
+    return "INCONCLUSIVE"
+
+
+def _g6_cost_model_gate(pilot_inputs: dict, execution_report: dict) -> str:
+    declared_cost_model = pilot_inputs.get("execution_model", {}).get("cost_model")
+    declared_model_id = (
+        declared_cost_model.get("model_id")
+        if isinstance(declared_cost_model, dict)
+        else declared_cost_model
+    )
+    reported_model_id = execution_report.get("cost_model")
+    if not declared_model_id or not reported_model_id:
+        return "INCONCLUSIVE"
+    if reported_model_id != declared_model_id:
+        return "FAIL"
+    return "PASS"
+
+
+def _g6_capacity_grid_gate(economic_report: dict) -> str:
+    failures = set(economic_report.get("failures", []))
+    capacity_grid = economic_report.get("capacity_grid", [])
+    if "capacity_pass" in failures:
+        return "FAIL"
+    if "capacity_grid" in failures or not capacity_grid:
+        return "INCONCLUSIVE"
+    return "PASS"
+
+
 def _min_annualized_return_threshold(economic_gate: dict, *, sessions_per_year: int = 252) -> float:
     thresholds = economic_gate.get("thresholds", {})
     if "min_annualized_return" in thresholds:
@@ -215,6 +248,10 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     monitoring_consultation_status = procedure_reports["monitoring_consultation_log"]["status"]
     incubation_report_status = procedure_reports["incubation_report"]["status"]
     deployment_gate_status = procedure_reports["deployment_gate"]["status"]
+    execution_status = _gate_verdict(procedure_reports["execution"].get("status"))
+    nav_reconciliation_status = _gate_verdict(procedure_reports["execution"].get("nav_reconciliation"))
+    cost_model_status = _g6_cost_model_gate(pilot_inputs, procedure_reports["execution"])
+    capacity_grid_status = _g6_capacity_grid_gate(procedure_reports["economic"])
     gates = {
         "config_id": identifiers["config_id"],
         "project_id": identifiers["project_id"],
@@ -238,10 +275,10 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "robustness_report": True,
         "robustness_matrix": True,
         "pre_oos_robustness_verdict": procedure_reports["robustness"]["status"],
-        "execution_report": True,
-        "cost_model": True,
-        "capacity_grid": True,
-        "nav_reconciliation": True,
+        "execution_report": execution_status,
+        "cost_model": cost_model_status,
+        "capacity_grid": capacity_grid_status,
+        "nav_reconciliation": nav_reconciliation_status,
         "pre_oos_manifest": sealing_status,
         "frozen_config": sealing_status,
         "test_reports": True,

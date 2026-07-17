@@ -56,6 +56,8 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                     "live_deployment.json",
                     "deployment_gate.json",
                     "reproduction_validation.json",
+                    "economic.json",
+                    "execution.json",
                 ]
             }
             manifest = json.loads((package_dir / "manifests" / "reproducibility_manifest.json").read_text(encoding="utf-8"))
@@ -98,10 +100,22 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         for field, expected_status in expected_lot_c_gate_values.items():
             with self.subTest(field=field):
                 self.assertEqual(gates[field], expected_status)
+        expected_g6_gate_values = {
+            "execution_report": procedure_reports["execution.json"]["status"],
+            "cost_model": "PASS",
+            "capacity_grid": "PASS",
+            "nav_reconciliation": procedure_reports["execution.json"]["nav_reconciliation"],
+        }
+        self.assertNotEqual(procedure_reports["economic.json"]["economic_status"], "")
+        for field, expected_status in expected_g6_gate_values.items():
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], expected_status)
         manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
         self.assertEqual(manifest_paths, set(package_shape["artifact_paths"]))
         self.assertTrue(all("artifact_role" in artifact for artifact in manifest["artifacts"]))
-        for procedure_report in procedure_reports.values():
+        for name, procedure_report in procedure_reports.items():
+            if name == "economic.json":
+                continue
             self.assertIn(procedure_report["status"], {"PASS", "AUTHORIZED"})
         self.assertEqual(procedure_reports["oos_access_decision.json"]["status"], "AUTHORIZED")
 

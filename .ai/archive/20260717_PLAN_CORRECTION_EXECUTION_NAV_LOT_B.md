@@ -426,14 +426,14 @@ observable dans les artefacts produits.
 
 ## 12. Definition of Done
 
-- [ ] Toutes les phases validees individuellement (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre.
-- [ ] Aucune regression sur la suite de tests existante.
-- [ ] Bug-hunter applique sur les fichiers touches et sans bug confirme ouvert.
-- [ ] Plan-conformance-audit applique et sans critere manquant.
+- [x] Toutes les phases validees individuellement (section 9).
+- [x] Exit criteria de la section Triage atteint et verifiable.
+- [x] Aucune modification hors perimetre.
+- [x] Aucune regression sur la suite de tests existante.
+- [x] Bug-hunter applique sur les fichiers touches et sans bug confirme ouvert.
+- [x] Plan-conformance-audit applique et sans critere manquant.
 - [ ] `.ai/checkpoint.json` valide apres close.
-- [ ] Aucune implementation partielle, stub ou placeholder ne subsiste comme substitut a une brique prevue.
+- [x] Aucune implementation partielle, stub ou placeholder ne subsiste comme substitut a une brique prevue.
 
 ---
 
@@ -441,19 +441,26 @@ observable dans les artefacts produits.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir a la cloture |
-| Ecarts par rapport au plan initial | A remplir a la cloture |
-| Suites a prevoir (hors perimetre de ce plan) | A remplir a la cloture |
+| Resultat final | DONE - Implementation Lot B terminee ; G6 execution/NAV derive des preuves et rapports reels. |
+| Ecarts par rapport au plan initial | Aucun ecart fonctionnel. Les artefacts generes du package pilote ont ete restaures apres le build pour respecter le perimetre de fichiers autorises ; la preuve reste le build PASS execute. |
+| Suites a prevoir (hors perimetre de ce plan) | Actualiser l'EPIC mere puis appliquer l'audit global avant cloture generale. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | A remplir |
-| Phases executees | A remplir |
-| Artefact produit | A remplir |
-| Validation | A remplir |
-| Ecart par rapport au plan | A remplir |
+| Date | 2026-07-17 |
+| Phases executees | Phase 1, Phase 2, Phase 3 |
+| Artefact produit | `execution.json` calcule, `gates.json` G6 derive, tests de non-regression Lot B |
+| Validation | PASS : tests cibles, suite runtime 167 tests, build pilote PASS, pyrefly 0 errors, greps de hardcoding sans match |
+| Ecart par rapport au plan | Aucun |
+
+### Audits pre-cloture
+
+| Audit | Resultat | Preuve |
+| --- | --- | --- |
+| bug-hunter | PASS | Pyrefly cible : `INFO 0 errors` ; suite runtime : `Ran 167 tests ... OK` ; build pilote : `status PASS`. |
+| plan-conformance-audit | PASS | Exit criteria 1 et 2 prouves par greps sans match ; critere 3 prouve par `test_oos_without_orders_and_flat_nav_cannot_pass_g6` et `test_non_positive_nav_fails_execution_report` ; critere 4 prouve par validations listees. |
 
 ---
 

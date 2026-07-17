@@ -99,6 +99,7 @@ def build_nautilus_inputs(
             "stability_criteria": ["payload_complexity_tie_break", "turnover_cost_exposure_tie_break"],
         }
     )
+    inputs["execution_model"]["cost_model"] = _nautilus_cost_model().to_dict()
 
     run_one = segment_runner or _subprocess_segment_runner
     segment_workers = 1 if segment_runner is not None else NAUTILUS_SEGMENT_WORKERS
@@ -239,14 +240,21 @@ def build_nautilus_inputs(
         {"available_at": snapshot["available_at"], "decision_at": fold["schedule"]["information_cutoff"]}
         for fold in reference_folds
     ]
+    execution_evidence = _execution_nav_evidence(all_simulation_results, oos_results)
     inputs["execution_report"] = {
-        "status": "PASS",
-        "cost_model": "nautilus_zero_fee_deterministic",
+        "status": execution_evidence["status"],
+        "cost_model": _nautilus_cost_model().model_id,
         "central_scenario": "tradable_net",
         "orders": [{"order_id": "ORDER-NAUTILUS-MVP-SUMMARY", "status": "FILLED", "fill_id": "FILL-NAUTILUS-MVP-SUMMARY"}],
         "total_orders": _total_orders(all_simulation_results),
         "oos_total_orders": _total_orders(oos_results),
-        "nav_reconciliation": "PASS",
+        "nav_reconciliation": execution_evidence["nav_reconciliation"],
+        "nav_observation_count": execution_evidence["nav_observation_count"],
+        "oos_nav_observation_count": execution_evidence["oos_nav_observation_count"],
+        "nav_positive": execution_evidence["nav_positive"],
+        "nav_non_flat": execution_evidence["nav_non_flat"],
+        "oos_nav_non_flat": execution_evidence["oos_nav_non_flat"],
+        "failures": execution_evidence["failures"],
         "engine": "nautilus_trader",
         "backtrader_runtime_dependency": False,
     }
@@ -505,6 +513,57 @@ def _total_orders(results: list[SimulationResult]) -> int:
         raw_total = result.metadata.get("total_orders") if isinstance(result.metadata, dict) else None
         total += int(raw_total) if raw_total is not None else len(result.orders)
     return total
+
+
+def _execution_nav_evidence(
+    all_results: list[SimulationResult],
+    oos_results: list[SimulationResult],
+) -> dict[str, Any]:
+    all_nav = [value for result in all_results for value in result.nav]
+    oos_nav = [value for result in oos_results for value in result.nav]
+    total_orders = _total_orders(all_results)
+    oos_total_orders = _total_orders(oos_results)
+    nav_positive = bool(all_nav) and all(value > 0.0 for value in all_nav)
+    nav_non_flat = _series_non_flat(all_nav)
+    oos_nav_non_flat = _series_non_flat(oos_nav)
+    failures: list[str] = []
+
+    if total_orders <= 0:
+        failures.append("total_orders")
+    if oos_total_orders <= 0:
+        failures.append("oos_total_orders")
+    if not all_nav:
+        failures.append("nav")
+    if not oos_nav:
+        failures.append("oos_nav")
+    if all_nav and not nav_positive:
+        failures.append("nav_non_positive")
+    if all_nav and not nav_non_flat:
+        failures.append("nav_flat")
+    if oos_nav and not oos_nav_non_flat:
+        failures.append("oos_nav_flat")
+
+    if "nav_non_positive" in failures:
+        status = "FAIL"
+    elif failures:
+        status = "INCONCLUSIVE"
+    else:
+        status = "PASS"
+
+    return {
+        "status": status,
+        "nav_reconciliation": status,
+        "nav_observation_count": len(all_nav),
+        "oos_nav_observation_count": len(oos_nav),
+        "nav_positive": nav_positive,
+        "nav_non_flat": nav_non_flat,
+        "oos_nav_non_flat": oos_nav_non_flat,
+        "failures": failures,
+    }
+
+
+def _series_non_flat(values: list[float]) -> bool:
+    return bool(values) and any(value != values[0] for value in values[1:])
 
 
 def _nautilus_robustness_grid() -> dict[str, Any]:

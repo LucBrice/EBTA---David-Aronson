@@ -577,10 +577,10 @@
       "id": "PLAN_CORRECTION_EXECUTION_NAV_LOT_B",
       "title": "Lot B - G6 execution NAV reconstructible",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
+      "source_path": ".ai/archive/20260717_PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260717_PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-17",
@@ -590,8 +590,9 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Lot B termine : G6 execution_report cost_model capacity_grid nav_reconciliation derivent des preuves execution NAV et rapports reels ; tests cibles, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {

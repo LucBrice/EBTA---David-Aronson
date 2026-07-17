@@ -154,6 +154,7 @@ class NautilusResearchPackageTests(unittest.TestCase):
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
             search_space = json.loads((package_dir / "reports" / "search_space.json").read_text(encoding="utf-8"))
             execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
             fold_schedule = json.loads((package_dir / "reports" / "fold_schedule.json").read_text(encoding="utf-8"))
             oos_series = json.loads((package_dir / "series" / "oos_primary_returns.json").read_text(encoding="utf-8"))
         self.assertEqual(report["status"], "PASS")
@@ -163,8 +164,13 @@ class NautilusResearchPackageTests(unittest.TestCase):
         self.assertEqual(search_space["candidate_count"], 8)
         self.assertEqual(search_space["asset_candidate_count"], {"NASDAQ": 8})
         self.assertEqual(execution["engine"], "nautilus_trader")
+        self.assertEqual(execution["status"], "PASS")
+        self.assertEqual(execution["nav_reconciliation"], "PASS")
         self.assertGreater(execution["total_orders"], 0)
         self.assertGreater(execution["oos_total_orders"], 0)
+        for field in ("execution_report", "cost_model", "capacity_grid", "nav_reconciliation"):
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], "PASS")
         self.assertEqual(len(oos_series["observations"]), 6)
         self.assertGreater(len(calls), 8)
         for call in calls:
@@ -174,6 +180,50 @@ class NautilusResearchPackageTests(unittest.TestCase):
             self.assertEqual(call["interval_value"], 1)
             self.assertEqual(call["interval_unit"], "MINUTE")
             self.assertEqual(len(call["bars"]), 3)
+
+    def test_oos_without_orders_and_flat_nav_cannot_pass_g6(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            report = build_nautilus_research_package(
+                package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=_flat_oos_zero_order_segment_runner,
+            )
+            execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(execution["status"], "INCONCLUSIVE")
+        self.assertEqual(execution["nav_reconciliation"], "INCONCLUSIVE")
+        self.assertEqual(execution["oos_total_orders"], 0)
+        self.assertIn("oos_total_orders", execution["failures"])
+        self.assertIn("oos_nav_flat", execution["failures"])
+        self.assertEqual(gates["execution_report"], "INCONCLUSIVE")
+        self.assertEqual(gates["nav_reconciliation"], "INCONCLUSIVE")
+
+    def test_non_positive_nav_fails_execution_report(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            report = build_nautilus_research_package(
+                package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=_non_positive_nav_segment_runner,
+            )
+            execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(execution["status"], "FAIL")
+        self.assertEqual(execution["nav_reconciliation"], "FAIL")
+        self.assertIn("nav_non_positive", execution["failures"])
+        self.assertEqual(gates["execution_report"], "FAIL")
+        self.assertEqual(gates["nav_reconciliation"], "FAIL")
 
 
 def _losing_segment_runner(**kwargs) -> SimulationResult:
@@ -253,6 +303,36 @@ def _fake_segment_runner(**kwargs) -> SimulationResult:
         nav=[1000.0 + index for index, _ in enumerate(bars)],
         total_costs=0.0,
         metadata={"source": "fake_nautilus_test_runner", "total_orders": 2},
+    )
+
+
+def _flat_oos_zero_order_segment_runner(**kwargs) -> SimulationResult:
+    bars = kwargs["bars"]
+    is_oos = kwargs["seed"] == 29
+    return SimulationResult(
+        candidate_id=kwargs["candidate"].candidate_id,
+        instrument_id=kwargs["instrument_config"].instrument_id,
+        timestamps=[bar.timestamp.isoformat().replace("+00:00", "Z") for bar in bars],
+        daily_returns=[0.0 if is_oos else 0.001 for _ in bars],
+        daily_exposure=[0.1 for _ in bars],
+        nav=[1000.0 if is_oos else 1000.0 + index for index, _ in enumerate(bars)],
+        total_costs=0.0,
+        metadata={"source": "fake_nautilus_flat_oos_zero_order_runner", "total_orders": 0 if is_oos else 2},
+    )
+
+
+def _non_positive_nav_segment_runner(**kwargs) -> SimulationResult:
+    bars = kwargs["bars"]
+    nav = [-100.0 if kwargs["seed"] == 29 else 1000.0 + index for index, _ in enumerate(bars)]
+    return SimulationResult(
+        candidate_id=kwargs["candidate"].candidate_id,
+        instrument_id=kwargs["instrument_config"].instrument_id,
+        timestamps=[bar.timestamp.isoformat().replace("+00:00", "Z") for bar in bars],
+        daily_returns=[-1.1 if kwargs["seed"] == 29 else 0.001 for _ in bars],
+        daily_exposure=[0.1 for _ in bars],
+        nav=nav,
+        total_costs=0.0,
+        metadata={"source": "fake_nautilus_non_positive_nav_runner", "total_orders": 2},
     )
 
 
