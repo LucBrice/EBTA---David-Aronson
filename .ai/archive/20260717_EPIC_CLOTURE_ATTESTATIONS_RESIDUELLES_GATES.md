@@ -17,8 +17,8 @@
 | Question | Reponse |
 | --- | --- |
 | Un chantier actif couvre-t-il deja ce perimetre (`DONE`, `ACTIVE`, ou `SUPERSEDED`) ? | Non. `.ai/checkpoint.json::active_workstream_id` est `null`. `PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE` (`DONE`, 2026-07-16) a deja clos le Lot A1 (perimetre distinct, non chevauchant : `statistical_gate` -> G9 uniquement). Aucun chantier ne couvre C/A2/B. |
-| Un verrou de gouvernance actif bloque-t-il ce chantier ? | Non pour C et A2 (methode decidee en session, voir section 10). Oui pour B : decision de seuil execution/NAV non encore prise — ce chantier mere ne route PAS le Lot B tant que cette decision n'est pas actee ; il reste au niveau tracking pour B jusque-la. |
-| Ce plan a-t-il besoin d'une decision humaine explicite pour lever un verrou avant d'etre routable via `/start` ? | Non pour l'ouverture du chantier mere lui-meme (decisions C/A2 deja actees en session, voir section 10). Oui pour le sous-chantier Lot B specifiquement, a demander au moment venu. |
+| Un verrou de gouvernance actif bloque-t-il ce chantier ? | Non. C et A2 sont clos ; B a ete debloque par decision humaine du 2026-07-17 puis clos par commit `6f0b212`. |
+| Ce plan a-t-il besoin d'une decision humaine explicite pour lever un verrou avant d'etre routable via `/start` ? | Non. La decision Lot B est journalisee section 10 et le sous-chantier est `DONE`. |
 | Ce plan remplace-t-il un document ou chantier existant ? | Non. Il complete `PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE` (`DONE`, Lot A1) sans le rouvrir, et regroupe le suivi des lots A2/B/C que l'observation source avait deliberement laisses non routes. |
 
 ---
@@ -242,7 +242,7 @@ Critere de sortie :
 Statut 2026-07-16 : `DONE` — cloture mecanique effectuee par
 `.ai/tools/plan.ps1 close`, commit `1a7ed30`.
 
-### Phase 3 - Lot B : execution_report / nav_reconciliation (G6) — PAUSE OBLIGATOIRE
+### Phase 3 - Lot B : execution_report / nav_reconciliation (G6)
 
 Objectif : demander et journaliser la decision de seuil humaine necessaire
 avant toute redaction de plan, puis suivre le meme cycle complet que les
@@ -272,13 +272,16 @@ Actions :
 Livrables :
 
 - Decision de seuil journalisee (section 10).
-- Workstream `fix` Lot B `DONE` dans `.ai/checkpoint.json`.
+- Workstream `fix` Lot B `DONE` dans `.ai/checkpoint.json` (`6f0b212`).
 
 Critere de sortie :
 
-- La decision de seuil est explicitement actee par l'humain avant toute
+- La decision de seuil a ete explicitement actee par l'humain avant toute
   ligne de code de ce lot.
 - Suite runtime complete `PASS` apres implementation.
+
+Statut 2026-07-17 : `DONE` — cloture mecanique effectuee par
+`.ai/tools/plan.ps1 close`, commit `6f0b212`.
 
 ### Chemin critique (ordre des phases)
 
@@ -345,16 +348,16 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Prochaine etape executable proposee** :
 
 ```text
-Phase 3 - Lot B : PAUSE obligatoire pour decision humaine de seuil execution/NAV
+Cloture generale de l'EPIC : audits globaux puis `plan.ps1 close`
 ```
 
 ### Execution sans interruption
 
-Ce chantier mere est concu pour enchainer les Phases 1 et 2 (Lots C et A2)
-sans retour vers l'humain entre elles, les decisions necessaires etant deja
-actees en section 10. La Phase 3 (Lot B) marque un arret legitime et
-obligatoire pour demander la decision de seuil manquante — ce n'est pas un
-echec d'execution, c'est une cause d'arret prevue par ce plan lui-meme.
+Ce chantier mere a enchaine les Phases 1 et 2 (Lots C et A2) sans retour vers
+l'humain entre elles, les decisions necessaires etant deja actees en section
+10. La Phase 3 (Lot B) a marque un arret legitime pour demander la decision de
+seuil manquante ; cette decision est maintenant journalisee et le Lot B est
+clos.
 
 ### Autorite decisionnelle accordee
 
@@ -382,6 +385,7 @@ methode a la place de l'humain.
 | 2026-07-16 | Lot C cloture en `DONE` par commit `4e568c5` : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; suite runtime, build pilote, pyrefly, bug-hunter et audit de conformite `PASS`. | Autorise la reprise de la boucle sur le sous-chantier suivant : Lot A2. |
 | 2026-07-16 | Lot A2 cloture en `DONE` par commit `1a7ed30` : `power_check` calcule une puissance atteinte depuis rendements pre-OOS et seuil annuel, `power_report` derive de `power_check.status`, suite runtime, build pilote, pyrefly, bug-hunter et audit de conformite `PASS`. | Termine les lots autorises sans nouvelle consultation ; impose maintenant la pause Lot B pour decision humaine de seuil execution/NAV. |
 | 2026-07-17 | GO Lot B : Option 3 stricte actee apres consultation NotebookLM/livre comme appui non normatif et decision humaine finale. `PASS` uniquement si la preuve execution/NAV est reconstructible avec `total_orders > 0`, `oos_total_orders > 0`, NAV presente, positive et non plate ; `INCONCLUSIVE` si la preuve est insuffisante ou non reconstructible ; `FAIL` si une contradiction ou violation explicite est observee. | Leve le verrou de la Phase 3 et autorise la redaction, le routage et l'implementation du sous-chantier Lot B sans modifier `Protocole/`, `validators/gate_validator.py::VERDICT_VALUES`, ni les lots C/A2 deja clos. |
+| 2026-07-17 | Lot B cloture en `DONE` par commit `6f0b212` : `execution_report.status`/`nav_reconciliation` sont calcules depuis les preuves `SimulationResult`, les quatre champs G6 derivent des rapports reels, les cas OOS sans ordre/NAV plate et NAV non positive ne peuvent plus produire G6 `PASS`. | Termine les trois sous-chantiers C/A2/B et autorise l'audit global puis la cloture generale de l'EPIC. |
 
 ---
 
@@ -390,7 +394,7 @@ methode a la place de l'humain.
 | Risque | Impact | Mitigation / condition de deblocage |
 | --- | --- | --- |
 | Le Lot A2 fait basculer `power_check.status`/G9 a `INCONCLUSIVE` sur le package M1 de production reel si la puissance estimee est insuffisante | Risque clos pour ce sous-chantier : la logique A2 est implementee et testee ; tout `INCONCLUSIVE` futur est un verdict EBTA legitime, pas un masquage | Cloture Lot A2 commit `1a7ed30` ; aucun contournement de puissance insuffisante |
-| Le Lot B reste bloque indefiniment si l'humain ne tranche jamais la decision de seuil | Ce chantier mere ne peut pas se clore | Demander explicitement la decision au debut de la Phase 3, ne pas la contourner |
+| Le Lot B reste bloque indefiniment si l'humain ne tranche jamais la decision de seuil | Risque clos : decision humaine 2026-07-17 puis implementation Lot B `DONE` commit `6f0b212` | Aucun contournement : seuil journalise avant routage du plan Lot B |
 
 ---
 
@@ -398,7 +402,7 @@ methode a la place de l'humain.
 
 - [x] Lot C `DONE`.
 - [x] Lot A2 `DONE`.
-- [ ] Lot B `DONE` ou explicitement differe par decision humaine documentee (section 10).
+- [x] Lot B `DONE` ou explicitement differe par decision humaine documentee (section 10).
 - [x] Aucune modification hors perimetre par ce document lui-meme (section 5).
 - [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier C/A2.
 
@@ -410,9 +414,16 @@ A remplir au moment de `/close` du chantier mere (apres cloture des trois sous-c
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [A remplir a la cloture] |
-| Ecarts par rapport au plan initial | [A remplir a la cloture] |
+| Resultat final | DONE - Lots C, A2 et B termines, chacun par son cycle complet et son commit de cloture. |
+| Ecarts par rapport au plan initial | Aucun ecart bloquant ; Lot B a ete execute apres decision humaine explicite, comme prevu. |
 | Suites a prevoir (hors perimetre de ce plan) | G2 (`independent_registry_review`, decision de source de verite non tranchee), G7/G13/G14 (attestations humaines, hors perimetre par nature) |
+
+### Audits globaux pre-cloture
+
+| Audit | Resultat | Preuve |
+| --- | --- | --- |
+| bug-hunter global | PASS | Union des fichiers Python touches depuis `c45eb66` : Pyrefly `INFO 0 errors`, suite runtime `Ran 167 tests ... OK`, build pilote `status PASS`. |
+| plan-conformance-audit EPIC | PASS | Exit criteria (1) Lot C `DONE` commit `4e568c5`, (2) Lot A2 `DONE` commit `1a7ed30`, (3) Lot B `DONE` commit `6f0b212`, (4) tous les prerequis de cloture EPIC satisfaits ; aucun fichier `Protocole/`, `validators/gate_validator.py` ou `.ai/checkpoint.schema.json` touche. |
 
 ---
 
@@ -422,3 +433,4 @@ A remplir au moment de `/close` du chantier mere (apres cloture des trois sous-c
 | --- | --- | --- |
 | 2026-07-16 | Verification directe du code du Lot A2 (`oos_confidence_interval.py:22,43`) contredisant l'hypothese initiale "le plus urgent... calcul reel" de l'observation source : `power_check` est en realite un calcul manquant, pas un branchement. Ordre des phases revise (C avant A2) en consequence, avant toute redaction de sous-chantier. | Eviter d'ecrire un plan Lot A2 qui traiterait a tort ce lot comme un branchement mecanique, ce qui aurait recree exactement le piege deja identifie (`power` renvoye a lui-meme = `PASS` par construction). |
 | 2026-07-16 | Actualisation apres cloture Lot A2 : commit `1a7ed30`, DoD partiel C/A2 coche, prochaine etape requalifiee en pause Lot B. | Eviter de laisser l'EPIC pointer vers un sous-chantier deja clos et rappeler que Lot B reste interdit sans decision humaine de seuil execution/NAV. |
+| 2026-07-17 | Actualisation apres cloture Lot B : commit `6f0b212`, DoD C/A2/B cochee, prochaine etape requalifiee en cloture generale de l'EPIC. | Eviter de conserver une pause Lot B obsolete alors que la decision humaine et l'implementation sont terminees. |
