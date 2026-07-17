@@ -53,6 +53,7 @@ Before any substantive action, read in this order:
 - Consult `.agents/skills/` for specialized playbooks. Each `SKILL.md` documents its own trigger; when a task's shape matches one, read and follow it, regardless of which AI or tool is operating. In particular:
   - After implementing or modifying code under `Implementation/ebta_engine/` (or adjacent adapters/examples), and before declaring the task done, apply `.agents/skills/bug-hunter/SKILL.md` on the touched files. A confirmed real bug it finds must be fixed (or explicitly escalated to the human) before the task counts as complete.
   - Before calling `.ai/tools/plan.ps1 close` (see `/close` below), apply both `.agents/skills/bug-hunter/SKILL.md` (full sweep of the workstream's touched files, not just the last diff) and `.agents/skills/plan-conformance-audit/SKILL.md`. Do not call `plan.ps1 close` if either reports an open confirmed bug or a missing Exit criterion.
+  - When a human draft, an intake observation, or a human request describes several distinct sub-chantiers that should not be merged into one plan (e.g. multiple independent "lots" from the same audit), apply `.agents/skills/epic-orchestrator/SKILL.md` to structure a single parent tracking workstream and execute its sub-chantiers successively, instead of letting each lot become a scattered, hard-to-track intake note.
 
 ## Conversational Commands
 
