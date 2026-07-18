@@ -106,6 +106,12 @@ to manage a plan. These are the human-facing commands.
   from a reviewed, revertible point — see e.g. commit `184b013` for the
   expected shape. Only then does `/continue` begin implementation.
 - `/continue` resumes an existing workstream with `.ai/tools/plan.ps1 continue`.
+  Before implementing any code, re-check the workstream's plan against the
+  detection test in `.agents/skills/epic-orchestrator/SKILL.md`. If the plan
+  coordinates multiple independent sub-chantiers (even if it was not
+  originally structured that way), direct implementation is forbidden —
+  apply that skill's procedure first instead of writing code under this
+  `/continue`.
 - `/close` first applies `.agents/skills/bug-hunter/SKILL.md` on the
   workstream's touched files and `.agents/skills/plan-conformance-audit/SKILL.md`
   against its Exit criteria. Only if bug-hunter reports zero open confirmed

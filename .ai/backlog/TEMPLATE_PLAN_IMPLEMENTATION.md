@@ -98,10 +98,27 @@ Cette section est obligatoire avant qu'un plan puisse passer de `INTAKE` a
 | --- | --- |
 | Track | `mainline` \| `annexe` \| `fix` |
 | Lifecycle | `INTAKE` \| `TRIAGED` \| `PLANNED` \| `ACTIVE` |
+| Type de chantier | `SINGLE` \| `MULTI_LOT` — voir `.agents/skills/epic-orchestrator/SKILL.md`, section "Test de detection", pour decider. `MULTI_LOT` uniquement si au moins deux composantes ont chacune un Exit criteria independant, un ordre interchangeable, et un blocage sur l'une n'empeche pas les autres d'avancer. Si `MULTI_LOT`, la section "## Sous-chantiers" ci-dessous devient obligatoire et `plan.ps1 continue`/`close` la valident mecaniquement contre `.ai/checkpoint.json` (aucun sous-chantier liste manquant ou non `DONE`). |
 | Scope | [Une phrase : ce que ce chantier change concretement.] |
 | Non-goals | [Liste explicite de ce que ce chantier NE fait PAS. Un plan sans non-goals invite l'IA a "ameliorer" hors perimetre.] |
 | Source | [Qui a demande quoi, quand — conversation, ticket, decision anterieure.] |
 | Exit criteria | [Condition binaire, observable et testable qui marque le DONE. Pas d'adjectif ("propre", "robuste") sans metrique.] |
+
+## Sous-chantiers
+
+> Supprimer cette section entiere si `Type de chantier` = `SINGLE`. Obligatoire
+> si `MULTI_LOT` : lister chaque sous-chantier prevu, meme avant qu'il existe
+> comme fichier route dans `.ai/backlog/`. Format de ligne fixe (parse par
+> `plan.ps1`) : `| <numero> | <ID exact du futur workstream> | <titre> |`.
+> `plan.ps1 continue` et `plan.ps1 close` refusent de s'executer sur CE plan
+> tant qu'un des ID listes ici n'existe pas dans `.ai/checkpoint.json` avec
+> `status: DONE` — ne pas lister un ID que ce chantier ne compte pas
+> effectivement router.
+
+| # | ID prevu | Titre |
+| --- | --- | --- |
+| 1 | [ID_SOUS_CHANTIER_1] | [titre] |
+| 2 | [ID_SOUS_CHANTIER_2] | [titre] |
 
 ## Statut
 

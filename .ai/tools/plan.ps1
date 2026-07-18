@@ -100,6 +100,67 @@ function Find-Workstream {
     return @($Checkpoint.workstreams | Where-Object { $_.id -eq $WorkstreamId })
 }
 
+function Get-ChantierType {
+    # Lecture texte-only du champ "Type de chantier" de la table ## Triage.
+    # Defaut SINGLE si absent, pour retro-compatibilite avec les plans
+    # ecrits avant l'introduction de ce champ (aucun blocage retroactif).
+    param([string]$PlanPath)
+    $content = Get-Content -Raw $PlanPath
+    if ($content -match "(?im)\|\s*Type de chantier\s*\|[^\|]*?(SINGLE|MULTI_LOT)[^\|]*\|") {
+        return $Matches[1]
+    }
+    return "SINGLE"
+}
+
+function Get-DeclaredSubChantierIds {
+    # Parse purement mecanique (texte) de la section "## Sous-chantiers" :
+    # extrait la colonne ID de chaque ligne "| n | ID | Titre |". Ne juge
+    # jamais si le decoupage est semantiquement correct, seulement s'il est
+    # present et bien forme.
+    param([string]$PlanPath)
+    $content = Get-Content -Raw $PlanPath
+    if ($content -notmatch "(?ims)^##\s+Sous-chantiers.*?\r?\n(.*?)(\r?\n##\s|\r?\n---|\z)") {
+        return @()
+    }
+    $sectionBody = $Matches[1]
+    $ids = New-Object System.Collections.Generic.List[string]
+    foreach ($line in ($sectionBody -split "`r?`n")) {
+        if ($line -match "^\s*\|\s*\d+\s*\|\s*([A-Za-z0-9_]+)\s*\|") {
+            $ids.Add($Matches[1])
+        }
+    }
+    return @($ids | Select-Object -Unique)
+}
+
+function Assert-SubChantiersClosed {
+    # Garde partagee par "continue" et "close" : si le plan de $Workstream
+    # est declare MULTI_LOT, chaque ID liste dans sa section
+    # "## Sous-chantiers" doit exister dans checkpoint.json avec status
+    # DONE. Ne bloque jamais un plan SINGLE (comportement inchange).
+    param([object]$Checkpoint, [object]$Workstream, [string]$RepoRoot, [string]$ActionName)
+    $planPath = Join-Path $RepoRoot ($Workstream.source_path -replace "/", "\")
+    if (-not (Test-Path $planPath)) {
+        return
+    }
+    $chantierType = Get-ChantierType $planPath
+    if ($chantierType -ne "MULTI_LOT") {
+        return
+    }
+    $declaredSubIds = Get-DeclaredSubChantierIds $planPath
+    $blocking = @()
+    foreach ($subId in $declaredSubIds) {
+        $subWorkstreams = @(Find-Workstream $Checkpoint $subId)
+        if ($subWorkstreams.Count -ne 1 -or $subWorkstreams[0].status -ne "DONE") {
+            $blocking += $subId
+        }
+    }
+    if ($blocking.Count -gt 0) {
+        throw ("Action ${ActionName}: le chantier `"$($Workstream.id)`" est declare MULTI_LOT et " +
+            "coordonne des sous-chantiers non tous DONE: $($blocking -join ', '). Route, evalue, " +
+            "implemente et cloture ces sous-chantiers d'abord (voir " +
+            ".agents/skills/epic-orchestrator/SKILL.md) avant de $ActionName ce chantier mere.")
+    }
+}
 
 function Assert-PlanAuditReady {
     param([string]$PlanPath)
@@ -109,7 +170,7 @@ function Assert-PlanAuditReady {
     if ($content -notmatch "(?m)^-\s+\[[ xX]\]") {
         $missing += "checklist Markdown"
     }
-    foreach ($label in @("Track", "Lifecycle", "Scope", "Non-goals", "Source", "Exit criteria")) {
+    foreach ($label in @("Track", "Lifecycle", "Type de chantier", "Scope", "Non-goals", "Source", "Exit criteria")) {
         if ($content -notmatch "(?im)(^|\|)\s*$([regex]::Escape($label))\s*(\||:|$)") {
             $missing += $label
         }
@@ -117,6 +178,22 @@ function Assert-PlanAuditReady {
 
     if ($missing.Count -gt 0) {
         throw "Action start: plan non pret pour routage. Sections manquantes: $($missing -join ', '). Auditer et structurer le plan avant start."
+    }
+
+    $chantierType = Get-ChantierType $PlanPath
+    if ($chantierType -eq "MULTI_LOT") {
+        if ($content -notmatch "(?im)^##\s+Sous-chantiers") {
+            throw ("Action start: plan declare `"Type de chantier: MULTI_LOT`" mais ne contient pas de " +
+                "section `"## Sous-chantiers`". Voir .agents/skills/epic-orchestrator/SKILL.md et " +
+                ".ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md. Lister au moins deux sous-chantiers ou " +
+                "corriger `"Type de chantier`" en SINGLE si ce plan n'est pas reellement multi-lot.")
+        }
+        $declaredSubIds = Get-DeclaredSubChantierIds $PlanPath
+        if ($declaredSubIds.Count -lt 2) {
+            throw ("Action start: la section `"## Sous-chantiers`" doit lister au moins deux ID de " +
+                "sous-chantiers (format `"| n | ID | Titre |`") quand `"Type de chantier`" est MULTI_LOT. " +
+                "Trouve: $($declaredSubIds.Count).")
+        }
     }
 
     # Structure enrichie exigee par .ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md.
@@ -257,6 +334,7 @@ switch ($Action) {
             throw "Chantier introuvable ou ambigu: $Id"
         }
         $workstream = $foundWorkstreams[0]
+        Assert-SubChantiersClosed $checkpoint $workstream $repoRoot "continue"
         $workstream.status = "ACTIVE"
         $workstream.lifecycle = "ACTIVE"
         $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
@@ -277,6 +355,7 @@ switch ($Action) {
             throw "Chantier introuvable ou ambigu: $Id"
         }
         $workstream = $foundWorkstreams[0]
+        Assert-SubChantiersClosed $checkpoint $workstream $repoRoot "close"
 
         $sourcePath = Join-Path $repoRoot ($workstream.source_path -replace "/", "\")
         if (Test-Path $sourcePath) {

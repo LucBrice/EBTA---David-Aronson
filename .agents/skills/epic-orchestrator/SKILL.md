@@ -1,6 +1,6 @@
 ---
 name: epic-orchestrator
-description: A invoquer quand un brouillon d'intake, une observation, ou une demande humaine decrit plusieurs sous-chantiers distincts qui ne doivent pas etre fusionnes dans un seul plan (ex. plusieurs "lots" independants issus d'un meme audit). Structure un chantier mere de suivi (track fix ou mainline selon le cas) qui coordonne l'execution successive de chaque sous-chantier via son propre cycle complet /start -> /evaluate x2 -> baseline -> /continue -> bug-hunter + plan-conformance-audit -> /close, sans jamais fusionner deux lots ni dupliquer leur contenu dans le document de suivi. Ne s'applique pas a un brouillon qui decrit un seul chantier coherent, meme complexe.
+description: A invoquer quand un brouillon d'intake, une observation, ou une demande humaine decrit plusieurs sous-chantiers distincts qui ne doivent pas etre fusionnes dans un seul plan (ex. plusieurs "lots" independants issus d'un meme audit) — voir "Test de detection" ci-dessous pour un critere verifiable. OBLIGATOIRE, pas optionnel, a deux moments precis : (1) au moment d'auditer/structurer un brouillon via /start, avant de choisir entre gabarit simple ou chantier mere ; (2) au moment de /continue sur un workstream existant — si son plan reussit le test de detection, /continue ne doit PAS demarrer une implementation de code directe, il doit d'abord appliquer ce skill. Structure un chantier mere de suivi qui coordonne l'execution successive de chaque sous-chantier via son propre cycle complet /start -> /evaluate x2 -> baseline -> /continue -> bug-hunter + plan-conformance-audit -> /close, sans jamais fusionner deux lots ni dupliquer leur contenu dans le document de suivi. Ne s'applique pas a un brouillon qui decrit un seul chantier coherent, meme complexe.
 ---
 
 # Role
@@ -19,20 +19,57 @@ manquant, decision de seuil d'execution) issus d'une meme observation
 d'intake. Voir `EXAMPLE_REPORT.md` pour le detail de ce cas, y compris les
 erreurs commises et corrigees en le construisant.
 
-# Quand s'invoquer
+# Test de detection (a appliquer, pas a supposer)
 
-- Un brouillon dans `0 - HUMAN START HERE/` (ou une observation d'audit deja
-  convergee) decrit explicitement plusieurs lots/blocs de correction
-  distincts, avec un decoupage propose (par risque, par gate, par module).
-- Une demande humaine explicite de regrouper des sous-chantiers epars pour
-  ne pas les perdre de vue (le declencheur qui a produit ce skill).
-- **Ne pas s'invoquer** si le brouillon decrit un seul objectif coherent,
-  meme avec plusieurs phases internes — la structure `## 6. Decoupage en
-  phases` d'un plan unique (`.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md`)
-  suffit deja pour une sequence de phases qui appartiennent au meme chantier
-  et se ferment ensemble. Ce skill sert seulement quand des lots ont des
-  cycles de vie independants (peuvent etre clos separement, dans un ordre
-  qui peut changer, avec des decisions humaines propres a chacun).
+Un brouillon, une observation, ou un plan deja route est **multi-lot**
+(declenche ce skill) si, pour au moins deux composantes qu'il decrit, les
+trois conditions suivantes sont TOUTES vraies :
+
+1. Chaque composante a son propre Exit criteria verifiable **sans dependre
+   de l'etat des autres** (fermer l'une ne suppose pas que l'autre soit
+   faite).
+2. Chaque composante pourrait etre routee, implementee et cloturee dans un
+   ordre different de celui propose, sans changer son sens.
+3. Un blocage sur une composante (ex. decision humaine en attente) n'empeche
+   pas les autres d'avancer.
+
+A l'inverse, un plan reste **single-chantier** (le gabarit normal suffit,
+`## 6. Decoupage en phases` de `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md`)
+si ses phases sont sequentielles et interdependantes : la phase N+1 n'a de
+sens que si la phase N est faite, et un seul jeu d'Exit criteria couvre
+l'ensemble. Un plan qui a des "Phases" au sens du gabarit n'est pas
+automatiquement multi-lot — ne pas confondre decoupage en phases d'un meme
+chantier et lots independants.
+
+Exemple deja rencontre dans ce depot : `EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES`
+est multi-lot (Lot C peut se clore sans que A2 ou B soient faits, dans un
+ordre qui a ete revise en session sans changer le sens d'aucun lot). A
+l'inverse, un plan comme `PLAN_CORRECTION_GATES_MECANIQUES_LOT_C` (un des
+lots lui-meme) n'est PAS multi-lot malgre ses deux phases internes (Phase 1
+"corriger l'assemblage", Phase 2 "preuve de non-regression") : la Phase 2
+n'a de sens que si la Phase 1 est faite, un seul Exit criteria couvre les
+deux.
+
+# Quand s'invoquer (deux points de controle obligatoires)
+
+1. **Au moment d'auditer un brouillon via `/start`** : applique le test de
+   detection ci-dessus AVANT de choisir la structure (gabarit simple vs
+   chantier mere + lots). Documente explicitement le resultat du test dans
+   le bandeau de statut du plan que tu rediges — ne le laisse pas implicite.
+2. **Au moment de `/continue` sur un workstream existant** : avant
+   d'implementer la moindre ligne de code, relis son plan
+   (`checkpoint.json::workstreams[].source_path`) et reapplique le test de
+   detection. Si le plan reussit le test (il coordonne des lots
+   independants, meme si ce n'etait pas explicite au moment de sa
+   redaction), **l'implementation directe est interdite** — applique
+   d'abord la Procedure ci-dessous. Un plan peut reussir ce test alors que
+   son auteur ne l'avait pas structure comme un chantier mere (redaction
+   initiale imparfaite, ou drift depuis) : le test se rejoue sur l'etat
+   actuel du plan, pas sur l'intention d'origine.
+3. Une demande humaine explicite de regrouper des sous-chantiers epars pour
+   ne pas les perdre de vue declenche aussi ce skill directement, sans
+   attendre le prochain `/start`/`/continue` (le declencheur qui a produit
+   ce skill).
 
 # Contrainte structurelle a respecter
 
@@ -136,6 +173,11 @@ une decision humaine journalisee) :
 
 # Regle de blocage
 
+- Ne jamais lancer `plan.ps1 continue` puis coder directement sur un
+  workstream dont le plan reussit le test de detection sans etre passe par
+  la Procedure ci-dessous — ce n'est pas une preference, c'est bloquant au
+  meme titre que l'interdiction de `plan.ps1 close` sans bug-hunter/
+  plan-conformance-audit.
 - Ne jamais fusionner deux lots dans un seul commit, une seule boucle
   `/evaluate`, ou une seule cloture.
 - Ne jamais rediger le plan d'un lot sur une classification non revalidee
