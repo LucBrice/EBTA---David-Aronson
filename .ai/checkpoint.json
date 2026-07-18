@@ -1,770 +1,826 @@
 {
-  "schema_version": "1.2.0",
-  "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-17",
-  "status": "ACTIVE",
-  "repo": {
-    "name": "EBTA - David Aronson",
-    "root": "D:/Livre/Trading/Trading algorithmic/EBTA - David Aronson",
-    "git_head_short": "fe23580",
-    "git_status_policy": "Run git status live before relying on repo dirtiness; do not persist porcelain snapshots here.",
-    "warning": "git status may emit permission warnings for C:/Users/liant/.config/git/ignore"
-  },
-  "relay_contract": {
-    "only_files": [
-      ".ai/checkpoint.json"
-    ],
-    "write_policy": "overwrite_only",
-    "startup_read_order": [
-      "AGENTS.md",
-      ".ai/README.md",
-      ".ai/checkpoint.json",
-      "active_paths.active_hook_path",
-      "active_paths.active_tracking_path",
-      "active_paths.active_protocol_entrypoint",
-      ".ai/governance/AI_MODIFICATION_CHECKLIST.md when the task is normative, structural, or implementation-impacting"
-    ],
-    "do_not_create": [
-      "dated plan files",
-      "versioned checkpoint files",
-      "parallel relay folders",
-      "reactivated current_plan.md",
-      "competing project state snapshots"
-    ]
-  },
-  "active_paths": {
-    "active_hook_path": "Implementation/Active/HOOK.md",
-    "active_tracking_path": "Implementation/Active/tracking.json",
-    "active_protocol_entrypoint": "Protocole/0-README - Comprendre et maintenir le protocole EBTA.md",
-    "human_start_path": "0 - HUMAN START HERE/",
-    "backlog_mainline_path": ".ai/backlog/mainline/",
-    "backlog_annexes_path": ".ai/backlog/annexes/",
-    "backlog_fixes_path": ".ai/backlog/fixes/"
-  },
-  "authority_model": {
-    "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
-    "runtime_authority": "Implementation/ is executable derivative, not normative doctrine",
-    "runtime_hook": "See active_paths.active_hook_path",
-    "runtime_machine_state": "See active_paths.active_tracking_path — single source of truth for runtime step/task state",
-    "runtime_history": "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md",
-    "agent_bootstrap": "AGENTS.md",
-    "ai_cockpit": ".ai/ is the single AI project-state cockpit; .ai/governance/ is procedural modification governance, not scientific authority",
-    "tooling_support": ".agents/ is historical/tooling support only, not a project-state authority",
-    "codex_adapter": ".codex/README.md",
-    "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
-  },
-  "active_workstream_id": null,
-  "next_actions": [
-    {
-      "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
-      "status": "DONE",
-      "title": "Phases -1 a 8 du moteur natif EBTA executees",
-      "classification": "ADAPTER_MAPPING",
-      "non_goals": [
-        "No BACKTRADER runtime dependency",
-        "No native engine extension before package validation remains PASS",
-        "No OOS opening or winner-only selection"
-      ]
-    },
-    {
-      "id": "NEXT_NAUTILUS_PHASE_1_CONTRACTS_SCHEMA",
-      "status": "DONE",
-      "title": "Phase 1 Nautilus - contrats stdlib et migrations de schema",
-      "classification": "CONTRACT_ENCODING",
-      "non_goals": [
-        "No Protocole/ change",
-        "No nautilus_trader import before adapter phases",
-        "No procedure, validator, governance, manifest, or package_builder rewrite"
-      ]
-    },
-    {
-      "id": "NEXT_NAUTILUS_PHASE_2_SPIKE",
-      "status": "DONE",
-      "title": "Phase 2 Nautilus - environnement reproductible et spike deterministe",
-      "classification": "ADAPTER_MAPPING",
-      "non_goals": [
-        "No nautilus_trader import outside adapters/ or nautilus_env/",
-        "No Train/Test/OOS segment metadata leakage",
-        "No Nautilus metric as EBTA verdict"
-      ]
-    },
-    {
-      "id": "NEXT_NAUTILUS_PHASE_3_N1_DATA",
-      "status": "DONE",
-      "title": "Phase 3 Nautilus - ingestion de donnees et instruments",
-      "classification": "ADAPTER_MAPPING",
-      "non_goals": [
-        "No nautilus_trader import outside adapters/ or nautilus_env/",
-        "No precision loss in OHLCV mapping",
-        "No lookahead through bar timestamps",
-        "No Train/Test/OOS segment metadata leakage"
-      ]
-    },
-    {
-      "id": "NEXT_NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS",
-      "status": "DONE",
-      "title": "Phase 4 Nautilus - strategie generique et couts scelles",
-      "classification": "ADAPTER_MAPPING",
-      "non_goals": [
-        "No candidate-specific strategy class",
-        "No implicit default FillModel, FeeModel, or LatencyModel",
-        "No Nautilus metric as EBTA verdict"
-      ]
-    },
-    {
-      "id": "NEXT_NAUTILUS_PHASE_5_N4_N5_MULTIFOLD",
-      "status": "DONE",
-      "title": "Phase 5 Nautilus - correction completed 2026-07-10: WalkForwardSplitter, risk/robustness.py, and real K=2 multi-fold Nautilus package PASS",
-      "classification": "ADAPTER_MAPPING",
-      "non_goals": [
-        "No Train/Test/OOS segment metadata leakage into Nautilus",
-        "No procedure, validator, governance, manifest, or package_builder signature change",
-        "No Nautilus metric as EBTA verdict"
-      ]
-    },
-    {
-      "id": "NEXT_NAUTILUS_PHASE_6_CUTOVER",
-      "status": "DONE",
-      "title": "Phase 6 Nautilus - research_package PASS et retrait reversible du moteur natif",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "non_goals": [
-        "No native-engine removal before Nautilus research_package PASS",
-        "No non-reversible native removal",
-        "No Protocole/ methodology change"
-      ]
-    }
-  ],
-  "workstreams": [
-    {
-      "id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF",
-      "title": "Moteur de backtest natif EBTA",
-      "priority": 1,
-      "track": "mainline",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "ADAPTER_MAPPING",
-      "source_path": ".ai/archive/20260709_PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md",
-      "active_runtime_path": "Implementation/Active/HOOK.md",
-      "opened_at": "2026-07-02",
-      "last_moved_at": "2026-07-09",
-      "routing_decision": "mainline",
-      "routing_reason": "/start requested on 2026-07-02; replaces the external-engine BACKTRADER integration track with a native EBTA engine track. User later answered 1A/2B/3A: BACKTRADER read-only, data root supplied, and Implementation/ work authorized through Phase 8. Phases -1 through 8 were executed on 2026-07-02.",
-      "moved_by": "mixed",
-      "blocks_mainline": false,
-      "advances_mainline": true,
-      "closure_reason": "Cloture mecanique alignee sur l'etat deja narre dans checkpoint.json (DONE/DONE) ; reste DONE historiquement par decision D2 du pivot Nautilus, non touche par le remplacement du moteur.",
-      "non_goals": [
-        "No Protocole/ modification",
-        "No BACKTRADER runtime dependency",
-        "No native engine extension before package validation remains PASS",
-        "No web application in this Phase -1 through Phase 8 execution",
-        "No OOS opening before sealing"
-      ],
-      "is_active": false
-    },
-    {
-      "id": "STEP_3_BACKTRADER_INTEGRATION",
-      "title": "Integration BACKTRADER apres gouvernance locale",
-      "priority": 1,
-      "track": "mainline",
-      "status": "DONE",
-      "lifecycle": "SUPERSEDED",
-      "classification": "ADAPTER_MAPPING",
-      "source_path": ".ai/archive/20260709_EPIC_reprise_et_integration_backtrader.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-06-29",
-      "last_moved_at": "2026-07-09",
-      "routing_decision": "mainline",
-      "routing_reason": "Superseded by PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF; BACKTRADER is now reference-only for native EBTA rewrite.",
-      "moved_by": "ai",
-      "blocks_mainline": true,
-      "advances_mainline": false,
-      "closure_reason": "Cloture mecanique alignee sur l'etat deja narre dans checkpoint.json (DONE/SUPERSEDED) ; remplace par le plan natif puis par le pivot Nautilus.",
-      "non_goals": [
-        "No BACKTRADER modification before governance read",
-        "No EBTA runtime contract change before mapping gaps are known",
-        "No import of BACKTRADER conventions as EBTA norms"
-      ],
-      "is_active": false
-    },
-    {
-      "id": "EPIC_ARCHITECTURE_IA_RAG",
-      "title": "Proposition Architecture IA / RAG evolutive EBTA",
-      "priority": 3,
-      "track": "annexe",
-      "status": "DONE",
-      "lifecycle": "REJECTED",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/annexes/EPIC_Proposition_Architecture_IA_RAG.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-06-30",
-      "last_moved_at": "2026-07-01",
-      "routing_decision": "annexe",
-      "routing_reason": "Useful governance/RAG proposal, but not required to advance the current runtime mainline.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Fichier source supprime manuellement par l'humain le 2026-07-01; plan rejete avant execution.",
-      "non_goals": [
-        "No Protocole/ frontmatter insertion in this governance reorg lot",
-        "No Knowledge_Router skill creation in this governance reorg lot",
-        "No mass metadata migration"
-      ],
-      "is_active": false
-    },
-    {
-      "id": "EPIC_AI_GOVERNANCE_LAYER",
-      "title": "Couche de gouvernance IA pour transformation controlee des connaissances",
-      "priority": 2,
-      "track": "annexe",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/governance/README.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-06-30",
-      "last_moved_at": "2026-06-30",
-      "routing_decision": "annexe",
-      "routing_reason": "Governance layer documents how knowledge, conflicts, and modification requests are classified before any protocol or implementation change.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Governance policies created without changing Protocole/ or Implementation/.",
-      "non_goals": [
-        "No Protocole/ modification",
-        "No Implementation/ modification",
-        "No RAG, embeddings, vector database, or autonomous agent system",
-        "No new EBTA scientific authority outside Protocole/"
-      ],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA",
-      "title": "Gouvernance des biais humains dans EBTA",
-      "priority": 2,
-      "track": "annexe",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "NORMATIVE_CHANGE_REQUIRED",
-      "source_path": ".ai/backlog/annexes/PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-01",
-      "last_moved_at": "2026-07-01",
-      "routing_decision": "annexe",
-      "routing_reason": "Option A GO received on 2026-07-01; normative Protocole documentation completed as EBTA-DOC-1.1; runtime G-BIAS checkers, OOS guard, aggregate gate, package validation compatibility, pilot evidence, and regression tests completed.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Updated via .ai/tools/plan.ps1",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF_EXTENSION",
-      "title": "Extension multi-fold du moteur de backtest natif EBTA",
-      "track": "mainline",
-      "status": "DONE",
-      "lifecycle": "SUPERSEDED",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260709_implementation_plan - 1.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-06",
-      "last_moved_at": "2026-07-09",
-      "routing_decision": "deferred",
-      "routing_reason": "Correction 2026-07-07: cette entree affirmait a tort un routage /start effectue le 2026-07-06 (lifecycle TRIAGED, source_path vers .ai/backlog/mainline/). Le fichier n'a en realite jamais quitte '0 - HUMAN START HERE/' et n'a jamais ete reecrit selon le gabarit. Le document lui-meme (bandeau d'audit du 2026-07-06) declare qu'il ne peut pas etre route via /start sans decision humaine explicite levant le verrou de gouvernance (extension au-dela du MVP NATIVE_ENGINE_PHASE_8_COMPLETED deja DONE). Cette entree reste INTAKE/BLOCKED tant que cette decision n'est pas donnee.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Remplace definitivement par 0 - HUMAN START HERE/Implementation_plan_Nautilus.md (bandeau de tete section 0.1) ; implementation_plan - 1.md archive tel quel pour tracabilite.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS",
-      "title": "Migration du moteur de backtest EBTA vers NautilusTrader",
-      "track": "mainline",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/archive/20260710_PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260709_Implementation_plan_Nautilus.md",
-      "active_runtime_path": "Implementation/Active/HOOK.md",
-      "opened_at": "2026-07-09",
-      "last_moved_at": "2026-07-10",
-      "routing_decision": "mainline",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": true,
-      "advances_mainline": true,
-      "closure_reason": "Correction Nautilus multi-fold et robustesse terminee; package PASS, runtime suite PASS, validate_package_dir PASS.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION",
-      "title": "Calibration et correction du gate economique Nautilus MVP",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/archive/20260710_PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260710_OBSERVATION_GATE_ECONOMIQUE_BOOLEENS_CODES_EN_DUR.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-10",
-      "last_moved_at": "2026-07-10",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Gate economique de production calcule reellement ses cinq booleens (au lieu de True code en dur) ; modele de frais MakerTakerFeeModel avec taux indicatifs branche ; 117 tests PASS ; preuve mecanique sur candidat perdant synthetique (REJECTED_ECONOMIC) sur le chemin de production reel.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE",
-      "title": "Correction - Completer le pivot Nautilus (multi-fold reel + robustesse) et reconcilier l'etat machine",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260713_PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE.md",
-      "original_draft_path": null,
-      "active_runtime_path": null,
-      "opened_at": "2026-07-10",
-      "last_moved_at": "2026-07-13",
-      "routing_decision": "fix",
-      "routing_reason": "Enregistre a posteriori le 2026-07-13 pour appliquer la procedure de cloture standard du depot (jamais enregistre comme workstream independant a l'origine ; sa remediation etait absorbee dans la closure_reason du workstream parent PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS). Travail deja termine et verifie le 2026-07-10 (Phases 0 a 4, section 13 du plan) : WalkForwardSplitter (SOP 04), risk/robustness.py (SOP 05), boucle multi-fold reelle K=2 branchee sur nautilus_research_package.py.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Phases 0 a 4 executees et verifiees le 2026-07-10 : WalkForwardSplitter (SOP 04), risk/robustness.py (SOP 05), boucle multi-fold reelle K=2 branchee sur nautilus_research_package.py, validate_package_dir() PASS, etat machine reconcilie.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_EXPERIENCE_CONTROLEE_DISCRIMINATION_GATES",
-      "title": "Experience controlee de discrimination des gates Nautilus (candidat gagnant vs perdant)",
-      "track": "annexe",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "TEST_FIXTURE",
-      "source_path": ".ai/archive/20260713_PLAN_EXPERIENCE_CONTROLEE_DISCRIMINATION_GATES.md",
-      "original_draft_path": null,
-      "active_runtime_path": null,
-      "opened_at": "2026-07-10",
-      "last_moved_at": "2026-07-13",
-      "routing_decision": "annexe",
-      "routing_reason": "Enregistre a posteriori le 2026-07-13 pour appliquer la procedure de cloture standard du depot (jamais enregistre comme workstream independant a l'origine, meme precedent que PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE). Travail deja termine et verifie le 2026-07-10 (Phases 1 a 3, section 13 du plan) : discrimination reelle prouvee via le venv Nautilus (gagnant PASS/PASS, perdant REJECTED_ECONOMIC/FAIL) et test de contraste permanent demontrant que les booleens de production codes en dur laisseraient passer le perdant.",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Phases 1 a 3 executees et verifiees le 2026-07-10 : discrimination reelle prouvee via le venv Nautilus (gagnant PASS/PASS, perdant REJECTED_ECONOMIC/FAIL), test de contraste permanent demontrant que les booleens de production codes en dur laisseraient passer le perdant.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS",
-      "title": "Moteur de signaux réel (R1) et extraction Nautilus corrigée (R2)",
-      "track": "mainline",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/archive/20260713_PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260713_PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS_2026-07-13.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-13",
-      "last_moved_at": "2026-07-13",
-      "routing_decision": "mainline",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": true,
-      "advances_mainline": true,
-      "closure_reason": "R1/R2 implemented: resampling, vector oracle, incremental registry/state machines, Nautilus bridge delegation, R2 real extraction, golden recalibration, package PASS.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION",
-      "title": "PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION",
-      "track": "mainline",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "ADAPTER_MAPPING",
-      "source_path": ".ai/archive/20260715_PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260714_PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-14",
-      "last_moved_at": "2026-07-15",
-      "routing_decision": "mainline",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": true,
-      "advances_mainline": true,
-      "closure_reason": "R4 complete: M1 real Nautilus package PASS, GHI bias_filter fixed, total_orders > 0, bug-hunter and conformance audit PASS.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE",
-      "title": "PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260715_PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260715_OBSERVATION_GATE_STATISTIQUE_WRC_MASQUE.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-15",
-      "last_moved_at": "2026-07-15",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Verdict WRC reel propage vers economic.json et incubation_gate.json; test de non-regression production PASS; validators globaux hors perimetre documentes.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE",
-      "title": "Statut global de package reflete un gate reellement en echec",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260715_PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260715_OBSERVATION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-15",
-      "last_moved_at": "2026-07-15",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Correction validators statut global package terminee; bug-hunter PASS; conformance audit PASS; runtime suite PASS; minimal pilot package PASS",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
-      "title": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATE_ROBUSTESSE_G5_FIGE.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-16",
-      "last_moved_at": "2026-07-16",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Exit criteria G5 formels atteints; bug-hunter et audit de conformite PASS; FAIL WRC M1 courant documente comme verdict EBTA legitime et exogene a G5 dans PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
-      "title": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/archive/20260716_PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_WRC_PRIMAIRE_PACKAGE_NAUTILUS_M1_FAIL.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-16",
-      "last_moved_at": "2026-07-16",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Artefact R4 PASS et FAIL WRC M1 documentes append-only dans l'historique moteur; G5 clos apres audits et validations; aucun Protocole ni calcul WRC modifie",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
-      "title": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATES_ATTESTATIONS_RESIDUELLES.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-16",
-      "last_moved_at": "2026-07-16",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "G9 OOS statistique branche sur statistical_gate reel; bug-hunter PASS; conformance audit PASS; suite runtime PASS",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES",
-      "title": "Chantier mere - Cloture attestations residuelles gates (C/A2/B)",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260717_EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-16",
-      "last_moved_at": "2026-07-17",
-      "routing_decision": "fix",
-      "routing_reason": "Chantier mere de suivi pour les Lots C/A2/B residuels de gates.json, suite a demande humaine explicite 2026-07-17 de regrouper les sous-chantiers disperses",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "EPIC termine : Lots C, A2 et B DONE ; audits globaux bug-hunter et conformance PASS ; aucun Protocole, validator ou schema checkpoint modifie.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_GATES_MECANIQUES_LOT_C",
-      "title": "Lot C - Brancher les attestations mecaniques (G1/G7/G11/G12/G13)",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-16",
-      "last_moved_at": "2026-07-16",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Lot C termine : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; tests ciblés, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_POWER_CHECK_A2",
-      "title": "Lot A2 - Calcul reel de puissance atteinte G9 power_check",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/archive/20260716_PLAN_CORRECTION_POWER_CHECK_A2.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260716_PLAN_CORRECTION_POWER_CHECK_A2.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-16",
-      "last_moved_at": "2026-07-16",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Lot A2 termine : power_check calcule depuis rendements pre-OOS et seuil economique annuel ; power_report branche sur power_check.status ; suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
-      "non_goals": [],
-      "is_active": false
-    },
-    {
-      "id": "PLAN_CORRECTION_EXECUTION_NAV_LOT_B",
-      "title": "Lot B - G6 execution NAV reconstructible",
-      "track": "fix",
-      "status": "DONE",
-      "lifecycle": "DONE",
-      "classification": "GOVERNANCE",
-      "source_path": ".ai/archive/20260717_PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
-      "original_draft_path": "0 - HUMAN START HERE/archive/20260717_PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
-      "active_runtime_path": null,
-      "opened_at": "2026-07-17",
-      "last_moved_at": "2026-07-17",
-      "routing_decision": "fix",
-      "routing_reason": "Updated via .ai/tools/plan.ps1",
-      "moved_by": "ai",
-      "blocks_mainline": false,
-      "advances_mainline": false,
-      "closure_reason": "Lot B termine : G6 execution_report cost_model capacity_grid nav_reconciliation derivent des preuves execution NAV et rapports reels ; tests cibles, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
-      "non_goals": [],
-      "is_active": false
-    }
-  ],
-  "validation": {
-    "commands": [
-      {
-        "command": "python -m json.tool .ai\\checkpoint.json",
-        "purpose": "Validate relay checkpoint JSON syntax",
-        "last_result": "PASS - 2026-07-09"
-      },
-      {
-        "command": "python -c \"import json, jsonschema; jsonschema.validate(json.load(open('.ai/checkpoint.json', encoding='utf-8')), json.load(open('.ai/checkpoint.schema.json', encoding='utf-8')))\"",
-        "purpose": "Validate relay checkpoint against schema",
-        "last_result": "PASS - 2026-07-09"
-      },
-      {
-        "command": "python -m json.tool Implementation\\Active\\tracking.json",
-        "purpose": "Validate runtime task tracking JSON syntax",
-        "last_result": "PASS - 2026-07-09"
-      },
-      {
-        "command": "python -c \"import json, jsonschema; jsonschema.validate(json.load(open('Implementation/Active/tracking.json', encoding='utf-8')), json.load(open('Implementation/Active/tracking.schema.json', encoding='utf-8')))\"",
-        "purpose": "Validate runtime tracking against schema",
-        "last_result": "PASS - 2026-07-09"
-      },
-      {
-        "command": "git diff --check -- Implementation Protocole .ai",
-        "purpose": "Patch hygiene for implementation, protocol, and AI cockpit files",
-        "last_result": "PASS - 2026-07-09 - CRLF/LF warnings only"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
-        "purpose": "Runtime non-regression suite",
-        "last_result": "PASS - 110 tests after Nautilus multi-fold correction - 2026-07-10"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
-        "purpose": "Nautilus Phase 1 contracts, migrations, payload factory, and fake simulator tests",
-        "last_result": "PASS - 8 tests - 2026-07-09"
-      },
-      {
-        "command": ".\\Implementation\\adapters\\nautilus_env\\setup_env.ps1 -VenvRelativePath \"Implementation\\adapters\\nautilus_env\\venv\" -SkipInstall",
-        "purpose": "Nautilus Phase 2 setup smoke test",
-        "last_result": "PASS - nautilus_trader 1.230.0 / Cache - 2026-07-09"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase2_golden_case.py",
-        "purpose": "Nautilus Phase 2 deterministic golden-case regression tests",
-        "last_result": "PASS - 3 tests - 2026-07-09"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_instrument_nasdaq.py",
-        "purpose": "Nautilus Phase 3 NASDAQ/XAUUSD instrument and OHLCV bar mapping tests",
-        "last_result": "PASS - 2 tests - 2026-07-09"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase4_strategy_costs.py",
-        "purpose": "Nautilus Phase 4 sealed cost model and generic strategy bridge tests",
-        "last_result": "PASS - 2 tests - 2026-07-09"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase5_run_segment.py",
-        "purpose": "Nautilus Phase 5 run_segment, SimulationResult extraction, NO_MODEL, and multi-fold orchestration tests",
-        "last_result": "PASS - 3 tests - 2026-07-09"
-      },
-      {
-        "command": "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_research_package.py",
-        "purpose": "Nautilus Phase 6 research_package builder test with injected segment runner",
-        "last_result": "PASS - 1 test - 2026-07-09"
-      },
-      {
-        "command": ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
-        "purpose": "Build full Nautilus-backed research_package",
-        "last_result": "PASS - package status PASS before and after native removal - 2026-07-09"
-      },
-      {
-        "command": "rg -n \"from ebta_engine\\.(backtest|package_builder\\.native_research_package|features|trading_signals|risk|metrics)|native_engine|native_research_package|run_native_backtest|build_native\" Implementation\\ebta_engine -g \"*.py\"",
-        "purpose": "Verify no active residual imports to removed native engine cluster",
-        "last_result": "PASS - no Python matches (rg exit 1) - 2026-07-09"
-      },
-      {
-        "command": "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
-        "purpose": "Build minimal pilot research_package after schema 1.1.0 migration",
-        "last_result": "PASS - package status PASS - 2026-07-09"
-      },
-      {
-        "command": "python -m ebta_engine.package_builder.native_research_package",
-        "purpose": "Build native XAUUSD/NASDAQ x E-I MVP research_package under Implementation/research_packages/native_mvp",
-        "last_result": "PASS - package status PASS - 2026-07-02"
-      }
-    ]
-  },
-  "session_log": [
-    {
-      "date": "2026-07-09",
-      "summary": "Completed Nautilus Phase 4 cost and strategy bridge; explicit venue models and one GenericPayloadStrategy class pass; Phase 5 extraction/multifold is active",
-      "files_count": 5
-    },
-    {
-      "date": "2026-07-09",
-      "summary": "Completed Nautilus Phase 5 run_segment and extraction; golden, NO_MODEL, and multifold orchestration tests pass; Phase 6 cutover is active",
-      "files_count": 4
-    },
-    {
-      "date": "2026-07-09",
-      "summary": "Nautilus Phase 6 package gate passed; full Nautilus-backed research_package builds PASS under the dedicated venv; pre-cutover tag is next",
-      "files_count": 3
-    },
-    {
-      "date": "2026-07-09",
-      "summary": "Completed Nautilus Phase 6 cutover; pre-cutover tag exists, native cluster removed, suite and Nautilus package pass after removal",
-      "files_count": 17
-    },
-    {
-      "date": "2026-07-10",
-      "summary": "Completed Nautilus correction fix: WalkForwardSplitter and risk/robustness.py added, package builder now runs K=2 walk-forward via Nautilus, runtime suite and validate_package_dir PASS",
-      "files_count": 8
-    }
-  ],
-  "risks": [
-    {
-      "id": "R1",
-      "status": "CONTROLLED",
-      "risk": "Relay files could become a competing EBTA source of truth",
-      "control": "Relay files point to Protocole/ and Implementation/ authorities and only track handoff state"
-    },
-    {
-      "id": "R2",
-      "status": "CONTROLLED",
-      "risk": "BACKTRADER reference mining could import external conventions into EBTA",
-      "control": "BACKTRADER governance was read first; BACKTRADER stayed read-only/reference-only; data provenance and native rewrite boundaries are documented; runtime tests and package validation passed"
-    },
-    {
-      "id": "R3",
-      "status": "CONTROLLED",
-      "risk": "Checkpoint could become stale or narrative again",
-      "control": ".ai/checkpoint.schema.json v1.2.0 constrains structure; runtime state delegated entirely to tracking.json"
-    },
-    {
-      "id": "R4",
-      "status": "CONTROLLED",
-      "risk": "Runtime tracking JSON could drift without machine validation",
-      "control": "Implementation/Active/tracking.schema.json v1.1.0 constrains the active tracking file"
-    },
-    {
-      "id": "R5",
-      "status": "CONTROLLED",
-      "risk": "Human intake drafts could be executed without audit",
-      "control": "0 - HUMAN START HERE/ is intake-only; .ai/tools/plan.ps1 start requires -Audited and backlog-ready sections before routing"
-    },
-    {
-      "id": "R6",
-      "status": "CONTROLLED",
-      "risk": ".ai workstreams could duplicate Implementation/Active runtime tracking",
-      "control": ".ai/checkpoint.json tracks macro workstreams only; runtime step/task state is exclusively in tracking.json"
-    },
-    {
-      "id": "R7",
-      "status": "CONTROLLED",
-      "risk": ".ai/governance/ could be mistaken for EBTA scientific authority",
-      "control": "Governance files state that Protocole/ remains normative and Implementation/ remains the executable derivative"
-    },
-    {
-      "id": "R8",
-      "status": "CONTROLLED",
-      "risk": "The G-BIAS runtime layer could become a competing taxonomy",
-      "control": "bias_registry.py, schemas, checkers, guard, and bias_gate.py cite SOP 13 and BIAS_RISK_REGISTER.md and are tracked as subordinate runtime contracts"
-    },
-    {
-      "id": "R9",
-      "status": "CONTROLLED",
-      "risk": "The Nautilus workstream was recorded DONE while two SOP-derived deliverables (WalkForwardSplitter, risk/robustness.py) were absent and the research_package was single-fold, not the required real multi-fold walk-forward loop",
-      "control": "2026-07-10 remediation completed: WalkForwardSplitter, risk/robustness.py, K=2 Nautilus research_package, runtime suite, and validate_package_dir all PASS"
-    }
-  ]
+    "schema_version":  "1.2.0",
+    "checkpoint_kind":  "multi_ai_relay",
+    "updated_at":  "2026-07-18",
+    "status":  "ACTIVE",
+    "repo":  {
+                 "name":  "EBTA - David Aronson",
+                 "root":  "D:/Livre/Trading/Trading algorithmic/EBTA - David Aronson",
+                 "git_head_short":  "fe23580",
+                 "git_status_policy":  "Run git status live before relying on repo dirtiness; do not persist porcelain snapshots here.",
+                 "warning":  "git status may emit permission warnings for C:/Users/liant/.config/git/ignore"
+             },
+    "relay_contract":  {
+                           "only_files":  [
+                                              ".ai/checkpoint.json"
+                                          ],
+                           "write_policy":  "overwrite_only",
+                           "startup_read_order":  [
+                                                      "AGENTS.md",
+                                                      ".ai/README.md",
+                                                      ".ai/checkpoint.json",
+                                                      "active_paths.active_hook_path",
+                                                      "active_paths.active_tracking_path",
+                                                      "active_paths.active_protocol_entrypoint",
+                                                      ".ai/governance/AI_MODIFICATION_CHECKLIST.md when the task is normative, structural, or implementation-impacting"
+                                                  ],
+                           "do_not_create":  [
+                                                 "dated plan files",
+                                                 "versioned checkpoint files",
+                                                 "parallel relay folders",
+                                                 "reactivated current_plan.md",
+                                                 "competing project state snapshots"
+                                             ]
+                       },
+    "active_paths":  {
+                         "active_hook_path":  "Implementation/Active/HOOK.md",
+                         "active_tracking_path":  "Implementation/Active/tracking.json",
+                         "active_protocol_entrypoint":  "Protocole/0-README - Comprendre et maintenir le protocole EBTA.md",
+                         "human_start_path":  "0 - HUMAN START HERE/",
+                         "backlog_mainline_path":  ".ai/backlog/mainline/",
+                         "backlog_annexes_path":  ".ai/backlog/annexes/",
+                         "backlog_fixes_path":  ".ai/backlog/fixes/"
+                     },
+    "authority_model":  {
+                            "normative_authority":  "Protocole/ frozen as EBTA-DOC-1.1",
+                            "runtime_authority":  "Implementation/ is executable derivative, not normative doctrine",
+                            "runtime_hook":  "See active_paths.active_hook_path",
+                            "runtime_machine_state":  "See active_paths.active_tracking_path — single source of truth for runtime step/task state",
+                            "runtime_history":  "Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md",
+                            "agent_bootstrap":  "AGENTS.md",
+                            "ai_cockpit":  ".ai/ is the single AI project-state cockpit; .ai/governance/ is procedural modification governance, not scientific authority",
+                            "tooling_support":  ".agents/ is historical/tooling support only, not a project-state authority",
+                            "codex_adapter":  ".codex/README.md",
+                            "adapter_boundary":  "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
+                        },
+    "active_workstream_id":  null,
+    "next_actions":  [
+                         {
+                             "id":  "NEXT_NATIVE_ENGINE_PREREQUISITES",
+                             "status":  "DONE",
+                             "title":  "Phases -1 a 8 du moteur natif EBTA executees",
+                             "classification":  "ADAPTER_MAPPING",
+                             "non_goals":  [
+                                               "No BACKTRADER runtime dependency",
+                                               "No native engine extension before package validation remains PASS",
+                                               "No OOS opening or winner-only selection"
+                                           ]
+                         },
+                         {
+                             "id":  "NEXT_NAUTILUS_PHASE_1_CONTRACTS_SCHEMA",
+                             "status":  "DONE",
+                             "title":  "Phase 1 Nautilus - contrats stdlib et migrations de schema",
+                             "classification":  "CONTRACT_ENCODING",
+                             "non_goals":  [
+                                               "No Protocole/ change",
+                                               "No nautilus_trader import before adapter phases",
+                                               "No procedure, validator, governance, manifest, or package_builder rewrite"
+                                           ]
+                         },
+                         {
+                             "id":  "NEXT_NAUTILUS_PHASE_2_SPIKE",
+                             "status":  "DONE",
+                             "title":  "Phase 2 Nautilus - environnement reproductible et spike deterministe",
+                             "classification":  "ADAPTER_MAPPING",
+                             "non_goals":  [
+                                               "No nautilus_trader import outside adapters/ or nautilus_env/",
+                                               "No Train/Test/OOS segment metadata leakage",
+                                               "No Nautilus metric as EBTA verdict"
+                                           ]
+                         },
+                         {
+                             "id":  "NEXT_NAUTILUS_PHASE_3_N1_DATA",
+                             "status":  "DONE",
+                             "title":  "Phase 3 Nautilus - ingestion de donnees et instruments",
+                             "classification":  "ADAPTER_MAPPING",
+                             "non_goals":  [
+                                               "No nautilus_trader import outside adapters/ or nautilus_env/",
+                                               "No precision loss in OHLCV mapping",
+                                               "No lookahead through bar timestamps",
+                                               "No Train/Test/OOS segment metadata leakage"
+                                           ]
+                         },
+                         {
+                             "id":  "NEXT_NAUTILUS_PHASE_4_N2_N3_STRATEGY_COSTS",
+                             "status":  "DONE",
+                             "title":  "Phase 4 Nautilus - strategie generique et couts scelles",
+                             "classification":  "ADAPTER_MAPPING",
+                             "non_goals":  [
+                                               "No candidate-specific strategy class",
+                                               "No implicit default FillModel, FeeModel, or LatencyModel",
+                                               "No Nautilus metric as EBTA verdict"
+                                           ]
+                         },
+                         {
+                             "id":  "NEXT_NAUTILUS_PHASE_5_N4_N5_MULTIFOLD",
+                             "status":  "DONE",
+                             "title":  "Phase 5 Nautilus - correction completed 2026-07-10: WalkForwardSplitter, risk/robustness.py, and real K=2 multi-fold Nautilus package PASS",
+                             "classification":  "ADAPTER_MAPPING",
+                             "non_goals":  [
+                                               "No Train/Test/OOS segment metadata leakage into Nautilus",
+                                               "No procedure, validator, governance, manifest, or package_builder signature change",
+                                               "No Nautilus metric as EBTA verdict"
+                                           ]
+                         },
+                         {
+                             "id":  "NEXT_NAUTILUS_PHASE_6_CUTOVER",
+                             "status":  "DONE",
+                             "title":  "Phase 6 Nautilus - research_package PASS et retrait reversible du moteur natif",
+                             "classification":  "IMPLEMENTATION_DETAIL",
+                             "non_goals":  [
+                                               "No native-engine removal before Nautilus research_package PASS",
+                                               "No non-reversible native removal",
+                                               "No Protocole/ methodology change"
+                                           ]
+                         }
+                     ],
+    "workstreams":  [
+                        {
+                            "id":  "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF",
+                            "title":  "Moteur de backtest natif EBTA",
+                            "priority":  1,
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "ADAPTER_MAPPING",
+                            "source_path":  ".ai/archive/20260709_PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF.md",
+                            "active_runtime_path":  "Implementation/Active/HOOK.md",
+                            "opened_at":  "2026-07-02",
+                            "last_moved_at":  "2026-07-09",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "/start requested on 2026-07-02; replaces the external-engine BACKTRADER integration track with a native EBTA engine track. User later answered 1A/2B/3A: BACKTRADER read-only, data root supplied, and Implementation/ work authorized through Phase 8. Phases -1 through 8 were executed on 2026-07-02.",
+                            "moved_by":  "mixed",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  true,
+                            "closure_reason":  "Cloture mecanique alignee sur l\u0027etat deja narre dans checkpoint.json (DONE/DONE) ; reste DONE historiquement par decision D2 du pivot Nautilus, non touche par le remplacement du moteur.",
+                            "non_goals":  [
+                                              "No Protocole/ modification",
+                                              "No BACKTRADER runtime dependency",
+                                              "No native engine extension before package validation remains PASS",
+                                              "No web application in this Phase -1 through Phase 8 execution",
+                                              "No OOS opening before sealing"
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "STEP_3_BACKTRADER_INTEGRATION",
+                            "title":  "Integration BACKTRADER apres gouvernance locale",
+                            "priority":  1,
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "SUPERSEDED",
+                            "classification":  "ADAPTER_MAPPING",
+                            "source_path":  ".ai/archive/20260709_EPIC_reprise_et_integration_backtrader.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-06-29",
+                            "last_moved_at":  "2026-07-09",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "Superseded by PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF; BACKTRADER is now reference-only for native EBTA rewrite.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  true,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Cloture mecanique alignee sur l\u0027etat deja narre dans checkpoint.json (DONE/SUPERSEDED) ; remplace par le plan natif puis par le pivot Nautilus.",
+                            "non_goals":  [
+                                              "No BACKTRADER modification before governance read",
+                                              "No EBTA runtime contract change before mapping gaps are known",
+                                              "No import of BACKTRADER conventions as EBTA norms"
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "EPIC_ARCHITECTURE_IA_RAG",
+                            "title":  "Proposition Architecture IA / RAG evolutive EBTA",
+                            "priority":  3,
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "REJECTED",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/backlog/annexes/EPIC_Proposition_Architecture_IA_RAG.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-06-30",
+                            "last_moved_at":  "2026-07-01",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Useful governance/RAG proposal, but not required to advance the current runtime mainline.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Fichier source supprime manuellement par l\u0027humain le 2026-07-01; plan rejete avant execution.",
+                            "non_goals":  [
+                                              "No Protocole/ frontmatter insertion in this governance reorg lot",
+                                              "No Knowledge_Router skill creation in this governance reorg lot",
+                                              "No mass metadata migration"
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "EPIC_AI_GOVERNANCE_LAYER",
+                            "title":  "Couche de gouvernance IA pour transformation controlee des connaissances",
+                            "priority":  2,
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/governance/README.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-06-30",
+                            "last_moved_at":  "2026-06-30",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Governance layer documents how knowledge, conflicts, and modification requests are classified before any protocol or implementation change.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Governance policies created without changing Protocole/ or Implementation/.",
+                            "non_goals":  [
+                                              "No Protocole/ modification",
+                                              "No Implementation/ modification",
+                                              "No RAG, embeddings, vector database, or autonomous agent system",
+                                              "No new EBTA scientific authority outside Protocole/"
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA",
+                            "title":  "Gouvernance des biais humains dans EBTA",
+                            "priority":  2,
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "NORMATIVE_CHANGE_REQUIRED",
+                            "source_path":  ".ai/backlog/annexes/PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-01",
+                            "last_moved_at":  "2026-07-01",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Option A GO received on 2026-07-01; normative Protocole documentation completed as EBTA-DOC-1.1; runtime G-BIAS checkers, OOS guard, aggregate gate, package validation compatibility, pilot evidence, and regression tests completed.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Updated via .ai/tools/plan.ps1",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF_EXTENSION",
+                            "title":  "Extension multi-fold du moteur de backtest natif EBTA",
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "SUPERSEDED",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260709_implementation_plan - 1.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-06",
+                            "last_moved_at":  "2026-07-09",
+                            "routing_decision":  "deferred",
+                            "routing_reason":  "Correction 2026-07-07: cette entree affirmait a tort un routage /start effectue le 2026-07-06 (lifecycle TRIAGED, source_path vers .ai/backlog/mainline/). Le fichier n\u0027a en realite jamais quitte \u00270 - HUMAN START HERE/\u0027 et n\u0027a jamais ete reecrit selon le gabarit. Le document lui-meme (bandeau d\u0027audit du 2026-07-06) declare qu\u0027il ne peut pas etre route via /start sans decision humaine explicite levant le verrou de gouvernance (extension au-dela du MVP NATIVE_ENGINE_PHASE_8_COMPLETED deja DONE). Cette entree reste INTAKE/BLOCKED tant que cette decision n\u0027est pas donnee.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Remplace definitivement par 0 - HUMAN START HERE/Implementation_plan_Nautilus.md (bandeau de tete section 0.1) ; implementation_plan - 1.md archive tel quel pour tracabilite.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS",
+                            "title":  "Migration du moteur de backtest EBTA vers NautilusTrader",
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/archive/20260710_PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260709_Implementation_plan_Nautilus.md",
+                            "active_runtime_path":  "Implementation/Active/HOOK.md",
+                            "opened_at":  "2026-07-09",
+                            "last_moved_at":  "2026-07-10",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  true,
+                            "advances_mainline":  true,
+                            "closure_reason":  "Correction Nautilus multi-fold et robustesse terminee; package PASS, runtime suite PASS, validate_package_dir PASS.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION",
+                            "title":  "Calibration et correction du gate economique Nautilus MVP",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/archive/20260710_PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260710_OBSERVATION_GATE_ECONOMIQUE_BOOLEENS_CODES_EN_DUR.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-10",
+                            "last_moved_at":  "2026-07-10",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Gate economique de production calcule reellement ses cinq booleens (au lieu de True code en dur) ; modele de frais MakerTakerFeeModel avec taux indicatifs branche ; 117 tests PASS ; preuve mecanique sur candidat perdant synthetique (REJECTED_ECONOMIC) sur le chemin de production reel.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE",
+                            "title":  "Correction - Completer le pivot Nautilus (multi-fold reel + robustesse) et reconcilier l\u0027etat machine",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260713_PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE.md",
+                            "original_draft_path":  null,
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-10",
+                            "last_moved_at":  "2026-07-13",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Enregistre a posteriori le 2026-07-13 pour appliquer la procedure de cloture standard du depot (jamais enregistre comme workstream independant a l\u0027origine ; sa remediation etait absorbee dans la closure_reason du workstream parent PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS). Travail deja termine et verifie le 2026-07-10 (Phases 0 a 4, section 13 du plan) : WalkForwardSplitter (SOP 04), risk/robustness.py (SOP 05), boucle multi-fold reelle K=2 branchee sur nautilus_research_package.py.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Phases 0 a 4 executees et verifiees le 2026-07-10 : WalkForwardSplitter (SOP 04), risk/robustness.py (SOP 05), boucle multi-fold reelle K=2 branchee sur nautilus_research_package.py, validate_package_dir() PASS, etat machine reconcilie.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_EXPERIENCE_CONTROLEE_DISCRIMINATION_GATES",
+                            "title":  "Experience controlee de discrimination des gates Nautilus (candidat gagnant vs perdant)",
+                            "track":  "annexe",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "TEST_FIXTURE",
+                            "source_path":  ".ai/archive/20260713_PLAN_EXPERIENCE_CONTROLEE_DISCRIMINATION_GATES.md",
+                            "original_draft_path":  null,
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-10",
+                            "last_moved_at":  "2026-07-13",
+                            "routing_decision":  "annexe",
+                            "routing_reason":  "Enregistre a posteriori le 2026-07-13 pour appliquer la procedure de cloture standard du depot (jamais enregistre comme workstream independant a l\u0027origine, meme precedent que PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE). Travail deja termine et verifie le 2026-07-10 (Phases 1 a 3, section 13 du plan) : discrimination reelle prouvee via le venv Nautilus (gagnant PASS/PASS, perdant REJECTED_ECONOMIC/FAIL) et test de contraste permanent demontrant que les booleens de production codes en dur laisseraient passer le perdant.",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Phases 1 a 3 executees et verifiees le 2026-07-10 : discrimination reelle prouvee via le venv Nautilus (gagnant PASS/PASS, perdant REJECTED_ECONOMIC/FAIL), test de contraste permanent demontrant que les booleens de production codes en dur laisseraient passer le perdant.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS",
+                            "title":  "Moteur de signaux réel (R1) et extraction Nautilus corrigée (R2)",
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/archive/20260713_PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260713_PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS_2026-07-13.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-13",
+                            "last_moved_at":  "2026-07-13",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  true,
+                            "advances_mainline":  true,
+                            "closure_reason":  "R1/R2 implemented: resampling, vector oracle, incremental registry/state machines, Nautilus bridge delegation, R2 real extraction, golden recalibration, package PASS.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION",
+                            "title":  "PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION",
+                            "track":  "mainline",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "ADAPTER_MAPPING",
+                            "source_path":  ".ai/archive/20260715_PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260714_PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-14",
+                            "last_moved_at":  "2026-07-15",
+                            "routing_decision":  "mainline",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  true,
+                            "advances_mainline":  true,
+                            "closure_reason":  "R4 complete: M1 real Nautilus package PASS, GHI bias_filter fixed, total_orders \u003e 0, bug-hunter and conformance audit PASS.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE",
+                            "title":  "PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260715_PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260715_OBSERVATION_GATE_STATISTIQUE_WRC_MASQUE.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-15",
+                            "last_moved_at":  "2026-07-15",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Verdict WRC reel propage vers economic.json et incubation_gate.json; test de non-regression production PASS; validators globaux hors perimetre documentes.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE",
+                            "title":  "Statut global de package reflete un gate reellement en echec",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260715_PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260715_OBSERVATION_VALIDATORS_STATUT_GLOBAL_PACKAGE.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-15",
+                            "last_moved_at":  "2026-07-15",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Correction validators statut global package terminee; bug-hunter PASS; conformance audit PASS; runtime suite PASS; minimal pilot package PASS",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
+                            "title":  "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260716_PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATE_ROBUSTESSE_G5_FIGE.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-16",
+                            "last_moved_at":  "2026-07-16",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Exit criteria G5 formels atteints; bug-hunter et audit de conformite PASS; FAIL WRC M1 courant documente comme verdict EBTA legitime et exogene a G5 dans PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
+                            "title":  "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/archive/20260716_PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260716_OBSERVATION_WRC_PRIMAIRE_PACKAGE_NAUTILUS_M1_FAIL.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-16",
+                            "last_moved_at":  "2026-07-16",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Artefact R4 PASS et FAIL WRC M1 documentes append-only dans l\u0027historique moteur; G5 clos apres audits et validations; aucun Protocole ni calcul WRC modifie",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
+                            "title":  "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260716_PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260716_OBSERVATION_GATES_ATTESTATIONS_RESIDUELLES.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-16",
+                            "last_moved_at":  "2026-07-16",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "G9 OOS statistique branche sur statistical_gate reel; bug-hunter PASS; conformance audit PASS; suite runtime PASS",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES",
+                            "title":  "Chantier mere - Cloture attestations residuelles gates (C/A2/B)",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260717_EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260716_EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-16",
+                            "last_moved_at":  "2026-07-17",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Chantier mere de suivi pour les Lots C/A2/B residuels de gates.json, suite a demande humaine explicite 2026-07-17 de regrouper les sous-chantiers disperses",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "EPIC termine : Lots C, A2 et B DONE ; audits globaux bug-hunter et conformance PASS ; aucun Protocole, validator ou schema checkpoint modifie.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_GATES_MECANIQUES_LOT_C",
+                            "title":  "Lot C - Brancher les attestations mecaniques (G1/G7/G11/G12/G13)",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/archive/20260716_PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260716_PLAN_CORRECTION_GATES_MECANIQUES_LOT_C.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-16",
+                            "last_moved_at":  "2026-07-16",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Lot C termine : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; tests ciblés, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_POWER_CHECK_A2",
+                            "title":  "Lot A2 - Calcul reel de puissance atteinte G9 power_check",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/archive/20260716_PLAN_CORRECTION_POWER_CHECK_A2.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260716_PLAN_CORRECTION_POWER_CHECK_A2.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-16",
+                            "last_moved_at":  "2026-07-16",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Lot A2 termine : power_check calcule depuis rendements pre-OOS et seuil economique annuel ; power_report branche sur power_check.status ; suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "PLAN_CORRECTION_EXECUTION_NAV_LOT_B",
+                            "title":  "Lot B - G6 execution NAV reconstructible",
+                            "track":  "fix",
+                            "status":  "DONE",
+                            "lifecycle":  "DONE",
+                            "classification":  "GOVERNANCE",
+                            "source_path":  ".ai/archive/20260717_PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260717_PLAN_CORRECTION_EXECUTION_NAV_LOT_B.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-17",
+                            "last_moved_at":  "2026-07-17",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Updated via .ai/tools/plan.ps1",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  "Lot B termine : G6 execution_report cost_model capacity_grid nav_reconciliation derivent des preuves execution NAV et rapports reels ; tests cibles, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
+                            "non_goals":  [
+
+                                          ],
+                            "is_active":  false
+                        },
+                        {
+                            "id":  "EPIC_ATTESTATIONS_RESIDUELLES_R3",
+                            "title":  "Attestations residuelles R3 (Lots D/E/F) et regeneration package persistant",
+                            "track":  "fix",
+                            "status":  "PENDING",
+                            "lifecycle":  "TRIAGED",
+                            "classification":  "IMPLEMENTATION_DETAIL",
+                            "source_path":  ".ai/backlog/fixes/EPIC_ATTESTATIONS_RESIDUELLES_R3.md",
+                            "original_draft_path":  "0 - HUMAN START HERE/archive/20260717_EPIC_ATTESTATIONS_RESIDUELLES_R3_INVARIANT_EVIDENCE.md",
+                            "active_runtime_path":  null,
+                            "opened_at":  "2026-07-17",
+                            "last_moved_at":  "2026-07-17",
+                            "routing_decision":  "fix",
+                            "routing_reason":  "Demande humaine 2026-07-17 de poursuivre le sujet R3-residuel apres cloture EPIC C/A2/B ; note d\u0027intake convergee en 2 passes /evaluate",
+                            "moved_by":  "ai",
+                            "blocks_mainline":  false,
+                            "advances_mainline":  false,
+                            "closure_reason":  null,
+                            "non_goals":  [
+
+                                          ]
+                        }
+                    ],
+    "validation":  {
+                       "commands":  [
+                                        {
+                                            "command":  "python -m json.tool .ai\\checkpoint.json",
+                                            "purpose":  "Validate relay checkpoint JSON syntax",
+                                            "last_result":  "PASS - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\u0027.ai/checkpoint.json\u0027, encoding=\u0027utf-8\u0027)), json.load(open(\u0027.ai/checkpoint.schema.json\u0027, encoding=\u0027utf-8\u0027)))\"",
+                                            "purpose":  "Validate relay checkpoint against schema",
+                                            "last_result":  "PASS - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m json.tool Implementation\\Active\\tracking.json",
+                                            "purpose":  "Validate runtime task tracking JSON syntax",
+                                            "last_result":  "PASS - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -c \"import json, jsonschema; jsonschema.validate(json.load(open(\u0027Implementation/Active/tracking.json\u0027, encoding=\u0027utf-8\u0027)), json.load(open(\u0027Implementation/Active/tracking.schema.json\u0027, encoding=\u0027utf-8\u0027)))\"",
+                                            "purpose":  "Validate runtime tracking against schema",
+                                            "last_result":  "PASS - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "git diff --check -- Implementation Protocole .ai",
+                                            "purpose":  "Patch hygiene for implementation, protocol, and AI cockpit files",
+                                            "last_result":  "PASS - 2026-07-09 - CRLF/LF warnings only"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation",
+                                            "purpose":  "Runtime non-regression suite",
+                                            "last_result":  "PASS - 110 tests after Nautilus multi-fold correction - 2026-07-10"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase1_contracts.py",
+                                            "purpose":  "Nautilus Phase 1 contracts, migrations, payload factory, and fake simulator tests",
+                                            "last_result":  "PASS - 8 tests - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  ".\\Implementation\\adapters\\nautilus_env\\setup_env.ps1 -VenvRelativePath \"Implementation\\adapters\\nautilus_env\\venv\" -SkipInstall",
+                                            "purpose":  "Nautilus Phase 2 setup smoke test",
+                                            "last_result":  "PASS - nautilus_trader 1.230.0 / Cache - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase2_golden_case.py",
+                                            "purpose":  "Nautilus Phase 2 deterministic golden-case regression tests",
+                                            "last_result":  "PASS - 3 tests - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_instrument_nasdaq.py",
+                                            "purpose":  "Nautilus Phase 3 NASDAQ/XAUUSD instrument and OHLCV bar mapping tests",
+                                            "last_result":  "PASS - 2 tests - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase4_strategy_costs.py",
+                                            "purpose":  "Nautilus Phase 4 sealed cost model and generic strategy bridge tests",
+                                            "last_result":  "PASS - 2 tests - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_phase5_run_segment.py",
+                                            "purpose":  "Nautilus Phase 5 run_segment, SimulationResult extraction, NO_MODEL, and multi-fold orchestration tests",
+                                            "last_result":  "PASS - 3 tests - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m unittest discover -s Implementation\\ebta_engine\\tests -t Implementation -p test_nautilus_research_package.py",
+                                            "purpose":  "Nautilus Phase 6 research_package builder test with injected segment runner",
+                                            "last_result":  "PASS - 1 test - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  ".\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package",
+                                            "purpose":  "Build full Nautilus-backed research_package",
+                                            "last_result":  "PASS - package status PASS before and after native removal - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "rg -n \"from ebta_engine\\.(backtest|package_builder\\.native_research_package|features|trading_signals|risk|metrics)|native_engine|native_research_package|run_native_backtest|build_native\" Implementation\\ebta_engine -g \"*.py\"",
+                                            "purpose":  "Verify no active residual imports to removed native engine cluster",
+                                            "last_result":  "PASS - no Python matches (rg exit 1) - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python Implementation\\examples\\minimal_pilot_pipeline\\build_research_package.py",
+                                            "purpose":  "Build minimal pilot research_package after schema 1.1.0 migration",
+                                            "last_result":  "PASS - package status PASS - 2026-07-09"
+                                        },
+                                        {
+                                            "command":  "python -m ebta_engine.package_builder.native_research_package",
+                                            "purpose":  "Build native XAUUSD/NASDAQ x E-I MVP research_package under Implementation/research_packages/native_mvp",
+                                            "last_result":  "PASS - package status PASS - 2026-07-02"
+                                        }
+                                    ]
+                   },
+    "session_log":  [
+                        {
+                            "date":  "2026-07-09",
+                            "summary":  "Completed Nautilus Phase 4 cost and strategy bridge; explicit venue models and one GenericPayloadStrategy class pass; Phase 5 extraction/multifold is active",
+                            "files_count":  5
+                        },
+                        {
+                            "date":  "2026-07-09",
+                            "summary":  "Completed Nautilus Phase 5 run_segment and extraction; golden, NO_MODEL, and multifold orchestration tests pass; Phase 6 cutover is active",
+                            "files_count":  4
+                        },
+                        {
+                            "date":  "2026-07-09",
+                            "summary":  "Nautilus Phase 6 package gate passed; full Nautilus-backed research_package builds PASS under the dedicated venv; pre-cutover tag is next",
+                            "files_count":  3
+                        },
+                        {
+                            "date":  "2026-07-09",
+                            "summary":  "Completed Nautilus Phase 6 cutover; pre-cutover tag exists, native cluster removed, suite and Nautilus package pass after removal",
+                            "files_count":  17
+                        },
+                        {
+                            "date":  "2026-07-10",
+                            "summary":  "Completed Nautilus correction fix: WalkForwardSplitter and risk/robustness.py added, package builder now runs K=2 walk-forward via Nautilus, runtime suite and validate_package_dir PASS",
+                            "files_count":  8
+                        }
+                    ],
+    "risks":  [
+                  {
+                      "id":  "R1",
+                      "status":  "CONTROLLED",
+                      "risk":  "Relay files could become a competing EBTA source of truth",
+                      "control":  "Relay files point to Protocole/ and Implementation/ authorities and only track handoff state"
+                  },
+                  {
+                      "id":  "R2",
+                      "status":  "CONTROLLED",
+                      "risk":  "BACKTRADER reference mining could import external conventions into EBTA",
+                      "control":  "BACKTRADER governance was read first; BACKTRADER stayed read-only/reference-only; data provenance and native rewrite boundaries are documented; runtime tests and package validation passed"
+                  },
+                  {
+                      "id":  "R3",
+                      "status":  "CONTROLLED",
+                      "risk":  "Checkpoint could become stale or narrative again",
+                      "control":  ".ai/checkpoint.schema.json v1.2.0 constrains structure; runtime state delegated entirely to tracking.json"
+                  },
+                  {
+                      "id":  "R4",
+                      "status":  "CONTROLLED",
+                      "risk":  "Runtime tracking JSON could drift without machine validation",
+                      "control":  "Implementation/Active/tracking.schema.json v1.1.0 constrains the active tracking file"
+                  },
+                  {
+                      "id":  "R5",
+                      "status":  "CONTROLLED",
+                      "risk":  "Human intake drafts could be executed without audit",
+                      "control":  "0 - HUMAN START HERE/ is intake-only; .ai/tools/plan.ps1 start requires -Audited and backlog-ready sections before routing"
+                  },
+                  {
+                      "id":  "R6",
+                      "status":  "CONTROLLED",
+                      "risk":  ".ai workstreams could duplicate Implementation/Active runtime tracking",
+                      "control":  ".ai/checkpoint.json tracks macro workstreams only; runtime step/task state is exclusively in tracking.json"
+                  },
+                  {
+                      "id":  "R7",
+                      "status":  "CONTROLLED",
+                      "risk":  ".ai/governance/ could be mistaken for EBTA scientific authority",
+                      "control":  "Governance files state that Protocole/ remains normative and Implementation/ remains the executable derivative"
+                  },
+                  {
+                      "id":  "R8",
+                      "status":  "CONTROLLED",
+                      "risk":  "The G-BIAS runtime layer could become a competing taxonomy",
+                      "control":  "bias_registry.py, schemas, checkers, guard, and bias_gate.py cite SOP 13 and BIAS_RISK_REGISTER.md and are tracked as subordinate runtime contracts"
+                  },
+                  {
+                      "id":  "R9",
+                      "status":  "CONTROLLED",
+                      "risk":  "The Nautilus workstream was recorded DONE while two SOP-derived deliverables (WalkForwardSplitter, risk/robustness.py) were absent and the research_package was single-fold, not the required real multi-fold walk-forward loop",
+                      "control":  "2026-07-10 remediation completed: WalkForwardSplitter, risk/robustness.py, K=2 Nautilus research_package, runtime suite, and validate_package_dir all PASS"
+                  }
+              ]
 }
