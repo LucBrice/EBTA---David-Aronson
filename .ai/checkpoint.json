@@ -612,27 +612,29 @@
       "blocks_mainline": false,
       "advances_mainline": false,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": false
     },
     {
       "id": "PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D",
       "title": "Lot D - G2/G3/G4/G5/G7-residuel/G10 derives de preuves reelles",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D.md",
+      "source_path": ".ai/archive/20260718_PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260718_PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-18",
       "last_moved_at": "2026-07-18",
       "routing_decision": "fix",
-      "routing_reason": "Sous-chantier 1/4 de EPIC_ATTESTATIONS_RESIDUELLES_R3 - Lot D registre/pre-OOS/economique",
+      "routing_reason": "Execution du sous-chantier 1/4 de EPIC_ATTESTATIONS_RESIDUELLES_R3 - Lot D",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Lot D termine : G2/G3/G4/G5/G7-residuel/G10 derives de preuves reelles ; tests cibles, suite runtime, build pilote, pyrefly et conformance audit PASS.",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {

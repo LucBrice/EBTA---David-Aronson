@@ -58,10 +58,16 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                     "reproduction_validation.json",
                     "economic.json",
                     "execution.json",
+                    "robustness.json",
+                    "optimization_log.json",
+                    "ml_manifest.json",
+                    "complexity_selection.json",
+                    "registry_review.json",
                 ]
             }
             manifest = json.loads((package_dir / "manifests" / "reproducibility_manifest.json").read_text(encoding="utf-8"))
             direct_validation = module.validate_package_dir(package_dir)
+            registered_candidates = module._registered_candidates_from_registry(package_dir)
 
         self.assertEqual(report["status"], "PASS")
         self.assertEqual(direct_validation["status"], "PASS")
@@ -110,14 +116,72 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         for field, expected_status in expected_g6_gate_values.items():
             with self.subTest(field=field):
                 self.assertEqual(gates[field], expected_status)
+        expected_lot_d_gate_values = {
+            "registry_initialized": module._g2_registry_initialized_gate(
+                procedure_reports["registry_review.json"],
+                registered_candidates,
+            ),
+            "candidate_catalog": module._g2_candidate_catalog_gate(search_space),
+            "local_matrix": module._g2_local_matrix_gate(candidate_matrix, procedure_reports["registry_review.json"]),
+            "selection_rule": module._g3_selection_rule_gate(procedure_reports["complexity_selection.json"]),
+            "train_only_calibration_log": module._g3_train_calibration_gate(
+                procedure_reports["optimization_log.json"],
+                procedure_reports["ml_manifest.json"],
+            ),
+            "wrc_report": module._g4_wrc_report_gate(wrc),
+            "wrc_family_matrix": module._g4_wrc_family_matrix_gate(wrc, candidate_matrix),
+            "robustness_report": module._g5_robustness_report_gate(procedure_reports["robustness.json"]),
+            "robustness_matrix": module._g5_robustness_matrix_gate(procedure_reports["robustness.json"]),
+            "test_reports": module._test_reports_gate(
+                {
+                    "candidate_matrix": candidate_matrix,
+                    "wrc": wrc,
+                    "robustness": procedure_reports["robustness.json"],
+                    "economic": procedure_reports["economic.json"],
+                }
+            ),
+            "economic_report": module._gate_verdict(procedure_reports["economic.json"]["economic_status"]),
+            "statistical_gate_report": module._gate_verdict(procedure_reports["economic.json"]["statistical_status"]),
+            "economic_gate_report": module._gate_verdict(procedure_reports["economic.json"]["global_status"]),
+        }
+        for field, expected_status in expected_lot_d_gate_values.items():
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], expected_status)
+                self.assertIsInstance(gates[field], str)
+                self.assertNotEqual(gates[field], True)
         manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
         self.assertEqual(manifest_paths, set(package_shape["artifact_paths"]))
         self.assertTrue(all("artifact_role" in artifact for artifact in manifest["artifacts"]))
         for name, procedure_report in procedure_reports.items():
             if name == "economic.json":
                 continue
+            if "status" not in procedure_report:
+                continue
             self.assertIn(procedure_report["status"], {"PASS", "AUTHORIZED"})
         self.assertEqual(procedure_reports["oos_access_decision.json"]["status"], "AUTHORIZED")
+
+    def test_lot_d_registry_review_detects_registry_missing_matrix_candidate(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "research_package"
+            package_dir.mkdir()
+            registry_event = {
+                "event_type": "REGISTER_CANDIDATE",
+                "candidate_id": "CAND-A",
+            }
+            (package_dir / "registry.jsonl").write_text(json.dumps(registry_event) + "\n", encoding="utf-8")
+            registered_candidates = module._registered_candidates_from_registry(package_dir)
+
+        registry_review = module.review_registry_lineage(registered_candidates, ["CAND-A", "CAND-B"])
+
+        self.assertEqual(registered_candidates, ["CAND-A"])
+        self.assertEqual(registry_review["status"], "FAIL")
+        self.assertEqual(registry_review["missing_influential_candidates"], ["CAND-B"])
+        self.assertEqual(module._g2_registry_initialized_gate(registry_review, registered_candidates), "FAIL")
 
     def test_minimal_pilot_contract_requires_package_shape(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)

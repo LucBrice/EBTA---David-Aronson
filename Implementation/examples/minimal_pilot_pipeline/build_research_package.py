@@ -226,6 +226,110 @@ def _g6_capacity_grid_gate(economic_report: dict) -> str:
     return "PASS"
 
 
+def _read_jsonl_events(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    events = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            events.append(json.loads(line))
+    return events
+
+
+def _registered_candidates_from_registry(package_dir: Path) -> list[str]:
+    events = _read_jsonl_events(package_dir / "registry.jsonl")
+    return sorted(
+        {
+            event["candidate_id"]
+            for event in events
+            if event.get("event_type") == "REGISTER_CANDIDATE" and event.get("candidate_id")
+        }
+    )
+
+
+def _registry_lineage_events(package_dir: Path) -> list[dict]:
+    events = _read_jsonl_events(package_dir / "registry.jsonl")
+    return [event for event in events if event.get("parent_candidate_ids")]
+
+
+def _presence_gate(report: dict, required_keys: list[str]) -> str:
+    if not report:
+        return "INCONCLUSIVE"
+    return "PASS" if all(report.get(key) not in (None, "", [], {}) for key in required_keys) else "INCONCLUSIVE"
+
+
+def _g2_registry_initialized_gate(registry_review: dict, registered_candidates: list[str]) -> str:
+    if not registered_candidates:
+        return "INCONCLUSIVE"
+    return _gate_verdict(registry_review.get("status"))
+
+
+def _g2_candidate_catalog_gate(search_space: dict) -> str:
+    return _presence_gate(search_space, ["candidates", "candidate_count", "canonical_hash"])
+
+
+def _g2_local_matrix_gate(candidate_matrix: dict, registry_review: dict) -> str:
+    if registry_review.get("status") == "FAIL":
+        return "FAIL"
+    if candidate_matrix.get("complete_family") is not True:
+        return "INCONCLUSIVE"
+    return _presence_gate(candidate_matrix, ["candidate_ids", "rows", "matrix_id"])
+
+
+def _g3_selection_rule_gate(complexity_selection: dict) -> str:
+    if complexity_selection.get("status") != "PASS":
+        return "INCONCLUSIVE"
+    return _presence_gate(complexity_selection, ["selection_rule", "selected_candidate_id"])
+
+
+def _g3_train_calibration_gate(optimization_log: dict, ml_manifest: dict) -> str:
+    if optimization_log.get("source_segment") != "Train_k" or ml_manifest.get("train_segment") != "Train_k":
+        return "FAIL"
+    evaluations = optimization_log.get("evaluations", [])
+    if not evaluations:
+        return "INCONCLUSIVE"
+    if any(entry.get("status") != "EVALUATED" for entry in evaluations):
+        return "INCONCLUSIVE"
+    return _presence_gate(ml_manifest, ["manifest_id", "selection_rule", "transformations"])
+
+
+def _g4_wrc_report_gate(wrc_report: dict) -> str:
+    return _presence_gate(wrc_report, ["candidate_ids", "verdict", "wrc_pvalue", "family_catalogue_hash"])
+
+
+def _g4_wrc_family_matrix_gate(wrc_report: dict, candidate_matrix: dict) -> str:
+    wrc_candidates = sorted(wrc_report.get("candidate_ids", []))
+    matrix_candidates = sorted(candidate_matrix.get("candidate_ids", []))
+    if not wrc_candidates or not matrix_candidates:
+        return "INCONCLUSIVE"
+    return "PASS" if wrc_candidates == matrix_candidates else "FAIL"
+
+
+def _g5_robustness_report_gate(robustness_report: dict) -> str:
+    return _presence_gate(robustness_report, ["artifact_type", "status", "classification_counts"])
+
+
+def _g5_robustness_matrix_gate(robustness_report: dict) -> str:
+    counts = robustness_report.get("classification_counts", {})
+    expected_classes = {"CENTRAL", "PLAUSIBLE_BASE", "EXTREME"}
+    if not counts:
+        return "INCONCLUSIVE"
+    return "PASS" if expected_classes.issubset(counts) else "INCONCLUSIVE"
+
+
+def _test_reports_gate(procedure_reports: dict) -> str:
+    required_reports = {
+        "candidate_matrix": ["candidate_ids", "rows", "matrix_id"],
+        "wrc": ["candidate_ids", "verdict", "wrc_pvalue"],
+        "robustness": ["artifact_type", "status"],
+        "economic": ["artifact_type", "statistical_status", "economic_status", "global_status"],
+    }
+    for report_name, keys in required_reports.items():
+        if _presence_gate(procedure_reports.get(report_name, {}), keys) != "PASS":
+            return "INCONCLUSIVE"
+    return "PASS"
+
+
 def _min_annualized_return_threshold(economic_gate: dict, *, sessions_per_year: int = 252) -> float:
     thresholds = economic_gate.get("thresholds", {})
     if "min_annualized_return" in thresholds:
@@ -237,7 +341,7 @@ def _min_annualized_return_threshold(economic_gate: dict, *, sessions_per_year: 
 
 def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
-    procedure_reports = _procedure_reports(pilot_inputs)
+    procedure_reports = _procedure_reports(pilot_inputs, package_dir=package_dir)
     candidate_ids = procedure_reports["candidate_matrix"]["candidate_ids"]
     oos_gate_value = _g9_gate_value(procedure_reports["oos"]["statistical_gate"])
     power_gate_value = _g9_gate_value(procedure_reports["oos"]["power_check"]["status"])
@@ -252,6 +356,13 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     nav_reconciliation_status = _gate_verdict(procedure_reports["execution"].get("nav_reconciliation"))
     cost_model_status = _g6_cost_model_gate(pilot_inputs, procedure_reports["execution"])
     capacity_grid_status = _g6_capacity_grid_gate(procedure_reports["economic"])
+    registry_review = procedure_reports["registry_review"]
+    registered_candidates = procedure_reports["registered_candidates"]
+    search_space = procedure_reports["search_space"]
+    candidate_matrix = procedure_reports["candidate_matrix"]
+    wrc = procedure_reports["wrc"]
+    robustness = procedure_reports["robustness"]
+    economic = procedure_reports["economic"]
     gates = {
         "config_id": identifiers["config_id"],
         "project_id": identifiers["project_id"],
@@ -262,26 +373,29 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "data_snapshots": data_availability_status,
         "availability_timestamps": data_availability_status,
         "anti_leakage_report": data_availability_status,
-        "registry_initialized": True,
-        "candidate_catalog": True,
-        "local_matrix": True,
+        "registry_initialized": _g2_registry_initialized_gate(registry_review, registered_candidates),
+        "candidate_catalog": _g2_candidate_catalog_gate(search_space),
+        "local_matrix": _g2_local_matrix_gate(candidate_matrix, registry_review),
         "independent_registry_review": True,
-        "selection_rule": True,
-        "train_only_calibration_log": True,
+        "selection_rule": _g3_selection_rule_gate(procedure_reports["complexity_selection"]),
+        "train_only_calibration_log": _g3_train_calibration_gate(
+            procedure_reports["optimization_log"],
+            procedure_reports["ml_manifest"],
+        ),
         "selected_candidate_id": procedure_reports["complexity_selection"]["selected_candidate_id"],
-        "wrc_report": True,
-        "wrc_status": procedure_reports["wrc"]["verdict"],
-        "wrc_family_matrix": True,
-        "robustness_report": True,
-        "robustness_matrix": True,
-        "pre_oos_robustness_verdict": procedure_reports["robustness"]["status"],
+        "wrc_report": _g4_wrc_report_gate(wrc),
+        "wrc_status": wrc["verdict"],
+        "wrc_family_matrix": _g4_wrc_family_matrix_gate(wrc, candidate_matrix),
+        "robustness_report": _g5_robustness_report_gate(robustness),
+        "robustness_matrix": _g5_robustness_matrix_gate(robustness),
+        "pre_oos_robustness_verdict": robustness["status"],
         "execution_report": execution_status,
         "cost_model": cost_model_status,
         "capacity_grid": capacity_grid_status,
         "nav_reconciliation": nav_reconciliation_status,
         "pre_oos_manifest": sealing_status,
         "frozen_config": sealing_status,
-        "test_reports": True,
+        "test_reports": _test_reports_gate(procedure_reports),
         "independent_pre_oos_approval": True,
         "oos_access_log": True,
         "opening_authorization": True,
@@ -290,9 +404,9 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "concatenated_oos_series": oos_gate_value,
         "oos_bootstrap_report": oos_gate_value,
         "power_report": power_gate_value,
-        "economic_report": True,
-        "statistical_gate_report": True,
-        "economic_gate_report": True,
+        "economic_report": _gate_verdict(economic.get("economic_status")),
+        "statistical_gate_report": _gate_verdict(economic.get("statistical_status")),
+        "economic_gate_report": _gate_verdict(economic.get("global_status")),
         "validation_ready_manifest": reproduction_status,
         "reproduction_report": reproduction_status,
         "incubation_approval": reproduction_status,
@@ -391,9 +505,11 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         atomic_write_json(package_dir / "reports" / filename, payload)
 
 
-def _procedure_reports(pilot_inputs: dict) -> dict:
+def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -> dict:
     search_space = _pilot_search_space(pilot_inputs)
     candidate_ids = [candidate["candidate_id"] for candidate in search_space["candidates"]]
+    registered_candidates = _registered_candidates_from_registry(package_dir) if package_dir is not None else []
+    lineage_events = _registry_lineage_events(package_dir) if package_dir is not None else []
     statistical_plan = pilot_inputs["statistical_plan"]
     train_scores = _scores_by_rank(candidate_ids, pilot_inputs["train_scores_by_rank"])
     optimization_log = optimize_on_train(search_space, train_scores)
@@ -513,7 +629,12 @@ def _procedure_reports(pilot_inputs: dict) -> dict:
             pilot_inputs["walk_forward_schedule"],
             information_stop_criterion=pilot_inputs["information_stop_criterion"],
         ),
-        "registry_review": review_registry_lineage(candidate_ids, candidate_ids),
+        "registered_candidates": registered_candidates,
+        "registry_review": review_registry_lineage(
+            registered_candidates,
+            candidate_matrix["candidate_ids"],
+            lineage_events=lineage_events,
+        ),
     }
 
 

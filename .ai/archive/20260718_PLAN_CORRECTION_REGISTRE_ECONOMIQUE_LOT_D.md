@@ -60,9 +60,9 @@ implementees ensemble dans le meme assemblage `gates.json` :
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `DONE - implementation Lot D terminee, audits pre-cloture PASS` |
 | Date de creation | 2026-07-18 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-18 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` gates G2/G3/G4/G5/G7/G10 ; SOP 03 pour registre, SOP 06 pour selection, SOP 02 pour WRC, SOP 05 pour robustesse, SOP 08/09B pour economique, SOP 12 pour package. |
 | Autorite executable | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` et procedures EBTA deja existantes. |
 | Changement normatif attendu | Aucun. |
@@ -197,6 +197,7 @@ Implementation/
 ```text
 Implementation/examples/minimal_pilot_pipeline/build_research_package.py  MODIFIER - derivation Lot D
 Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py           MODIFIER - tests ciblant Lot D
+Implementation/examples/minimal_pilot_pipeline/research_package/          MODIFIER - artefact exemple regenere par le build pilote
 Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md                    MODIFIER - trace runtime
 Implementation/TRACEABILITY_MATRIX.md                                    MODIFIER si le mapping doit etre precise
 ```
@@ -374,31 +375,38 @@ etre masque en ajustant les fixtures, les seuils, ou les validateurs.
 
 ## 12. Definition of Done
 
-- [ ] Phases 1 a 3 terminees.
-- [ ] Exit criteria de la section Triage atteints.
-- [ ] Aucune modification hors perimetre.
-- [ ] Tests section 9 executes et resultats documentes.
-- [ ] `bug-hunter` applique sur les fichiers touches.
-- [ ] `plan-conformance-audit` applique avant `/close`.
-- [ ] Checklist post-modification executee.
+- [x] Phases 1 a 3 terminees.
+- [x] Exit criteria de la section Triage atteints.
+- [x] Aucune modification hors perimetre.
+- [x] Tests section 9 executes et resultats documentes.
+- [x] `bug-hunter` applique sur les fichiers touches.
+- [x] `plan-conformance-audit` applique avant `/close`.
+- [x] Checklist post-modification executee.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a la cloture] |
-| Ecarts par rapport au plan initial | [a remplir a la cloture] |
-| Suites a prevoir (hors perimetre de ce plan) | [a remplir a la cloture] |
+| Resultat final | DONE - Lot D implemente : G2/G3/G4/G5/G7-residuel/G10 derives de preuves reelles dans le builder pilote. |
+| Ecarts par rapport au plan initial | Aucun ecart de fond. Precision ajoutee en cours d'execution : le package exemple minimal regenere est autorise comme artefact de preuve, sans toucher `Implementation/research_packages/nautilus_mvp/`. |
+| Suites a prevoir (hors perimetre de ce plan) | Continuer l'EPIC par Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`), puis Lot F et regeneration finale du package persistant. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [a remplir] |
-| Phases executees | [a remplir] |
-| Artefact produit | [a remplir] |
-| Validation | [a remplir] |
-| Ecart par rapport au plan | [a remplir] |
+| Date | 2026-07-18 |
+| Phases executees | Phases 1 a 3 |
+| Artefact produit | Builder pilote corrige, tests Lot D, package exemple minimal regenere, historique runtime mis a jour. |
+| Validation | `test_minimal_pilot_pipeline.py` PASS (6 tests) ; `test_nautilus_research_package.py` PASS (6 tests) ; suite runtime PASS (168 tests) ; build pilote PASS ; Pyrefly bug-hunter PASS (0 erreur) ; plan-conformance PASS. |
+| Ecart par rapport au plan | Aucun ecart bloquant. |
+
+### Audits pre-cloture
+
+| Audit | Resultat | Preuve |
+| --- | --- | --- |
+| bug-hunter | PASS | `Implementation/adapters/nautilus_env/venv/Scripts/python.exe -m pyrefly check Implementation/examples/minimal_pilot_pipeline/build_research_package.py Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py --output-format min-text` -> `INFO 0 errors`. |
+| plan-conformance-audit | PASS | Exit criteria implementes : registre non tautologique, champs D sans `True` residuel, test registre incomplet, validations ciblees et suite complete PASS ; aucun non-goal viole. |
 
 ## 14. Journal d'audits post-hoc
 

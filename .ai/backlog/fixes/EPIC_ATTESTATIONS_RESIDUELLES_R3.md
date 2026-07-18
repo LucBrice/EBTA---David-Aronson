@@ -108,7 +108,7 @@ narratif). Ce chantier mere ne code et n'implemente rien lui-meme.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `EN_COURS - Lot D DONE ; prochain sous-chantier Lot E` |
 | Date de creation | 2026-07-17 |
 | Date d'activation | 2026-07-17 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` (gates G0-G14) ; SOP 03 (Lot D, registry lineage) ; SOP 10 (Lot E, acces OOS) ; SOP 08/09B (Lot D, gate economique G10) — gelees, non modifiees par ce chantier |
@@ -433,7 +433,7 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Prochaine etape executable proposee** :
 
 ```text
-Phase 1 : rediger et router le sous-chantier Lot D
+Phase 2 : rediger et router le sous-chantier Lot E
 ```
 
 ### Execution sans interruption
@@ -458,7 +458,7 @@ trouve precisement pour cette raison).
 
 ## 9. Definition of Done
 
-- [ ] Lot D `DONE`.
+- [x] Lot D `DONE`.
 - [ ] Lot E `DONE`.
 - [ ] Lot F `DONE` ou explicitement differe par decision humaine documentee (section 10).
 - [ ] Phase 4 (regeneration) executee et documentee.
@@ -478,6 +478,7 @@ trouve precisement pour cette raison).
 | 2026-07-17 | Boucle `/evaluate` (code-architecture-evaluator) executee sur la note d'intake : passe 1 a trouve deux bugs de fond (`review_registry_lineage()` tautologique pour G2, `wrc_pass` fige pour G8) ; passe 2 a confirme les sources de derivation G10 et documente l'ambiguite residuelle "registered vs influential" pour G2 sans nouveau blind spot majeur. Convergence actee apres 2 passes. | Autorise la cloture de la boucle `/evaluate` a ce stade (pas de 3e passe requise). |
 | 2026-07-17 | Les deux bugs trouves en passe 1 sont integres aux Lots D et E existants respectivement, plutot que traites comme des sous-chantiers separes. | Autorise le perimetre elargi de Lot D (bug registry) et Lot E (bug wrc_pass) tel que decrit section 3.3 et 5. |
 | 2026-07-17 | Backfill demande explicitement par l'humain, apres coup : ajout du champ `Type de chantier: MULTI_LOT` (table Triage) et de la section `## Sous-chantiers` (IDs `PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`, `PLAN_CORRECTION_ACCES_OOS_LOT_E`, `PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F`), car ce plan avait ete route avant le commit `568b8c8` (garde mecanique `plan.ps1 continue`/`close` sur les chantiers `MULTI_LOT`) et en aurait ete exempte par le defaut retro-compatible `SINGLE`, malgre son verdict multi-lot deja explicite section 0. La Phase 4 (Regeneration) reste volontairement exclue de cette liste : elle depend de D/E/F et constitue la cloture propre de ce chantier mere, pas un lot independant. | Autorise l'edition en place de ce plan deja `TRIAGED` (pas un nouveau `/start`) pour qu'il beneficie retroactivement du garde-fou mecanique. Les trois ID prevus deviennent contraignants : le `/start` reel de chaque lot devra utiliser exactement ces ID. |
+| 2026-07-18 | Lot D (`PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`) clos en `DONE` : G2/G3/G4/G5/G7-residuel/G10 derivent de preuves reelles dans le builder pilote ; bug `registry_review` tautologique corrige ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers le Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) comme prochaine etape executable. |
 
 ---
 

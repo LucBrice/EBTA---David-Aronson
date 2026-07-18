@@ -80,6 +80,59 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-18 - Derivation des gates residuels Lot D depuis preuves reelles
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` gates G2/G3/G4/G5/G7/G10 ; SOP 02, SOP 03, SOP 05, SOP 06, SOP 08, SOP 09B, SOP 12 |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/examples/minimal_pilot_pipeline/research_package/` |
+| Impact protocole | NONE |
+| Verification | `test_minimal_pilot_pipeline.py` PASS (6 tests), `test_nautilus_research_package.py` PASS (6 tests), suite runtime PASS (168 tests), build pilote PASS |
+
+### Contexte
+
+Le chantier `PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`, sous-chantier 1/4
+de `EPIC_ATTESTATIONS_RESIDUELLES_R3`, a traite les champs residuels de
+`gates.json` encore codes en `True` pour G2/G3/G4/G5/G7/G10. Le bug G2
+principal etait l'appel tautologique
+`review_registry_lineage(candidate_ids, candidate_ids)`, qui rendait le
+rapport `registry_review` incapable de signaler une candidate de matrice Test
+absente du registre.
+
+### Decision
+
+Le builder pilote lit maintenant les candidates enregistrees depuis
+`registry.jsonl` deja ecrit sur disque avant `_write_reports()`, puis compare
+ces candidates a `candidate_matrix["candidate_ids"]` via
+`review_registry_lineage()`. Les champs Lot D de `gates.json` sont derives
+des rapports existants (`search_space`, `optimization_log`, `ml_manifest`,
+`complexity_selection`, `candidate_matrix`, `wrc`, `robustness`, `economic`)
+en verdicts `PASS`/`FAIL`/`INCONCLUSIVE`.
+
+`test_reports` reste une derivation technique minimale de presence/coherence
+des rapports Test existants ; aucune nouvelle procedure normative
+`test_reports` n'est creee.
+
+### Impact
+
+- `registry_review` peut maintenant echouer si le registre omet une candidate
+  de la matrice Test.
+- Les champs G2/G3/G4/G5/G7/G10 vises ne sont plus des booleens `True` non
+  derives dans le builder pilote.
+- Le package exemple minimal est regenere pour refleter les verdicts string.
+- `Implementation/research_packages/nautilus_mvp/` n'est pas regenere dans ce
+  lot ; cette regeneration reste reservee a la phase finale du chantier mere.
+- Aucun changement de protocole, SOP, `gate_validator.py` ou
+  `package_validator.py`.
+
+### Suite
+
+Continuer l'EPIC par le Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) apres
+cloture conforme de ce Lot D.
+
 ## 2026-07-16 - Propagation du verdict OOS reel vers le gate G9
 
 | Champ | Valeur |
