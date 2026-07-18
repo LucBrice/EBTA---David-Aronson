@@ -108,7 +108,7 @@ narratif). Ce chantier mere ne code et n'implemente rien lui-meme.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - Lot D DONE ; prochain sous-chantier Lot E` |
+| Statut | `EN_COURS - Lots D/E DONE ; prochaine etape Lot F (confirmation perimetre requise)` |
 | Date de creation | 2026-07-17 |
 | Date d'activation | 2026-07-17 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` (gates G0-G14) ; SOP 03 (Lot D, registry lineage) ; SOP 10 (Lot E, acces OOS) ; SOP 08/09B (Lot D, gate economique G10) — gelees, non modifiees par ce chantier |
@@ -433,7 +433,7 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Prochaine etape executable proposee** :
 
 ```text
-Phase 2 : rediger et router le sous-chantier Lot E
+Phase 3 : confirmer les sources de derivation du Lot F avant routage
 ```
 
 ### Execution sans interruption
@@ -459,7 +459,7 @@ trouve precisement pour cette raison).
 ## 9. Definition of Done
 
 - [x] Lot D `DONE`.
-- [ ] Lot E `DONE`.
+- [x] Lot E `DONE`.
 - [ ] Lot F `DONE` ou explicitement differe par decision humaine documentee (section 10).
 - [ ] Phase 4 (regeneration) executee et documentee.
 - [ ] Aucune modification hors perimetre par ce document lui-meme (section 4).
@@ -479,6 +479,7 @@ trouve precisement pour cette raison).
 | 2026-07-17 | Les deux bugs trouves en passe 1 sont integres aux Lots D et E existants respectivement, plutot que traites comme des sous-chantiers separes. | Autorise le perimetre elargi de Lot D (bug registry) et Lot E (bug wrc_pass) tel que decrit section 3.3 et 5. |
 | 2026-07-17 | Backfill demande explicitement par l'humain, apres coup : ajout du champ `Type de chantier: MULTI_LOT` (table Triage) et de la section `## Sous-chantiers` (IDs `PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`, `PLAN_CORRECTION_ACCES_OOS_LOT_E`, `PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F`), car ce plan avait ete route avant le commit `568b8c8` (garde mecanique `plan.ps1 continue`/`close` sur les chantiers `MULTI_LOT`) et en aurait ete exempte par le defaut retro-compatible `SINGLE`, malgre son verdict multi-lot deja explicite section 0. La Phase 4 (Regeneration) reste volontairement exclue de cette liste : elle depend de D/E/F et constitue la cloture propre de ce chantier mere, pas un lot independant. | Autorise l'edition en place de ce plan deja `TRIAGED` (pas un nouveau `/start`) pour qu'il beneficie retroactivement du garde-fou mecanique. Les trois ID prevus deviennent contraignants : le `/start` reel de chaque lot devra utiliser exactement ces ID. |
 | 2026-07-18 | Lot D (`PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`) clos en `DONE` : G2/G3/G4/G5/G7-residuel/G10 derivent de preuves reelles dans le builder pilote ; bug `registry_review` tautologique corrige ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers le Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) comme prochaine etape executable. |
+| 2026-07-18 | Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) clos en `DONE` : `wrc_pass` derive du verdict WRC reel ; G8 derive de `oos_access_decision` ; test production Nautilus WRC FAIL -> OOS DENIED PASS ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers la Phase 3, mais Lot F reste soumis a la pause prevue : confirmer les sources exactes de derivation de `invariant_evidence.json` avant tout routage. |
 
 ---
 

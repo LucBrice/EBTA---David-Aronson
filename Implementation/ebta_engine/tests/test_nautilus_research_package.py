@@ -60,6 +60,8 @@ class NautilusStatisticalGateProductionTests(unittest.TestCase):
             incubation = json.loads((package_dir / "reports" / "incubation_gate.json").read_text(encoding="utf-8"))
             robustness = json.loads((package_dir / "reports" / "robustness.json").read_text(encoding="utf-8"))
             execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+            oos_access = json.loads((package_dir / "reports" / "oos_access_decision.json").read_text(encoding="utf-8"))
             reproduction = json.loads(
                 (package_dir / "reports" / "reproduction_validation.json").read_text(encoding="utf-8")
             )
@@ -72,6 +74,11 @@ class NautilusStatisticalGateProductionTests(unittest.TestCase):
         self.assertEqual(economic["global_status"], "FAIL")
         self.assertEqual(incubation["status"], "FAIL")
         self.assertIn("statistical_status", incubation["failures"])
+        self.assertEqual(oos_access["status"], "DENIED")
+        self.assertIn("wrc_pass", oos_access["missing_requirements"])
+        for field in ("oos_access_log", "opening_authorization", "single_oos_execution_log"):
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], "INCONCLUSIVE")
 
         old_economic = economic_gate_report(
             {

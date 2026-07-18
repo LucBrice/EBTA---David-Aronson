@@ -80,6 +80,53 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-18 - Derivation du gate G8 depuis l'autorisation OOS reelle
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` gate G8 ; SOP 10 |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/research_package/` |
+| Impact protocole | NONE |
+| Verification | `test_minimal_pilot_pipeline.py` PASS (7 tests), `test_nautilus_research_package.py` PASS (6 tests), suite runtime PASS (169 tests), build pilote PASS, Pyrefly PASS |
+
+### Contexte
+
+Le chantier `PLAN_CORRECTION_ACCES_OOS_LOT_E`, sous-chantier 2/4 de
+`EPIC_ATTESTATIONS_RESIDUELLES_R3`, a corrige le bug ou
+`_oos_access_request()` forcait `wrc_pass` a `True`. Le package Nautilus
+persistant exposait deja le symptome : WRC `FAIL` mais
+`oos_access_decision.status = "AUTHORIZED"`.
+
+### Decision
+
+Le builder pilote transmet maintenant le rapport WRC a
+`_oos_access_request()`, qui calcule `wrc_pass` depuis
+`wrc["verdict"] == "PASS"`. Les trois champs G8 de `gates.json`
+(`oos_access_log`, `opening_authorization`, `single_oos_execution_log`)
+derivent du statut reel `oos_access_decision`.
+
+### Impact
+
+- Un WRC `FAIL` produit maintenant un acces OOS `DENIED` et des champs G8
+  non passants.
+- Le chemin Nautilus production possede un test de contraste WRC FAIL ->
+  OOS DENIED.
+- Le package exemple minimal est regenere pour remplacer les booleens G8 par
+  des verdicts string derives.
+- `Implementation/research_packages/nautilus_mvp/` n'est pas regenere dans ce
+  lot ; cette regeneration reste reservee a la phase finale du chantier mere.
+- Aucun changement de protocole, SOP, `gate_validator.py` ou
+  `package_validator.py`.
+
+### Suite
+
+Continuer l'EPIC par le Lot F ou documenter explicitement son report si une
+decision humaine est necessaire sur les sources exactes de
+`invariant_evidence.json`.
+
 ## 2026-07-18 - Derivation des gates residuels Lot D depuis preuves reelles
 
 | Champ | Valeur |

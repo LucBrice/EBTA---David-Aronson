@@ -201,6 +201,14 @@ def _gate_verdict(value: object) -> str:
     return "INCONCLUSIVE"
 
 
+def _g8_oos_access_gate(oos_access_decision: dict) -> str:
+    if oos_access_decision.get("status") == "AUTHORIZED":
+        return "PASS"
+    if oos_access_decision.get("status") == "DENIED":
+        return "INCONCLUSIVE"
+    return "INCONCLUSIVE"
+
+
 def _g6_cost_model_gate(pilot_inputs: dict, execution_report: dict) -> str:
     declared_cost_model = pilot_inputs.get("execution_model", {}).get("cost_model")
     declared_model_id = (
@@ -363,6 +371,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     wrc = procedure_reports["wrc"]
     robustness = procedure_reports["robustness"]
     economic = procedure_reports["economic"]
+    oos_access_gate = _g8_oos_access_gate(procedure_reports["oos_access_decision"])
     gates = {
         "config_id": identifiers["config_id"],
         "project_id": identifiers["project_id"],
@@ -397,9 +406,9 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "frozen_config": sealing_status,
         "test_reports": _test_reports_gate(procedure_reports),
         "independent_pre_oos_approval": True,
-        "oos_access_log": True,
-        "opening_authorization": True,
-        "single_oos_execution_log": True,
+        "oos_access_log": oos_access_gate,
+        "opening_authorization": oos_access_gate,
+        "single_oos_execution_log": oos_access_gate,
         "oos_report": oos_gate_value,
         "concatenated_oos_series": oos_gate_value,
         "oos_bootstrap_report": oos_gate_value,
@@ -571,7 +580,7 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
     robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
     sealing = validate_pre_oos_seal(**pilot_inputs["pre_oos_seal"])
     g_bias = _g_bias_report(pilot_inputs, search_space, candidate_matrix, robustness)
-    oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, robustness, sealing, g_bias))
+    oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, wrc, robustness, sealing, g_bias))
     monitoring_plan = validate_monitoring_plan(pilot_inputs["incubation_plan"]["monitoring"])
     monitoring_consultation_log = validate_consultation_log(
         pilot_inputs["monitoring_consultations"],
@@ -638,12 +647,12 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
     }
 
 
-def _oos_access_request(pilot_inputs: dict, robustness: dict, sealing: dict, g_bias: dict) -> dict:
+def _oos_access_request(pilot_inputs: dict, wrc: dict, robustness: dict, sealing: dict, g_bias: dict) -> dict:
     event = pilot_inputs["oos_access_log"][0]
     return {
         **event,
         "pre_oos_sealed": sealing["status"] == "PASS",
-        "wrc_pass": True,
+        "wrc_pass": wrc.get("verdict") == "PASS",
         "robustness_pass": robustness["status"] == "PASS",
         "execution_pass": pilot_inputs["execution_report"]["status"] == "PASS",
         "independent_approval": pilot_inputs["pre_oos_seal"]["independent_approval"],

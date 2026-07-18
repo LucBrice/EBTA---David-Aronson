@@ -159,6 +159,16 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                 continue
             self.assertIn(procedure_report["status"], {"PASS", "AUTHORIZED"})
         self.assertEqual(procedure_reports["oos_access_decision.json"]["status"], "AUTHORIZED")
+        expected_lot_e_gate_values = {
+            "oos_access_log": module._g8_oos_access_gate(procedure_reports["oos_access_decision.json"]),
+            "opening_authorization": module._g8_oos_access_gate(procedure_reports["oos_access_decision.json"]),
+            "single_oos_execution_log": module._g8_oos_access_gate(procedure_reports["oos_access_decision.json"]),
+        }
+        for field, expected_status in expected_lot_e_gate_values.items():
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], expected_status)
+                self.assertIsInstance(gates[field], str)
+                self.assertNotEqual(gates[field], True)
 
     def test_lot_d_registry_review_detects_registry_missing_matrix_candidate(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
@@ -182,6 +192,29 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         self.assertEqual(registry_review["status"], "FAIL")
         self.assertEqual(registry_review["missing_influential_candidates"], ["CAND-B"])
         self.assertEqual(module._g2_registry_initialized_gate(registry_review, registered_candidates), "FAIL")
+
+    def test_lot_e_wrc_fail_denies_oos_access_and_g8(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        pilot_inputs = module.load_pilot_inputs()
+        failed_request = module._oos_access_request(
+            pilot_inputs,
+            {"verdict": "FAIL"},
+            {"status": "PASS"},
+            {"status": "PASS"},
+            {"status": "PASS"},
+        )
+        failed_oos_access = module.authorize_oos_access(failed_request)
+
+        self.assertFalse(failed_request["wrc_pass"])
+        self.assertEqual(failed_oos_access["status"], "DENIED")
+        self.assertIn("wrc_pass", failed_oos_access["missing_requirements"])
+        for field in ("oos_access_log", "opening_authorization", "single_oos_execution_log"):
+            with self.subTest(field=field):
+                self.assertEqual(module._g8_oos_access_gate(failed_oos_access), "INCONCLUSIVE")
 
     def test_minimal_pilot_contract_requires_package_shape(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)

@@ -45,9 +45,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `DONE - implementation Lot E terminee, audits pre-cloture PASS` |
 | Date de creation | 2026-07-18 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-18 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` ; SOP 10 - Gouvernance OOS et gestion des echecs |
 | Autorite executable | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` ; `Implementation/ebta_engine/procedures/oos_access.py` |
 | Changement normatif attendu | Aucun |
@@ -383,14 +383,14 @@ global pour compenser un builder fautif.
 
 ## 12. Definition of Done
 
-- [ ] `_oos_access_request()` ne contient plus `wrc_pass: True`.
-- [ ] Les trois champs G8 ne sont plus des litteraux `True`.
-- [ ] Test WRC FAIL -> `oos_access_decision.status = "DENIED"` et G8 non passant.
-- [ ] Tests cibles et suite runtime `PASS`.
-- [ ] Build pilote minimal `PASS`.
-- [ ] Bug-hunter Pyrefly `PASS`.
-- [ ] Plan-conformance-audit `PASS`.
-- [ ] Plan clos via `plan.ps1 close` et checkpoint valide.
+- [x] `_oos_access_request()` ne contient plus `wrc_pass: True`.
+- [x] Les trois champs G8 ne sont plus des litteraux `True`.
+- [x] Test WRC FAIL -> `oos_access_decision.status = "DENIED"` et G8 non passant.
+- [x] Tests cibles et suite runtime `PASS`.
+- [x] Build pilote minimal `PASS`.
+- [x] Bug-hunter Pyrefly `PASS`.
+- [x] Plan-conformance-audit `PASS`.
+- [x] Plan clos via `plan.ps1 close` et checkpoint valide.
 
 ---
 
@@ -398,19 +398,26 @@ global pour compenser un builder fautif.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a la cloture] |
-| Ecarts par rapport au plan initial | [a remplir a la cloture] |
-| Suites a prevoir (hors perimetre de ce plan) | [a remplir a la cloture] |
+| Resultat final | DONE - cloture mecanique executee |
+| Ecarts par rapport au plan initial | Aucun. La preuve minimal-pilot WRC FAIL est deterministe au niveau `_oos_access_request()` ; la preuve production complete est portee par `test_nautilus_research_package.py`. |
+| Suites a prevoir (hors perimetre de ce plan) | Reprendre l'EPIC parent sur Lot F ou documenter son report explicite avant la regeneration persistante. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [a remplir] |
-| Phases executees | [a remplir] |
-| Artefact produit | [a remplir] |
-| Validation | [a remplir] |
-| Ecart par rapport au plan | [a remplir] |
+| Date | 2026-07-18 |
+| Phases executees | Phase 1, Phase 2, Phase 3 jusqu'aux audits pre-cloture |
+| Artefact produit | `Implementation/examples/minimal_pilot_pipeline/research_package/reports/gates.json` regenere avec G8 derive |
+| Validation | PASS : tests cibles, suite runtime, build pilote, Pyrefly, conformance audit |
+| Ecart par rapport au plan | Aucun changement de perimetre |
+
+### Audits pre-cloture
+
+| Audit | Resultat | Preuve |
+| --- | --- | --- |
+| bug-hunter | PASS | `pyrefly check build_research_package.py test_minimal_pilot_pipeline.py test_nautilus_research_package.py --output-format min-text` -> `INFO 0 errors` |
+| plan-conformance-audit | PASS | Exit criteria 1-4 verifies contre le code, les tests et les artefacts regeneres |
 
 ---
 
