@@ -108,7 +108,7 @@ narratif). Ce chantier mere ne code et n'implemente rien lui-meme.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - Lots D/E DONE ; prochaine etape Lot F (confirmation perimetre requise)` |
+| Statut | `BLOQUE - Lots D/E DONE ; Lot F attend decision de source pour pre_oos_sealed_at` |
 | Date de creation | 2026-07-17 |
 | Date d'activation | 2026-07-17 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` (gates G0-G14) ; SOP 03 (Lot D, registry lineage) ; SOP 10 (Lot E, acces OOS) ; SOP 08/09B (Lot D, gate economique G10) — gelees, non modifiees par ce chantier |
@@ -433,7 +433,27 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Prochaine etape executable proposee** :
 
 ```text
-Phase 3 : confirmer les sources de derivation du Lot F avant routage
+Phase 3 : decision humaine requise avant routage du Lot F
+```
+
+### Analyse de reprise Lot F du 2026-07-18
+
+La revalidation dans le code reel confirme que Lot F ne peut pas etre route
+sans decision explicite sur au moins une source :
+
+| Valeur `invariant_evidence.json` | Source candidate verifiee | Statut |
+| --- | --- | --- |
+| `oos_openings[].wrc_local_status` | `procedure_reports["wrc"]["verdict"]`, replie par fold du `walk_forward_schedule` courant. | Confirmable dans le code, mais le mapping multi-fold exact devra etre fixe dans le plan Lot F. |
+| `transformation_fits` | `procedure_reports["ml_manifest"]["transformations"]`, deja derive de `pilot_inputs["ml_manifest"]["transformations"]`. | Source exploitable. |
+| `decision_events` | `pilot_inputs["data_availability_checks"]` (`available_at`/`decision_at`). | Source exploitable avec renommage vers `data_available_at`. |
+| `pre_oos_sealed_at` | Aucune source temporelle dans `procedure_reports["sealing"]` : `validate_pre_oos_seal()` retourne seulement `artifact_type`, `status`, `violations`. | Decision humaine requise : ajouter explicitement un timestamp de scellement dans les inputs/rapport pilote, ou differer Lot F. |
+
+Decision attendue avant `/start` Lot F :
+
+```text
+Autoriser ou non l'ajout d'une source executable explicite `sealed_at` /
+`pre_oos_sealed_at` dans les inputs et le rapport de scellement pilote,
+sans modifier Protocole/ ni changer la logique de validation normative.
 ```
 
 ### Execution sans interruption
@@ -480,6 +500,7 @@ trouve precisement pour cette raison).
 | 2026-07-17 | Backfill demande explicitement par l'humain, apres coup : ajout du champ `Type de chantier: MULTI_LOT` (table Triage) et de la section `## Sous-chantiers` (IDs `PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`, `PLAN_CORRECTION_ACCES_OOS_LOT_E`, `PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F`), car ce plan avait ete route avant le commit `568b8c8` (garde mecanique `plan.ps1 continue`/`close` sur les chantiers `MULTI_LOT`) et en aurait ete exempte par le defaut retro-compatible `SINGLE`, malgre son verdict multi-lot deja explicite section 0. La Phase 4 (Regeneration) reste volontairement exclue de cette liste : elle depend de D/E/F et constitue la cloture propre de ce chantier mere, pas un lot independant. | Autorise l'edition en place de ce plan deja `TRIAGED` (pas un nouveau `/start`) pour qu'il beneficie retroactivement du garde-fou mecanique. Les trois ID prevus deviennent contraignants : le `/start` reel de chaque lot devra utiliser exactement ces ID. |
 | 2026-07-18 | Lot D (`PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`) clos en `DONE` : G2/G3/G4/G5/G7-residuel/G10 derivent de preuves reelles dans le builder pilote ; bug `registry_review` tautologique corrige ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers le Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) comme prochaine etape executable. |
 | 2026-07-18 | Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) clos en `DONE` : `wrc_pass` derive du verdict WRC reel ; G8 derive de `oos_access_decision` ; test production Nautilus WRC FAIL -> OOS DENIED PASS ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers la Phase 3, mais Lot F reste soumis a la pause prevue : confirmer les sources exactes de derivation de `invariant_evidence.json` avant tout routage. |
+| 2026-07-18 | Reprise Lot F : sources revalidees dans le code reel. `transformation_fits`, `decision_events` et `oos_openings[].wrc_local_status` ont des sources candidates exploitables ; `pre_oos_sealed_at` n'a pas de source temporelle dans `sealing.json` ni dans `validate_pre_oos_seal()`. | Bloque le routage Lot F jusqu'a decision humaine : autoriser l'ajout d'une source explicite `sealed_at`/`pre_oos_sealed_at` dans les inputs/rapport pilote, ou differer Lot F. |
 
 ---
 
@@ -490,6 +511,7 @@ trouve precisement pour cette raison).
 | Le Lot D ne trouve pas de vraie distinction "registered vs influential" pour G2 et doit redefinir `registry_review` comme un controle plus modeste | Le champ G2 pourrait rester un controle de presence plutot qu'une preuve de non-selection biaisee du registre | Documenter explicitement le choix retenu et sa justification au moment du `/start` du Lot D, ne pas le laisser implicite |
 | La correction `wrc_pass` (Lot E) fait basculer `oos_access_decision.status` a `DENIED` sur le package `nautilus_mvp` courant (WRC `FAIL` deja observe) | G8 pourrait devenir `INCONCLUSIVE`/`FAIL` sur le package persistant courant, en plus de G4 deja rouge | Verdict EBTA legitime attendu, pas une regression a masquer — coherent avec le principe deja accepte pour G4/G5/G9 |
 | Lot F reste sans perimetre confirme si personne ne tranche la source de `transformation_fits`/`decision_events` | Lot F resterait bloque indefiniment | Pause explicite en Phase 3 ; ne pas router le Lot F sans confirmation |
+| `pre_oos_sealed_at` n'a pas de source temporelle executable dans `sealing.json` | Si Lot F est route sans decision, il reproduirait un timestamp fabrique ou modifierait implicitement le contrat de scellement | Decision humaine requise avant routage : ajouter une source explicite dans les inputs/rapport pilote, ou differer Lot F |
 
 ---
 
