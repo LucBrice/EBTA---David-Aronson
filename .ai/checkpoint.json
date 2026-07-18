@@ -635,6 +635,26 @@
       "closure_reason": "Lot D termine : G2/G3/G4/G5/G7-residuel/G10 derives de preuves reelles ; tests cibles, suite runtime, build pilote, pyrefly et conformance audit PASS.",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_CORRECTION_ACCES_OOS_LOT_E",
+      "title": "Lot E - G8 acces OOS et correction du bug wrc_pass fige",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_ACCES_OOS_LOT_E.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260718_PLAN_CORRECTION_ACCES_OOS_LOT_E.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-18",
+      "last_moved_at": "2026-07-18",
+      "routing_decision": "fix",
+      "routing_reason": "Sous-chantier 2/4 de EPIC_ATTESTATIONS_RESIDUELLES_R3 - Lot E acces OOS",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
