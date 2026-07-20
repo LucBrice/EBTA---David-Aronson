@@ -697,6 +697,26 @@
       "advances_mainline": true,
       "closure_reason": null,
       "non_goals": []
+    },
+    {
+      "id": "PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7",
+      "title": "Lot 1 - R7 reproductibilite operationnelle",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/mainline/PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-20",
+      "last_moved_at": "2026-07-20",
+      "routing_decision": "mainline",
+      "routing_reason": "Sous-chantier 1/4 de EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE - R7 reproductibilite operationnelle",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
