@@ -51,7 +51,7 @@ PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS`.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `EN_COURS - ENFANT 1/3 DONE` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | SOP 03/10/11/12/13 ; Paquet d'execution |
@@ -67,7 +67,7 @@ PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS`.
 | Autorite et lecture minimale | Ce plan, skill epic, SOP 10/12, Paquet, puis plan de l'enfant courant. |
 | Perimetre autorise | Ce document uniquement pour la mere. |
 | Interdits absolus | Aucun code depuis la mere; aucune approbation inventee; aucun schema/Protocole. |
-| Phase de reprise | Enfant 1 - chronologie et horodatage runtime. |
+| Phase de reprise | Enfant 2 - derivation des attestations mecaniques. |
 | Preuve attendue | Enfants `DONE`, tests d'ordre negatif, gates sans constantes, suite et audits globaux. |
 | Arret et escalade | Avant enfant 3 pour choisir les approbations humaines obligatoires; toute extension de schema. |
 
@@ -292,7 +292,7 @@ est acceptable.
 
 ## 11. Definition of Done
 
-- [ ] Enfant 1 `DONE`.
+- [x] Enfant 1 `DONE` - commit implementation `85b8751`, cloture `83deb27`.
 - [ ] Enfant 2 `DONE`.
 - [ ] Enfant 3 `DONE` (contrat explicite meme si les preuves restent absentes).
 - [ ] Aucun OOS avant autorisation.
@@ -316,3 +316,4 @@ est acceptable.
 | 2026-07-20 | Passe intake 3 : convergence sans nouvel angle mort majeur. | Frontieres et criteres negatifs devenus testables. |
 | 2026-07-20 | Passe plan route 1 : suppression du report narratif de l'enfant 3; il doit atteindre `DONE` avec un contrat explicite, meme si les preuves restent absentes. | `plan.ps1` exige tous les IDs enfants `DONE`; un statut differe aurait rendu la mere mecaniquement in-cloturable. |
 | 2026-07-20 | Passe plan route 2 : aucun nouvel angle mort majeur; convergence actee. | Les trois enfants ont des criteres binaires, les dependances humaines sont localisees, et la mere reste un suivi pur compatible avec le backend. |
+| 2026-07-20 | Enfant 1 clos `DONE` : registre avant Test, preuves pre-OOS scellees et reutilisees, refus sans OOS, acces UTC fold-par-fold. | 182 tests PASS, Pyrefly 0, pilote PASS; smoke reel `DENIED` sur `wrc_pass` sans OOS. Enfant suivant : attestations mecaniques. |

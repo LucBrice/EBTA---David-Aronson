@@ -107,7 +107,7 @@ ouverture, pas ici).
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - LOT 1 R7 DONE` |
+| Statut | `EN_COURS - LOT 1 R7 DONE; LOT 3 ENFANT 1/3 DONE` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/PROTOCOLE EBTA.md` ; SOP 05 (robustesse pre-OOS, Lot 2/R6) ; SOP 09B (modele d'execution/frictions/couts, Lot 2/R5) ; SOP 12 (reproductibilite/scellement, Lot 1/R7) - gelees, non modifiees par ce chantier |
@@ -600,3 +600,4 @@ report explicite, et production de la preuve globale Phase 5).
 | --- | --- | --- |
 | 2026-07-20 | Note d'intake, passe 1 `/evaluate` : Exit criterion circulaire remplace par une preuve globale concrete ; contradiction R10 levee (hors perimetre) ; application du test de detection clarifiee (independance = cloture par lot, R7->R4-long dependance de preuve assumee) ; prerequis donnees longues ajoute. | Rendre l'Exit criteria binaire/verifiable et le perimetre coherent avant `/start`. |
 | 2026-07-20 | Note d'intake, passe 2 `/evaluate` : ajout de la regle anti-stagnation (ne pas bloquer tout l'EPIC sur une decision humaine en attente). Convergence actee apres 2 passes. | Aligner le multi-lot sur l'objectif "ne plus revenir demander la suite". |
+| 2026-07-20 | Lot 3 enfant 1/3 `PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME` clos `DONE` (`85b8751`, `83deb27`). | Le chemin reel persiste le registre avant Test, refuse l'OOS si WRC/gates manquent et journalise chaque fold juste avant acces; le smoke reel s'arrete sur `wrc_pass`. |
