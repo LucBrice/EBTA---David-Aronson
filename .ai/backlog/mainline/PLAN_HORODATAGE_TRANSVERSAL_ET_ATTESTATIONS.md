@@ -51,7 +51,7 @@ PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS`.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - ENFANT 1/3 DONE` |
+| Statut | `EN_COURS - ENFANTS 1-2/3 DONE; ENFANT 3 EN ATTENTE DE DECISION HUMAINE` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | SOP 03/10/11/12/13 ; Paquet d'execution |
@@ -67,7 +67,7 @@ PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS`.
 | Autorite et lecture minimale | Ce plan, skill epic, SOP 10/12, Paquet, puis plan de l'enfant courant. |
 | Perimetre autorise | Ce document uniquement pour la mere. |
 | Interdits absolus | Aucun code depuis la mere; aucune approbation inventee; aucun schema/Protocole. |
-| Phase de reprise | Enfant 2 - derivation des attestations mecaniques. |
+| Phase de reprise | Enfant 3 - contrat des approbations humaines/post-OOS, apres decision de perimetre. |
 | Preuve attendue | Enfants `DONE`, tests d'ordre negatif, gates sans constantes, suite et audits globaux. |
 | Arret et escalade | Avant enfant 3 pour choisir les approbations humaines obligatoires; toute extension de schema. |
 
@@ -293,7 +293,7 @@ est acceptable.
 ## 11. Definition of Done
 
 - [x] Enfant 1 `DONE` - commit implementation `85b8751`, cloture `83deb27`.
-- [ ] Enfant 2 `DONE`.
+- [x] Enfant 2 `DONE` - commit implementation `f2e1269`, cloture `ecf2224`.
 - [ ] Enfant 3 `DONE` (contrat explicite meme si les preuves restent absentes).
 - [ ] Aucun OOS avant autorisation.
 - [ ] Aucun timestamp/approval fixture presente comme runtime reel.
@@ -317,3 +317,4 @@ est acceptable.
 | 2026-07-20 | Passe plan route 1 : suppression du report narratif de l'enfant 3; il doit atteindre `DONE` avec un contrat explicite, meme si les preuves restent absentes. | `plan.ps1` exige tous les IDs enfants `DONE`; un statut differe aurait rendu la mere mecaniquement in-cloturable. |
 | 2026-07-20 | Passe plan route 2 : aucun nouvel angle mort majeur; convergence actee. | Les trois enfants ont des criteres binaires, les dependances humaines sont localisees, et la mere reste un suivi pur compatible avec le backend. |
 | 2026-07-20 | Enfant 1 clos `DONE` : registre avant Test, preuves pre-OOS scellees et reutilisees, refus sans OOS, acces UTC fold-par-fold. | 182 tests PASS, Pyrefly 0, pilote PASS; smoke reel `DENIED` sur `wrc_pass` sans OOS. Enfant suivant : attestations mecaniques. |
+| 2026-07-20 | Enfant 2 clos `DONE` : live version/kill-switch derives et G14 fonde sur artefacts declares/presents. | 183 tests PASS, Pyrefly 0; package VALIDATION_READY honnetement FAIL sur G14 seul. Enfant suivant : approbations humaines/post-OOS. |
