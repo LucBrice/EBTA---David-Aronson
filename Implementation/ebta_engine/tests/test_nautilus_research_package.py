@@ -1,11 +1,15 @@
 import csv
+import hashlib
 import json
+import os
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from ebta_engine.package_builder.nautilus_research_package import build_nautilus_research_package
+from ebta_engine.procedures._utils import canonical_json
 from ebta_engine.procedures.economic_gate import economic_gate_report
 from ebta_engine.procedures.lifecycle import incubation_gate
 from ebta_engine.strategies.contracts import SimulationResult
@@ -38,6 +42,27 @@ class NautilusEconomicGateProductionTests(unittest.TestCase):
         self.assertEqual(economic["economic_status"], "REJECTED_ECONOMIC")
         self.assertIn("return_hurdle_pass", economic["failures"])
         self.assertIn("costs_pass", economic["failures"])
+
+
+class NautilusReproducibilityProductionTests(unittest.TestCase):
+    def test_environment_data_root_and_real_config_document_hash_reach_package(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            with patch.dict(os.environ, {"EBTA_DATA_ROOT": str(data_root)}):
+                build_nautilus_research_package(
+                    package_dir,
+                    assets=["NASDAQ"],
+                    segment_runner=_fake_segment_runner,
+                )
+            config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
+
+        document_hash = config.pop("document_hash")
+        expected_hash = hashlib.sha256(canonical_json(config).encode("utf-8")).hexdigest().upper()
+        self.assertEqual(document_hash, expected_hash)
+        self.assertEqual(len(document_hash), 64)
+        self.assertNotIn("PLACEHOLDER", document_hash)
 
 
 class NautilusStatisticalGateProductionTests(unittest.TestCase):

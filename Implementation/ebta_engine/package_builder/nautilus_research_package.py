@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -12,9 +13,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
-from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars
+from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars, resolve_data_root
 from ebta_engine.data.walk_forward import WalkForwardSplitter
 from ebta_engine.package_builder.economic_calibration import compute_economic_pass_flags, economic_observed_values
+from ebta_engine.procedures._utils import canonical_json
 from ebta_engine.risk.robustness import compute_robustness_scenarios
 from ebta_engine.strategies.contracts import Candidate, CostModel, InstrumentConfig, SimulationResult
 from ebta_engine.strategies.payload_factory import generate_family, liquidity_sweep_family_spec
@@ -60,12 +62,13 @@ def _load_pilot_module():
 
 def build_nautilus_inputs(
     *,
-    data_root: Path = DEFAULT_DATA_ROOT,
+    data_root: Path | None = None,
     assets: list[str] | None = None,
     start: str = DEFAULT_NAUTILUS_START,
     end: str = DEFAULT_NAUTILUS_END,
     segment_runner: SegmentRunner | None = None,
 ) -> dict:
+    effective_data_root = resolve_data_root(data_root)
     assets = sorted(assets or DEFAULT_NAUTILUS_ASSETS)
     pilot = _load_pilot_module()
     inputs = copy.deepcopy(pilot.load_pilot_inputs())
@@ -77,10 +80,10 @@ def build_nautilus_inputs(
             "research_family_id": "FAM-LIQUIDITY-SWEEP-NAUTILUS",
             "hypothesis_id": "HYP-LIQUIDITY-SWEEP-NAUTILUS-XAUUSD-NASDAQ",
             "process_version_id": "PROC-NAUTILUS-MVP-001",
-            "document_hash": "NAUTILUS_MVP_CONFIG_HASH_PLACEHOLDER",
+            "document_hash": "",
         }
     )
-    snapshot = build_data_snapshot(data_root, assets, start=start, end=end)
+    snapshot = build_data_snapshot(effective_data_root, assets, start=start, end=end)
     inputs["data_snapshots"] = [snapshot]
     inputs["statistical_plan"]["wrc_run_secondary"] = False
     inputs["candidate_space"].update(
@@ -105,7 +108,7 @@ def build_nautilus_inputs(
     segment_workers = 1 if segment_runner is not None else NAUTILUS_SEGMENT_WORKERS
     search_space = pilot._pilot_search_space(inputs)
     raw_bars_by_asset = {
-        asset: load_ohlcv_bars(data_root, asset, start=start, end=end)
+        asset: load_ohlcv_bars(effective_data_root, asset, start=start, end=end)
         for asset in assets
     }
     day_index_by_asset = {
@@ -297,18 +300,19 @@ def build_nautilus_inputs(
             "actor": "nautilus_trader_adapter",
             "fold_id": fold["fold_id"],
             "oos_segment_id": f"OOS-{index:03d}",
-            "read_paths": [str(data_root)],
+            "read_paths": [str(effective_data_root)],
             "write_paths": ["reports/oos.json", "series/oos_primary_returns.json"],
         }
         for index, fold in enumerate(reference_folds, start=1)
     ]
+    inputs["identifiers"]["document_hash"] = _config_document_hash(pilot, inputs)
     return inputs
 
 
 def build_nautilus_research_package(
     package_dir: Path,
     *,
-    data_root: Path = DEFAULT_DATA_ROOT,
+    data_root: Path | None = None,
     assets: list[str] | None = None,
     start: str = DEFAULT_NAUTILUS_START,
     end: str = DEFAULT_NAUTILUS_END,
@@ -323,6 +327,12 @@ def build_nautilus_research_package(
         segment_runner=segment_runner,
     )
     return pilot.build_package(package_dir, pilot_inputs=inputs)
+
+
+def _config_document_hash(pilot: Any, inputs: dict[str, Any]) -> str:
+    document = copy.deepcopy(pilot.config_document(inputs))
+    document.pop("document_hash")
+    return hashlib.sha256(canonical_json(document).encode("utf-8")).hexdigest().upper()
 
 
 def _payloads_by_axis(assets: list[str], research_family_id: str, fold_id: str) -> dict[tuple[str, str, str], Any]:

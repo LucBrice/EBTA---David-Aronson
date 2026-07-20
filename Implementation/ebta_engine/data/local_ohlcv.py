@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 
 DEFAULT_DATA_ROOT = Path(r"D:\TRADING\ENTREPRISE\0 - Phase de lancement\Stratégie de trading\0 - Backtest\Data")
@@ -20,6 +21,24 @@ DEFAULT_ASSET_DIRECTORIES = {
     "NASDAQ": "NASDAQ 1m",
 }
 REQUIRED_COLUMNS = ("timestamp", "open", "high", "low", "close", "volume")
+
+
+def resolve_data_root(
+    data_root: Path | str | None = None,
+    *,
+    environ: Mapping[str, str] | None = None,
+) -> Path:
+    """Resolve the OHLCV root once at the build boundary.
+
+    An explicit caller value takes priority over ``EBTA_DATA_ROOT``. The
+    historical local path remains the final compatibility fallback.
+    """
+
+    if data_root is not None:
+        return Path(data_root)
+    environment = os.environ if environ is None else environ
+    configured_root = environment.get("EBTA_DATA_ROOT", "").strip()
+    return Path(configured_root) if configured_root else DEFAULT_DATA_ROOT
 
 
 @dataclass(frozen=True)

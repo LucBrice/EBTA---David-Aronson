@@ -106,45 +106,48 @@ def _validate_pilot_contract(pilot_inputs: dict, package_shape: dict) -> None:
         raise ValueError("package shape must define artifact_paths")
 
 
-def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
+def config_document(pilot_inputs: dict) -> dict:
+    """Return the exact configuration document written into the package."""
+
     identifiers = pilot_inputs["identifiers"]
     search_space = _pilot_search_space(pilot_inputs)
     candidate_space = pilot_inputs["candidate_space"]
     candidate_count = len(search_space["candidates"])
-    atomic_write_json(
-        package_dir / "config.json",
-        {
-            "schema_version": "1.1.0",
-            "config_id": identifiers["config_id"],
-            "project_id": identifiers["project_id"],
-            "research_family_id": identifiers["research_family_id"],
-            "hypothesis_id": identifiers["hypothesis_id"],
-            "process_version_id": identifiers["process_version_id"],
-            "protocol_version": identifiers["protocol_version"],
-            "data_snapshots": pilot_inputs["data_snapshots"],
-            "walk_forward_schedule": pilot_inputs["walk_forward_schedule"],
-            "candidate_space": {
-                "candidate_count": candidate_count,
-                "asset_universe": candidate_space.get("asset_universe", []),
-                "asset_selection_axis": candidate_space.get("asset_selection_axis"),
-                "asset_selection_rule": candidate_space.get("asset_selection_rule"),
-                "asset_candidate_count": search_space.get("asset_candidate_count"),
-                "complexity_definition": candidate_space.get("complexity_definition", {"source": "parameter_grid"}),
-                "complexity_levels": candidate_space.get(
-                    "complexity_levels",
-                    sorted({candidate.get("complexity", 0) for candidate in search_space["candidates"]}),
-                ),
-            },
-            "selection_rule": pilot_inputs["selection_rule"],
-            "statistical_plan": pilot_inputs["statistical_plan"],
-            "execution_model": pilot_inputs["execution_model"],
-            "robustness_plan": {"required_before_oos": pilot_inputs["robustness_plan"]["required_before_oos"]},
-            "oos_opening_gate": pilot_inputs["oos_opening_gate"],
-            "incubation_plan": pilot_inputs["incubation_plan"],
-            "reproducibility_manifest": pilot_inputs["reproducibility_manifest"],
-            "document_hash": identifiers["document_hash"],
+    return {
+        "schema_version": "1.1.0",
+        "config_id": identifiers["config_id"],
+        "project_id": identifiers["project_id"],
+        "research_family_id": identifiers["research_family_id"],
+        "hypothesis_id": identifiers["hypothesis_id"],
+        "process_version_id": identifiers["process_version_id"],
+        "protocol_version": identifiers["protocol_version"],
+        "data_snapshots": pilot_inputs["data_snapshots"],
+        "walk_forward_schedule": pilot_inputs["walk_forward_schedule"],
+        "candidate_space": {
+            "candidate_count": candidate_count,
+            "asset_universe": candidate_space.get("asset_universe", []),
+            "asset_selection_axis": candidate_space.get("asset_selection_axis"),
+            "asset_selection_rule": candidate_space.get("asset_selection_rule"),
+            "asset_candidate_count": search_space.get("asset_candidate_count"),
+            "complexity_definition": candidate_space.get("complexity_definition", {"source": "parameter_grid"}),
+            "complexity_levels": candidate_space.get(
+                "complexity_levels",
+                sorted({candidate.get("complexity", 0) for candidate in search_space["candidates"]}),
+            ),
         },
-    )
+        "selection_rule": pilot_inputs["selection_rule"],
+        "statistical_plan": pilot_inputs["statistical_plan"],
+        "execution_model": pilot_inputs["execution_model"],
+        "robustness_plan": {"required_before_oos": pilot_inputs["robustness_plan"]["required_before_oos"]},
+        "oos_opening_gate": pilot_inputs["oos_opening_gate"],
+        "incubation_plan": pilot_inputs["incubation_plan"],
+        "reproducibility_manifest": pilot_inputs["reproducibility_manifest"],
+        "document_hash": identifiers["document_hash"],
+    }
+
+
+def _write_config(package_dir: Path, pilot_inputs: dict) -> None:
+    atomic_write_json(package_dir / "config.json", config_document(pilot_inputs))
 
 
 def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:

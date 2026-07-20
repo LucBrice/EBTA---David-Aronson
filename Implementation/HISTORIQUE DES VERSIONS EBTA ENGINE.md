@@ -80,6 +80,46 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-20 - Reproductibilite operationnelle du build Nautilus R7
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE / DOCUMENTATION_CLARIFICATION_NEEDED |
+| Statut | ACCEPTED |
+| Source normative | SOP 12 ; `Protocole/PAQUET D'EXECUTION EBTA.md` section 3.1 |
+| Fichiers impactes | `data/local_ohlcv.py` ; `package_builder/nautilus_research_package.py` ; pilote minimal ; tests R7 ; `adapters/nautilus_env/README.md` |
+| Impact protocole | NONE |
+| Verification | Tests cibles resolver/package/pilote ; suite runtime complete ; smoke `setup_env.ps1 -VenvRelativePath "Implementation\adapters\nautilus_env\venv" -SkipInstall` ; Pyrefly et audits de cloture du plan R7. |
+
+### Contexte
+
+Le build Nautilus acceptait deja un `data_root` explicite, mais son defaut etait
+lie a un chemin Windows local lors de l'import. Son `document_hash` etait un
+placeholder litteral et la procedure de recreation du venv n'avait pas de guide
+operationnel unique.
+
+### Decision
+
+Le bord du build resout maintenant la precedence argument explicite,
+`EBTA_DATA_ROOT`, puis fallback historique. Le pilote expose l'unique projection
+pure du document `config.json`; le builder Nautilus retire le champ
+auto-referentiel et calcule son SHA-256 sur la serialisation canonique existante.
+Le guide du venv conserve le defaut court deja acte et distingue l'override
+historique sans modifier les scripts.
+
+### Impact
+
+Une autre machine peut fournir son data root sans modifier le code, le package
+porte une empreinte reelle de son document de configuration effectif, et
+l'environnement pinne peut etre recree sans ambiguite. Aucun schema, gate, seuil
+ou document normatif n'est modifie.
+
+### Suite
+
+Le Lot 2 R5/R6 du chantier mere porte separement la calibration economique et
+les stress de robustesse ; ils ne sont pas traites par R7.
+
 ## 2026-07-20 - Horodatage automatique du scellement et preuves d'invariants derivees
 
 | Champ | Valeur |

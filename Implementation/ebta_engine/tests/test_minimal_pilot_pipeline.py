@@ -81,6 +81,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         self.assertEqual(report["gate_report"]["summary"]["inconclusive"], 0)
         self.assertTrue(all(result["status"] == "PASS" for result in report["invariant_results"]))
         self.assertEqual(config["config_id"], pilot_inputs["identifiers"]["config_id"])
+        self.assertEqual(config, module.config_document(pilot_inputs))
         self.assertEqual(config["project_id"], pilot_inputs["identifiers"]["project_id"])
         self.assertEqual(config["walk_forward_schedule"], pilot_inputs["walk_forward_schedule"])
         self.assertEqual(config["candidate_space"]["candidate_count"], len(candidate_matrix["candidate_ids"]))
