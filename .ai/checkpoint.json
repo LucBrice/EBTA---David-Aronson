@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-18",
+  "updated_at": "2026-07-20",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -656,6 +656,26 @@
       "closure_reason": "Lot E termine : wrc_pass derive du verdict WRC reel ; G8 derive de oos_access_decision ; tests cibles, suite runtime, build pilote, pyrefly et conformance audit PASS.",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F",
+      "title": "Lot F - invariant_evidence.json non fabrique",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-20",
+      "last_moved_at": "2026-07-20",
+      "routing_decision": "fix",
+      "routing_reason": "Sous-chantier 3/3 de EPIC_ATTESTATIONS_RESIDUELLES_R3 - preuves invariants derivees et scellement UTC automatique decide le 2026-07-20",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
