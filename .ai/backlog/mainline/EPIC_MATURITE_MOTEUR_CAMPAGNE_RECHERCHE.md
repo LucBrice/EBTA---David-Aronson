@@ -107,7 +107,7 @@ ouverture, pas ici).
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - LOT 1 R7 DONE; LOT 3 ENFANTS 1-2/3 DONE` |
+| Statut | `EN_COURS - LOTS 1 R7 ET 4 R4-LONG DONE; LOT 3 ENFANTS 1-2/3 DONE` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/PROTOCOLE EBTA.md` ; SOP 05 (robustesse pre-OOS, Lot 2/R6) ; SOP 09B (modele d'execution/frictions/couts, Lot 2/R5) ; SOP 12 (reproductibilite/scellement, Lot 1/R7) - gelees, non modifiees par ce chantier |
@@ -196,6 +196,14 @@ Etat actuel apres Lot 1 : les trois lignes R7 ci-dessus sont historiques.
 `PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7` est `DONE` (commits `683e5fe` et
 `7636c73`) : resolver argument/`EBTA_DATA_ROOT`/fallback teste, hash SHA-256
 reel de `config.json`, venv recreable documente, suite 179 tests PASS.
+
+Etat actuel apres Lot 4 : `PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG` est
+`DONE` (commits `e5fb08c` et `251f700`). Le rapport canonique 1/3/12 mois est
+`COMPLETED` : 1 an charge 1 019 520 barres, execute 46 080 bar-evaluations
+sur 5 760 timestamps Test uniques, produit 28 ordres, atteint 995 188 736
+octets de peak RSS et expose zero OOS. La ligne R4-long ci-dessus est donc
+historique; sa limite restante (splitter fixe, couverture 0,56 %) est mesuree,
+pas masquee, et toute decision scientifique de calendrier reste hors Lot 4.
 
 ### 3.2 Ce qui existe deja et doit etre reutilise (pas duplique)
 
@@ -394,9 +402,13 @@ runner, via `PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG`.
 
 Classification : ADAPTER_MAPPING
 
-Constat (pause prerequis) : la disponibilite reelle des donnees longues au
-data root (bientot parametrable) n'est pas verifiee au niveau de detail des
-autres lots - a statuer `disponible`/`manquant`/`bloquant` a l'ouverture.
+Constat historique avant ouverture : la disponibilite reelle des donnees
+longues au data root, rendu parametrable par R7, n'etait pas encore verifiee
+au niveau de detail des autres lots.
+
+Resultat : prerequis `DISPONIBLE` et qualite 2020 validee sur 509 760
+barres/actif. Le workstream est `DONE`; rapport et limites documentes dans
+`Implementation/benchmarks/r4_long/`.
 
 Actions :
 
@@ -532,7 +544,7 @@ remplacer une valeur inerte par une autre valeur inerte sous couvert de
 - [x] Lot 1 R7 `DONE` (`683e5fe` implementation ; `7636c73` cloture).
 - [ ] Lot 2 R5/R6 `DONE` (directement ou via sa propre cloture generale s'il devient mere).
 - [ ] Lot 3 horodatage/attestations `DONE` ou explicitement differe par decision humaine documentee (section 10).
-- [ ] Lot 4 R4-long `DONE`.
+- [x] Lot 4 R4-long `DONE` (`e5fb08c` implementation ; `251f700` cloture).
 - [ ] Preuve globale (Exit criteria (5)) produite et documentee (Phase 5).
 - [ ] Aucune modification hors perimetre par ce document lui-meme (section 4).
 - [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier.
@@ -554,7 +566,8 @@ Decisions restant a trancher (au `/start` du lot concerne, pas ici) :
 - Perimetre exact des attestations humaines/post-OOS a expliciter vs deriver - Lot 3.
 
 Prerequis factuels a statuer (a l'ouverture du lot) :
-- Disponibilite/qualite des donnees longues (Lot 4) - `disponible`/`manquant`/`bloquant`.
+- Disponibilite/qualite des donnees longues (Lot 4) - **RESOLU : DISPONIBLE** ;
+  72 CSV mensuels/actif 2020-2025, canonique 1 an `COMPLETED`.
 - Recreabilite documentee du venv Nautilus (Lot 1) - **RESOLU** : smoke
   `nautilus_trader 1.230.0`/`Cache` PASS et guide
   `Implementation/adapters/nautilus_env/README.md` livre.
@@ -565,8 +578,8 @@ Prerequis factuels a statuer (a l'ouverture du lot) :
 | --- | --- | --- |
 | 1 - R7 | `DONE` | Workstream archive ; 179 tests, pilote minimal, smoke venv, Pyrefly, bug-hunter et conformance PASS. |
 | 2 - R5/R6 | `NEXT - DECISIONS HUMAINES REQUISES` | Revalider les valeurs et le cablage actuels ; reappliquer le test multi-lot ; demander les sources/valeurs de calibration R5 et les magnitudes/seuils R6 avant tout code. |
-| 3 - Horodatage | `PENDING` | Peut avancer si Lot 2 est en attente, mais son perimetre d'attestations exige aussi une decision humaine. |
-| 4 - R4-long | `PENDING` | Verifier les donnees longues apres resolution des decisions precedentes. |
+| 3 - Horodatage | `ENFANTS 1-2/3 DONE - DECISION HUMAINE REQUISE` | L'enfant approbations humaines/post-OOS attend le choix de contrat section 10. |
+| 4 - R4-long | `DONE` | Canonique 1/3/12 mois `COMPLETED`, 195 tests PASS, Pyrefly 0, OOS zero; commits `e5fb08c`/`251f700`. |
 
 ---
 
@@ -575,7 +588,7 @@ Prerequis factuels a statuer (a l'ouverture du lot) :
 | Risque | Impact | Mitigation / condition de deblocage |
 | --- | --- | --- |
 | Lot 2 (R5/R6) attend une decision de seuil humaine | Le coeur scientifique stagne | Regle anti-stagnation (section 4) : avancer le Lot 3 independant pendant la pause ; demander la decision, la journaliser section 10. |
-| Donnees longues absentes/insuffisantes au data root | Lot 4 bloque | Prerequis factuel verifie a l'ouverture du Lot 4 ; si bloquant, s'arreter et demander. |
+| Donnees longues absentes/insuffisantes au data root - `RESOLU` | Aucun impact residuel sur Lot 4 clos | 72 CSV mensuels/actif verifies; canonique 1 an `COMPLETED`. |
 | Un lot s'avere multi-lot (recursion) | Sous-estimation de charge | Reappliquer le test de detection a l'ouverture ; le lot devient mere, route ses propres enfants, sans nesting preventif. |
 | La correction R5/R6 fait basculer des gates vers `FAIL`/`INCONCLUSIVE` | Le package reste ou devient rouge | Verdict EBTA legitime, documente en Phase 5, jamais masque (invariant 4). |
 
@@ -602,3 +615,4 @@ report explicite, et production de la preuve globale Phase 5).
 | 2026-07-20 | Note d'intake, passe 2 `/evaluate` : ajout de la regle anti-stagnation (ne pas bloquer tout l'EPIC sur une decision humaine en attente). Convergence actee apres 2 passes. | Aligner le multi-lot sur l'objectif "ne plus revenir demander la suite". |
 | 2026-07-20 | Lot 3 enfant 1/3 `PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME` clos `DONE` (`85b8751`, `83deb27`). | Le chemin reel persiste le registre avant Test, refuse l'OOS si WRC/gates manquent et journalise chaque fold juste avant acces; le smoke reel s'arrete sur `wrc_pass`. |
 | 2026-07-20 | Lot 3 enfant 2/3 `PLAN_DERIVATION_ATTESTATIONS_MECANIQUES` clos `DONE` (`f2e1269`, `ecf2224`). | Cinq facades mecaniques retirees; G14 courant devient INCONCLUSIVE faute d'artefacts lifecycle, sans toucher les approbations humaines. |
+| 2026-07-20 | Lot 4 `PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG` clos `DONE` (`e5fb08c`, `251f700`). | Rapport canonique 1/3/12 mois sous budgets, qualite exacte, couverture unique distinguee des evaluations, validator pre-OOS FAIL explicite et zero OOS. |
