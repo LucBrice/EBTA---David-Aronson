@@ -366,3 +366,18 @@ pour conserver artificiellement un package `PASS`.
 | Validation | PASS - 182 tests; Pyrefly 0 erreur; pilote minimal PASS; smoke reel `DENIED` sur `wrc_pass` sans OOS |
 | Bug-hunter | 7 diagnostics d'inference sur le spec OOS heterogene, corriges par `OosRunSpec`; balayage final 0 erreur. Revue manuelle : journalisation rendue fold-par-fold avant materialisation/execution. |
 | Ecart | Aucun ecart de scope; le verdict reel `DENIED` est conforme au plan. |
+
+### Audit de conformite avant cloture - 2026-07-20
+
+| Exit criterion | Classement | Preuve |
+| --- | --- | --- |
+| Zero appel/journal OOS sur `DENIED` | IMPLEMENTE | Tests WRC/robustesse : aucune seed 29 et aucun `oos_access_log.jsonl`; smoke reel `DENIED` sur `wrc_pass`. |
+| Decision et journal avant OOS autorise | IMPLEMENTE | Test runner filesystem; boucle fold-par-fold ecrit le JSONL avant materialisation et appel. |
+| Registre append-only avant Test | IMPLEMENTE | `prepare_pre_oos_package()` precede `test_outputs`; test runner constate le registre avant chaque seed 13. |
+| Aucun recalcul post-OOS | IMPLEMENTE | Cache hashe; test remplace `_pre_oos_reports` par une exception et prouve sa non-invocation, puis rejette une mutation. |
+| UTC runtime ou fixture aware | IMPLEMENTE | Tests horloge injectee, horloge naive rejetee et UTC production sans injection. |
+| Suite et pilote | IMPLEMENTE | 182 tests PASS; Pyrefly 0; pilote PASS. |
+
+Non-goals verifies : aucun changement dans `Protocole/`, schemas, adapters,
+procedures `oos_access`/`sealing`, R5/R6, live/G14 ou BACKTRADER. Aucun critere
+manquant et aucun extra hors scope; `/close` autorise.

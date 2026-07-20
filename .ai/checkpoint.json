@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -745,10 +745,10 @@
       "id": "PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME",
       "title": "PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/mainline/PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME.md",
+      "source_path": ".ai/archive/20260720_PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-20",
@@ -758,9 +758,9 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Chronologie pre-OOS/OOS corrigee; registre avant Test; refus sans OOS; journal fold-par-fold; 182 tests PASS; Pyrefly 0; pilote PASS; conformance PASS",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
