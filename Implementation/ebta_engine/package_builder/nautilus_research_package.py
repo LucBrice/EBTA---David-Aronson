@@ -9,8 +9,9 @@ import json
 import subprocess
 import sys
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, TypedDict
 
 from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
 from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars, resolve_data_root
@@ -50,6 +51,13 @@ NAUTILUS_ECONOMIC_THRESHOLDS = {
 
 
 SegmentRunner = Callable[..., SimulationResult]
+RuntimeClock = Callable[[], datetime]
+
+
+class OosRunSpec(TypedDict):
+    asset: str
+    date_range: list[str]
+    run_input: dict[str, Any]
 
 
 def _load_pilot_module():
@@ -67,11 +75,16 @@ def build_nautilus_inputs(
     start: str = DEFAULT_NAUTILUS_START,
     end: str = DEFAULT_NAUTILUS_END,
     segment_runner: SegmentRunner | None = None,
+    package_dir: Path,
+    clock: RuntimeClock | None = None,
 ) -> dict:
     effective_data_root = resolve_data_root(data_root)
     assets = sorted(assets or DEFAULT_NAUTILUS_ASSETS)
     pilot = _load_pilot_module()
     inputs = copy.deepcopy(pilot.load_pilot_inputs())
+    inputs["oos_access_template"] = copy.deepcopy(inputs["oos_access_log"][0])
+    inputs["oos_access_log"] = []
+    inputs["pre_oos_seal"].pop("fixture_sealed_at", None)
     inputs["actor"] = "nautilus_trader_adapter"
     inputs["identifiers"].update(
         {
@@ -175,6 +188,9 @@ def build_nautilus_inputs(
                     "timestamp_is_close": True,
                 }
             )
+    inputs["registry_timestamp"] = _runtime_timestamp(clock)
+    inputs["identifiers"]["document_hash"] = _config_document_hash(pilot, inputs)
+    pilot.prepare_pre_oos_package(package_dir, inputs)
     test_outputs = run_multifold_segments(segment_inputs, runner=run_one, max_workers=segment_workers)
     for output in test_outputs:
         result = output["simulation_result"]
@@ -187,7 +203,7 @@ def build_nautilus_inputs(
         train_scores.append(_mean(series))
     selected_candidate_id = max(zip(search_space["candidates"], train_scores), key=lambda item: item[1])[0]["candidate_id"]
     selected_row = candidate_rows_by_id[selected_candidate_id]
-    oos_inputs = []
+    oos_inputs: list[OosRunSpec] = []
     for fold in reference_folds:
         parameters = selected_row["parameters"]
         asset = parameters["asset"]
@@ -195,27 +211,82 @@ def build_nautilus_inputs(
         payload = payloads_by_fold[fold["fold_id"]][(asset, parameters["bias_filter"], parameters["session"])]
         oos_inputs.append(
             {
-                "fold_id": fold["fold_id"],
-                "candidate": Candidate(
-                    candidate_id=selected_candidate_id,
-                    research_family_id=inputs["identifiers"]["research_family_id"],
-                    payload=payload.to_dict(),
-                    asset=asset,
-                    complexity=int(parameters.get("complexity", 1)),
-                    fold_id=fold["fold_id"],
-                ),
-                "bars": _slice_bars_by_date_range(raw_bars_by_asset[asset], *asset_fold["schedule"]["oos"]),
-                "cost_model": _nautilus_cost_model(),
-                "instrument_config": _instrument_config(asset),
-                "seed": 29,
-                "starting_nav": 1000.0,
-                "trade_size": "1",
-                "interval_value": 1,
-                "interval_unit": "MINUTE",
-                "timestamp_is_close": True,
+                "asset": asset,
+                "date_range": asset_fold["schedule"]["oos"],
+                "run_input": {
+                    "fold_id": fold["fold_id"],
+                    "candidate": Candidate(
+                        candidate_id=selected_candidate_id,
+                        research_family_id=inputs["identifiers"]["research_family_id"],
+                        payload=payload.to_dict(),
+                        asset=asset,
+                        complexity=int(parameters.get("complexity", 1)),
+                        fold_id=fold["fold_id"],
+                    ),
+                    "cost_model": _nautilus_cost_model(),
+                    "instrument_config": _instrument_config(asset),
+                    "seed": 29,
+                    "starting_nav": 1000.0,
+                    "trade_size": "1",
+                    "interval_value": 1,
+                    "interval_unit": "MINUTE",
+                    "timestamp_is_close": True,
+                },
             }
         )
-    oos_outputs = run_multifold_segments(oos_inputs, runner=run_one, max_workers=segment_workers)
+    inputs["train_scores_by_rank"] = train_scores
+    inputs["representative_test_scores_by_rank"] = [max(train_scores)]
+    inputs["candidate_test_returns_by_rank"] = candidate_series
+    first_candidate_id = search_space["candidates"][0]["candidate_id"]
+    inputs["candidate_test_dates"] = [
+        timestamp
+        for result in result_by_candidate[first_candidate_id]
+        for timestamp in result.timestamps
+    ]
+    test_results = [result for results in result_by_candidate.values() for result in results]
+    inputs["execution_report"] = _execution_report(test_results, [], require_oos=False)
+    inputs["robustness_plan"]["scenarios"] = compute_robustness_scenarios(
+        {
+            "ROB-NAUTILUS-CENTRAL": test_results,
+            "ROB-NAUTILUS-PLAUSIBLE": test_results,
+            "ROB-NAUTILUS-EXTREME": test_results,
+        },
+        scenario_grid=_nautilus_robustness_grid(),
+    )
+    if clock is not None:
+        inputs["pre_oos_seal"]["fixture_sealed_at"] = _runtime_timestamp(clock)
+    pre_oos_reports = pilot._pre_oos_reports(inputs)
+    pilot.cache_pre_oos_reports(inputs, pre_oos_reports)
+    oos_access_decision = pre_oos_reports["oos_access_decision"]
+    if oos_access_decision["status"] != "AUTHORIZED":
+        inputs["_build_outcome"] = {
+            "status": "DENIED",
+            "package_built": False,
+            "oos_access_decision": copy.deepcopy(oos_access_decision),
+            "pre_oos_reports_hash": pre_oos_reports["content_hash"],
+        }
+        return inputs
+
+    access_template = inputs["oos_access_template"]
+    oos_outputs = []
+    for index, (fold, oos_spec) in enumerate(zip(reference_folds, oos_inputs), start=1):
+        access_event = {
+            **access_template,
+            "access_event_id": f"OOS-ACCESS-NAUTILUS-{index:03d}",
+            "timestamp": _runtime_timestamp(clock),
+            "actor": "nautilus_trader_adapter",
+            "fold_id": fold["fold_id"],
+            "oos_segment_id": f"OOS-{index:03d}",
+            "read_paths": [str(effective_data_root)],
+            "write_paths": ["reports/oos.json", "series/oos_primary_returns.json"],
+            "result_artifact_hash": "",
+        }
+        inputs["oos_access_log"].append(access_event)
+        pilot._write_oos_access_log(package_dir, {"oos_access_log": [access_event]})
+        run_input = dict(oos_spec["run_input"])
+        asset = oos_spec["asset"]
+        run_input["bars"] = _slice_bars_by_date_range(raw_bars_by_asset[asset], *oos_spec["date_range"])
+        oos_outputs.extend(run_multifold_segments([run_input], runner=run_one, max_workers=segment_workers))
     oos_results = [output["simulation_result"] for output in oos_outputs]
     all_simulation_results = [result for results in result_by_candidate.values() for result in results] + oos_results
     oos_returns = [value for result in oos_results for value in result.daily_returns]
@@ -243,37 +314,12 @@ def build_nautilus_inputs(
         {"available_at": snapshot["available_at"], "decision_at": fold["schedule"]["information_cutoff"]}
         for fold in reference_folds
     ]
-    execution_evidence = _execution_nav_evidence(all_simulation_results, oos_results)
-    inputs["execution_report"] = {
-        "status": execution_evidence["status"],
-        "cost_model": _nautilus_cost_model().model_id,
-        "central_scenario": "tradable_net",
-        "orders": [{"order_id": "ORDER-NAUTILUS-MVP-SUMMARY", "status": "FILLED", "fill_id": "FILL-NAUTILUS-MVP-SUMMARY"}],
-        "total_orders": _total_orders(all_simulation_results),
-        "oos_total_orders": _total_orders(oos_results),
-        "nav_reconciliation": execution_evidence["nav_reconciliation"],
-        "nav_observation_count": execution_evidence["nav_observation_count"],
-        "oos_nav_observation_count": execution_evidence["oos_nav_observation_count"],
-        "nav_positive": execution_evidence["nav_positive"],
-        "nav_non_flat": execution_evidence["nav_non_flat"],
-        "oos_nav_non_flat": execution_evidence["oos_nav_non_flat"],
-        "failures": execution_evidence["failures"],
-        "engine": "nautilus_trader",
-        "backtrader_runtime_dependency": False,
-    }
+    inputs["execution_report"] = _execution_report(all_simulation_results, oos_results, require_oos=True)
     inputs["reproduction_report"]["commands"] = [
         "Implementation\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package"
     ]
     inputs["reproduction_report"]["notes"] = "Nautilus package built from local OHLCV CSV files and EBTA StrategyPayload contracts; no BACKTRADER runtime dependency."
     inputs["incubation_report"]["data_source_ids"] = [snapshot["data_snapshot_id"]]
-    inputs["robustness_plan"]["scenarios"] = compute_robustness_scenarios(
-        {
-            "ROB-NAUTILUS-CENTRAL": [result for results in result_by_candidate.values() for result in results],
-            "ROB-NAUTILUS-PLAUSIBLE": [result for results in result_by_candidate.values() for result in results],
-            "ROB-NAUTILUS-EXTREME": [result for results in result_by_candidate.values() for result in results],
-        },
-        scenario_grid=_nautilus_robustness_grid(),
-    )
     selected_oos = _merge_results(selected_candidate_id, oos_results)
     economic_thresholds = dict(NAUTILUS_ECONOMIC_THRESHOLDS)
     min_annualized_return = inputs["economic_gate"].get("thresholds", {}).get("min_annualized_return")
@@ -293,19 +339,6 @@ def build_nautilus_inputs(
         capacity_grid=inputs["economic_gate"]["capacity_grid"],
         **economic_flags,
     )
-    inputs["oos_access_log"] = [
-        {
-            **inputs["oos_access_log"][0],
-            "access_event_id": f"OOS-ACCESS-NAUTILUS-{index:03d}",
-            "actor": "nautilus_trader_adapter",
-            "fold_id": fold["fold_id"],
-            "oos_segment_id": f"OOS-{index:03d}",
-            "read_paths": [str(effective_data_root)],
-            "write_paths": ["reports/oos.json", "series/oos_primary_returns.json"],
-        }
-        for index, fold in enumerate(reference_folds, start=1)
-    ]
-    inputs["identifiers"]["document_hash"] = _config_document_hash(pilot, inputs)
     return inputs
 
 
@@ -317,6 +350,7 @@ def build_nautilus_research_package(
     start: str = DEFAULT_NAUTILUS_START,
     end: str = DEFAULT_NAUTILUS_END,
     segment_runner: SegmentRunner | None = None,
+    clock: RuntimeClock | None = None,
 ) -> dict:
     pilot = _load_pilot_module()
     inputs = build_nautilus_inputs(
@@ -325,14 +359,26 @@ def build_nautilus_research_package(
         start=start,
         end=end,
         segment_runner=segment_runner,
+        package_dir=package_dir,
+        clock=clock,
     )
-    return pilot.build_package(package_dir, pilot_inputs=inputs)
+    denied = inputs.get("_build_outcome")
+    if denied is not None:
+        return denied
+    return pilot.build_package(package_dir, pilot_inputs=inputs, prepared_pre_oos=True)
 
 
 def _config_document_hash(pilot: Any, inputs: dict[str, Any]) -> str:
     document = copy.deepcopy(pilot.config_document(inputs))
     document.pop("document_hash")
     return hashlib.sha256(canonical_json(document).encode("utf-8")).hexdigest().upper()
+
+
+def _runtime_timestamp(clock: RuntimeClock | None) -> str:
+    value = (clock or (lambda: datetime.now(timezone.utc)))()
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise ValueError("runtime clock must return a timezone-aware datetime")
+    return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _payloads_by_axis(assets: list[str], research_family_id: str, fold_id: str) -> dict[tuple[str, str, str], Any]:
@@ -528,6 +574,8 @@ def _total_orders(results: list[SimulationResult]) -> int:
 def _execution_nav_evidence(
     all_results: list[SimulationResult],
     oos_results: list[SimulationResult],
+    *,
+    require_oos: bool = True,
 ) -> dict[str, Any]:
     all_nav = [value for result in all_results for value in result.nav]
     oos_nav = [value for result in oos_results for value in result.nav]
@@ -540,11 +588,11 @@ def _execution_nav_evidence(
 
     if total_orders <= 0:
         failures.append("total_orders")
-    if oos_total_orders <= 0:
+    if require_oos and oos_total_orders <= 0:
         failures.append("oos_total_orders")
     if not all_nav:
         failures.append("nav")
-    if not oos_nav:
+    if require_oos and not oos_nav:
         failures.append("oos_nav")
     if all_nav and not nav_positive:
         failures.append("nav_non_positive")
@@ -569,6 +617,33 @@ def _execution_nav_evidence(
         "nav_non_flat": nav_non_flat,
         "oos_nav_non_flat": oos_nav_non_flat,
         "failures": failures,
+    }
+
+
+def _execution_report(
+    all_results: list[SimulationResult],
+    oos_results: list[SimulationResult],
+    *,
+    require_oos: bool,
+) -> dict[str, Any]:
+    evidence = _execution_nav_evidence(all_results, oos_results, require_oos=require_oos)
+    return {
+        "status": evidence["status"],
+        "cost_model": _nautilus_cost_model().model_id,
+        "central_scenario": "tradable_net",
+        "orders": [{"order_id": "ORDER-NAUTILUS-MVP-SUMMARY", "status": "FILLED", "fill_id": "FILL-NAUTILUS-MVP-SUMMARY"}],
+        "total_orders": _total_orders(all_results),
+        "oos_total_orders": _total_orders(oos_results),
+        "nav_reconciliation": evidence["nav_reconciliation"],
+        "nav_observation_count": evidence["nav_observation_count"],
+        "oos_nav_observation_count": evidence["oos_nav_observation_count"],
+        "nav_positive": evidence["nav_positive"],
+        "nav_non_flat": evidence["nav_non_flat"],
+        "oos_nav_non_flat": evidence["oos_nav_non_flat"],
+        "failures": evidence["failures"],
+        "engine": "nautilus_trader",
+        "evidence_scope": "TEST_ONLY" if not require_oos else "TEST_AND_OOS",
+        "backtrader_runtime_dependency": False,
     }
 
 
@@ -611,7 +686,10 @@ def _mean(values: list[float]) -> float:
 def main() -> int:
     package_dir = IMPLEMENTATION_ROOT / "research_packages" / "nautilus_mvp"
     report = build_nautilus_research_package(package_dir)
-    print({"package_dir": str(package_dir), "status": report["status"]})
+    summary = {"package_dir": str(package_dir), "status": report["status"]}
+    if report.get("oos_access_decision"):
+        summary["missing_requirements"] = report["oos_access_decision"].get("missing_requirements", [])
+    print(summary)
     return 0 if report["status"] == "PASS" else 1
 
 

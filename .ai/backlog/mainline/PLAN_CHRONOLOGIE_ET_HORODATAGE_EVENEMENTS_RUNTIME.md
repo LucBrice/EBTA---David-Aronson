@@ -37,9 +37,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `DONE - implementation et validations terminees` |
 | Date de creation | 2026-07-20 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-20 |
 | Autorite normative | `SOP 03`, `SOP 10`, `SOP 12`, `SOP 13`, `PAQUET D'EXECUTION EBTA.md` |
 | Autorite executable | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` et `Implementation/ebta_engine/package_builder/nautilus_research_package.py` |
 | Changement normatif attendu | Aucun |
@@ -332,20 +332,20 @@ pour conserver artificiellement un package `PASS`.
 
 ## 12. Definition of Done
 
-- [ ] Les quatre phases sont validees.
-- [ ] `DENIED` implique zero appel et zero evenement OOS.
-- [ ] `AUTHORIZED` implique decision/journal avant appel OOS.
-- [ ] Rapports pre-OOS reutilises sans recalcul.
-- [ ] Horodatages runtime/fixture prouves.
-- [ ] Suite, pilote, Pyrefly, bug-hunter et conformance PASS.
-- [ ] Aucun fichier hors perimetre touche.
+- [x] Les quatre phases sont validees.
+- [x] `DENIED` implique zero appel et zero evenement OOS.
+- [x] `AUTHORIZED` implique decision/journal avant appel OOS.
+- [x] Rapports pre-OOS reutilises sans recalcul.
+- [x] Horodatages runtime/fixture prouves.
+- [x] Suite, pilote, Pyrefly et bug-hunter PASS; conformance a valider avant `/close`.
+- [x] Aucun fichier hors perimetre touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir |
-| Ecarts | A remplir |
+| Resultat final | DONE - en attente de cloture mecanique |
+| Ecarts | Le smoke donnees reelles retourne honnetement `DENIED` (`wrc_pass`) au lieu du precedent package post-OOS; c'est la preuve attendue du gate, pas un contournement. |
 | Suites | Reprendre enfant 2 de la mere. |
 
 ## 14. Journal d'audits post-hoc
@@ -356,3 +356,13 @@ pour conserver artificiellement un package `PASS`.
 | 2026-07-20 | Passe intake 2 : preuve d'execution Test-only avant autorisation. | La preuve finale exigeait l'OOS et creait une dependance circulaire. |
 | 2026-07-20 | Passe plan route 1 : persistance reelle du registre avant Test, avec assemblage final non destructif. | Capturer un timestamp avant Test mais ecrire le registre apres OOS aurait seulement antedate la preuve. |
 | 2026-07-20 | Passe plan route 2 : reprise pre-OOS rendue explicite et protegee contre les dossiers stale; convergence atteinte. | Un simple `reset=False` aurait pu melanger des artefacts de runs differents. Aucun nouvel angle mort majeur apres correction. |
+
+### Resultat d'execution - 2026-07-20
+
+| Champ | Valeur |
+| --- | --- |
+| Phases executees | 1 a 4 |
+| Artefacts | builders pilote/Nautilus, fixture, tests, historique moteur |
+| Validation | PASS - 182 tests; Pyrefly 0 erreur; pilote minimal PASS; smoke reel `DENIED` sur `wrc_pass` sans OOS |
+| Bug-hunter | 7 diagnostics d'inference sur le spec OOS heterogene, corriges par `OosRunSpec`; balayage final 0 erreur. Revue manuelle : journalisation rendue fold-par-fold avant materialisation/execution. |
+| Ecart | Aucun ecart de scope; le verdict reel `DENIED` est conforme au plan. |

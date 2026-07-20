@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from copy import deepcopy
 from pathlib import Path
+from unittest.mock import patch
 
 from ebta_engine.validators.invariant_validator import validate_invariants
 
@@ -13,6 +14,24 @@ PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_pa
 
 
 class MinimalPilotPipelineTests(unittest.TestCase):
+    def test_cached_pre_oos_reports_are_reused_and_tampering_is_rejected(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        pilot_inputs = module.load_pilot_inputs()
+        reports = module._pre_oos_reports(pilot_inputs)
+        module.cache_pre_oos_reports(pilot_inputs, reports)
+
+        with patch.object(module, "_pre_oos_reports", side_effect=AssertionError("pre-OOS recalculated")):
+            resolved = module._procedure_reports(pilot_inputs)
+        self.assertEqual(resolved["sealing"], reports["sealing"])
+        self.assertEqual(resolved["oos_access_decision"], reports["oos_access_decision"])
+
+        pilot_inputs["_pre_oos_reports"]["wrc"]["verdict"] = "FAIL"
+        with self.assertRaisesRegex(ValueError, "mutated"):
+            module._procedure_reports(pilot_inputs)
+
     def test_g9_gate_value_only_passes_pass(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
         assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"

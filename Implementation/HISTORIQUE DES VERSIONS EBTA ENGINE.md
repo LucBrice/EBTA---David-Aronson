@@ -80,6 +80,41 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-20 - Chronologie effective avant ouverture OOS
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL |
+| Statut | ACCEPTED |
+| Source normative | SOP 03, SOP 10, SOP 12, SOP 13; Paquet d'execution EBTA |
+| Fichiers impactes | builders pilote/Nautilus, fixture pilote et tests de chronologie |
+| Impact protocole | NONE |
+| Verification | 182 tests; Pyrefly 0 erreur; pilote minimal PASS; smoke donnees reelles `DENIED` sur `wrc_pass` avec aucun OOS execute |
+
+### Contexte
+
+Le builder Nautilus executait les segments OOS avant que le pilote calcule WRC,
+robustesse, scellement, G-BIAS et autorisation. Les timestamps du registre et de
+l'acces provenaient en outre de la fixture du pilote.
+
+### Decision
+
+- persister configuration et registre append-only avant le premier run Test ;
+- calculer et hasher une fois les preuves pre-OOS, puis les reutiliser dans
+  l'assemblage final sans resceller apres OOS ;
+- fonder l'autorisation sur une preuve d'execution Test-only non circulaire ;
+- retourner `DENIED` sans appel runner OOS ni faux package complet lorsqu'un
+  gate pre-OOS manque ;
+- journaliser chaque fold immediatement avant son appel OOS avec UTC runtime ou
+  horloge fixture aware injectee.
+
+### Impact
+
+L'ordre declare par SOP 10 est maintenant l'ordre reel du chemin de production.
+Un refus statistique ou de robustesse conserve seulement les artefacts pre-OOS
+honnetes (`config.json`, `registry.jsonl`) et ne consomme plus l'OOS.
+
 ## 2026-07-20 - Reproductibilite operationnelle du build Nautilus R7
 
 | Champ | Valeur |

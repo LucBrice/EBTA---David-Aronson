@@ -152,6 +152,7 @@
     "independent_approval": true,
     "fixture_sealed_at": "2026-01-01T00:00:00Z"
   },
+  "registry_timestamp": "2026-01-01T00:00:00Z",
   "train_scores_by_rank": [0.01, 0.02, 0.03, 0.04, 0.011, 0.021, 0.031, 0.041],
   "representative_test_scores_by_rank": [0.01, 0.02],
   "candidate_test_returns_by_rank": [

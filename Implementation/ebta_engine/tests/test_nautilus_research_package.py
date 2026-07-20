@@ -10,10 +10,7 @@ from unittest.mock import patch
 
 from ebta_engine.package_builder.nautilus_research_package import build_nautilus_research_package
 from ebta_engine.procedures._utils import canonical_json
-from ebta_engine.procedures.economic_gate import economic_gate_report
-from ebta_engine.procedures.lifecycle import incubation_gate
 from ebta_engine.strategies.contracts import SimulationResult
-from ebta_engine.validators.gate_validator import gate_report
 
 
 class NautilusEconomicGateProductionTests(unittest.TestCase):
@@ -57,18 +54,29 @@ class NautilusReproducibilityProductionTests(unittest.TestCase):
                     segment_runner=_fake_segment_runner,
                 )
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
+            registry_event = json.loads((package_dir / "registry.jsonl").read_text(encoding="utf-8").splitlines()[0])
+            access_event = json.loads((package_dir / "oos_access_log.jsonl").read_text(encoding="utf-8").splitlines()[0])
 
         document_hash = config.pop("document_hash")
         expected_hash = hashlib.sha256(canonical_json(config).encode("utf-8")).hexdigest().upper()
         self.assertEqual(document_hash, expected_hash)
         self.assertEqual(len(document_hash), 64)
         self.assertNotIn("PLACEHOLDER", document_hash)
+        for event in (registry_event, access_event):
+            timestamp = datetime.fromisoformat(event["timestamp"].replace("Z", "+00:00"))
+            self.assertEqual(timestamp.utcoffset(), timedelta(0))
 
 
 class NautilusStatisticalGateProductionTests(unittest.TestCase):
     """Non-regression proof for PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE."""
 
     def test_real_wrc_fail_reaches_economic_and_incubation_gates(self):
+        calls = []
+
+        def runner(**kwargs):
+            calls.append(kwargs["seed"])
+            return _statistical_fail_segment_runner(**kwargs)
+
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             data_root = _write_fixture_data(root / "data")
@@ -77,65 +85,29 @@ class NautilusStatisticalGateProductionTests(unittest.TestCase):
                 package_dir,
                 data_root=data_root,
                 assets=["NASDAQ"],
-                segment_runner=_statistical_fail_segment_runner,
+                segment_runner=runner,
             )
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
-            wrc = json.loads((package_dir / "reports" / "wrc.json").read_text(encoding="utf-8"))
-            economic = json.loads((package_dir / "reports" / "economic.json").read_text(encoding="utf-8"))
-            incubation = json.loads((package_dir / "reports" / "incubation_gate.json").read_text(encoding="utf-8"))
-            robustness = json.loads((package_dir / "reports" / "robustness.json").read_text(encoding="utf-8"))
-            execution = json.loads((package_dir / "reports" / "execution.json").read_text(encoding="utf-8"))
-            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
-            oos_access = json.loads((package_dir / "reports" / "oos_access_decision.json").read_text(encoding="utf-8"))
-            reproduction = json.loads(
-                (package_dir / "reports" / "reproduction_validation.json").read_text(encoding="utf-8")
-            )
+            files = {path.relative_to(package_dir).as_posix() for path in package_dir.rglob("*") if path.is_file()}
 
-        # The old R3 defect kept the package PASS despite a real statistical gate failure.
-        self.assertEqual(report["status"], "FAIL")
-        self.assertEqual(wrc["verdict"], "FAIL")
-        self.assertEqual(economic["statistical_status"], "FAIL")
-        self.assertEqual(economic["economic_status"], "PASS")
-        self.assertEqual(economic["global_status"], "FAIL")
-        self.assertEqual(incubation["status"], "FAIL")
-        self.assertIn("statistical_status", incubation["failures"])
-        self.assertEqual(oos_access["status"], "DENIED")
-        self.assertIn("wrc_pass", oos_access["missing_requirements"])
-        for field in ("oos_access_log", "opening_authorization", "single_oos_execution_log"):
-            with self.subTest(field=field):
-                self.assertEqual(gates[field], "INCONCLUSIVE")
-
-        old_economic = economic_gate_report(
-            {
-                "statistical_status": "PASS",
-                "return_hurdle_pass": True,
-                "drawdown_pass": True,
-                "capacity_pass": True,
-                "costs_pass": True,
-                "execution_pass": True,
-                "thresholds": economic["thresholds"],
-                "observed_values": economic["observed_values"],
-                "capacity_grid": economic["capacity_grid"],
-            }
-        )
-        old_incubation = incubation_gate(
-            {
-                "statistical_status": "PASS",
-                "economic_status": old_economic["economic_status"],
-                "robustness_status": robustness["status"],
-                "execution_status": execution["status"],
-                "package_stage": config["reproducibility_manifest"]["package_stage"],
-                "reproduction_status": reproduction["status"],
-            }
-        )
-        self.assertEqual(old_economic["global_status"], "PASS")
-        self.assertEqual(old_incubation["status"], "PASS")
+        self.assertEqual(config["config_id"], "CFG-NAUTILUS-MVP-001")
+        self.assertEqual(report["status"], "DENIED")
+        self.assertFalse(report["package_built"])
+        self.assertIn("wrc_pass", report["oos_access_decision"]["missing_requirements"])
+        self.assertNotIn(29, calls)
+        self.assertEqual(files, {"config.json", "registry.jsonl"})
 
 
 class NautilusRobustnessGateProductionTests(unittest.TestCase):
     """Non-regression proof for PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE."""
 
     def test_real_robustness_fail_reaches_g5_gate(self):
+        calls = []
+
+        def runner(**kwargs):
+            calls.append(kwargs["seed"])
+            return _robustness_fail_segment_runner(**kwargs)
+
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             data_root = _write_fixture_data(root / "data")
@@ -144,25 +116,75 @@ class NautilusRobustnessGateProductionTests(unittest.TestCase):
                 package_dir,
                 data_root=data_root,
                 assets=["NASDAQ"],
-                segment_runner=_robustness_fail_segment_runner,
+                segment_runner=runner,
             )
-            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
-            robustness = json.loads((package_dir / "reports" / "robustness.json").read_text(encoding="utf-8"))
 
-        self.assertEqual(report["status"], "FAIL")
-        self.assertEqual(robustness["status"], "FAIL")
-        self.assertEqual(gates["pre_oos_robustness_verdict"], "FAIL")
+        self.assertEqual(report["status"], "DENIED")
+        self.assertIn("robustness_pass", report["oos_access_decision"]["missing_requirements"])
+        self.assertNotIn(29, calls)
+        self.assertFalse((package_dir / "oos_access_log.jsonl").exists())
 
-        honest_gate_report = gate_report(gates)
-        g5 = _gate_by_id(honest_gate_report, "G5")
-        self.assertEqual(g5["status"], "INCONCLUSIVE")
-        self.assertIn("pre_oos_robustness_verdict", g5["missing"])
 
-        old_hardcoded_gates = dict(gates)
-        old_hardcoded_gates["pre_oos_robustness_verdict"] = "PASS"
-        old_g5 = _gate_by_id(gate_report(old_hardcoded_gates), "G5")
-        self.assertEqual(old_g5["status"], "PASS")
-        self.assertEqual(robustness["status"], "FAIL")
+class NautilusChronologyProductionTests(unittest.TestCase):
+    def test_registry_and_access_are_persisted_before_their_respective_runs(self):
+        instants = iter(
+            [
+                datetime(2026, 7, 20, 10, 0, tzinfo=timezone.utc),
+                datetime(2026, 7, 20, 10, 1, tzinfo=timezone.utc),
+                datetime(2026, 7, 20, 10, 2, tzinfo=timezone.utc),
+                datetime(2026, 7, 20, 10, 3, tzinfo=timezone.utc),
+            ]
+        )
+        observed_files = []
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+
+            def runner(**kwargs):
+                files = {path.name for path in package_dir.iterdir() if path.is_file()}
+                observed_files.append((kwargs["seed"], files))
+                self.assertIn("registry.jsonl", files)
+                if kwargs["seed"] == 29:
+                    self.assertIn("oos_access_log.jsonl", files)
+                else:
+                    self.assertNotIn("oos_access_log.jsonl", files)
+                return _fake_segment_runner(**kwargs)
+
+            report = build_nautilus_research_package(
+                package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=runner,
+                clock=lambda: next(instants),
+            )
+            registry = [json.loads(line) for line in (package_dir / "registry.jsonl").read_text(encoding="utf-8").splitlines()]
+            access = [json.loads(line) for line in (package_dir / "oos_access_log.jsonl").read_text(encoding="utf-8").splitlines()]
+            sealing = json.loads((package_dir / "reports" / "sealing.json").read_text(encoding="utf-8"))
+            decision = json.loads((package_dir / "reports" / "oos_access_decision.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(report["status"], "PASS")
+        self.assertTrue(all(event["timestamp"] == "2026-07-20T10:00:00Z" for event in registry))
+        self.assertEqual(sealing["sealed_at"], "2026-07-20T10:01:00Z")
+        self.assertEqual(decision["log_entry"]["timestamp"], "2026-07-20T10:01:00Z")
+        self.assertEqual([event["timestamp"] for event in access], ["2026-07-20T10:02:00Z", "2026-07-20T10:03:00Z"])
+        self.assertTrue(any(seed == 29 for seed, _files in observed_files))
+
+    def test_naive_runtime_clock_is_rejected_before_test_execution(self):
+        calls = []
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            with self.assertRaisesRegex(ValueError, "timezone-aware"):
+                build_nautilus_research_package(
+                    root / "research_package",
+                    data_root=data_root,
+                    assets=["NASDAQ"],
+                    segment_runner=lambda **kwargs: calls.append(kwargs) or _fake_segment_runner(**kwargs),
+                    clock=lambda: datetime(2026, 7, 20, 10, 0),
+                )
+        self.assertEqual(calls, [])
 
 
 class NautilusResearchPackageTests(unittest.TestCase):
@@ -261,7 +283,7 @@ class NautilusResearchPackageTests(unittest.TestCase):
 def _losing_segment_runner(**kwargs) -> SimulationResult:
     bars = kwargs["bars"]
     starting_nav = kwargs.get("starting_nav", 1000.0)
-    returns = [-0.01 for _ in bars]
+    returns = [(-0.01 if kwargs["seed"] == 29 else 0.001) for _ in bars]
     nav = []
     current_nav = starting_nav
     for value in returns:
@@ -387,13 +409,6 @@ def _write_fixture_data(data_root: Path) -> Path:
             )
     _write_asset_csv(data_root / "NASDAQ 1m", "USATECH.IDXUSD-m1-bid-2020-01-01-2020-01-31.csv", rows)
     return data_root
-
-
-def _gate_by_id(report: dict, gate_id: str) -> dict:
-    for gate in report["gates"]:
-        if gate["gate_id"] == gate_id:
-            return gate
-    raise AssertionError(f"missing gate {gate_id}")
 
 
 def _write_asset_csv(folder: Path, filename: str, rows: list[dict]) -> None:

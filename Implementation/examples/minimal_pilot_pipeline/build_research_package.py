@@ -9,6 +9,7 @@ write BACKTRADER and does not create methodological rules.
 
 from __future__ import annotations
 
+import copy
 import json
 import math
 import shutil
@@ -16,6 +17,7 @@ import sys
 from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
+from typing import Any
 
 
 IMPLEMENTATION_ROOT = Path(__file__).resolve().parents[2]
@@ -65,23 +67,67 @@ def build_package(
     *,
     pilot_inputs: dict | None = None,
     package_shape: dict | None = None,
+    prepared_pre_oos: bool = False,
 ) -> dict:
     pilot_inputs = pilot_inputs or load_pilot_inputs()
     package_shape = package_shape or load_package_shape()
     _validate_pilot_contract(pilot_inputs, package_shape)
 
-    if package_dir.exists():
-        shutil.rmtree(package_dir)
-    package_dir.mkdir(parents=True)
-
-    _write_config(package_dir, pilot_inputs)
-    _write_registry(package_dir, pilot_inputs)
+    if prepared_pre_oos:
+        _validate_prepared_pre_oos_package(package_dir, pilot_inputs)
+    else:
+        prepare_pre_oos_package(package_dir, pilot_inputs)
     _write_reports(package_dir, pilot_inputs)
-    _write_oos_access_log(package_dir, pilot_inputs)
+    if not prepared_pre_oos:
+        _write_oos_access_log(package_dir, pilot_inputs)
     _write_series(package_dir, pilot_inputs)
     _write_manifest(package_dir, package_shape)
 
     return validate_package_dir(package_dir)
+
+
+def prepare_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
+    """Create the durable config and append-only registry before Test execution."""
+
+    if package_dir.exists():
+        shutil.rmtree(package_dir)
+    package_dir.mkdir(parents=True)
+    _write_config(package_dir, pilot_inputs)
+    _write_registry(package_dir, pilot_inputs)
+
+
+def _validate_prepared_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
+    expected_files = {"config.json", "registry.jsonl", "oos_access_log.jsonl"}
+    actual_files = {
+        path.relative_to(package_dir).as_posix()
+        for path in package_dir.rglob("*")
+        if path.is_file()
+    } if package_dir.exists() else set()
+    if actual_files != expected_files:
+        raise ValueError(
+            "prepared authorized package must contain exactly config.json, registry.jsonl and oos_access_log.jsonl; "
+            f"got {sorted(actual_files)}"
+        )
+    actual_config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
+    if actual_config != config_document(pilot_inputs):
+        raise ValueError("prepared pre-OOS config does not match current pilot inputs")
+    registry_events = [
+        json.loads(line)
+        for line in (package_dir / "registry.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    expected_count = len(pilot_inputs["walk_forward_schedule"]) * len(_pilot_search_space(pilot_inputs)["candidates"])
+    if len(registry_events) != expected_count:
+        raise ValueError(f"prepared pre-OOS registry event count mismatch: expected {expected_count}, got {len(registry_events)}")
+    if any(event.get("timestamp") != pilot_inputs["registry_timestamp"] for event in registry_events):
+        raise ValueError("prepared pre-OOS registry timestamp does not match current pilot inputs")
+    access_events = [
+        json.loads(line)
+        for line in (package_dir / "oos_access_log.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    if access_events != pilot_inputs["oos_access_log"]:
+        raise ValueError("prepared OOS access log does not match current pilot inputs")
 
 
 def _validate_pilot_contract(pilot_inputs: dict, package_shape: dict) -> None:
@@ -161,7 +207,7 @@ def _write_registry(package_dir: Path, pilot_inputs: dict) -> None:
                 {
                     "schema_version": "1.0.0",
                     "event_id": f"EVT-PILOT-{event_index:03d}",
-                    "timestamp": "2026-01-01T00:00:00Z",
+                    "timestamp": pilot_inputs["registry_timestamp"],
                     "actor": actor,
                     "event_type": "REGISTER_CANDIDATE",
                     "project_id": identifiers["project_id"],
@@ -555,11 +601,9 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         atomic_write_json(package_dir / "reports" / filename, payload)
 
 
-def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -> dict:
+def _pre_oos_reports(pilot_inputs: dict) -> dict:
     search_space = _pilot_search_space(pilot_inputs)
     candidate_ids = [candidate["candidate_id"] for candidate in search_space["candidates"]]
-    registered_candidates = _registered_candidates_from_registry(package_dir) if package_dir is not None else []
-    lineage_events = _registry_lineage_events(package_dir) if package_dir is not None else []
     statistical_plan = pilot_inputs["statistical_plan"]
     train_scores = _scores_by_rank(candidate_ids, pilot_inputs["train_scores_by_rank"])
     optimization_log = optimize_on_train(search_space, train_scores)
@@ -578,6 +622,78 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
         candidate_assets=search_space.get("candidate_asset_map"),
         fold_id=_fold_scope_id(pilot_inputs["walk_forward_schedule"]),
     )
+    wrc = wrc_test(
+        candidate_returns,
+        replications=statistical_plan["wrc_bootstrap_replications"],
+        mean_block_length=statistical_plan["wrc_mean_block_length"],
+        seed=statistical_plan["wrc_seed"],
+        alpha=statistical_plan["wrc_alpha"],
+        run_secondary=statistical_plan.get("wrc_run_secondary", True),
+    )
+    local_wrc_reports = _local_wrc_reports(
+        candidate_returns,
+        dates=pilot_inputs["candidate_test_dates"],
+        schedule=pilot_inputs["walk_forward_schedule"],
+        statistical_plan=statistical_plan,
+    )
+    robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
+    sealing = _pre_oos_sealing_report(pilot_inputs)
+    g_bias = _g_bias_report(pilot_inputs, search_space, candidate_matrix, robustness)
+    access_request = _oos_access_request(pilot_inputs, wrc, robustness, sealing, g_bias)
+    if sealing.get("sealed_at"):
+        access_request["timestamp"] = sealing["sealed_at"]
+    oos_access_decision = authorize_oos_access(access_request)
+    reports: dict[str, Any] = {
+        "search_space": search_space,
+        "optimization_log": optimization_log,
+        "complexity_selection": complexity_selection,
+        "candidate_matrix": candidate_matrix,
+        "wrc": wrc,
+        "wrc_local_reports": local_wrc_reports,
+        "robustness": robustness,
+        "sealing": sealing,
+        "g_bias": g_bias,
+        "oos_access_decision": oos_access_decision,
+    }
+    reports["content_hash"] = _stable_payload_hash(reports)
+    return reports
+
+
+def cache_pre_oos_reports(pilot_inputs: dict, reports: dict) -> None:
+    cached = copy.deepcopy(reports)
+    expected_hash = cached.pop("content_hash", None)
+    actual_hash = _stable_payload_hash(cached)
+    if expected_hash != actual_hash:
+        raise ValueError("pre-OOS report content hash mismatch")
+    cached["content_hash"] = expected_hash
+    pilot_inputs["_pre_oos_reports"] = cached
+
+
+def _resolved_pre_oos_reports(pilot_inputs: dict) -> dict:
+    cached = pilot_inputs.get("_pre_oos_reports")
+    if cached is None:
+        return _pre_oos_reports(pilot_inputs)
+    reports = copy.deepcopy(cached)
+    expected_hash = reports.pop("content_hash", None)
+    if expected_hash != _stable_payload_hash(reports):
+        raise ValueError("cached pre-OOS reports were mutated after authorization")
+    reports["content_hash"] = expected_hash
+    return reports
+
+
+def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -> dict:
+    pre_oos = _resolved_pre_oos_reports(pilot_inputs)
+    search_space = pre_oos["search_space"]
+    candidate_matrix = pre_oos["candidate_matrix"]
+    wrc = pre_oos["wrc"]
+    local_wrc_reports = pre_oos["wrc_local_reports"]
+    robustness = pre_oos["robustness"]
+    sealing = pre_oos["sealing"]
+    g_bias = pre_oos["g_bias"]
+    oos_access_decision = pre_oos["oos_access_decision"]
+    statistical_plan = pilot_inputs["statistical_plan"]
+    registered_candidates = _registered_candidates_from_registry(package_dir) if package_dir is not None else []
+    lineage_events = _registry_lineage_events(package_dir) if package_dir is not None else []
     ml_inputs = pilot_inputs["ml_manifest"]
     ml_manifest = build_ml_manifest(
         ml_inputs["ml_id"],
@@ -597,20 +713,6 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
         detrending_inputs["betas"],
         segment_id=detrending_inputs["segment_id"],
     )
-    wrc = wrc_test(
-        candidate_returns,
-        replications=statistical_plan["wrc_bootstrap_replications"],
-        mean_block_length=statistical_plan["wrc_mean_block_length"],
-        seed=statistical_plan["wrc_seed"],
-        alpha=statistical_plan["wrc_alpha"],
-        run_secondary=statistical_plan.get("wrc_run_secondary", True),
-    )
-    local_wrc_reports = _local_wrc_reports(
-        candidate_returns,
-        dates=pilot_inputs["candidate_test_dates"],
-        schedule=pilot_inputs["walk_forward_schedule"],
-        statistical_plan=statistical_plan,
-    )
     oos = oos_confidence_interval(
         pilot_inputs["oos_returns"],
         replications=statistical_plan["oos_bootstrap_replications"],
@@ -624,10 +726,6 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
         "statistical_status": wrc["verdict"],
     }
     economic = economic_gate_report(economic_gate_evidence)
-    robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
-    sealing = _pre_oos_sealing_report(pilot_inputs)
-    g_bias = _g_bias_report(pilot_inputs, search_space, candidate_matrix, robustness)
-    oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, wrc, robustness, sealing, g_bias))
     monitoring_plan = validate_monitoring_plan(pilot_inputs["incubation_plan"]["monitoring"])
     monitoring_consultation_log = validate_consultation_log(
         pilot_inputs["monitoring_consultations"],
@@ -660,9 +758,9 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
     )
     return {
         "search_space": search_space,
-        "optimization_log": optimization_log,
+        "optimization_log": pre_oos["optimization_log"],
         "ml_manifest": ml_manifest,
-        "complexity_selection": complexity_selection,
+        "complexity_selection": pre_oos["complexity_selection"],
         "candidate_matrix": candidate_matrix,
         "wrc": wrc,
         "wrc_local_reports": local_wrc_reports,
@@ -696,9 +794,14 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
 
 
 def _oos_access_request(pilot_inputs: dict, wrc: dict, robustness: dict, sealing: dict, g_bias: dict) -> dict:
-    event = pilot_inputs["oos_access_log"][0]
+    template = pilot_inputs.get("oos_access_template")
+    if template is None:
+        access_log = pilot_inputs.get("oos_access_log", [])
+        if not access_log:
+            raise ValueError("pilot inputs require oos_access_template before authorization")
+        template = access_log[0]
     return {
-        **event,
+        **template,
         "pre_oos_sealed": sealing["status"] == "PASS",
         "wrc_pass": wrc.get("verdict") == "PASS",
         "robustness_pass": robustness["status"] == "PASS",
