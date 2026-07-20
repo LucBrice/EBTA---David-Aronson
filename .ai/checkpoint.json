@@ -761,6 +761,26 @@
       "closure_reason": "Chronologie pre-OOS/OOS corrigee; registre avant Test; refus sans OOS; journal fold-par-fold; 182 tests PASS; Pyrefly 0; pilote PASS; conformance PASS",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_DERIVATION_ATTESTATIONS_MECANIQUES",
+      "title": "PLAN_DERIVATION_ATTESTATIONS_MECANIQUES",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/mainline/PLAN_DERIVATION_ATTESTATIONS_MECANIQUES.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_DERIVATION_ATTESTATIONS_MECANIQUES.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-20",
+      "last_moved_at": "2026-07-20",
+      "routing_decision": "mainline",
+      "routing_reason": "Sous-chantier 2/3 de PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
