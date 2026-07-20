@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -661,10 +661,10 @@
       "id": "PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F",
       "title": "Lot F - invariant_evidence.json non fabrique",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F.md",
+      "source_path": ".ai/archive/20260720_PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-20",
@@ -674,9 +674,9 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Lot F termine : scellement UTC automatique, horloge fixture explicite, preuves invariant_evidence derivees, WRC locaux par fold, 174 tests et audits PASS",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {

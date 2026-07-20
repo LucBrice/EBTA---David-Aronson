@@ -53,7 +53,7 @@ sur la source de scellement empeche la preuve finale.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - implementation terminee, audits pre-cloture PASS` |
+| Statut | `DONE - implementation, audits et cloture mecanique termines` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` section 6 ; SOP 09A ; SOP 10 ; SOP 12 |
@@ -440,7 +440,7 @@ deux horloges pour la meme preuve, ou masquer un FAIL/INCONCLUSIVE legitime.
 - [x] Build pilote minimal `PASS` et artefacts regeneres.
 - [x] Pyrefly/bug-hunter `PASS`.
 - [x] Plan-conformance-audit `PASS`.
-- [ ] Lot F clos via `plan.ps1 close`, checkpoint valide et epic parent synchronise.
+- [x] Lot F clos via `plan.ps1 close`, checkpoint valide et epic parent synchronise.
 
 ---
 
@@ -448,7 +448,7 @@ deux horloges pour la meme preuve, ou masquer un FAIL/INCONCLUSIVE legitime.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat pre-cloture | PASS - implementation terminee, cloture mecanique autorisee |
+| Resultat final | DONE - `plan.ps1 close` execute, checkpoint valide et epic parent synchronise |
 | Ecarts par rapport au plan | Le premier passage de suite complete a revele le besoin de produire les WRC locaux K=2 au lieu de laisser le package Nautilus `FAIL`; correction realisee dans le perimetre builder/tests existant et documentee section 14. |
 | Fichiers interdits touches | Aucun (`Protocole/`, validateurs et `nautilus_mvp` inchanges par Lot F). |
 | Suite hors perimetre | Chantier transversal d'horodatage automatique des autres jalons EBTA. |
