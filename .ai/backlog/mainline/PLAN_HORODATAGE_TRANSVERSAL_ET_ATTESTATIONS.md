@@ -51,7 +51,7 @@ PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS`.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - ENFANTS 1-2/3 DONE; ENFANT 3 EN ATTENTE DE DECISION HUMAINE` |
+| Statut | `EN_COURS - ENFANTS 1-2/3 DONE; ENFANT 3 PRET POUR /START (DECISION 3A)` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | SOP 03/10/11/12/13 ; Paquet d'execution |
@@ -67,9 +67,9 @@ PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS`.
 | Autorite et lecture minimale | Ce plan, skill epic, SOP 10/12, Paquet, puis plan de l'enfant courant. |
 | Perimetre autorise | Ce document uniquement pour la mere. |
 | Interdits absolus | Aucun code depuis la mere; aucune approbation inventee; aucun schema/Protocole. |
-| Phase de reprise | Enfant 3 - contrat des approbations humaines/post-OOS, apres decision de perimetre. |
+| Phase de reprise | Enfant 3 - router le contrat d'inputs de preuve pre-OOS explicites selon la decision `3A` du 2026-07-21. |
 | Preuve attendue | Enfants `DONE`, tests d'ordre negatif, gates sans constantes, suite et audits globaux. |
-| Arret et escalade | Avant enfant 3 pour choisir les approbations humaines obligatoires; toute extension de schema. |
+| Arret et escalade | Toute extension de schema ou besoin d'une identite reelle absente; le contrat `3A` est deja tranche. |
 
 ## 1. Role de ce document et non-objectifs
 
@@ -281,6 +281,7 @@ est acceptable.
 | --- | --- | --- |
 | 2026-07-20 | EPIC multi-lot et recursion autorises; regle anti-stagnation. | Autorise ce chantier mere et l'avancement des enfants 1-2 pendant la pause R5/R6. |
 | 2026-07-17 (decision anterieure revalidee le 2026-07-20) | Les champs et mecanismes post-OOS/live (`kill_switch`, `live_approval`, `incident_log`, `retention_policy`, `live_version_id`, `lifecycle_archive`) sont hors perimetre plutot qu'a transformer en vrai cycle live. | Decision sourcee dans `20260720_EPIC_ATTESTATIONS_RESIDUELLES_R3.md`; interdit a l'enfant 3 de rouvrir R10 ou de demander un arbitrage deja rendu. |
+| 2026-07-21 | Choix `3A` : les reviewers et approbations pre-OOS sont fournis par des inputs de preuve explicites et optionnels; leur absence retourne `INCONCLUSIVE`/DENIED; les fixtures sont limitees aux tests. | Leve l'arret humain de l'enfant 3. Autorise son `/start` sans identite fabriquee, sans modification de schema et sans extension au post-OOS/live. |
 
 ### Perimetre residuel exact de l'enfant 3
 
@@ -307,7 +308,7 @@ production.
 | Risque | Impact | Mitigation |
 | --- | --- | --- |
 | R5/R6 non calibres | L'autorisation OOS honnete peut etre refusee. | Resultat legitime; ne pas executer l'OOS ni masquer le refus. |
-| Contrat des preuves humaines pre-OOS non tranche | Enfant 3 bloque; les reviewers/approbations fixtures ne peuvent pas etre promus en preuves reelles. | Choisir le contrat section 9. Les mecanismes post-OOS/live sont deja exclus et ne font plus partie de la decision. |
+| `[RESOLU 2026-07-21]` Contrat des preuves humaines pre-OOS non tranche | Aucun blocage humain residuel avant `/start`. | Decision `3A` section 9; absence non-PASS et fixtures reservees aux tests. |
 | Refactor orchestration large | Regression du package builder. | Plan enfant ferme, tests espions d'ordre, suite complete. |
 | Preuves post-OOS absentes | G11-G14 deviennent INCONCLUSIVE. | Verdict honnete attendu, pas un echec de chantier. |
 
