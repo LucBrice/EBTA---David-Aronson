@@ -97,9 +97,9 @@ Contrat d'interpretation par l'IA :
   le deplacer**, puis ECRIRE UN NOUVEAU FICHIER dans le dossier backlog cible
   (`mainline`/`annexes`/`fixes`), integralement restructure selon le gabarit
   `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md` (Bandeau de statut, Audit IA
-  de promotion, Triage, Contexte obligatoire, Etat des lieux, Decision
-  d'architecture, Decoupage en phases, Invariants/NO GO, Verification,
-  Journal de decisions, Definition of Done, ...), choisir `mainline`, `annexe`
+  de promotion, Triage, Carte d'execution IA, Contexte obligatoire, Etat des
+  lieux, Decision d'architecture, Decoupage en phases, Invariants/NO GO,
+  Verification, Journal de decisions, Definition of Done, ...), choisir `mainline`, `annexe`
   ou `fix`, puis appeler
   `.ai/tools/plan.ps1 start -Path <brouillon original> -RewrittenPath <nouveau
   fichier deja ecrit dans le dossier backlog cible> -Audited`.

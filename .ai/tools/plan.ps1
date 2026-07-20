@@ -202,6 +202,7 @@ function Assert-PlanAuditReady {
     # gabarit) avant que start ne l'accepte.
     $templateSections = [ordered]@{
         "Bandeau de statut"                  = "Verifier si un chantier ou un verrou de gouvernance couvre deja ce perimetre."
+        "Carte d'execution IA"               = "Resumer le contrat de reprise d'une IA sans creer une autorite concurrente."
         "Contexte obligatoire"                = "Lister les documents qu'une IA froide doit lire avant de coder."
         "Etat des lieux"                      = "Distinguer ce qui existe deja (a reutiliser) de ce qui manque reellement."
         "Decision d'architecture"             = "Expliquer pourquoi cette architecture, pas seulement ce qu'elle est."

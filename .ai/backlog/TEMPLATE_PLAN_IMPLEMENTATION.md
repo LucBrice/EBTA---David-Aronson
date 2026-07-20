@@ -132,6 +132,27 @@ Cette section est obligatoire avant qu'un plan puisse passer de `INTAKE` a
 | Changement normatif attendu | [Aucun \| liste explicite] |
 | Dependances externes | [Depots, API, donnees externes — avec leur statut d'autorisation] |
 
+## Carte d'execution IA (lecture prioritaire pour `/continue`)
+
+Cette carte est le point d'entree concis d'une IA qui reprend le chantier a
+froid. Elle resume les decisions deja prises dans les sections detaillees
+ci-dessous ; elle ne cree aucune nouvelle autorite. En cas de conflit, les
+sections detaillees du plan et leurs sources citees priment.
+
+| Champ | Contenu operationnel |
+| --- | --- |
+| Objectif executable | [Resultat observable a produire, en une phrase.] |
+| Autorite et lecture minimale | [Fichiers a lire dans l'ordre, avec l'autorite qui prime.] |
+| Perimetre autorise | [Fichiers/dossiers que l'IA peut modifier.] |
+| Interdits absolus | [Fichiers, regles ou raccourcis a ne jamais toucher.] |
+| Phase de reprise | [Premiere phase non terminee et son prerequis immediat.] |
+| Preuve attendue | [Commandes exactes et artefacts qui prouvent le succes.] |
+| Arret et escalade | [Condition precise qui impose de s'arreter et de demander une decision humaine.] |
+
+> Garder cette carte factuelle et courte. Elle ne remplace pas la lecture des
+> sections 2, 5, 6, 8 et 9 avant toute modification de code ; elle evite a une
+> IA medium de reconstituer le contrat d'execution parmi tout le document.
+
 ---
 
 ## 1. Role de ce document et non-objectifs

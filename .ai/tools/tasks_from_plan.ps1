@@ -76,11 +76,12 @@ function ConvertTo-Slug {
 function Get-PhaseBlocks {
     param([string]$Content)
 
-    # Bornes de la section "Decoupage en phases" : du titre de section (## 6.
-    # ... ou historiquement "## Phases d'implementation") jusqu'au prochain
-    # titre de niveau 2 ("## ") ou fin de fichier. Regex en simple-quote pour
-    # eviter toute expansion PowerShell de "$(" (subexpression) dans le motif.
-    $sectionPattern = '(?ms)^##\s+(?:6\.\s*)?(?:Decoupage en phases|Phases d.implementation)[^\r\n]*\r?\n(?<body>.*?)(?=^##\s|\z)'
+    # Bornes de la section "Decoupage en phases" : accepter toute numerotation
+    # Markdown, car le gabarit autorise la suppression des sections non
+    # applicables. La section se termine au prochain titre de niveau 2 ("## ")
+    # ou a la fin du fichier. Regex en simple-quote pour eviter toute expansion
+    # PowerShell de "$(" (subexpression) dans le motif.
+    $sectionPattern = '(?ms)^##\s+(?:(?:\d+\.)\s*)?(?:Decoupage en phases|Phases d.implementation)[^\r\n]*\r?\n(?<body>.*?)(?=^##\s|\z)'
     $sectionMatch = [regex]::Match($Content, $sectionPattern)
     if (-not $sectionMatch.Success) {
         throw "Section 'Decoupage en phases' (ou 'Phases d'implementation') introuvable dans $PlanPath."
@@ -90,7 +91,10 @@ function Get-PhaseBlocks {
     # Separateur id/titre exige au moins un espace de chaque cote du tiret,
     # pour ne pas couper un id du type "0-BIS" (tiret colle, sans espace) au
     # premier tiret rencontre.
-    $phasePattern = '(?ms)^###\s+Phase\s+(?<pid>[^\r\n]+?)\s+-\s+(?<ptitle>[^\r\n]+?)\r?\n(?<body>.*?)(?=^###\s+Phase\s|\z)'
+    # Un sous-titre H3 qui suit les phases (par exemple "### Chemin critique")
+    # ne fait pas partie de la derniere phase. Les details H4 restent, eux,
+    # rattaches a leur phase.
+    $phasePattern = '(?ms)^###\s+Phase\s+(?<pid>[^\r\n]+?)\s+-\s+(?<ptitle>[^\r\n]+?)\r?\n(?<body>.*?)(?=^###\s|\z)'
     $phaseMatches = [regex]::Matches($sectionBody, $phasePattern)
     if ($phaseMatches.Count -eq 0) {
         throw "Aucune phase au format '### Phase <id> - <titre>' trouvee dans la section Decoupage en phases."
