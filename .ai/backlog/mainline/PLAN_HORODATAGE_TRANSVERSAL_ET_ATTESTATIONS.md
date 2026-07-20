@@ -280,13 +280,34 @@ est acceptable.
 | Date | Decision | Portee |
 | --- | --- | --- |
 | 2026-07-20 | EPIC multi-lot et recursion autorises; regle anti-stagnation. | Autorise ce chantier mere et l'avancement des enfants 1-2 pendant la pause R5/R6. |
+| 2026-07-17 (decision anterieure revalidee le 2026-07-20) | Les champs et mecanismes post-OOS/live (`kill_switch`, `live_approval`, `incident_log`, `retention_policy`, `live_version_id`, `lifecycle_archive`) sont hors perimetre plutot qu'a transformer en vrai cycle live. | Decision sourcee dans `20260720_EPIC_ATTESTATIONS_RESIDUELLES_R3.md`; interdit a l'enfant 3 de rouvrir R10 ou de demander un arbitrage deja rendu. |
+
+### Perimetre residuel exact de l'enfant 3
+
+L'audit du chemin courant reduit l'arret humain aux preuves de revue et
+d'approbation **pre-OOS/recherche** encore injectees par fixtures :
+
+- `independent_registry_review` et `independent_pre_oos_approval` dans le
+  builder du package pilote;
+- `reviewers` et `approvals` dans le manifeste, actuellement alimentes par
+  `independent_reviewer` et `runtime_fixture_approval`;
+- les valeurs homologues de `pilot_inputs.json`, qui restent des fixtures et
+  ne constituent pas une identite ni une approbation humaine reelle.
+
+Le futur enfant ne doit ni inventer des identites ni modifier les schemas.
+La decision residuelle consiste a choisir entre : (a) un contrat d'inputs de
+preuve explicites, optionnels, dont l'absence produit `INCONCLUSIVE`/DENIED et
+dont les fixtures restent limitees aux tests; (b) de vraies identites et
+preuves fournies par l'humain; ou (c) le report explicite de l'enfant. Dans
+tous les cas, aucun champ de fixture ne peut produire `PASS` sur le chemin de
+production.
 
 ## 10. Risques et blocages connus
 
 | Risque | Impact | Mitigation |
 | --- | --- | --- |
 | R5/R6 non calibres | L'autorisation OOS honnete peut etre refusee. | Resultat legitime; ne pas executer l'OOS ni masquer le refus. |
-| Perimetre humain non tranche | Enfant 3 bloque. | Demander la liste exacte; avancer enfants 1-2. |
+| Contrat des preuves humaines pre-OOS non tranche | Enfant 3 bloque; les reviewers/approbations fixtures ne peuvent pas etre promus en preuves reelles. | Choisir le contrat section 9. Les mecanismes post-OOS/live sont deja exclus et ne font plus partie de la decision. |
 | Refactor orchestration large | Regression du package builder. | Plan enfant ferme, tests espions d'ordre, suite complete. |
 | Preuves post-OOS absentes | G11-G14 deviennent INCONCLUSIVE. | Verdict honnete attendu, pas un echec de chantier. |
 

@@ -561,9 +561,43 @@ remplacer une valeur inerte par une autre valeur inerte sous couvert de
 | 2026-07-20 | Un sous-chantier peut lui-meme devenir un chantier mere (recursion). | Autorise le split d'un lot a son ouverture si le test de detection se declenche, sans nesting preventif. |
 
 Decisions restant a trancher (au `/start` du lot concerne, pas ici) :
-- Seuils de calibration R5 (couts/slippage/latence : sources, valeurs) - Lot 2.
-- Magnitude des chocs de stress R6 et seuil `minimum_mean_return` reel - Lot 2.
-- Perimetre exact des attestations humaines/post-OOS a expliciter vs deriver - Lot 3.
+- Contrat de calibration R5 : autoriser ou non une preuve mixte combinant le
+  spread NASDAQ empirique disponible et des proxies conservateurs documentes
+  pour les composantes/actifs sans source; les frais, le slippage, la latence
+  et le spread XAUUSD restent sans source reelle identifiee - Lot 2.
+- Magnitude des chocs de stress R6 et seuil `minimum_mean_return` reel; les
+  quantiles de spread NASDAQ peuvent informer cette decision mais ne fixent
+  pas les autres dimensions ni le seuil a la place de l'humain - Lot 2.
+- Contrat des preuves humaines pre-OOS encore produites par fixtures
+  (`reviewers`/`approvals`, revue independante du registre et approbation
+  pre-OOS). Les mecanismes post-OOS/live ont deja ete exclus par decision
+  humaine du 2026-07-17 et ne sont donc plus a arbitrer - Lot 3.
+
+### Audit preparatoire des decisions R5/R6 (2026-07-20)
+
+Cet audit est une reduction factuelle du blocage, pas une calibration gelee :
+
+- le data root contient 36 CSV tick NASDAQ mensuels couvrant 2023-2025. Bien
+  que les noms de fichiers portent `tick-bid`, leurs en-tetes exposent
+  `ask`, `bid`, `ask_volume` et `bid_volume`;
+- un diagnostic par echantillonnage systematique (une ligne sur 100, janvier
+  2023/2024/2025) n'a trouve ni prix invalide ni marche croise. Les spreads
+  en points observes ont pour quantiles p50/p95/p99 : 2023
+  `1.522/3.512/3.552`, 2024 `1.536/3.525/3.558`, 2025
+  `1.999/3.526/3.558`; en points de base, respectivement
+  `1.355158/3.143078/3.226963`, `0.916990/2.116056/2.154926` et
+  `0.930670/1.668674/1.694506`;
+- ces chiffres sont un diagnostic exploratoire, pas encore une fenetre de
+  calibration preregistree ni une preuve de provenance. L'inventaire local
+  reste `UNVERIFIED_LOCAL_EXPORT`; aucun fournisseur, licence ou identifiant
+  de contrat n'est encode;
+- aucune donnee tick ask/bid XAUUSD, grille de frais broker/exchange, donnee
+  de fills/slippage reel ou mesure de latence d'execution n'a ete trouvee;
+- conformement a SOP 09B, une observation historique, une estimation
+  point-in-time ou un proxy conservateur documente peuvent alimenter le
+  scenario central, mais les composantes manquantes ne peuvent jamais etre
+  remplacees silencieusement par zero. Elles imposent sensibilites, limites
+  de portee et, lorsqu'elles restent non bornees, `INCONCLUSIVE`/`NOT_VALIDATED`.
 
 Prerequis factuels a statuer (a l'ouverture du lot) :
 - Disponibilite/qualite des donnees longues (Lot 4) - **RESOLU : DISPONIBLE** ;
@@ -577,8 +611,8 @@ Prerequis factuels a statuer (a l'ouverture du lot) :
 | Lot | Etat | Preuve / action suivante |
 | --- | --- | --- |
 | 1 - R7 | `DONE` | Workstream archive ; 179 tests, pilote minimal, smoke venv, Pyrefly, bug-hunter et conformance PASS. |
-| 2 - R5/R6 | `NEXT - DECISIONS HUMAINES REQUISES` | Revalider les valeurs et le cablage actuels ; reappliquer le test multi-lot ; demander les sources/valeurs de calibration R5 et les magnitudes/seuils R6 avant tout code. |
-| 3 - Horodatage | `ENFANTS 1-2/3 DONE - DECISION HUMAINE REQUISE` | L'enfant approbations humaines/post-OOS attend le choix de contrat section 10. |
+| 2 - R5/R6 | `NEXT - DECISIONS HUMAINES REQUISES` | Audit local termine : spread NASDAQ partiellement observable sur ticks 2023-2025; XAUUSD, frais, slippage et latence non sources. Choisir le contrat de preuve R5, les magnitudes R6 et `minimum_mean_return` avant tout code. |
+| 3 - Horodatage | `ENFANTS 1-2/3 DONE - DECISION HUMAINE REQUISE` | Les mecanismes post-OOS/live sont deja hors perimetre. L'enfant 3 attend seulement le contrat des reviewers/approbations pre-OOS encore produits par fixtures. |
 | 4 - R4-long | `DONE` | Canonique 1/3/12 mois `COMPLETED`, 195 tests PASS, Pyrefly 0, OOS zero; commits `e5fb08c`/`251f700`. |
 
 ---
@@ -587,7 +621,8 @@ Prerequis factuels a statuer (a l'ouverture du lot) :
 
 | Risque | Impact | Mitigation / condition de deblocage |
 | --- | --- | --- |
-| Lot 2 (R5/R6) attend une decision de seuil humaine | Le coeur scientifique stagne | Regle anti-stagnation (section 4) : avancer le Lot 3 independant pendant la pause ; demander la decision, la journaliser section 10. |
+| Lot 2 (R5/R6) attend une decision humaine de contrat de preuve, de stress et de seuil | Le coeur scientifique stagne | L'audit local borne le spread NASDAQ mais pas XAUUSD/frais/slippage/latence. Choisir le contrat section 10, puis le journaliser avant routage. |
+| Lot 3 enfant 3 attend le contrat des preuves humaines pre-OOS | Des fixtures risquent de rester presentees comme approbations reelles | Ne pas rouvrir le live deja exclu. Choisir si les preuves pre-OOS deviennent des inputs explicites dont l'absence vaut `INCONCLUSIVE`, ou fournir de vraies identites/preuves. |
 | Donnees longues absentes/insuffisantes au data root - `RESOLU` | Aucun impact residuel sur Lot 4 clos | 72 CSV mensuels/actif verifies; canonique 1 an `COMPLETED`. |
 | Un lot s'avere multi-lot (recursion) | Sous-estimation de charge | Reappliquer le test de detection a l'ouverture ; le lot devient mere, route ses propres enfants, sans nesting preventif. |
 | La correction R5/R6 fait basculer des gates vers `FAIL`/`INCONCLUSIVE` | Le package reste ou devient rouge | Verdict EBTA legitime, documente en Phase 5, jamais masque (invariant 4). |
