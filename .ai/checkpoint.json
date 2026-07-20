@@ -719,6 +719,26 @@
       "closure_reason": "Lot R7 termine : data root argument/env/fallback, hash SHA-256 reel de config.json, venv documente ; 179 tests, pilote, smoke, Pyrefly, bug-hunter et conformance PASS",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS",
+      "title": "Lot 3 - Horodatage transversal et attestations",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/mainline/PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-20",
+      "last_moved_at": "2026-07-20",
+      "routing_decision": "mainline",
+      "routing_reason": "Sous-chantier 3/4 de EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE - horodatage et attestations",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
