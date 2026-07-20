@@ -49,9 +49,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `PRET_A_CLOTURER - IMPLEMENTATION ET AUDITS PASS` |
 | Date de creation | 2026-07-20 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-20 |
 | Autorite normative | `Protocole/` : SOP 04, SOP 10, SOP 12 et `PAQUET D'EXECUTION EBTA.md` |
 | Autorite executable | `Implementation/ebta_engine/data`, `package_builder`, adaptateur Nautilus existant |
 | Changement normatif attendu | Aucun |
@@ -387,32 +387,32 @@ donnee/venv indisponible; extension normative/hors liste; `AUTHORIZED` inattendu
 
 ## 12. Definition of Done
 
-- [ ] Phases 1-4 validees.
-- [ ] Exit criteria du triage atteints.
-- [ ] Aucun fichier hors liste modifie.
-- [ ] Rapport canonique relisible et regenérable, trois fenetres completes.
-- [ ] OOS zero prouve; aucun journal/serie OOS.
-- [ ] Suite complete, Pyrefly, bug-hunter et conformance PASS.
-- [ ] Checklist post-modification executee.
-- [ ] Aucun stub/mock/placeholder ne sert de preuve canonique.
+- [x] Phases 1-4 validees.
+- [x] Exit criteria du triage atteints.
+- [x] Aucun fichier hors liste modifie.
+- [x] Rapport canonique relisible et regenerable, trois fenetres completes.
+- [x] OOS zero prouve; aucun journal/serie OOS.
+- [x] Suite complete, Pyrefly, bug-hunter et conformance PASS.
+- [x] Checklist post-modification executee.
+- [x] Aucun stub/mock/placeholder ne sert de preuve canonique.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir au `/close` |
-| Ecarts | A remplir au `/close` |
+| Resultat final | `PRET_A_CLOTURER` - 7/7 Exit criteria implementes; aucun manque. |
+| Ecarts | Aucun ecart de perimetre. Le pilote minimal regenere retourne le `FAIL` G14 honnete deja attendu; ses fichiers generes ont ete remis au baseline car hors scope. |
 | Suites hors perimetre | Revalidation package globale apres R5/R6; refonte streaming seulement si benchmark l'exige. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | - |
-| Phases executees | - |
-| Artefact produit | - |
-| Validation | - |
-| Ecart | - |
+| Date | 2026-07-20 |
+| Phases executees | 1-4 |
+| Artefact produit | `Implementation/benchmarks/r4_long/benchmark_report.json` (`COMPLETED`, 316,074 s) et README |
+| Validation | 195 tests PASS; Pyrefly 0; JSON/empreintes PASS; bug-hunter 0 bug ouvert; conformance 7/7 IMPLEMENTE; Guardian CONFORME |
+| Ecart | Aucun. Rapport : 1 an = 1 019 520 barres chargees, 5 760 Test uniques, 46 080 bar-evaluations, 28 ordres, peak RSS 995 188 736 octets, OOS 0. |
 
 ## 14. Journal d'audits post-hoc
 
@@ -422,3 +422,6 @@ donnee/venv indisponible; extension normative/hors liste; `AUTHORIZED` inattendu
 | 2026-07-20 | Intake `/evaluate` 2 | Ajout cellule pipeline conjointe 16 candidats/32 Test; distinction budget dur/seuil memoire; convergence sans nouveau blind spot majeur. |
 | 2026-07-20 | Plan route `/evaluate` 1 | Ajout du scope `PRE_OOS_BENCHMARK` : securite independante du verdict futur des gates, defaut production inchange, test `AUTHORIZED` sans OOS. |
 | 2026-07-20 | Plan route `/evaluate` 2 | Preservation checksum historique + content hash distinct, alignement folds inter-actifs, definition non ambigue du peak RSS arbre; convergence sans nouveau blind spot majeur. |
+| 2026-07-20 | Bug-hunter | Pyrefly 13 -> 0 (portabilite `sysconf` et inference dict heterogene); deux vrais contrats runtime corriges : `DATA_INVALID` structure et pipeline non lance si prerequis data echoue. Suite 195 PASS. |
+| 2026-07-20 | Plan-conformance-audit | 7/7 Exit criteria `IMPLEMENTE`; aucun `MANQUANT`, `HORS-SCOPE` ou non-goal viole. Cloture autorisee. |
+| 2026-07-20 | EBTA_Protocol_Guardian | `CONFORME` : aucune norme/schema/gate modifie; scope pre-OOS bloque toute execution OOS; verdicts reels preserves. |

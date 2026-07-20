@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from ebta_engine.package_builder.nautilus_research_package import build_nautilus_research_package
+from ebta_engine.package_builder.nautilus_research_package import build_nautilus_inputs, build_nautilus_research_package
 from ebta_engine.procedures._utils import canonical_json
 from ebta_engine.strategies.contracts import SimulationResult
 
@@ -126,6 +126,46 @@ class NautilusRobustnessGateProductionTests(unittest.TestCase):
 
 
 class NautilusChronologyProductionTests(unittest.TestCase):
+    def test_pre_oos_benchmark_scope_stops_even_when_gates_authorize(self):
+        calls = []
+
+        def runner(**kwargs):
+            calls.append(kwargs["seed"])
+            return _fake_segment_runner(**kwargs)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            data_root = _write_fixture_data(root / "data")
+            package_dir = root / "research_package"
+            inputs = build_nautilus_inputs(
+                package_dir=package_dir,
+                data_root=data_root,
+                assets=["NASDAQ"],
+                segment_runner=runner,
+                execution_scope="PRE_OOS_BENCHMARK",
+            )
+            oos_access_log_exists = (package_dir / "oos_access_log.jsonl").exists()
+
+        self.assertEqual(inputs["_build_outcome"]["status"], "PRE_OOS_ONLY")
+        self.assertEqual(inputs["_build_outcome"]["oos_access_decision"]["status"], "AUTHORIZED")
+        self.assertNotIn(29, calls)
+        self.assertFalse(oos_access_log_exists)
+        metrics = inputs["_benchmark_metrics"]
+        self.assertEqual(metrics["candidate_count"], 8)
+        self.assertEqual(metrics["test_segment_count"], 16)
+        self.assertEqual(metrics["test_bar_evaluation_count"], 48)
+        self.assertEqual(metrics["unique_test_bar_count"], 6)
+        self.assertTrue(metrics["fold_schedules_aligned"])
+
+    def test_unknown_execution_scope_is_rejected_before_data_access(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with self.assertRaisesRegex(ValueError, "unsupported execution_scope"):
+                build_nautilus_inputs(
+                    package_dir=Path(temp_dir) / "research_package",
+                    data_root=Path(temp_dir) / "missing-data",
+                    execution_scope="OOS_BENCHMARK",  # type: ignore[arg-type]
+                )
+
     def test_registry_and_access_are_persisted_before_their_respective_runs(self):
         instants = iter(
             [

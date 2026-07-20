@@ -1,0 +1,944 @@
+{
+  "assets": [
+    "NASDAQ",
+    "XAUUSD"
+  ],
+  "budgets": {
+    "data_cell_timeout_seconds": 180.0,
+    "global_timeout_seconds": 1080.0,
+    "peak_tree_rss_budget_bytes": 8589934592,
+    "pipeline_cell_timeout_seconds": 240.0
+  },
+  "canonical": true,
+  "code_fingerprints": [
+    {
+      "path": "Implementation/ebta_engine/data/local_ohlcv.py",
+      "sha256": "a59d5cbc89febc4e0497e60d14f0b13b9f5e9a04f94e1c8111705774c8d75649"
+    },
+    {
+      "path": "Implementation/ebta_engine/benchmarks/long_data.py",
+      "sha256": "2bdba26bd851ba96fda274932ea927d6b99d65ff29b886c0540251c7a7edace2"
+    },
+    {
+      "path": "Implementation/ebta_engine/package_builder/nautilus_research_package.py",
+      "sha256": "98bf493eee7af6fbf6359728a3eb30e1ce66749f2d7742ad3cc59447f3bf2b84"
+    },
+    {
+      "path": "Implementation/ebta_engine/adapters/nautilus_mapping.py",
+      "sha256": "92e4e3dbc06d0263913d9f8b54f71355498ca8568d9d343d6edc900792cb8329"
+    }
+  ],
+  "data_cells": [
+    {
+      "assets": [
+        "NASDAQ"
+      ],
+      "cell_id": "1_MONTH:NASDAQ",
+      "elapsed_seconds": 1.457555,
+      "end": "2020-01-31T23:59:00Z",
+      "kind": "data",
+      "payload": {
+        "inspection": {
+          "asset": "NASDAQ",
+          "bar_count": 43200,
+          "content_checksum": "65f889b3d760e3c52e09e657b581c5b4089ae1fcfa6681aab9da5415d3209ad9",
+          "gap_buckets": {
+            "over_1_day": 0,
+            "over_1_hour_to_1_day": 0,
+            "over_1_minute_to_1_hour": 0
+          },
+          "gap_count": 0,
+          "gap_policy": "descriptive_only_no_normative_venue_calendar",
+          "maximum_gap_seconds": 0.0,
+          "observed_end": "2020-01-30T23:59:00Z",
+          "observed_start": "2020-01-01T00:00:00Z",
+          "requested_end": "2020-01-31T23:59:00Z",
+          "requested_start": "2020-01-01T00:00:00Z",
+          "selected_file_count": 1,
+          "selected_files": [
+            "USATECH.IDXUSD-m1-bid-2020-01-01-2020-01-31.csv"
+          ]
+        },
+        "load_elapsed_seconds": 0.213824,
+        "load_matches_scan": true,
+        "loaded_bar_count": 43200,
+        "scan_elapsed_seconds": 0.498591
+      },
+      "peak_tree_rss_bytes": 100007936,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "XAUUSD"
+      ],
+      "cell_id": "1_MONTH:XAUUSD",
+      "elapsed_seconds": 1.458007,
+      "end": "2020-01-31T23:59:00Z",
+      "kind": "data",
+      "payload": {
+        "inspection": {
+          "asset": "XAUUSD",
+          "bar_count": 43200,
+          "content_checksum": "e5ec678b54e322440651a78a2ea35ec8173786168284d92d9573dde01232ff9f",
+          "gap_buckets": {
+            "over_1_day": 0,
+            "over_1_hour_to_1_day": 0,
+            "over_1_minute_to_1_hour": 0
+          },
+          "gap_count": 0,
+          "gap_policy": "descriptive_only_no_normative_venue_calendar",
+          "maximum_gap_seconds": 0.0,
+          "observed_end": "2020-01-30T23:59:00Z",
+          "observed_start": "2020-01-01T00:00:00Z",
+          "requested_end": "2020-01-31T23:59:00Z",
+          "requested_start": "2020-01-01T00:00:00Z",
+          "selected_file_count": 1,
+          "selected_files": [
+            "XAUUSD-m1-bid-2020-01-01-2020-01-31.csv"
+          ]
+        },
+        "load_elapsed_seconds": 0.215381,
+        "load_matches_scan": true,
+        "loaded_bar_count": 43200,
+        "scan_elapsed_seconds": 0.493547
+      },
+      "peak_tree_rss_bytes": 103632896,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "NASDAQ"
+      ],
+      "cell_id": "3_MONTHS:NASDAQ",
+      "elapsed_seconds": 2.874477,
+      "end": "2020-03-31T23:59:00Z",
+      "kind": "data",
+      "payload": {
+        "inspection": {
+          "asset": "NASDAQ",
+          "bar_count": 126720,
+          "content_checksum": "09c9bc77ecbe7fc5179579b787d09a175c7463e96181e8c1b81e11bf77792d5b",
+          "gap_buckets": {
+            "over_1_day": 2,
+            "over_1_hour_to_1_day": 0,
+            "over_1_minute_to_1_hour": 0
+          },
+          "gap_count": 2,
+          "gap_policy": "descriptive_only_no_normative_venue_calendar",
+          "maximum_gap_seconds": 86460.0,
+          "observed_end": "2020-03-30T23:59:00Z",
+          "observed_start": "2020-01-01T00:00:00Z",
+          "requested_end": "2020-03-31T23:59:00Z",
+          "requested_start": "2020-01-01T00:00:00Z",
+          "selected_file_count": 3,
+          "selected_files": [
+            "USATECH.IDXUSD-m1-bid-2020-01-01-2020-01-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-02-01-2020-02-29.csv",
+            "USATECH.IDXUSD-m1-bid-2020-03-01-2020-03-31.csv"
+          ]
+        },
+        "load_elapsed_seconds": 0.622671,
+        "load_matches_scan": true,
+        "loaded_bar_count": 126720,
+        "scan_elapsed_seconds": 1.455603
+      },
+      "peak_tree_rss_bytes": 127455232,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "XAUUSD"
+      ],
+      "cell_id": "3_MONTHS:XAUUSD",
+      "elapsed_seconds": 2.882071,
+      "end": "2020-03-31T23:59:00Z",
+      "kind": "data",
+      "payload": {
+        "inspection": {
+          "asset": "XAUUSD",
+          "bar_count": 126720,
+          "content_checksum": "67eb0fe46ffa0d0af35d4c9d37bcd5596681d987cb014c8bd27ecae28eacc690",
+          "gap_buckets": {
+            "over_1_day": 2,
+            "over_1_hour_to_1_day": 0,
+            "over_1_minute_to_1_hour": 0
+          },
+          "gap_count": 2,
+          "gap_policy": "descriptive_only_no_normative_venue_calendar",
+          "maximum_gap_seconds": 86460.0,
+          "observed_end": "2020-03-30T23:59:00Z",
+          "observed_start": "2020-01-01T00:00:00Z",
+          "requested_end": "2020-03-31T23:59:00Z",
+          "requested_start": "2020-01-01T00:00:00Z",
+          "selected_file_count": 3,
+          "selected_files": [
+            "XAUUSD-m1-bid-2020-01-01-2020-01-31.csv",
+            "XAUUSD-m1-bid-2020-02-01-2020-02-29.csv",
+            "XAUUSD-m1-bid-2020-03-01-2020-03-31.csv"
+          ]
+        },
+        "load_elapsed_seconds": 0.619442,
+        "load_matches_scan": true,
+        "loaded_bar_count": 126720,
+        "scan_elapsed_seconds": 1.457039
+      },
+      "peak_tree_rss_bytes": 127729664,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "NASDAQ"
+      ],
+      "cell_id": "1_YEAR:NASDAQ",
+      "elapsed_seconds": 9.432925,
+      "end": "2020-12-31T23:59:00Z",
+      "kind": "data",
+      "payload": {
+        "inspection": {
+          "asset": "NASDAQ",
+          "bar_count": 509760,
+          "content_checksum": "d5abfb476f189cb2c71c1a16a8766e24f113cd34128bfbc8d5f0c7c9fa5b49d0",
+          "gap_buckets": {
+            "over_1_day": 11,
+            "over_1_hour_to_1_day": 0,
+            "over_1_minute_to_1_hour": 0
+          },
+          "gap_count": 11,
+          "gap_policy": "descriptive_only_no_normative_venue_calendar",
+          "maximum_gap_seconds": 86460.0,
+          "observed_end": "2020-12-30T23:59:00Z",
+          "observed_start": "2020-01-01T00:00:00Z",
+          "requested_end": "2020-12-31T23:59:00Z",
+          "requested_start": "2020-01-01T00:00:00Z",
+          "selected_file_count": 12,
+          "selected_files": [
+            "USATECH.IDXUSD-m1-bid-2020-01-01-2020-01-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-02-01-2020-02-29.csv",
+            "USATECH.IDXUSD-m1-bid-2020-03-01-2020-03-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-04-01-2020-04-30.csv",
+            "USATECH.IDXUSD-m1-bid-2020-05-01-2020-05-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-06-01-2020-06-30.csv",
+            "USATECH.IDXUSD-m1-bid-2020-07-01-2020-07-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-08-01-2020-08-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-09-01-2020-09-30.csv",
+            "USATECH.IDXUSD-m1-bid-2020-10-01-2020-10-31.csv",
+            "USATECH.IDXUSD-m1-bid-2020-11-01-2020-11-30.csv",
+            "USATECH.IDXUSD-m1-bid-2020-12-01-2020-12-31.csv"
+          ]
+        },
+        "load_elapsed_seconds": 2.635793,
+        "load_matches_scan": true,
+        "loaded_bar_count": 509760,
+        "scan_elapsed_seconds": 5.935294
+      },
+      "peak_tree_rss_bytes": 262774784,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "XAUUSD"
+      ],
+      "cell_id": "1_YEAR:XAUUSD",
+      "elapsed_seconds": 9.269558,
+      "end": "2020-12-31T23:59:00Z",
+      "kind": "data",
+      "payload": {
+        "inspection": {
+          "asset": "XAUUSD",
+          "bar_count": 509760,
+          "content_checksum": "374bcaf661663687369efcb066fee481fe5c1804ba38a4d8a21c8c3122e2f724",
+          "gap_buckets": {
+            "over_1_day": 11,
+            "over_1_hour_to_1_day": 0,
+            "over_1_minute_to_1_hour": 0
+          },
+          "gap_count": 11,
+          "gap_policy": "descriptive_only_no_normative_venue_calendar",
+          "maximum_gap_seconds": 86460.0,
+          "observed_end": "2020-12-30T23:59:00Z",
+          "observed_start": "2020-01-01T00:00:00Z",
+          "requested_end": "2020-12-31T23:59:00Z",
+          "requested_start": "2020-01-01T00:00:00Z",
+          "selected_file_count": 12,
+          "selected_files": [
+            "XAUUSD-m1-bid-2020-01-01-2020-01-31.csv",
+            "XAUUSD-m1-bid-2020-02-01-2020-02-29.csv",
+            "XAUUSD-m1-bid-2020-03-01-2020-03-31.csv",
+            "XAUUSD-m1-bid-2020-04-01-2020-04-30.csv",
+            "XAUUSD-m1-bid-2020-05-01-2020-05-31.csv",
+            "XAUUSD-m1-bid-2020-06-01-2020-06-30.csv",
+            "XAUUSD-m1-bid-2020-07-01-2020-07-31.csv",
+            "XAUUSD-m1-bid-2020-08-01-2020-08-31.csv",
+            "XAUUSD-m1-bid-2020-09-01-2020-09-30.csv",
+            "XAUUSD-m1-bid-2020-10-01-2020-10-31.csv",
+            "XAUUSD-m1-bid-2020-11-01-2020-11-30.csv",
+            "XAUUSD-m1-bid-2020-12-01-2020-12-31.csv"
+          ]
+        },
+        "load_elapsed_seconds": 2.58238,
+        "load_matches_scan": true,
+        "loaded_bar_count": 509760,
+        "scan_elapsed_seconds": 5.798462
+      },
+      "peak_tree_rss_bytes": 257921024,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    }
+  ],
+  "data_root": "D:\\TRADING\\ENTREPRISE\\0 - Phase de lancement\\Strat\u00e9gie de trading\\0 - Backtest\\Data",
+  "elapsed_seconds": 316.073832,
+  "environment": {
+    "logical_cpu_count": 8,
+    "nautilus_trader_version": "1.230.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+    "python_executable": "D:\\Livre\\Trading\\Trading algorithmic\\EBTA - David Aronson\\Implementation\\adapters\\nautilus_env\\venv\\Scripts\\python.exe",
+    "python_version": "3.13.0",
+    "visible_memory_bytes": 34188828672
+  },
+  "finished_at": "2026-07-20T19:01:34.323075Z",
+  "interpretation": {
+    "gaps_are_descriptive_without_venue_calendar": true,
+    "loaded_is_not_simulated": true,
+    "oos_permitted": false,
+    "package_validator_status_is_not_rewritten": true,
+    "projections_used_for_success": false
+  },
+  "measurement_scope": "PRE_OOS_TEST_ONLY",
+  "pipeline_cells": [
+    {
+      "assets": [
+        "NASDAQ",
+        "XAUUSD"
+      ],
+      "cell_id": "1_MONTH:JOINT",
+      "elapsed_seconds": 87.330933,
+      "end": "2020-01-31T23:59:00Z",
+      "kind": "pipeline",
+      "payload": {
+        "benchmark_metrics": {
+          "candidate_count": 16,
+          "execution_scope": "PRE_OOS_BENCHMARK",
+          "fold_schedules_aligned": true,
+          "fold_schedules_by_asset": {
+            "NASDAQ": [
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-001",
+                "information_cutoff": "2020-01-03T00:00:00Z",
+                "oos": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-03",
+                  "2020-01-03"
+                ],
+                "train": [
+                  "2020-01-01",
+                  "2020-01-02"
+                ],
+                "warmup_days": 0
+              },
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-002",
+                "information_cutoff": "2020-01-04T00:00:00Z",
+                "oos": [
+                  "2020-01-05",
+                  "2020-01-05"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "train": [
+                  "2020-01-02",
+                  "2020-01-03"
+                ],
+                "warmup_days": 0
+              }
+            ],
+            "XAUUSD": [
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-001",
+                "information_cutoff": "2020-01-03T00:00:00Z",
+                "oos": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-03",
+                  "2020-01-03"
+                ],
+                "train": [
+                  "2020-01-01",
+                  "2020-01-02"
+                ],
+                "warmup_days": 0
+              },
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-002",
+                "information_cutoff": "2020-01-04T00:00:00Z",
+                "oos": [
+                  "2020-01-05",
+                  "2020-01-05"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "train": [
+                  "2020-01-02",
+                  "2020-01-03"
+                ],
+                "warmup_days": 0
+              }
+            ]
+          },
+          "oos_bar_count": 0,
+          "oos_segment_count": 0,
+          "test_bar_evaluation_count": 46080,
+          "test_bar_evaluation_count_by_asset": {
+            "NASDAQ": 23040,
+            "XAUUSD": 23040
+          },
+          "test_segment_count": 32,
+          "test_total_orders": 28,
+          "unique_test_bar_count": 5760,
+          "unique_test_bar_count_by_asset": {
+            "NASDAQ": 2880,
+            "XAUUSD": 2880
+          }
+        },
+        "build_outcome": {
+          "oos_access_decision": {
+            "artifact_type": "oos_access_decision",
+            "log_entry": null,
+            "missing_requirements": [
+              "wrc_pass"
+            ],
+            "status": "DENIED"
+          },
+          "package_built": false,
+          "pre_oos_reports_hash": "ac4f38738366953c7b3a9ac5cc0f1f19bcc6bc80204d810df551fb0ecd622f75",
+          "status": "PRE_OOS_ONLY"
+        },
+        "loaded_bar_count": 86400,
+        "loaded_bar_count_by_asset": {
+          "NASDAQ": 43200,
+          "XAUUSD": 43200
+        },
+        "oos_access_log_event_count": 0,
+        "oos_access_log_exists": false,
+        "package_validation": {
+          "gate_failures": [
+            "G0 INCONCLUSIVE: missing ['config_id', 'project_id', 'research_family_id', 'hypothesis_id', 'process_version_id', 'template_hash']",
+            "G1 INCONCLUSIVE: missing ['data_snapshots', 'availability_timestamps', 'anti_leakage_report']",
+            "G2 INCONCLUSIVE: missing ['registry_initialized', 'candidate_catalog', 'local_matrix', 'independent_registry_review']",
+            "G3 INCONCLUSIVE: missing ['selection_rule', 'train_only_calibration_log', 'selected_candidate_id']",
+            "G4 INCONCLUSIVE: missing ['wrc_report', 'wrc_status', 'wrc_family_matrix']",
+            "G5 INCONCLUSIVE: missing ['robustness_report', 'robustness_matrix', 'pre_oos_robustness_verdict']",
+            "G6 INCONCLUSIVE: missing ['execution_report', 'cost_model', 'capacity_grid', 'nav_reconciliation']",
+            "G7 INCONCLUSIVE: missing ['pre_oos_manifest', 'frozen_config', 'test_reports', 'independent_pre_oos_approval']",
+            "G8 INCONCLUSIVE: missing ['oos_access_log', 'opening_authorization', 'single_oos_execution_log']",
+            "G9 INCONCLUSIVE: missing ['oos_report', 'concatenated_oos_series', 'oos_bootstrap_report', 'power_report']",
+            "G10 INCONCLUSIVE: missing ['economic_report', 'statistical_gate_report', 'economic_gate_report']",
+            "G11 INCONCLUSIVE: missing ['validation_ready_manifest', 'reproduction_report', 'incubation_approval']",
+            "G12 INCONCLUSIVE: missing ['incubation_report', 'paper_trading_log', 'monitoring_plan']",
+            "G13 INCONCLUSIVE: missing ['deployment_certified_manifest', 'live_version_id', 'kill_switch', 'live_approval']",
+            "G14 INCONCLUSIVE: missing ['lifecycle_archive', 'incident_log', 'retention_policy']"
+          ],
+          "invariant_failures": [
+            "INV-001 INCONCLUSIVE: missing evidence: oos_segments",
+            "INV-002 INCONCLUSIVE: missing evidence: pre_oos_sealed_at or oos_access_log",
+            "INV-003 INCONCLUSIVE: missing evidence: oos_openings",
+            "INV-004 INCONCLUSIVE: missing evidence: influential_candidates or registered_candidates",
+            "INV-005 INCONCLUSIVE: missing evidence: applicable_candidates or wrc_matrix_candidates",
+            "INV-006 INCONCLUSIVE: missing evidence: transformation_fits",
+            "INV-007 INCONCLUSIVE: missing evidence: decision_events",
+            "INV-008 INCONCLUSIVE: missing evidence: expected_oos_days or oos_series_days",
+            "INV-009 INCONCLUSIVE: missing evidence: bootstrap_sources",
+            "INV-010 INCONCLUSIVE: missing evidence: gate_reports",
+            "INV-011 INCONCLUSIVE: missing evidence: robustness_checks",
+            "INV-012 INCONCLUSIVE: missing evidence: same_oos_reruns",
+            "INV-013 INCONCLUSIVE: missing evidence: influential_modifications",
+            "INV-014 INCONCLUSIVE: missing evidence: package_stages",
+            "INV-015 INCONCLUSIVE: missing evidence: package_stages"
+          ],
+          "missing_paths": [
+            "manifests/reproducibility_manifest.json",
+            "oos_access_log.jsonl",
+            "reports/candidate_matrix.json",
+            "reports/complexity_selection.json",
+            "reports/data_availability.json",
+            "reports/detrending.json",
+            "reports/economic.json",
+            "reports/execution.json",
+            "reports/fold_schedule.json",
+            "reports/gates.json",
+            "reports/incubation_gate.json",
+            "reports/invariant_evidence.json",
+            "reports/ml_manifest.json",
+            "reports/oos.json",
+            "reports/optimization_log.json",
+            "reports/registry_review.json",
+            "reports/reproduction.json",
+            "reports/robustness.json",
+            "reports/search_space.json",
+            "reports/wrc.json",
+            "series/oos_primary_returns.json"
+          ],
+          "schema_errors": [],
+          "semantic_errors": [],
+          "status": "FAIL"
+        },
+        "unique_simulated_to_loaded_ratio": 0.06666666666666667
+      },
+      "peak_tree_rss_bytes": 672632832,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "NASDAQ",
+        "XAUUSD"
+      ],
+      "cell_id": "3_MONTHS:JOINT",
+      "elapsed_seconds": 91.268206,
+      "end": "2020-03-31T23:59:00Z",
+      "kind": "pipeline",
+      "payload": {
+        "benchmark_metrics": {
+          "candidate_count": 16,
+          "execution_scope": "PRE_OOS_BENCHMARK",
+          "fold_schedules_aligned": true,
+          "fold_schedules_by_asset": {
+            "NASDAQ": [
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-001",
+                "information_cutoff": "2020-01-03T00:00:00Z",
+                "oos": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-03",
+                  "2020-01-03"
+                ],
+                "train": [
+                  "2020-01-01",
+                  "2020-01-02"
+                ],
+                "warmup_days": 0
+              },
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-002",
+                "information_cutoff": "2020-01-04T00:00:00Z",
+                "oos": [
+                  "2020-01-05",
+                  "2020-01-05"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "train": [
+                  "2020-01-02",
+                  "2020-01-03"
+                ],
+                "warmup_days": 0
+              }
+            ],
+            "XAUUSD": [
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-001",
+                "information_cutoff": "2020-01-03T00:00:00Z",
+                "oos": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-03",
+                  "2020-01-03"
+                ],
+                "train": [
+                  "2020-01-01",
+                  "2020-01-02"
+                ],
+                "warmup_days": 0
+              },
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-002",
+                "information_cutoff": "2020-01-04T00:00:00Z",
+                "oos": [
+                  "2020-01-05",
+                  "2020-01-05"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "train": [
+                  "2020-01-02",
+                  "2020-01-03"
+                ],
+                "warmup_days": 0
+              }
+            ]
+          },
+          "oos_bar_count": 0,
+          "oos_segment_count": 0,
+          "test_bar_evaluation_count": 46080,
+          "test_bar_evaluation_count_by_asset": {
+            "NASDAQ": 23040,
+            "XAUUSD": 23040
+          },
+          "test_segment_count": 32,
+          "test_total_orders": 28,
+          "unique_test_bar_count": 5760,
+          "unique_test_bar_count_by_asset": {
+            "NASDAQ": 2880,
+            "XAUUSD": 2880
+          }
+        },
+        "build_outcome": {
+          "oos_access_decision": {
+            "artifact_type": "oos_access_decision",
+            "log_entry": null,
+            "missing_requirements": [
+              "wrc_pass"
+            ],
+            "status": "DENIED"
+          },
+          "package_built": false,
+          "pre_oos_reports_hash": "c04e79dcfaafce5c0dbfbf9b9d97db72da1dc3f0261a7aaa617b65912ccc4bcd",
+          "status": "PRE_OOS_ONLY"
+        },
+        "loaded_bar_count": 253440,
+        "loaded_bar_count_by_asset": {
+          "NASDAQ": 126720,
+          "XAUUSD": 126720
+        },
+        "oos_access_log_event_count": 0,
+        "oos_access_log_exists": false,
+        "package_validation": {
+          "gate_failures": [
+            "G0 INCONCLUSIVE: missing ['config_id', 'project_id', 'research_family_id', 'hypothesis_id', 'process_version_id', 'template_hash']",
+            "G1 INCONCLUSIVE: missing ['data_snapshots', 'availability_timestamps', 'anti_leakage_report']",
+            "G2 INCONCLUSIVE: missing ['registry_initialized', 'candidate_catalog', 'local_matrix', 'independent_registry_review']",
+            "G3 INCONCLUSIVE: missing ['selection_rule', 'train_only_calibration_log', 'selected_candidate_id']",
+            "G4 INCONCLUSIVE: missing ['wrc_report', 'wrc_status', 'wrc_family_matrix']",
+            "G5 INCONCLUSIVE: missing ['robustness_report', 'robustness_matrix', 'pre_oos_robustness_verdict']",
+            "G6 INCONCLUSIVE: missing ['execution_report', 'cost_model', 'capacity_grid', 'nav_reconciliation']",
+            "G7 INCONCLUSIVE: missing ['pre_oos_manifest', 'frozen_config', 'test_reports', 'independent_pre_oos_approval']",
+            "G8 INCONCLUSIVE: missing ['oos_access_log', 'opening_authorization', 'single_oos_execution_log']",
+            "G9 INCONCLUSIVE: missing ['oos_report', 'concatenated_oos_series', 'oos_bootstrap_report', 'power_report']",
+            "G10 INCONCLUSIVE: missing ['economic_report', 'statistical_gate_report', 'economic_gate_report']",
+            "G11 INCONCLUSIVE: missing ['validation_ready_manifest', 'reproduction_report', 'incubation_approval']",
+            "G12 INCONCLUSIVE: missing ['incubation_report', 'paper_trading_log', 'monitoring_plan']",
+            "G13 INCONCLUSIVE: missing ['deployment_certified_manifest', 'live_version_id', 'kill_switch', 'live_approval']",
+            "G14 INCONCLUSIVE: missing ['lifecycle_archive', 'incident_log', 'retention_policy']"
+          ],
+          "invariant_failures": [
+            "INV-001 INCONCLUSIVE: missing evidence: oos_segments",
+            "INV-002 INCONCLUSIVE: missing evidence: pre_oos_sealed_at or oos_access_log",
+            "INV-003 INCONCLUSIVE: missing evidence: oos_openings",
+            "INV-004 INCONCLUSIVE: missing evidence: influential_candidates or registered_candidates",
+            "INV-005 INCONCLUSIVE: missing evidence: applicable_candidates or wrc_matrix_candidates",
+            "INV-006 INCONCLUSIVE: missing evidence: transformation_fits",
+            "INV-007 INCONCLUSIVE: missing evidence: decision_events",
+            "INV-008 INCONCLUSIVE: missing evidence: expected_oos_days or oos_series_days",
+            "INV-009 INCONCLUSIVE: missing evidence: bootstrap_sources",
+            "INV-010 INCONCLUSIVE: missing evidence: gate_reports",
+            "INV-011 INCONCLUSIVE: missing evidence: robustness_checks",
+            "INV-012 INCONCLUSIVE: missing evidence: same_oos_reruns",
+            "INV-013 INCONCLUSIVE: missing evidence: influential_modifications",
+            "INV-014 INCONCLUSIVE: missing evidence: package_stages",
+            "INV-015 INCONCLUSIVE: missing evidence: package_stages"
+          ],
+          "missing_paths": [
+            "manifests/reproducibility_manifest.json",
+            "oos_access_log.jsonl",
+            "reports/candidate_matrix.json",
+            "reports/complexity_selection.json",
+            "reports/data_availability.json",
+            "reports/detrending.json",
+            "reports/economic.json",
+            "reports/execution.json",
+            "reports/fold_schedule.json",
+            "reports/gates.json",
+            "reports/incubation_gate.json",
+            "reports/invariant_evidence.json",
+            "reports/ml_manifest.json",
+            "reports/oos.json",
+            "reports/optimization_log.json",
+            "reports/registry_review.json",
+            "reports/reproduction.json",
+            "reports/robustness.json",
+            "reports/search_space.json",
+            "reports/wrc.json",
+            "series/oos_primary_returns.json"
+          ],
+          "schema_errors": [],
+          "semantic_errors": [],
+          "status": "FAIL"
+        },
+        "unique_simulated_to_loaded_ratio": 0.022727272727272728
+      },
+      "peak_tree_rss_bytes": 730243072,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    },
+    {
+      "assets": [
+        "NASDAQ",
+        "XAUUSD"
+      ],
+      "cell_id": "1_YEAR:JOINT",
+      "elapsed_seconds": 109.939393,
+      "end": "2020-12-31T23:59:00Z",
+      "kind": "pipeline",
+      "payload": {
+        "benchmark_metrics": {
+          "candidate_count": 16,
+          "execution_scope": "PRE_OOS_BENCHMARK",
+          "fold_schedules_aligned": true,
+          "fold_schedules_by_asset": {
+            "NASDAQ": [
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-001",
+                "information_cutoff": "2020-01-03T00:00:00Z",
+                "oos": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-03",
+                  "2020-01-03"
+                ],
+                "train": [
+                  "2020-01-01",
+                  "2020-01-02"
+                ],
+                "warmup_days": 0
+              },
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-002",
+                "information_cutoff": "2020-01-04T00:00:00Z",
+                "oos": [
+                  "2020-01-05",
+                  "2020-01-05"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "train": [
+                  "2020-01-02",
+                  "2020-01-03"
+                ],
+                "warmup_days": 0
+              }
+            ],
+            "XAUUSD": [
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-001",
+                "information_cutoff": "2020-01-03T00:00:00Z",
+                "oos": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-03",
+                  "2020-01-03"
+                ],
+                "train": [
+                  "2020-01-01",
+                  "2020-01-02"
+                ],
+                "warmup_days": 0
+              },
+              {
+                "embargo_days": 0,
+                "fold_id": "FOLD-002",
+                "information_cutoff": "2020-01-04T00:00:00Z",
+                "oos": [
+                  "2020-01-05",
+                  "2020-01-05"
+                ],
+                "policy": "rolling",
+                "purge_days": 0,
+                "test": [
+                  "2020-01-04",
+                  "2020-01-04"
+                ],
+                "train": [
+                  "2020-01-02",
+                  "2020-01-03"
+                ],
+                "warmup_days": 0
+              }
+            ]
+          },
+          "oos_bar_count": 0,
+          "oos_segment_count": 0,
+          "test_bar_evaluation_count": 46080,
+          "test_bar_evaluation_count_by_asset": {
+            "NASDAQ": 23040,
+            "XAUUSD": 23040
+          },
+          "test_segment_count": 32,
+          "test_total_orders": 28,
+          "unique_test_bar_count": 5760,
+          "unique_test_bar_count_by_asset": {
+            "NASDAQ": 2880,
+            "XAUUSD": 2880
+          }
+        },
+        "build_outcome": {
+          "oos_access_decision": {
+            "artifact_type": "oos_access_decision",
+            "log_entry": null,
+            "missing_requirements": [
+              "wrc_pass"
+            ],
+            "status": "DENIED"
+          },
+          "package_built": false,
+          "pre_oos_reports_hash": "5ec61f6ca6bb8f353b78591869c02ab863e9ad7cabc1c667f9a62fb5726014e7",
+          "status": "PRE_OOS_ONLY"
+        },
+        "loaded_bar_count": 1019520,
+        "loaded_bar_count_by_asset": {
+          "NASDAQ": 509760,
+          "XAUUSD": 509760
+        },
+        "oos_access_log_event_count": 0,
+        "oos_access_log_exists": false,
+        "package_validation": {
+          "gate_failures": [
+            "G0 INCONCLUSIVE: missing ['config_id', 'project_id', 'research_family_id', 'hypothesis_id', 'process_version_id', 'template_hash']",
+            "G1 INCONCLUSIVE: missing ['data_snapshots', 'availability_timestamps', 'anti_leakage_report']",
+            "G2 INCONCLUSIVE: missing ['registry_initialized', 'candidate_catalog', 'local_matrix', 'independent_registry_review']",
+            "G3 INCONCLUSIVE: missing ['selection_rule', 'train_only_calibration_log', 'selected_candidate_id']",
+            "G4 INCONCLUSIVE: missing ['wrc_report', 'wrc_status', 'wrc_family_matrix']",
+            "G5 INCONCLUSIVE: missing ['robustness_report', 'robustness_matrix', 'pre_oos_robustness_verdict']",
+            "G6 INCONCLUSIVE: missing ['execution_report', 'cost_model', 'capacity_grid', 'nav_reconciliation']",
+            "G7 INCONCLUSIVE: missing ['pre_oos_manifest', 'frozen_config', 'test_reports', 'independent_pre_oos_approval']",
+            "G8 INCONCLUSIVE: missing ['oos_access_log', 'opening_authorization', 'single_oos_execution_log']",
+            "G9 INCONCLUSIVE: missing ['oos_report', 'concatenated_oos_series', 'oos_bootstrap_report', 'power_report']",
+            "G10 INCONCLUSIVE: missing ['economic_report', 'statistical_gate_report', 'economic_gate_report']",
+            "G11 INCONCLUSIVE: missing ['validation_ready_manifest', 'reproduction_report', 'incubation_approval']",
+            "G12 INCONCLUSIVE: missing ['incubation_report', 'paper_trading_log', 'monitoring_plan']",
+            "G13 INCONCLUSIVE: missing ['deployment_certified_manifest', 'live_version_id', 'kill_switch', 'live_approval']",
+            "G14 INCONCLUSIVE: missing ['lifecycle_archive', 'incident_log', 'retention_policy']"
+          ],
+          "invariant_failures": [
+            "INV-001 INCONCLUSIVE: missing evidence: oos_segments",
+            "INV-002 INCONCLUSIVE: missing evidence: pre_oos_sealed_at or oos_access_log",
+            "INV-003 INCONCLUSIVE: missing evidence: oos_openings",
+            "INV-004 INCONCLUSIVE: missing evidence: influential_candidates or registered_candidates",
+            "INV-005 INCONCLUSIVE: missing evidence: applicable_candidates or wrc_matrix_candidates",
+            "INV-006 INCONCLUSIVE: missing evidence: transformation_fits",
+            "INV-007 INCONCLUSIVE: missing evidence: decision_events",
+            "INV-008 INCONCLUSIVE: missing evidence: expected_oos_days or oos_series_days",
+            "INV-009 INCONCLUSIVE: missing evidence: bootstrap_sources",
+            "INV-010 INCONCLUSIVE: missing evidence: gate_reports",
+            "INV-011 INCONCLUSIVE: missing evidence: robustness_checks",
+            "INV-012 INCONCLUSIVE: missing evidence: same_oos_reruns",
+            "INV-013 INCONCLUSIVE: missing evidence: influential_modifications",
+            "INV-014 INCONCLUSIVE: missing evidence: package_stages",
+            "INV-015 INCONCLUSIVE: missing evidence: package_stages"
+          ],
+          "missing_paths": [
+            "manifests/reproducibility_manifest.json",
+            "oos_access_log.jsonl",
+            "reports/candidate_matrix.json",
+            "reports/complexity_selection.json",
+            "reports/data_availability.json",
+            "reports/detrending.json",
+            "reports/economic.json",
+            "reports/execution.json",
+            "reports/fold_schedule.json",
+            "reports/gates.json",
+            "reports/incubation_gate.json",
+            "reports/invariant_evidence.json",
+            "reports/ml_manifest.json",
+            "reports/oos.json",
+            "reports/optimization_log.json",
+            "reports/registry_review.json",
+            "reports/reproduction.json",
+            "reports/robustness.json",
+            "reports/search_space.json",
+            "reports/wrc.json",
+            "series/oos_primary_returns.json"
+          ],
+          "schema_errors": [],
+          "semantic_errors": [],
+          "status": "FAIL"
+        },
+        "unique_simulated_to_loaded_ratio": 0.005649717514124294
+      },
+      "peak_tree_rss_bytes": 995188736,
+      "start": "2020-01-01T00:00:00Z",
+      "status": "COMPLETED"
+    }
+  ],
+  "schema_id": "ebta.r4_long_benchmark.v1",
+  "started_at": "2026-07-20T18:56:18.244855Z",
+  "status": "COMPLETED",
+  "windows": [
+    {
+      "end": "2020-01-31T23:59:00Z",
+      "start": "2020-01-01T00:00:00Z",
+      "window_id": "1_MONTH"
+    },
+    {
+      "end": "2020-03-31T23:59:00Z",
+      "start": "2020-01-01T00:00:00Z",
+      "window_id": "3_MONTHS"
+    },
+    {
+      "end": "2020-12-31T23:59:00Z",
+      "start": "2020-01-01T00:00:00Z",
+      "window_id": "1_YEAR"
+    }
+  ]
+}

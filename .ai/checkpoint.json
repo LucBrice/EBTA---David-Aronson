@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -787,8 +787,8 @@
       "id": "PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG",
       "title": "R4-long - benchmark donnees longues et scalabilite du runner",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "ADAPTER_MAPPING",
       "source_path": ".ai/backlog/mainline/PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG.md",
@@ -796,12 +796,13 @@
       "opened_at": "2026-07-20",
       "last_moved_at": "2026-07-20",
       "routing_decision": "mainline",
-      "routing_reason": "Sous-chantier 4/4 de EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE - benchmark 1/3/12 mois pre-OOS",
+      "routing_reason": "Reprise apres baseline 294a986; test multi-lot reconfirme SINGLE, implementation R4-long autorisee",
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": true
     }
   ],
   "validation": {

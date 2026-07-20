@@ -11,7 +11,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, Literal, TypedDict
 
 from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
 from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars, resolve_data_root
@@ -52,6 +52,7 @@ NAUTILUS_ECONOMIC_THRESHOLDS = {
 
 SegmentRunner = Callable[..., SimulationResult]
 RuntimeClock = Callable[[], datetime]
+ExecutionScope = Literal["FULL_RESEARCH_PACKAGE", "PRE_OOS_BENCHMARK"]
 
 
 class OosRunSpec(TypedDict):
@@ -77,7 +78,10 @@ def build_nautilus_inputs(
     segment_runner: SegmentRunner | None = None,
     package_dir: Path,
     clock: RuntimeClock | None = None,
+    execution_scope: ExecutionScope = "FULL_RESEARCH_PACKAGE",
 ) -> dict:
+    if execution_scope not in {"FULL_RESEARCH_PACKAGE", "PRE_OOS_BENCHMARK"}:
+        raise ValueError(f"unsupported execution_scope: {execution_scope}")
     effective_data_root = resolve_data_root(data_root)
     assets = sorted(assets or DEFAULT_NAUTILUS_ASSETS)
     pilot = _load_pilot_module()
@@ -154,7 +158,7 @@ def build_nautilus_inputs(
     result_by_candidate: dict[str, list[SimulationResult]] = {
         candidate_row["candidate_id"]: [] for candidate_row in search_space["candidates"]
     }
-    segment_inputs = []
+    segment_inputs: list[dict[str, Any]] = []
     candidate_rows_by_id = {row["candidate_id"]: row for row in search_space["candidates"]}
     payloads_by_fold = {
         fold["fold_id"]: _payloads_by_axis(assets, inputs["identifiers"]["research_family_id"], fold["fold_id"])
@@ -188,6 +192,27 @@ def build_nautilus_inputs(
                     "timestamp_is_close": True,
                 }
             )
+    test_bar_count_by_asset = {
+        asset: sum(len(item["bars"]) for item in segment_inputs if item["candidate"].asset == asset)
+        for asset in assets
+    }
+    unique_test_bar_count_by_asset = {
+        asset: len(
+            {
+                bar.timestamp
+                for item in segment_inputs
+                if item["candidate"].asset == asset
+                for bar in item["bars"]
+            }
+        )
+        for asset in assets
+    }
+    fold_schedules_by_asset = {
+        asset: [copy.deepcopy(fold["schedule"]) for fold in folds]
+        for asset, folds in folds_by_asset.items()
+    }
+    reference_schedule = fold_schedules_by_asset[assets[0]]
+    fold_schedules_aligned = all(schedule == reference_schedule for schedule in fold_schedules_by_asset.values())
     inputs["registry_timestamp"] = _runtime_timestamp(clock)
     inputs["identifiers"]["document_hash"] = _config_document_hash(pilot, inputs)
     pilot.prepare_pre_oos_package(package_dir, inputs)
@@ -258,6 +283,28 @@ def build_nautilus_inputs(
     pre_oos_reports = pilot._pre_oos_reports(inputs)
     pilot.cache_pre_oos_reports(inputs, pre_oos_reports)
     oos_access_decision = pre_oos_reports["oos_access_decision"]
+    if execution_scope == "PRE_OOS_BENCHMARK":
+        inputs["_benchmark_metrics"] = {
+            "execution_scope": execution_scope,
+            "candidate_count": len(search_space["candidates"]),
+            "test_segment_count": len(segment_inputs),
+            "test_bar_evaluation_count": sum(test_bar_count_by_asset.values()),
+            "test_bar_evaluation_count_by_asset": test_bar_count_by_asset,
+            "unique_test_bar_count": sum(unique_test_bar_count_by_asset.values()),
+            "unique_test_bar_count_by_asset": unique_test_bar_count_by_asset,
+            "fold_schedules_by_asset": fold_schedules_by_asset,
+            "fold_schedules_aligned": fold_schedules_aligned,
+            "test_total_orders": inputs["execution_report"]["total_orders"],
+            "oos_segment_count": 0,
+            "oos_bar_count": 0,
+        }
+        inputs["_build_outcome"] = {
+            "status": "PRE_OOS_ONLY",
+            "package_built": False,
+            "oos_access_decision": copy.deepcopy(oos_access_decision),
+            "pre_oos_reports_hash": pre_oos_reports["content_hash"],
+        }
+        return inputs
     if oos_access_decision["status"] != "AUTHORIZED":
         inputs["_build_outcome"] = {
             "status": "DENIED",
