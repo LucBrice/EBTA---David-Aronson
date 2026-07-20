@@ -80,6 +80,31 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-20 - Derivation des attestations mecaniques G13/G14
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL |
+| Statut | ACCEPTED |
+| Source normative | SOP 11, SOP 12; Paquet d'execution G13/G14 |
+| Fichiers impactes | producer du pilote et tests end-to-end |
+| Impact protocole | NONE |
+| Verification | 183 tests PASS; Pyrefly 0 erreur; build pilote complet avec G14 INCONCLUSIVE attendu |
+
+### Decision
+
+- deriver la version live et le kill-switch depuis le rapport live fourni ;
+- deriver les trois exigences G14 uniquement depuis un mapping de chemins
+  explicite, declare dans la forme du package, contenu sous sa racine et present ;
+- retourner `INCONCLUSIVE` si la preuve manque et `FAIL` pour un chemin unsafe
+  ou un kill-switch explicitement faux ;
+- conserver le package courant `VALIDATION_READY` en `FAIL` global cause G14
+  `INCONCLUSIVE`, plutot que de maintenir cinq attestations favorables codees en dur.
+
+Les reviewers et approbations humaines restent inchanges et sont delegues au
+sous-chantier suivant.
+
 ## 2026-07-20 - Chronologie effective avant ouverture OOS
 
 | Champ | Valeur |

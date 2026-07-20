@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_DERIVATION_ATTESTATIONS_MECANIQUES",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -766,8 +766,8 @@
       "id": "PLAN_DERIVATION_ATTESTATIONS_MECANIQUES",
       "title": "PLAN_DERIVATION_ATTESTATIONS_MECANIQUES",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "IMPLEMENTATION_DETAIL",
       "source_path": ".ai/backlog/mainline/PLAN_DERIVATION_ATTESTATIONS_MECANIQUES.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_DERIVATION_ATTESTATIONS_MECANIQUES.md",
@@ -775,12 +775,13 @@
       "opened_at": "2026-07-20",
       "last_moved_at": "2026-07-20",
       "routing_decision": "mainline",
-      "routing_reason": "Sous-chantier 2/3 de PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS",
+      "routing_reason": "Sous-chantier 2/3 de PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS - implementation apres double convergence et baseline 66397ac",
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": true
     }
   ],
   "validation": {

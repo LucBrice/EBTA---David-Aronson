@@ -14,6 +14,44 @@ PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_pa
 
 
 class MinimalPilotPipelineTests(unittest.TestCase):
+    def test_mechanical_attestation_helpers_contrast_present_missing_false_and_unsafe_paths(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertEqual(module._identifier_evidence_gate("LIVE-REAL-001"), "LIVE-REAL-001")
+        self.assertEqual(module._identifier_evidence_gate(""), "INCONCLUSIVE")
+        self.assertEqual(module._boolean_evidence_gate(True), "PASS")
+        self.assertEqual(module._boolean_evidence_gate(False), "FAIL")
+        self.assertEqual(module._boolean_evidence_gate(None), "INCONCLUSIVE")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "package"
+            evidence_paths = {
+                "lifecycle_archive": "reports/lifecycle_archive.json",
+                "incident_log": "logs/incidents.jsonl",
+                "retention_policy": "reports/retention_policy.json",
+            }
+            shape = {
+                "artifact_paths": list(evidence_paths.values()),
+                "gate_evidence_paths": evidence_paths,
+            }
+            for relative_path in evidence_paths.values():
+                target = package_dir / relative_path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("{}\n", encoding="utf-8")
+            for evidence_name in evidence_paths:
+                self.assertEqual(module._artifact_evidence_gate(package_dir, shape, evidence_name), "PASS")
+
+            (package_dir / evidence_paths["incident_log"]).unlink()
+            self.assertEqual(module._artifact_evidence_gate(package_dir, shape, "incident_log"), "INCONCLUSIVE")
+            unsafe_shape = {
+                "artifact_paths": ["../outside.json"],
+                "gate_evidence_paths": {"lifecycle_archive": "../outside.json"},
+            }
+            self.assertEqual(module._artifact_evidence_gate(package_dir, unsafe_shape, "lifecycle_archive"), "FAIL")
+
     def test_cached_pre_oos_reports_are_reused_and_tampering_is_rejected(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
         assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
@@ -93,11 +131,15 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             direct_validation = module.validate_package_dir(package_dir)
             registered_candidates = module._registered_candidates_from_registry(package_dir)
 
-        self.assertEqual(report["status"], "PASS")
-        self.assertEqual(direct_validation["status"], "PASS")
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(direct_validation["status"], "FAIL")
         self.assertEqual(report["manifest_artifact_failures"], [])
         self.assertEqual(report["semantic_errors"], [])
-        self.assertEqual(report["gate_report"]["summary"]["inconclusive"], 0)
+        self.assertEqual(report["gate_report"]["summary"]["inconclusive"], 1)
+        self.assertEqual(
+            report["gate_failures"],
+            ["G14 INCONCLUSIVE: missing ['lifecycle_archive', 'incident_log', 'retention_policy']"],
+        )
         self.assertTrue(all(result["status"] == "PASS" for result in report["invariant_results"]))
         self.assertEqual(config["config_id"], pilot_inputs["identifiers"]["config_id"])
         self.assertEqual(config, module.config_document(pilot_inputs))
@@ -194,6 +236,11 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                 self.assertEqual(gates[field], expected_status)
                 self.assertIsInstance(gates[field], str)
                 self.assertNotEqual(gates[field], True)
+        for field in ("lifecycle_archive", "incident_log", "retention_policy"):
+            with self.subTest(field=field):
+                self.assertEqual(gates[field], "INCONCLUSIVE")
+        self.assertEqual(gates["live_version_id"], pilot_inputs["live_deployment_report"]["live_version_id"])
+        self.assertEqual(gates["kill_switch"], "PASS")
         sealing = procedure_reports["sealing.json"]
         self.assertEqual(sealing["sealed_at"], pilot_inputs["pre_oos_seal"]["fixture_sealed_at"])
         self.assertEqual(sealing["sealed_at_source"], "INJECTED_FIXTURE_CLOCK")

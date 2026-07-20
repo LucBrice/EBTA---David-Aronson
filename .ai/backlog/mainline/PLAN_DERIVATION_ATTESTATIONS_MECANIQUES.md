@@ -35,9 +35,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `DONE - implementation et validations terminees` |
 | Date de creation | 2026-07-20 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-20 |
 | Autorite normative | SOP 11, SOP 12, Paquet d'execution G13/G14 |
 | Autorite executable | builder pilote et gate validator existant |
 | Changement normatif | Aucun |
@@ -116,6 +116,7 @@ Autorises :
 Implementation/examples/minimal_pilot_pipeline/build_research_package.py
 Implementation/examples/minimal_pilot_pipeline/inputs/package_shape.json
 Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py
+Implementation/ebta_engine/tests/test_nautilus_research_package.py
 Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md
 ```
 
@@ -263,18 +264,18 @@ mock de preuve ou relachement du validator.
 
 ## 12. Definition of Done
 
-- [ ] Cinq constantes mecaniques supprimees.
-- [ ] Contrastes missing/false/present verts.
-- [ ] G14 courant INCONCLUSIVE sans erreur technique.
-- [ ] Aucun champ humain ou fichier interdit touche.
-- [ ] Suite, Pyrefly, bug-hunter et conformance verts.
+- [x] Cinq constantes mecaniques supprimees.
+- [x] Contrastes missing/false/present verts.
+- [x] G14 courant INCONCLUSIVE sans erreur technique.
+- [x] Aucun champ humain ou fichier interdit touche.
+- [x] Suite, Pyrefly et bug-hunter verts; conformance a valider avant `/close`.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A remplir |
-| Ecarts | A remplir |
+| Resultat | DONE - en attente de cloture mecanique |
+| Ecarts | Perimetre test etendu a `test_nautilus_research_package.py` pour aligner deux attentes globales; aucun code Nautilus touche. |
 | Suite | Enfant 3 approbations humaines. |
 
 ## 14. Journal d'audits
@@ -285,3 +286,14 @@ mock de preuve ou relachement du validator.
 | 2026-07-20 | Passe intake 2 : path traversal bloque, false kill-switch distingue de missing; convergence. | Securiser la derivation et conserver le sens des preuves. |
 | 2026-07-20 | Passe plan route 1 : le helper G14 est limite a la reconnaissance; il ne cree, copie ni preserve aucun artefact lifecycle. | Un mapping futur ne suffit pas a produire une preuve et le reset du builder demeure inchangé. |
 | 2026-07-20 | Passe plan route 2 : aucun nouvel angle mort majeur; convergence. | Les branches present/missing/false sont binaires, les preuves humaines et la production lifecycle restent hors scope. |
+| 2026-07-20 | Perimetre test etendu a `test_nautilus_research_package.py`. | Le builder Nautilus reutilise le package shape pilote; ses deux attentes globales PASS doivent constater le meme G14 INCONCLUSIVE sans changer le code Nautilus. |
+
+### Resultat d'execution - 2026-07-20
+
+| Champ | Valeur |
+| --- | --- |
+| Phases | 1 a 4 |
+| Validation | 183 tests PASS; Pyrefly 0 erreur; pilote construit integralement, status FAIL attendu, unique gate failure G14. |
+| Bug-hunter | Aucun diagnostic final; revue manuelle des types source (`object`), du confinement de chemins et des branches missing/false/present. |
+| Fichiers | Builder pilote, tests pilote/Nautilus, historique, plan/checkpoint. |
+| Non touches | Protocole, schemas, validator, manifest builder, code Nautilus, reviewers/approvals, R5/R6, BACKTRADER. |

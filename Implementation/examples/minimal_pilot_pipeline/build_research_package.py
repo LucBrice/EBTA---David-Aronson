@@ -77,7 +77,7 @@ def build_package(
         _validate_prepared_pre_oos_package(package_dir, pilot_inputs)
     else:
         prepare_pre_oos_package(package_dir, pilot_inputs)
-    _write_reports(package_dir, pilot_inputs)
+    _write_reports(package_dir, pilot_inputs, package_shape)
     if not prepared_pre_oos:
         _write_oos_access_log(package_dir, pilot_inputs)
     _write_series(package_dir, pilot_inputs)
@@ -423,7 +423,38 @@ def _oos_openings_from_wrc(schedule: list[dict], local_wrc_reports: list[dict]) 
     ]
 
 
-def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
+def _identifier_evidence_gate(value: object) -> str:
+    return value.strip() if isinstance(value, str) and value.strip() else "INCONCLUSIVE"
+
+
+def _boolean_evidence_gate(value: object) -> str:
+    if value is True:
+        return "PASS"
+    if value is False:
+        return "FAIL"
+    return "INCONCLUSIVE"
+
+
+def _artifact_evidence_gate(package_dir: Path, package_shape: dict, evidence_name: str) -> str:
+    mapping = package_shape.get("gate_evidence_paths", {})
+    relative_path = mapping.get(evidence_name) if isinstance(mapping, dict) else None
+    if not isinstance(relative_path, str) or not relative_path.strip():
+        return "INCONCLUSIVE"
+    if relative_path not in package_shape.get("artifact_paths", []):
+        return "INCONCLUSIVE"
+    candidate = Path(relative_path)
+    if candidate.is_absolute():
+        return "FAIL"
+    package_root = package_dir.resolve()
+    resolved = (package_dir / candidate).resolve()
+    try:
+        resolved.relative_to(package_root)
+    except ValueError:
+        return "FAIL"
+    return "PASS" if resolved.is_file() else "INCONCLUSIVE"
+
+
+def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
     procedure_reports = _procedure_reports(pilot_inputs, package_dir=package_dir)
     candidate_ids = procedure_reports["candidate_matrix"]["candidate_ids"]
@@ -500,12 +531,12 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "paper_trading_log": monitoring_consultation_status,
         "monitoring_plan": monitoring_plan_status,
         "deployment_certified_manifest": deployment_gate_status,
-        "live_version_id": "LIVE-PILOT-001",
-        "kill_switch": True,
+        "live_version_id": _identifier_evidence_gate(pilot_inputs["live_deployment_report"].get("live_version_id")),
+        "kill_switch": _boolean_evidence_gate(pilot_inputs["live_deployment_report"].get("kill_switch_tested")),
         "live_approval": True,
-        "lifecycle_archive": True,
-        "incident_log": True,
-        "retention_policy": True,
+        "lifecycle_archive": _artifact_evidence_gate(package_dir, package_shape, "lifecycle_archive"),
+        "incident_log": _artifact_evidence_gate(package_dir, package_shape, "incident_log"),
+        "retention_policy": _artifact_evidence_gate(package_dir, package_shape, "retention_policy"),
     }
     invariant_evidence = {
         "oos_segments": [
