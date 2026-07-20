@@ -80,6 +80,54 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-20 - Horodatage automatique du scellement et preuves d'invariants derivees
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | IMPLEMENTATION_DETAIL / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` section 6 ; SOP 09A ; SOP 10 ; SOP 12 |
+| Fichiers impactes | `Implementation/ebta_engine/procedures/sealing.py`, `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json`, `Implementation/ebta_engine/tests/test_procedure_governance.py`, `Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py`, package pilote regenere |
+| Impact protocole | NONE |
+| Verification | `test_procedure_governance.py` PASS (11 tests), `test_minimal_pilot_pipeline.py` PASS (9 tests), `test_nautilus_research_package.py` PASS (6 tests), suite runtime PASS (174 tests), build pilote PASS, Pyrefly PASS (`0 errors`) |
+
+### Contexte
+
+Le Lot F de `EPIC_ATTESTATIONS_RESIDUELLES_R3` a identifie quatre preuves
+fabriquees dans `invariant_evidence.json` : date de scellement, statuts WRC
+locaux, transformations ML et evenements de disponibilite. La decision humaine
+du 2026-07-20 impose que les dates de jalons soient capturees automatiquement,
+sans saisie humaine ni date choisie par une IA ; une horloge fixe reste admise
+uniquement pour une fixture reproductible explicitement identifiee.
+
+### Decision
+
+- `validate_pre_oos_seal()` capture l'heure UTC runtime seulement apres un
+  scellement `PASS`; un echec ne produit aucune date ;
+- les tests et le pilote injectent une horloge fixe identifiee par
+  `sealed_at_source: INJECTED_FIXTURE_CLOCK` ;
+- `pre_oos_sealed_at` propage exactement `sealing.json::sealed_at` ;
+- les transformations et evenements PIT derivent de `ml_manifest` et
+  `data_availability_checks` ;
+- le builder recalcule le WRC primaire sur la fenetre Test de chaque fold,
+  persiste les rapports sous `wrc.json::local_reports` et mappe les ouvertures
+  OOS par `fold_id`; une preuve locale absente reste `INCONCLUSIVE`.
+
+### Impact
+
+Les quatre literals historiques disparaissent du chemin d'assemblage. Le
+package pilote et le package Nautilus multi-fold restent valides, mais un fold
+sans observations Test locales ne peut plus obtenir un faux WRC local `PASS`.
+Aucun validateur, gate, seuil, statut normatif ou document de `Protocole/` ne
+change.
+
+### Suite
+
+La generalisation de cette capture automatique a tous les jalons EBTA reste un
+chantier transversal distinct. Lot F fournit le patron executable pour le
+scellement sans etendre son perimetre aux autres transitions de phase.
+
 ## 2026-07-18 - Derivation du gate G8 depuis l'autorisation OOS reelle
 
 | Champ | Valeur |

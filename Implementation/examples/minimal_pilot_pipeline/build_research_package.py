@@ -13,6 +13,7 @@ import json
 import math
 import shutil
 import sys
+from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
 
@@ -347,6 +348,32 @@ def _min_annualized_return_threshold(economic_gate: dict, *, sessions_per_year: 
     raise KeyError("economic_gate.thresholds must define min_annualized_return or minimum_mean_return")
 
 
+def _pre_oos_sealing_report(pilot_inputs: dict) -> dict:
+    seal_inputs = dict(pilot_inputs["pre_oos_seal"])
+    fixture_sealed_at = seal_inputs.pop("fixture_sealed_at", None)
+    clock = None
+    if fixture_sealed_at is not None:
+        fixture_time = datetime.fromisoformat(fixture_sealed_at.replace("Z", "+00:00"))
+        if fixture_time.tzinfo is None or fixture_time.utcoffset() is None:
+            raise ValueError("pre_oos_seal.fixture_sealed_at must be timezone-aware")
+        clock = lambda: fixture_time
+    return validate_pre_oos_seal(**seal_inputs, clock=clock)
+
+
+def _oos_openings_from_wrc(schedule: list[dict], local_wrc_reports: list[dict]) -> list[dict]:
+    status_by_fold = {
+        report["fold_id"]: report.get("verdict", "INCONCLUSIVE")
+        for report in local_wrc_reports
+    }
+    return [
+        {
+            "fold_id": fold["fold_id"],
+            "wrc_local_status": status_by_fold.get(fold["fold_id"], "INCONCLUSIVE"),
+        }
+        for fold in schedule
+    ]
+
+
 def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     identifiers = pilot_inputs["identifiers"]
     procedure_reports = _procedure_reports(pilot_inputs, package_dir=package_dir)
@@ -369,6 +396,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     search_space = procedure_reports["search_space"]
     candidate_matrix = procedure_reports["candidate_matrix"]
     wrc = procedure_reports["wrc"]
+    local_wrc_reports = procedure_reports["wrc_local_reports"]
     robustness = procedure_reports["robustness"]
     economic = procedure_reports["economic"]
     oos_access_gate = _g8_oos_access_gate(procedure_reports["oos_access_decision"])
@@ -435,15 +463,15 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
             {"id": f"OOS-{index:03d}", "start": fold["oos"][0], "end": fold["oos"][1]}
             for index, fold in enumerate(pilot_inputs["walk_forward_schedule"], start=1)
         ],
-        "pre_oos_sealed_at": "2023-01-01T00:00:00Z",
+        "pre_oos_sealed_at": procedure_reports["sealing"].get("sealed_at"),
         "oos_access_log": [
             {"timestamp": event["timestamp"], "fold_id": event["fold_id"]}
             for event in pilot_inputs["oos_access_log"]
         ],
-        "oos_openings": [
-            {"fold_id": fold["fold_id"], "wrc_local_status": "PASS"}
-            for fold in pilot_inputs["walk_forward_schedule"]
-        ],
+        "oos_openings": _oos_openings_from_wrc(
+            pilot_inputs["walk_forward_schedule"],
+            local_wrc_reports,
+        ),
         "influential_candidates": candidate_ids,
         "registered_candidates": candidate_ids,
         "applicable_candidates": candidate_ids,
@@ -451,9 +479,16 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
         "asset_selection_axis": procedure_reports["search_space"].get("asset_selection_axis"),
         "asset_universe": procedure_reports["search_space"].get("asset_universe"),
         "candidate_assets": procedure_reports["search_space"].get("candidate_asset_map"),
-        "transformation_fits": [{"name": "scaler", "fit_segment": "Train_k"}],
+        "transformation_fits": [
+            dict(transformation)
+            for transformation in procedure_reports["ml_manifest"]["transformations"]
+        ],
         "decision_events": [
-            {"decision_at": "2023-01-02T00:00:00Z", "data_available_at": "2023-01-01T00:00:00Z"}
+            {
+                "decision_at": event["decision_at"],
+                "data_available_at": event["available_at"],
+            }
+            for event in pilot_inputs["data_availability_checks"]
         ],
         "expected_oos_days": [row["date"] for row in pilot_inputs["oos_primary_returns"]],
         "oos_series_days": [
@@ -484,7 +519,10 @@ def _write_reports(package_dir: Path, pilot_inputs: dict) -> None:
     static_reports = {
         "gates.json": gates,
         "invariant_evidence.json": invariant_evidence,
-        "wrc.json": _compact_wrc_report(procedure_reports["wrc"]),
+        "wrc.json": _compact_wrc_report_with_locals(
+            procedure_reports["wrc"],
+            local_wrc_reports,
+        ),
         "robustness.json": procedure_reports["robustness"],
         "oos.json": _compact_oos_report(procedure_reports["oos"]),
         "economic.json": procedure_reports["economic"],
@@ -564,6 +602,12 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
         alpha=statistical_plan["wrc_alpha"],
         run_secondary=statistical_plan.get("wrc_run_secondary", True),
     )
+    local_wrc_reports = _local_wrc_reports(
+        candidate_returns,
+        dates=pilot_inputs["candidate_test_dates"],
+        schedule=pilot_inputs["walk_forward_schedule"],
+        statistical_plan=statistical_plan,
+    )
     oos = oos_confidence_interval(
         pilot_inputs["oos_returns"],
         replications=statistical_plan["oos_bootstrap_replications"],
@@ -578,7 +622,7 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
     }
     economic = economic_gate_report(economic_gate_evidence)
     robustness = robustness_verdict(pilot_inputs["robustness_plan"]["scenarios"])
-    sealing = validate_pre_oos_seal(**pilot_inputs["pre_oos_seal"])
+    sealing = _pre_oos_sealing_report(pilot_inputs)
     g_bias = _g_bias_report(pilot_inputs, search_space, candidate_matrix, robustness)
     oos_access_decision = authorize_oos_access(_oos_access_request(pilot_inputs, wrc, robustness, sealing, g_bias))
     monitoring_plan = validate_monitoring_plan(pilot_inputs["incubation_plan"]["monitoring"])
@@ -618,6 +662,7 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
         "complexity_selection": complexity_selection,
         "candidate_matrix": candidate_matrix,
         "wrc": wrc,
+        "wrc_local_reports": local_wrc_reports,
         "oos": oos,
         "economic": economic,
         "robustness": robustness,
@@ -735,6 +780,49 @@ def _fold_scope_id(schedule: list[dict]) -> str:
     return "WF-" + "-".join(fold["fold_id"] for fold in schedule)
 
 
+def _local_wrc_reports(
+    candidate_returns: dict[str, list[float]],
+    *,
+    dates: list[str],
+    schedule: list[dict],
+    statistical_plan: dict,
+) -> list[dict]:
+    reports = []
+    for fold in schedule:
+        test_start, test_end = fold["test"]
+        indices = [
+            index
+            for index, timestamp in enumerate(dates)
+            if test_start <= timestamp[:10] <= test_end
+        ]
+        if not indices:
+            reports.append(
+                {
+                    "artifact_type": "wrc_report",
+                    "fold_id": fold["fold_id"],
+                    "verdict": "INCONCLUSIVE",
+                    "reason": "no candidate Test observations for fold",
+                }
+            )
+            continue
+
+        fold_returns = {
+            candidate_id: [values[index] for index in indices]
+            for candidate_id, values in candidate_returns.items()
+        }
+        report = wrc_test(
+            fold_returns,
+            replications=statistical_plan["wrc_bootstrap_replications"],
+            mean_block_length=statistical_plan["wrc_mean_block_length"],
+            seed=statistical_plan["wrc_seed"],
+            alpha=statistical_plan["wrc_alpha"],
+            run_secondary=False,
+        )
+        report["fold_id"] = fold["fold_id"]
+        reports.append(report)
+    return reports
+
+
 def _scores_by_rank(keys: list[str], values: list) -> dict:
     if len(values) < len(keys):
         raise ValueError(f"not enough pilot values for keys: expected {len(keys)}, got {len(values)}")
@@ -746,6 +834,12 @@ def _compact_wrc_report(report: dict) -> dict:
     distribution = compact.pop("bootstrap_distribution", [])
     compact["bootstrap_distribution_count"] = len(distribution)
     compact["bootstrap_distribution_hash"] = _stable_payload_hash(distribution)
+    return compact
+
+
+def _compact_wrc_report_with_locals(report: dict, local_reports: list[dict]) -> dict:
+    compact = _compact_wrc_report(report)
+    compact["local_reports"] = [_compact_wrc_report(local_report) for local_report in local_reports]
     return compact
 
 

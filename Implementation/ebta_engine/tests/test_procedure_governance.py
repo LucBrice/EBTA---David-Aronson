@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime, timezone
 
 from ebta_engine.procedures.data_availability import validate_availability
 from ebta_engine.procedures.economic_gate import economic_gate_report
@@ -37,8 +38,48 @@ class GovernanceProcedureTests(unittest.TestCase):
     def test_oos_access_requires_pre_oos_seal(self):
         denied = authorize_oos_access({"pre_oos_sealed": False})
         self.assertEqual(denied["status"], "DENIED")
+        before = datetime.now(timezone.utc)
         seal = validate_pre_oos_seal("PRE_OOS_SEALED", manifest_hash="HASH", independent_approval=True)
+        after = datetime.now(timezone.utc)
         self.assertEqual(seal["status"], "PASS")
+        sealed_at = datetime.fromisoformat(seal["sealed_at"].replace("Z", "+00:00"))
+        self.assertLessEqual(before, sealed_at)
+        self.assertLessEqual(sealed_at, after)
+        self.assertEqual(seal["sealed_at_source"], "RUNTIME_UTC")
+
+    def test_pre_oos_seal_uses_injected_fixture_clock(self):
+        fixture_time = datetime(2026, 1, 1, tzinfo=timezone.utc)
+
+        seal = validate_pre_oos_seal(
+            "PRE_OOS_SEALED",
+            manifest_hash="HASH",
+            independent_approval=True,
+            clock=lambda: fixture_time,
+        )
+
+        self.assertEqual(seal["sealed_at"], "2026-01-01T00:00:00Z")
+        self.assertEqual(seal["sealed_at_source"], "INJECTED_FIXTURE_CLOCK")
+
+    def test_failed_pre_oos_seal_has_no_timestamp(self):
+        seal = validate_pre_oos_seal(
+            "DRAFT",
+            manifest_hash="",
+            independent_approval=False,
+            clock=lambda: datetime(2026, 1, 1, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(seal["status"], "FAIL")
+        self.assertNotIn("sealed_at", seal)
+        self.assertNotIn("sealed_at_source", seal)
+
+    def test_pre_oos_seal_rejects_naive_clock(self):
+        with self.assertRaisesRegex(ValueError, "timezone-aware"):
+            validate_pre_oos_seal(
+                "PRE_OOS_SEALED",
+                manifest_hash="HASH",
+                independent_approval=True,
+                clock=lambda: datetime(2026, 1, 1),
+            )
 
     def test_oos_access_authorizes_only_after_bias_gate_pass(self):
         authorized = authorize_oos_access(

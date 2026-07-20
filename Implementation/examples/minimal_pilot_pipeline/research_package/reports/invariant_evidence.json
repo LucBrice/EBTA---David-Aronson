@@ -30,8 +30,8 @@
   },
   "decision_events": [
     {
-      "data_available_at": "2023-01-01T00:00:00Z",
-      "decision_at": "2023-01-02T00:00:00Z"
+      "data_available_at": "2019-12-31T00:00:00Z",
+      "decision_at": "2020-01-01T00:00:00Z"
     }
   ],
   "expected_oos_days": [
@@ -100,7 +100,7 @@
     "DEPLOYMENT_CERTIFIED",
     "LIVE_LIMITED_STARTED"
   ],
-  "pre_oos_sealed_at": "2023-01-01T00:00:00Z",
+  "pre_oos_sealed_at": "2026-01-01T00:00:00Z",
   "registered_candidates": [
     "CAND-01252661EDAA",
     "CAND-0FED98B76946",
@@ -126,7 +126,7 @@
   "transformation_fits": [
     {
       "fit_segment": "Train_k",
-      "name": "scaler"
+      "name": "standardize"
     }
   ],
   "wrc_matrix_candidates": [

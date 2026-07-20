@@ -15,6 +15,69 @@
   ],
   "exceedance_count": 0,
   "family_catalogue_hash": "41a6770a752e231546e1bce279b4fe0b2c94ade66289d99f50705155f24cd542",
+  "local_reports": [
+    {
+      "alpha": 0.05,
+      "artifact_type": "wrc_report",
+      "bootstrap_distribution_count": 5000,
+      "bootstrap_distribution_hash": "d75eadcd88263ff730dee35cb235df87f0c03536194e9f67ced5fd222d6c3982",
+      "candidate_ids": [
+        "CAND-01252661EDAA",
+        "CAND-0FED98B76946",
+        "CAND-37230AE99928",
+        "CAND-4789F5ED21DB",
+        "CAND-A4F431B84F01",
+        "CAND-ABA4614D9225",
+        "CAND-B680DD363F65",
+        "CAND-C394514FD46E"
+      ],
+      "exceedance_count": 0,
+      "family_catalogue_hash": "41a6770a752e231546e1bce279b4fe0b2c94ade66289d99f50705155f24cd542",
+      "fold_id": "FOLD-001",
+      "observed_candidate_statistics": {
+        "CAND-01252661EDAA": 0.06,
+        "CAND-0FED98B76946": 0.03,
+        "CAND-37230AE99928": -0.01,
+        "CAND-4789F5ED21DB": -0.015,
+        "CAND-A4F431B84F01": 0.05,
+        "CAND-ABA4614D9225": 0.02,
+        "CAND-B680DD363F65": -0.02,
+        "CAND-C394514FD46E": -0.004999999999999999
+      },
+      "observed_statistic": 0.06,
+      "power_diagnostics": {
+        "bad_candidates_must_not_be_removed_after_observation": true,
+        "candidate_count": 8,
+        "negative_mean_candidate_count": 4,
+        "negative_mean_candidate_fraction": 0.5,
+        "non_significant_valid_wrc_is_not_inconclusive": true,
+        "status": "DIAGNOSTIC_ONLY",
+        "wrc_known_power_limit": "many_bad_candidates_can_reduce_power"
+      },
+      "primary_gate_authority": "WRC_ONLY",
+      "primary_test": "WRC",
+      "replications": 5000,
+      "secondary_tests": {
+        "mcpm": {
+          "role": "SECONDARY_CAUSAL_PERMUTATION",
+          "status": "NOT_RUN"
+        },
+        "romano_wolf": {
+          "role": "SECONDARY_IDENTIFICATION",
+          "status": "NOT_RUN"
+        },
+        "spa": {
+          "role": "SECONDARY_SENSITIVITY",
+          "status": "NOT_RUN"
+        }
+      },
+      "secondary_tests_cannot_override_wrc": true,
+      "seed": 13,
+      "source_normative": "SOP 02 sections 6-12; DN-008 to DN-011; DN-018",
+      "verdict": "PASS",
+      "wrc_pvalue": 0.0001999600079984003
+    }
+  ],
   "observed_candidate_statistics": {
     "CAND-01252661EDAA": 0.06,
     "CAND-0FED98B76946": 0.03,

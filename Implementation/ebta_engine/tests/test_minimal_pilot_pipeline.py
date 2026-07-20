@@ -5,6 +5,8 @@ import unittest
 from copy import deepcopy
 from pathlib import Path
 
+from ebta_engine.validators.invariant_validator import validate_invariants
+
 
 ROOT = Path(__file__).resolve().parents[2]
 PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_package.py"
@@ -41,6 +43,9 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             wrc = json.loads((reports_dir / "wrc.json").read_text(encoding="utf-8"))
             oos = json.loads((reports_dir / "oos.json").read_text(encoding="utf-8"))
             gates = json.loads((reports_dir / "gates.json").read_text(encoding="utf-8"))
+            invariant_evidence = json.loads(
+                (reports_dir / "invariant_evidence.json").read_text(encoding="utf-8")
+            )
             search_space = json.loads((reports_dir / "search_space.json").read_text(encoding="utf-8"))
             candidate_matrix = json.loads((reports_dir / "candidate_matrix.json").read_text(encoding="utf-8"))
             procedure_reports = {
@@ -169,6 +174,33 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                 self.assertEqual(gates[field], expected_status)
                 self.assertIsInstance(gates[field], str)
                 self.assertNotEqual(gates[field], True)
+        sealing = procedure_reports["sealing.json"]
+        self.assertEqual(sealing["sealed_at"], pilot_inputs["pre_oos_seal"]["fixture_sealed_at"])
+        self.assertEqual(sealing["sealed_at_source"], "INJECTED_FIXTURE_CLOCK")
+        self.assertEqual(invariant_evidence["pre_oos_sealed_at"], sealing["sealed_at"])
+        self.assertEqual(
+            invariant_evidence["oos_openings"],
+            [
+                {
+                    "fold_id": pilot_inputs["walk_forward_schedule"][0]["fold_id"],
+                    "wrc_local_status": wrc["local_reports"][0]["verdict"],
+                }
+            ],
+        )
+        self.assertEqual(
+            invariant_evidence["transformation_fits"],
+            procedure_reports["ml_manifest.json"]["transformations"],
+        )
+        self.assertEqual(
+            invariant_evidence["decision_events"],
+            [
+                {
+                    "decision_at": event["decision_at"],
+                    "data_available_at": event["available_at"],
+                }
+                for event in pilot_inputs["data_availability_checks"]
+            ],
+        )
 
     def test_lot_d_registry_review_detects_registry_missing_matrix_candidate(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
@@ -215,6 +247,64 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         for field in ("oos_access_log", "opening_authorization", "single_oos_execution_log"):
             with self.subTest(field=field):
                 self.assertEqual(module._g8_oos_access_gate(failed_oos_access), "INCONCLUSIVE")
+
+    def test_lot_f_derives_evidence_from_changed_sources(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        pilot_inputs = deepcopy(module.load_pilot_inputs())
+        pilot_inputs["pre_oos_seal"]["fixture_sealed_at"] = "2026-01-01T12:34:56Z"
+        pilot_inputs["ml_manifest"]["transformations"] = [
+            {"name": "winsorize", "fit_segment": "Train_k"}
+        ]
+        pilot_inputs["data_availability_checks"] = [
+            {
+                "available_at": "2019-12-30T00:00:00Z",
+                "decision_at": "2020-01-01T00:00:00Z",
+            }
+        ]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "research_package"
+            module.build_package(package_dir, pilot_inputs=pilot_inputs)
+            reports_dir = package_dir / "reports"
+            sealing = json.loads((reports_dir / "sealing.json").read_text(encoding="utf-8"))
+            evidence = json.loads((reports_dir / "invariant_evidence.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(evidence["pre_oos_sealed_at"], sealing["sealed_at"])
+        self.assertEqual(sealing["sealed_at"], "2026-01-01T12:34:56Z")
+        self.assertEqual(evidence["transformation_fits"], pilot_inputs["ml_manifest"]["transformations"])
+        self.assertEqual(
+            evidence["decision_events"],
+            [{"data_available_at": "2019-12-30T00:00:00Z", "decision_at": "2020-01-01T00:00:00Z"}],
+        )
+
+    def test_lot_f_multifold_without_local_wrc_is_not_passing(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        openings = module._oos_openings_from_wrc(
+            [{"fold_id": "FOLD-001"}, {"fold_id": "FOLD-002"}],
+            [],
+        )
+        invariant = next(
+            result
+            for result in validate_invariants({"oos_openings": openings})
+            if result.invariant_id == "INV-003"
+        )
+
+        self.assertEqual(
+            openings,
+            [
+                {"fold_id": "FOLD-001", "wrc_local_status": "INCONCLUSIVE"},
+                {"fold_id": "FOLD-002", "wrc_local_status": "INCONCLUSIVE"},
+            ],
+        )
+        self.assertEqual(invariant.status, "FAIL")
 
     def test_minimal_pilot_contract_requires_package_shape(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)

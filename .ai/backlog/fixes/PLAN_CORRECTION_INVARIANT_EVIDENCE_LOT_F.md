@@ -53,7 +53,7 @@ sur la source de scellement empeche la preuve finale.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE - plan converge, pret au routage` |
+| Statut | `EN_COURS - implementation terminee, audits pre-cloture PASS` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` section 6 ; SOP 09A ; SOP 10 ; SOP 12 |
@@ -166,10 +166,14 @@ contextes legitimes : temps reel en production et temps fixe dans une fixture.
 La provenance `RUNTIME_UTC` ou `INJECTED_FIXTURE_CLOCK` rend cette distinction
 auditable.
 
-Pour WRC, le pilote courant est mono-fold. Sans rapports WRC locaux distincts,
-un calendrier multi-fold produit `INCONCLUSIVE` pour chaque ouverture. Cette
-sortie fait echouer `INV-003` et empeche un faux succes ; elle n'invente pas une
-nouvelle regle et reutilise un statut deja admis dans le runtime.
+Pour WRC, le builder recalcule un rapport primaire local sur les observations
+Test de chaque fold, a partir de `candidate_test_dates` et des series candidates
+deja utilisees par le WRC agrege. Ces rapports sont conserves sous
+`wrc.json::local_reports` et indexent `oos_openings` par `fold_id`. Si un fold
+n'a aucune observation Test locale, son rapport et son ouverture valent
+`INCONCLUSIVE`. Cette sortie fait echouer `INV-003` et empeche un faux succes ;
+elle n'invente pas une nouvelle regle et reutilise un statut deja admis dans le
+runtime.
 
 ### Frontieres explicites
 
@@ -208,7 +212,8 @@ au pilote et ne peut pas la confondre avec une preuve de production.
 | --- | --- |
 | Heure runtime UTC automatique | Evite la saisie humaine fragile et la date choisie par IA. |
 | Horloge injectable uniquement pour fixture/test | Rend le pilote reproductible sans transformer la fixture en preuve reelle. |
-| `INCONCLUSIVE` sur multi-fold sans WRC locaux | Evite de dupliquer un verdict agrege et de produire un faux PASS. |
+| Recalcul et persistance d'un WRC primaire par fold | Fournit une vraie source locale a `oos_openings` sans dupliquer le verdict agrege. |
+| `INCONCLUSIVE` lorsqu'un fold n'a pas d'observations Test | Evite de produire un faux PASS en l'absence de preuve locale. |
 | Validateurs inchanges | Ils expriment deja les invariants attendus. |
 
 ### Perimetre de fichiers explicite
@@ -277,7 +282,8 @@ Actions :
 - Propager `sealing.get("sealed_at")` vers `pre_oos_sealed_at`.
 - Deriver `transformation_fits` du manifest ML.
 - Deriver `decision_events` de `data_availability_checks` avec renommage de cle.
-- Mapper le WRC reel pour le mono-fold ; produire `INCONCLUSIVE` pour chaque fold si le calendrier est multi-fold sans preuves locales.
+- Recalculer le WRC primaire sur les observations Test de chaque fold, persister ces rapports sous `wrc.json::local_reports` et mapper les ouvertures par `fold_id`.
+- Produire `INCONCLUSIVE` lorsqu'un fold ne possede aucune observation Test locale.
 - Ajouter des tests de contraste qui modifient les sources et observent les sorties.
 
 Livrables :
@@ -423,24 +429,38 @@ deux horloges pour la meme preuve, ou masquer un FAIL/INCONCLUSIVE legitime.
 
 ## 12. Definition of Done
 
-- [ ] `sealing.json` contient `sealed_at` UTC et sa provenance sur PASS.
-- [ ] Un scellement FAIL ne contient pas `sealed_at`.
-- [ ] Une horloge naive est rejetee.
-- [ ] `pre_oos_sealed_at` est egal a `sealing.sealed_at`.
-- [ ] `oos_openings`, `transformation_fits` et `decision_events` derivent de leurs sources reelles.
-- [ ] Un calendrier multi-fold sans WRC locaux ne produit aucun WRC local `PASS` et INV-003 n'est pas PASS.
-- [ ] Les quatre literals historiques ont disparu de `_write_reports()`.
-- [ ] Tests cibles et suite runtime `PASS`.
-- [ ] Build pilote minimal `PASS` et artefacts regeneres.
-- [ ] Pyrefly/bug-hunter `PASS`.
-- [ ] Plan-conformance-audit `PASS`.
+- [x] `sealing.json` contient `sealed_at` UTC et sa provenance sur PASS.
+- [x] Un scellement FAIL ne contient pas `sealed_at`.
+- [x] Une horloge naive est rejetee.
+- [x] `pre_oos_sealed_at` est egal a `sealing.sealed_at`.
+- [x] `oos_openings`, `transformation_fits` et `decision_events` derivent de leurs sources reelles.
+- [x] Un calendrier multi-fold sans WRC locaux ne produit aucun WRC local `PASS` et INV-003 n'est pas PASS.
+- [x] Les quatre literals historiques ont disparu de `_write_reports()`.
+- [x] Tests cibles et suite runtime `PASS`.
+- [x] Build pilote minimal `PASS` et artefacts regeneres.
+- [x] Pyrefly/bug-hunter `PASS`.
+- [x] Plan-conformance-audit `PASS`.
 - [ ] Lot F clos via `plan.ps1 close`, checkpoint valide et epic parent synchronise.
 
 ---
 
 ## 13. Cloture
 
-A remplir apres les audits pre-cloture.
+| Champ | Valeur |
+| --- | --- |
+| Resultat pre-cloture | PASS - implementation terminee, cloture mecanique autorisee |
+| Ecarts par rapport au plan | Le premier passage de suite complete a revele le besoin de produire les WRC locaux K=2 au lieu de laisser le package Nautilus `FAIL`; correction realisee dans le perimetre builder/tests existant et documentee section 14. |
+| Fichiers interdits touches | Aucun (`Protocole/`, validateurs et `nautilus_mvp` inchanges par Lot F). |
+| Suite hors perimetre | Chantier transversal d'horodatage automatique des autres jalons EBTA. |
+
+### Audits pre-cloture
+
+| Audit | Resultat | Preuve |
+| --- | --- | --- |
+| bug-hunter | PASS | Pyrefly cible -> `INFO 0 errors`; aucun diagnostic a trier. |
+| plan-conformance-audit | PASS | 11 criteres substantiels IMPLEMENTES; aucun MANQUANT; aucun Non-goal viole; item `/close` restant purement mecanique. |
+| Tests | PASS | 11 tests gouvernance, 9 tests pilote, 6 tests Nautilus, suite complete 174 tests. |
+| Build | PASS | Package pilote `status: PASS`; propagation scellement verifiee par assertion directe. |
 
 ---
 
@@ -452,3 +472,4 @@ A remplir apres les audits pre-cloture.
 | 2026-07-20 | Brouillon `/evaluate` 2 | Convergence ; appelants, schemas et frontieres verifies ; aucun nouveau blind spot majeur. |
 | 2026-07-20 | Plan route `/evaluate` 1 | Contrat builder/procedure precise : `fixture_sealed_at` est retire avant `**kwargs`; FAIL ne contient ni date ni provenance. Aucun changement de perimetre. |
 | 2026-07-20 | Plan route `/evaluate` 2 | Convergence ; perimetre, tests de contraste, comportement temporel et fallback multi-fold couvrent les risques identifies sans nouveau blind spot majeur. |
+| 2026-07-20 | Audit d'implementation apres suite runtime | La suite a revele que le package Nautilus K=2 ne pouvait pas rester PASS avec un seul WRC agrege. Correction dans le perimetre existant : recalcul WRC primaire par fenetre Test, persistance dans `wrc.json::local_reports`, mapping exact par `fold_id`; tests pilote et Nautilus PASS. |
