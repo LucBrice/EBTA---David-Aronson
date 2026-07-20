@@ -297,3 +297,18 @@ mock de preuve ou relachement du validator.
 | Bug-hunter | Aucun diagnostic final; revue manuelle des types source (`object`), du confinement de chemins et des branches missing/false/present. |
 | Fichiers | Builder pilote, tests pilote/Nautilus, historique, plan/checkpoint. |
 | Non touches | Protocole, schemas, validator, manifest builder, code Nautilus, reviewers/approvals, R5/R6, BACKTRADER. |
+
+### Audit de conformite avant cloture - 2026-07-20
+
+| Exit criterion | Classement | Preuve |
+| --- | --- | --- |
+| Cinq sorties sans constante | IMPLEMENTE | `gates` appelle trois helpers aux lignes productrices; grep ne retrouve aucune constante sur ces cinq champs. |
+| Missing/false perd le PASS | IMPLEMENTE | Contrastes identifiant vide, booleen False/None, artefact supprime. |
+| Mapping G14 present produit PASS | IMPLEMENTE | Trois fichiers temporaires declares dans `artifact_paths` et `gate_evidence_paths` donnent PASS. |
+| Package courant G14 seul non vert | IMPLEMENTE | Test end-to-end exige exactement une failure G14 et aucune erreur schema/manifest/semantic/invariant. |
+| Suite et types | IMPLEMENTE | 183 tests PASS; Pyrefly 0 erreur. |
+
+Non-goals verifies : aucun changement Protocole/schema/validator/manifest/code
+Nautilus/reviewer/approval/R5/R6/BACKTRADER. L'extension a deux assertions du
+test Nautilus est documentee et ne modifie aucun runtime. Aucun critere manquant;
+`/close` autorise.
