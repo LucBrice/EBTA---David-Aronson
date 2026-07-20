@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-20",
+  "updated_at": "2026-07-21",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -803,6 +803,26 @@
       "closure_reason": "R4-long livre : rapport canonique 1/3/12 mois COMPLETED, 195 tests PASS, Pyrefly 0, bug-hunter 0 bug ouvert, conformance 7/7, Guardian CONFORME, OOS zero",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_REALISME_ECONOMIQUE_R5_R6",
+      "title": "Realisme economique R5 R6",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/mainline/PLAN_REALISME_ECONOMIQUE_R5_R6.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260721_PLAN_REALISME_ECONOMIQUE_R5_R6.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-21",
+      "last_moved_at": "2026-07-21",
+      "routing_decision": "mainline",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
