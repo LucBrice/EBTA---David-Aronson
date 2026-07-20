@@ -108,13 +108,25 @@ narratif). Ce chantier mere ne code et n'implemente rien lui-meme.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `BLOQUE - Lots D/E DONE ; Lot F attend decision de source pour pre_oos_sealed_at` |
+| Statut | `DONE - Lots D/E/F, Phase 4, audits et cloture mecanique termines` |
 | Date de creation | 2026-07-17 |
 | Date d'activation | 2026-07-17 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` (gates G0-G14) ; SOP 03 (Lot D, registry lineage) ; SOP 10 (Lot E, acces OOS) ; SOP 08/09B (Lot D, gate economique G10) — gelees, non modifiees par ce chantier |
 | Autorite executable | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_write_reports()`/`_procedure_reports()`/`_oos_access_request()` ; `Implementation/ebta_engine/procedures/registry_lineage.py` ; `Implementation/ebta_engine/procedures/oos_access.py` (chemin partage par le pilote et par la production Nautilus, modifie uniquement par les sous-chantiers) |
 | Changement normatif attendu | Aucun — application de regles deja normatives (des verdicts deja calcules, ou calculables a partir de donnees deja ecrites comme `registry.jsonl`, doivent conditionner les gates qui en dependent), pas de nouvelle regle |
 | Dependances externes | Aucune nouvelle pour ce chantier mere. Chaque sous-chantier documente les siennes. |
+
+## Carte d'execution IA (lecture prioritaire pour `/continue`)
+
+| Champ | Contenu operationnel |
+| --- | --- |
+| Objectif executable | Regenerer `nautilus_mvp` apres cloture des Lots D/E/F et documenter les verdicts reels sans exiger un statut global `PASS`. |
+| Autorite et lecture minimale | Lire `AGENTS.md`, `.ai/README.md`, `.ai/checkpoint.json`, ce plan, puis les plans archives des Lots D/E/F si une preuve de cloture doit etre revalidee ; `Protocole/PAQUET D'EXECUTION EBTA.md` et les SOP citees priment. |
+| Perimetre autorise | Ce chantier mere ne modifie pas `Implementation/` ; il route et coordonne les sous-chantiers. Chaque sous-chantier porte son propre perimetre ferme. |
+| Interdits absolus | Ne pas modifier `Protocole/`, les validateurs de gates, les manifests, ni rouvrir D ou E qui sont `DONE`. Ne pas inventer la source de `pre_oos_sealed_at`. |
+| Phase de reprise | Les Lots D/E/F sont `DONE` ; executer la Phase 4 de regeneration du package persistant. |
+| Preuve attendue | `nautilus_research_package.py::main()` et `validate_package_dir()` executes avec un rapport explicite gate par gate. |
+| Arret et escalade | S'arreter si Lot F propose une date saisie manuellement, choisie par une IA ou fabriquee dans l'assemblage des preuves ; la source doit etre l'evenement de scellement automatique ou une horloge de fixture explicitement injectee. |
 
 ---
 
@@ -356,8 +368,45 @@ Actions :
 
 Livrables : package `nautilus_mvp` regenere, rapport de statut par gate.
 
-Critere de sortie : `validate_package_dir()` execute et son resultat
-documente (quel que soit le statut global).
+Critere de sortie :
+
+- `validate_package_dir()` est execute et son resultat documente, quel que
+  soit le statut global.
+
+#### Rapport d'execution Phase 4 - 2026-07-20
+
+- `nautilus_research_package.py::main()` execute dans le venv Nautilus dedie :
+  regeneration terminee, statut global `FAIL` (code retour 1 attendu pour ce
+  verdict scientifique).
+- `validate_package_dir()` execute independamment : aucun chemin manquant,
+  aucune erreur de schema, de manifest ou de gouvernance du biais.
+- Artefacts regeneres identiques aux fichiers suivis par Git ; aucune mise a
+  jour de `Implementation/TRACEABILITY_MATRIX.md` n'est applicable, car aucun
+  mapping norme/code n'a change.
+
+| Gate | Statut | Preuve manquante ou resultat |
+| --- | --- | --- |
+| G0 | `PASS` | Identifiants et configuration presents. |
+| G1 | `PASS` | Snapshots, disponibilite et anti-leakage presents. |
+| G2 | `PASS` | Registre, catalogue, matrice locale et revue independante presents. |
+| G3 | `PASS` | Regle de selection, calibration Train-only et candidat selectionne presents. |
+| G4 | `INCONCLUSIVE` | `wrc_status = FAIL`; rapports WRC presents mais preuve de passage absente. |
+| G5 | `PASS` | Robustesse et verdict pre-OOS presents. |
+| G6 | `INCONCLUSIVE` | `execution_report` et `nav_reconciliation` non passants. |
+| G7 | `PASS` | Manifest pre-OOS, configuration gelee, tests et approbation presents. |
+| G8 | `INCONCLUSIVE` | Acces OOS refuse/non execute : log, autorisation et execution non passants. |
+| G9 | `INCONCLUSIVE` | Rapport/serie/bootstrap OOS non passants. |
+| G10 | `INCONCLUSIVE` | Gates statistique et economique non passants. |
+| G11 | `PASS` | Validation, reproduction et approbation incubation presentes. |
+| G12 | `PASS` | Incubation, paper trading et monitoring presents. |
+| G13 | `PASS` | Manifest deploiement, version live, kill switch et approbation presents. |
+| G14 | `PASS` | Archive, incidents et retention presents. |
+
+Synthese : 15 gates, 10 `PASS`, 5 `INCONCLUSIVE`. Les invariants sont 16
+`PASS` et 1 `FAIL` : `INV-003` detecte correctement une ouverture OOS apres
+un WRC local non passant. Les erreurs semantiques `incubation_gate status is
+FAIL` et `economic global_status is FAIL` sont conservees comme verdicts
+reels. La suite runtime complete passe avec 174 tests.
 
 ### Chemin critique (ordre des phases)
 
@@ -433,7 +482,7 @@ python -m unittest discover -s Implementation\ebta_engine\tests -t Implementatio
 **Prochaine etape executable proposee** :
 
 ```text
-Phase 3 : decision humaine requise avant routage du Lot F
+Aucune - chantier clos en DONE
 ```
 
 ### Analyse de reprise Lot F du 2026-07-18
@@ -443,27 +492,37 @@ sans decision explicite sur au moins une source :
 
 | Valeur `invariant_evidence.json` | Source candidate verifiee | Statut |
 | --- | --- | --- |
-| `oos_openings[].wrc_local_status` | `procedure_reports["wrc"]["verdict"]`, replie par fold du `walk_forward_schedule` courant. | Confirmable dans le code, mais le mapping multi-fold exact devra etre fixe dans le plan Lot F. |
+| `oos_openings[].wrc_local_status` | Rapports WRC locaux calcules sur les observations Test de chaque fold et persistes sous `wrc.json::local_reports`. | Resolu par Lot F : mapping explicite par `fold_id`; une preuve locale absente produit `INCONCLUSIVE`, jamais un faux `PASS`. |
 | `transformation_fits` | `procedure_reports["ml_manifest"]["transformations"]`, deja derive de `pilot_inputs["ml_manifest"]["transformations"]`. | Source exploitable. |
 | `decision_events` | `pilot_inputs["data_availability_checks"]` (`available_at`/`decision_at`). | Source exploitable avec renommage vers `data_available_at`. |
-| `pre_oos_sealed_at` | Aucune source temporelle dans `procedure_reports["sealing"]` : `validate_pre_oos_seal()` retourne seulement `artifact_type`, `status`, `violations`. | Decision humaine requise : ajouter explicitement un timestamp de scellement dans les inputs/rapport pilote, ou differer Lot F. |
+| `pre_oos_sealed_at` | Aucune source temporelle dans `procedure_reports["sealing"]` : `validate_pre_oos_seal()` retourne seulement `artifact_type`, `status`, `violations`. | Decision humaine du 2026-07-20 : le runtime capture automatiquement l'heure UTC lors du scellement reussi et la propage dans le rapport ; une horloge injectee, explicite et etiquetee fixture reste autorisee pour les tests/pilotes reproductibles. |
 
-Decision attendue avant `/start` Lot F :
+Decision actee avant `/start` Lot F :
 
 ```text
-Autoriser ou non l'ajout d'une source executable explicite `sealed_at` /
-`pre_oos_sealed_at` dans les inputs et le rapport de scellement pilote,
-sans modifier Protocole/ ni changer la logique de validation normative.
+Autoriser l'ajout d'une source executable `sealed_at` / `pre_oos_sealed_at`
+produite automatiquement au moment ou le scellement reussit, puis propagee
+dans le rapport de scellement et les preuves. La production utilise l'heure UTC
+du runtime ; les tests et pilotes reproductibles utilisent une horloge injectee
+et explicitement identifiee comme fixture. Aucune IA ni saisie humaine ne choisit
+la date, et aucune modification de `Protocole/` ou de la logique normative n'est
+autorisee par cette decision.
 ```
+
+La demande d'automatiser de la meme maniere tous les jalons methodologiques est
+retenue, mais elle constitue un chantier transversal distinct : elle possede un
+Exit criterion independant du Lot F et touche plusieurs producteurs d'evenements.
+Le Lot F ne doit ni l'absorber entierement ni le faire disparaitre ; il doit
+seulement etablir pour le scellement le patron reutilisable (capture UTC en
+production, horloge injectee en fixture, propagation et preuve).
 
 ### Execution sans interruption
 
 Autorite decisionnelle accordee : en dehors du perimetre de fichiers
-(section 4), des invariants (section 7), et de la pause obligatoire de la
-Phase 3 (Lot F), l'IA qui execute ce plan est autorisee a rediger, router,
-evaluer, implementer et clore les sous-chantiers Lot D et Lot E sans
-repasser par l'humain entre les deux, les decisions necessaires etant deja
-actees en section 10.
+(section 4) et des invariants (section 7), l'IA qui execute ce plan est
+autorisee a rediger, router, evaluer, implementer et clore Lot F selon la
+decision du 2026-07-20, puis a executer la Phase 4 sans repasser par l'humain,
+les decisions necessaires etant actees en section 10.
 
 ### Interdiction des raccourcis (aucun faux succes)
 
@@ -480,10 +539,10 @@ trouve precisement pour cette raison).
 
 - [x] Lot D `DONE`.
 - [x] Lot E `DONE`.
-- [ ] Lot F `DONE` ou explicitement differe par decision humaine documentee (section 10).
-- [ ] Phase 4 (regeneration) executee et documentee.
-- [ ] Aucune modification hors perimetre par ce document lui-meme (section 4).
-- [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier.
+- [x] Lot F `DONE` ou explicitement differe par decision humaine documentee (section 10).
+- [x] Phase 4 (regeneration) executee et documentee.
+- [x] Aucune modification hors perimetre par ce document lui-meme (section 4).
+- [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier.
 
 ---
 
@@ -501,6 +560,8 @@ trouve precisement pour cette raison).
 | 2026-07-18 | Lot D (`PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D`) clos en `DONE` : G2/G3/G4/G5/G7-residuel/G10 derivent de preuves reelles dans le builder pilote ; bug `registry_review` tautologique corrige ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers le Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) comme prochaine etape executable. |
 | 2026-07-18 | Lot E (`PLAN_CORRECTION_ACCES_OOS_LOT_E`) clos en `DONE` : `wrc_pass` derive du verdict WRC reel ; G8 derive de `oos_access_decision` ; test production Nautilus WRC FAIL -> OOS DENIED PASS ; tests cibles, suite runtime, build pilote, bug-hunter et conformance audit PASS. | Autorise la progression vers la Phase 3, mais Lot F reste soumis a la pause prevue : confirmer les sources exactes de derivation de `invariant_evidence.json` avant tout routage. |
 | 2026-07-18 | Reprise Lot F : sources revalidees dans le code reel. `transformation_fits`, `decision_events` et `oos_openings[].wrc_local_status` ont des sources candidates exploitables ; `pre_oos_sealed_at` n'a pas de source temporelle dans `sealing.json` ni dans `validate_pre_oos_seal()`. | Bloque le routage Lot F jusqu'a decision humaine : autoriser l'ajout d'une source explicite `sealed_at`/`pre_oos_sealed_at` dans les inputs/rapport pilote, ou differer Lot F. |
+| 2026-07-20 | Decision humaine : les dates des jalons cles ne doivent pas etre saisies manuellement ni choisies par une IA. Pour Lot F, `sealed_at` est capture automatiquement en UTC lors du scellement reussi ; les fixtures utilisent une horloge injectee et identifiee comme telle. La generalisation a tous les jalons est un chantier transversal distinct. | Leve le blocage de source de Lot F et autorise son `/start` avec ce contrat. Interdit d'elargir Lot F a tous les jalons ; un suivi separe devra porter cette generalisation. |
+| 2026-07-20 | Lot F (`PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F`) clos en `DONE` : `sealed_at` est capture automatiquement apres scellement reussi, les WRC locaux sont calcules par fold, et les transformations/evenements sont derives de leurs sources. Tests cibles, suite runtime (174 tests), build pilote, Pyrefly, bug-hunter et audit de conformite `PASS`. | Autorise la Phase 4 de regeneration et validation du package persistant `nautilus_mvp`. |
 
 ---
 
@@ -508,10 +569,10 @@ trouve precisement pour cette raison).
 
 | Risque | Impact | Mitigation / condition de deblocage |
 | --- | --- | --- |
-| Le Lot D ne trouve pas de vraie distinction "registered vs influential" pour G2 et doit redefinir `registry_review` comme un controle plus modeste | Le champ G2 pourrait rester un controle de presence plutot qu'une preuve de non-selection biaisee du registre | Documenter explicitement le choix retenu et sa justification au moment du `/start` du Lot D, ne pas le laisser implicite |
-| La correction `wrc_pass` (Lot E) fait basculer `oos_access_decision.status` a `DENIED` sur le package `nautilus_mvp` courant (WRC `FAIL` deja observe) | G8 pourrait devenir `INCONCLUSIVE`/`FAIL` sur le package persistant courant, en plus de G4 deja rouge | Verdict EBTA legitime attendu, pas une regression a masquer — coherent avec le principe deja accepte pour G4/G5/G9 |
-| Lot F reste sans perimetre confirme si personne ne tranche la source de `transformation_fits`/`decision_events` | Lot F resterait bloque indefiniment | Pause explicite en Phase 3 ; ne pas router le Lot F sans confirmation |
-| `pre_oos_sealed_at` n'a pas de source temporelle executable dans `sealing.json` | Si Lot F est route sans decision, il reproduirait un timestamp fabrique ou modifierait implicitement le contrat de scellement | Decision humaine requise avant routage : ajouter une source explicite dans les inputs/rapport pilote, ou differer Lot F |
+| `[RESOLU 2026-07-18]` Lot D ne trouvait pas de distinction native "registered vs influential" pour G2 | Le champ G2 risquait de rester une tautologie | Lot D a redefini et teste la revue comme un controle reel de presence/coherence des evenements influents dans le registre. |
+| `[REALISE 2026-07-20]` La correction `wrc_pass` (Lot E) fait basculer `oos_access_decision.status` a `DENIED` sur le package `nautilus_mvp` courant (`wrc_status = FAIL`) | G8 est `INCONCLUSIVE`, en plus de G4 | Verdict EBTA legitime conserve et documente en Phase 4, pas une regression a masquer. |
+| `[RESOLU 2026-07-20]` Lot F restait sans perimetre confirme pour les sources de `transformation_fits`/`decision_events` | Lot F aurait pu rester bloque indefiniment | Mappings exacts fixes et implementes par Lot F ; tests de contraste `PASS`. |
+| `[RESOLU 2026-07-20]` `pre_oos_sealed_at` n'avait pas de source temporelle executable dans `sealing.json` | Un routage sans decision aurait reproduit un timestamp fabrique ou modifie implicitement le contrat de scellement | Capture UTC automatique lors du scellement reussi ; horloge injectee et etiquetee pour les fixtures ; aucune saisie humaine ou date choisie par IA. |
 
 ---
 
@@ -521,13 +582,13 @@ A remplir au moment de `/close` du chantier mere (apres cloture de Lot D, Lot E,
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a la cloture] |
-| Ecarts par rapport au plan initial | [a remplir a la cloture] |
-| Suites a prevoir (hors perimetre de ce plan) | [a remplir a la cloture] |
+| Resultat final | `DONE` - les cinq criteres sont satisfaits et `plan.ps1 close` a archive le chantier mere. |
+| Ecarts par rapport au plan initial | Lot F a necessite une decision humaine explicite sur la source temporelle, puis a ete implemente plutot que differe. La regeneration finale produit legitimement un package global `FAIL` : 10 gates `PASS`, 5 `INCONCLUSIVE`, `INV-003 FAIL`. |
+| Suites a prevoir (hors perimetre de ce plan) | Chantier transversal distinct pour automatiser l'horodatage des autres jalons cles de la recherche EBTA. |
 
 ### Audits globaux pre-cloture
 
 | Audit | Resultat | Preuve |
 | --- | --- | --- |
-| bug-hunter global | [a remplir] | [a remplir] |
-| plan-conformance-audit EPIC | [a remplir] | [a remplir] |
+| bug-hunter global | `PASS` | Pyrefly sur les cinq fichiers Python touches par D/E/F : `INFO 0 errors`; suite runtime complete : 174 tests `PASS`. |
+| plan-conformance-audit EPIC | `PASS` | Criteres 1-5 `IMPLEMENTE` : D/E/F et l'epic sont `DONE` dans le checkpoint ; Phase 4 executee et documentee. Aucun critere `MANQUANT`, aucun Non-goal viole. |
