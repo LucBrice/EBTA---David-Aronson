@@ -107,7 +107,7 @@ ouverture, pas ici).
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `EN_COURS - LOT 1 R7 DONE` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/PROTOCOLE EBTA.md` ; SOP 05 (robustesse pre-OOS, Lot 2/R6) ; SOP 09B (modele d'execution/frictions/couts, Lot 2/R5) ; SOP 12 (reproductibilite/scellement, Lot 1/R7) - gelees, non modifiees par ce chantier |
@@ -123,7 +123,7 @@ ouverture, pas ici).
 | Autorite et lecture minimale | Lire `AGENTS.md`, `.ai/README.md`, `.ai/checkpoint.json`, ce plan, puis `.agents/skills/epic-orchestrator/SKILL.md` (procedure "Boucle par lot"), puis le plan de chaque lot au moment ou il est route. `Protocole/` et les SOP citees priment. |
 | Perimetre autorise | Ce chantier mere ne modifie que lui-meme (mise a jour de statut apres chaque cloture de lot). Chaque sous-chantier porte son propre perimetre ferme. |
 | Interdits absolus | Ne pas modifier `Protocole/` ni `Implementation/` depuis ce document ; ne pas fusionner deux lots ; ne pas construire R10 (live) ; ne pas exiger un package `PASS`. |
-| Phase de reprise | Lot 1 (R7) - premier lot a router (section 5, Phase 1). |
+| Phase de reprise | Lot 2 (R5/R6) - revalider le code, reappliquer le test multi-lot et obtenir les decisions humaines de calibration/stress avant implementation. |
 | Preuve attendue | Chaque lot `DONE` dans `.ai/checkpoint.json` ; puis la preuve globale de l'Exit criteria (5) (package regenere + `validate_package_dir()` + rapport gate-par-gate + budget benchmark). |
 | Arret et escalade | S'arreter pour demander une decision humaine sur : les seuils de calibration R5, la magnitude de stress R6, le perimetre des attestations Lot 3, ou si un prerequis factuel (donnees longues, venv) s'avere manquant/bloquant. Ne jamais inventer un seuil ou une methode. |
 
@@ -179,7 +179,7 @@ que de deviner.
 
 ## 3. Etat des lieux (avant/apres) - reutiliser avant de recreer
 
-### 3.1 Constats verifies dans le code courant (2026-07-20)
+### 3.1 Constats initiaux verifies dans le code (2026-07-20)
 
 Reverifies directement (pas herites de l'audit du 2026-07-13) :
 
@@ -191,6 +191,11 @@ Reverifies directement (pas herites de l'audit du 2026-07-13) :
 | Frais indicatifs, slippage nul | `nautilus_research_package.py:355` (`prob_slippage=0.0`), `:371-372`/`:389-390` (`maker_fee="0.0002"`, `taker_fee="0.0005"`) | R5 |
 | Trois scenarios de robustesse identiques, seuil `-1.0` jamais echouable | `nautilus_research_package.py:569-594` : CENTRAL/PLAUSIBLE/EXTREME, tous `minimum_mean_return: -1.0`, seul le label et `blocking` different, aucun choc applique | R6 |
 | Downsampling / fenetre courte, donnees longues non exploitees | audit H1 (`_daily_sample`, ~7 barres) - a reverifier a l'ouverture du Lot 4 | R4-long |
+
+Etat actuel apres Lot 1 : les trois lignes R7 ci-dessus sont historiques.
+`PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7` est `DONE` (commits `683e5fe` et
+`7636c73`) : resolver argument/`EBTA_DATA_ROOT`/fallback teste, hash SHA-256
+reel de `config.json`, venv recreable documente, suite 179 tests PASS.
 
 ### 3.2 Ce qui existe deja et doit etre reutilise (pas duplique)
 
@@ -497,10 +502,10 @@ Preuve globale (Phase 5) :
 python -c "from pathlib import Path; from ebta_engine.validators.package_validator import validate_package_dir; print(validate_package_dir(Path('Implementation/research_packages/nautilus_mvp'))['status'])"
 ```
 
-**Premier lot executable propose** :
+**Prochain lot executable propose** :
 
 ```text
-Lot 1 - PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7 (rediger le brouillon dans 0 - HUMAN START HERE/, boucle /evaluate x2)
+Lot 2 - PLAN_REALISME_ECONOMIQUE_R5_R6 (revalider le code et le test multi-lot ; obtenir les decisions humaines R5/R6 avant implementation)
 ```
 
 ### Execution sans interruption
@@ -524,7 +529,7 @@ remplacer une valeur inerte par une autre valeur inerte sous couvert de
 
 ## 9. Definition of Done
 
-- [ ] Lot 1 R7 `DONE`.
+- [x] Lot 1 R7 `DONE` (`683e5fe` implementation ; `7636c73` cloture).
 - [ ] Lot 2 R5/R6 `DONE` (directement ou via sa propre cloture generale s'il devient mere).
 - [ ] Lot 3 horodatage/attestations `DONE` ou explicitement differe par decision humaine documentee (section 10).
 - [ ] Lot 4 R4-long `DONE`.
@@ -550,7 +555,18 @@ Decisions restant a trancher (au `/start` du lot concerne, pas ici) :
 
 Prerequis factuels a statuer (a l'ouverture du lot) :
 - Disponibilite/qualite des donnees longues (Lot 4) - `disponible`/`manquant`/`bloquant`.
-- Recreabilite documentee du venv Nautilus (Lot 1).
+- Recreabilite documentee du venv Nautilus (Lot 1) - **RESOLU** : smoke
+  `nautilus_trader 1.230.0`/`Cache` PASS et guide
+  `Implementation/adapters/nautilus_env/README.md` livre.
+
+### Suite immediate
+
+| Lot | Etat | Preuve / action suivante |
+| --- | --- | --- |
+| 1 - R7 | `DONE` | Workstream archive ; 179 tests, pilote minimal, smoke venv, Pyrefly, bug-hunter et conformance PASS. |
+| 2 - R5/R6 | `NEXT - DECISIONS HUMAINES REQUISES` | Revalider les valeurs et le cablage actuels ; reappliquer le test multi-lot ; demander les sources/valeurs de calibration R5 et les magnitudes/seuils R6 avant tout code. |
+| 3 - Horodatage | `PENDING` | Peut avancer si Lot 2 est en attente, mais son perimetre d'attestations exige aussi une decision humaine. |
+| 4 - R4-long | `PENDING` | Verifier les donnees longues apres resolution des decisions precedentes. |
 
 ---
 
