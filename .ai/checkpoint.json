@@ -677,6 +677,26 @@
       "closure_reason": "Lot F termine : scellement UTC automatique, horloge fixture explicite, preuves invariant_evidence derivees, WRC locaux par fold, 174 tests et audits PASS",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE",
+      "title": "Maturite du moteur EBTA pour une vraie campagne de recherche",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/mainline/EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260720_EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-20",
+      "last_moved_at": "2026-07-20",
+      "routing_decision": "mainline",
+      "routing_reason": "Chantier mere multi-lot issu de l'audit de maturite (Partie A section 3) ; coordonne R7, R5/R6, horodatage/attestations, R4-long pour cloturer le sujet 'moteur pret pour une vraie campagne de recherche'. Demande humaine du 2026-07-20 ; note d'intake convergee en 2 passes /evaluate.",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
