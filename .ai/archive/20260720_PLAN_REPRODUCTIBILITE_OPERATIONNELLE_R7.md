@@ -41,9 +41,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `ACTIVE - IMPLEMENTATION TERMINEE, AUDITS DE CLOTURE PASS` |
 | Date de creation | 2026-07-20 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-20 |
 | Autorite normative | SOP 12 ; `PAQUET D'EXECUTION EBTA.md` section 3.1 |
 | Classification | `IMPLEMENTATION_DETAIL` |
 | Changement normatif attendu | Aucun |
@@ -393,32 +393,34 @@ placeholder ou stub ne compte comme implementation.
 
 ## 11. Definition of Done
 
-- [ ] Toutes les phases validees.
-- [ ] Exit criteria du Triage atteint.
-- [ ] Tests cibles et suite complete PASS.
-- [ ] Pyrefly/bug-hunter sans bug confirme.
-- [ ] Audit de conformite sans critere manquant.
-- [ ] Historique moteur append-only mis a jour.
-- [ ] Aucun fichier hors perimetre modifie.
-- [ ] Aucun placeholder R7 restant dans le chemin de production.
+- [x] Toutes les phases validees.
+- [x] Exit criteria du Triage atteint.
+- [x] Tests cibles et suite complete PASS (179 tests).
+- [x] Pyrefly/bug-hunter sans bug confirme (0 erreur ; 1 warning non affiche).
+- [x] Audit de conformite sans critere manquant.
+- [x] Historique moteur append-only mis a jour.
+- [x] Aucun fichier hors perimetre modifie.
+- [x] Aucun placeholder R7 restant dans le chemin de production ; l'ancien
+  package persistant `nautilus_mvp/config.json`, hors perimetre et non regenere,
+  reste reserve a la preuve globale de l'EPIC.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir au `/close`. |
-| Ecarts | A remplir au `/close`. |
+| Resultat final | `DONE` - data root portable, hash reel du document de configuration, environnement recreable documente. |
+| Ecarts | Scripts venv volontairement inchanges apres l'audit post-routage : leur defaut court etait deja la decision canonique. Le helper `config_document()` a ete ajoute au perimetre pour eviter une projection de hash concurrente. |
 | Suites hors perimetre | Lot 2 R5/R6 du chantier mere. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | A remplir |
-| Phases executees | A remplir |
-| Artefact produit | A remplir |
-| Validation | A remplir |
-| Ecart | A remplir |
+| Date | 2026-07-20 |
+| Phases executees | 1 a 4 |
+| Artefact produit | `resolve_data_root()` ; `config_document()` ; SHA-256 reel ; `nautilus_env/README.md` ; tests et historique. |
+| Validation | Tests cibles PASS (4 + 7 + 9 + 4) ; suite 179 tests PASS ; minimal pilot package PASS ; smoke Nautilus 1.230.0/Cache PASS ; Pyrefly 0 erreur ; `git diff --check` PASS. |
+| Ecart | Aucun ecart fonctionnel. Package Nautilus persistant non regenere, conformement au perimetre et reporte a la preuve globale du chantier mere. |
 
 ## 13. Journal d'audits post-hoc
 

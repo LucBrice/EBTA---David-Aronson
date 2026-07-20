@@ -696,16 +696,17 @@
       "blocks_mainline": true,
       "advances_mainline": true,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": false
     },
     {
       "id": "PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7",
       "title": "Lot 1 - R7 reproductibilite operationnelle",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/mainline/PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7.md",
+      "source_path": ".ai/archive/20260720_PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260720_PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-20",
@@ -715,8 +716,9 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
-      "non_goals": []
+      "closure_reason": "Lot R7 termine : data root argument/env/fallback, hash SHA-256 reel de config.json, venv documente ; 179 tests, pilote, smoke, Pyrefly, bug-hunter et conformance PASS",
+      "non_goals": [],
+      "is_active": false
     }
   ],
   "validation": {
