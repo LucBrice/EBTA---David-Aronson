@@ -845,6 +845,26 @@
       "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE",
+      "title": "Preuve package pre-OOS refusee",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/fixes/PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260721_PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-21",
+      "last_moved_at": "2026-07-21",
+      "routing_decision": "fix",
+      "routing_reason": "Sous-chantier correctif 5/5 de EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE : materialiser les preuves pre-OOS sur refus sans ouvrir OOS.",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
