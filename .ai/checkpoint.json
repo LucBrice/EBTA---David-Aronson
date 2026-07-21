@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -850,10 +850,10 @@
       "id": "PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE",
       "title": "Preuve package pre-OOS refusee",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE.md",
+      "source_path": ".ai/archive/20260721_PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260721_PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-21",
@@ -863,9 +863,9 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Paquet pre-OOS refuse materialise sans acces OOS; G5/G6 auditables; validateur FAIL attendu sans erreur schema/semantique; 208 tests PASS; Pyrefly et conformance PASS.",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
