@@ -81,6 +81,8 @@ def build_nautilus_inputs(
     clock: RuntimeClock | None = None,
     execution_scope: ExecutionScope = "FULL_RESEARCH_PACKAGE",
     execution_calibration: dict[str, Any] | None = None,
+    pre_oos_human_evidence: dict[str, Any] | None = None,
+    allow_test_fixture_human_evidence: bool = False,
 ) -> dict:
     if execution_scope not in {"FULL_RESEARCH_PACKAGE", "PRE_OOS_BENCHMARK"}:
         raise ValueError(f"unsupported execution_scope: {execution_scope}")
@@ -252,6 +254,12 @@ def build_nautilus_inputs(
     }
     reference_schedule = fold_schedules_by_asset[assets[0]]
     fold_schedules_aligned = all(schedule == reference_schedule for schedule in fold_schedules_by_asset.values())
+    if pre_oos_human_evidence is not None:
+        inputs["pre_oos_human_evidence"] = copy.deepcopy(pre_oos_human_evidence)
+    pilot.prepare_human_evidence(
+        inputs,
+        allow_test_fixture=allow_test_fixture_human_evidence,
+    )
     inputs["registry_timestamp"] = _runtime_timestamp(clock)
     inputs["identifiers"]["document_hash"] = _config_document_hash(pilot, inputs)
     pilot.prepare_pre_oos_package(package_dir, inputs)
@@ -461,6 +469,8 @@ def build_nautilus_research_package(
     end: str = DEFAULT_NAUTILUS_END,
     segment_runner: SegmentRunner | None = None,
     clock: RuntimeClock | None = None,
+    pre_oos_human_evidence: dict[str, Any] | None = None,
+    allow_test_fixture_human_evidence: bool = False,
 ) -> dict:
     pilot = _load_pilot_module()
     inputs = build_nautilus_inputs(
@@ -471,11 +481,18 @@ def build_nautilus_research_package(
         segment_runner=segment_runner,
         package_dir=package_dir,
         clock=clock,
+        pre_oos_human_evidence=pre_oos_human_evidence,
+        allow_test_fixture_human_evidence=allow_test_fixture_human_evidence,
     )
     denied = inputs.get("_build_outcome")
     if denied is not None:
         return denied
-    return pilot.build_package(package_dir, pilot_inputs=inputs, prepared_pre_oos=True)
+    return pilot.build_package(
+        package_dir,
+        pilot_inputs=inputs,
+        prepared_pre_oos=True,
+        allow_test_fixture_human_evidence=allow_test_fixture_human_evidence,
+    )
 
 
 def _config_document_hash(pilot: Any, inputs: dict[str, Any]) -> str:

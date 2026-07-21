@@ -25,6 +25,7 @@ if str(IMPLEMENTATION_ROOT) not in sys.path:
     sys.path.insert(0, str(IMPLEMENTATION_ROOT))
 
 from ebta_engine.governance import evaluate_bias_gate
+from ebta_engine.governance.human_evidence import evidence_gate, normalize_pre_oos_human_evidence
 from ebta_engine.manifests.manifest_builder import build_manifest
 from ebta_engine.persistence import append_jsonl, atomic_write_json
 from ebta_engine.procedures.candidate_matrix import build_candidate_matrix
@@ -68,10 +69,15 @@ def build_package(
     pilot_inputs: dict | None = None,
     package_shape: dict | None = None,
     prepared_pre_oos: bool = False,
+    allow_test_fixture_human_evidence: bool = False,
 ) -> dict:
     pilot_inputs = pilot_inputs or load_pilot_inputs()
     package_shape = package_shape or load_package_shape()
     _validate_pilot_contract(pilot_inputs, package_shape)
+    prepare_human_evidence(
+        pilot_inputs,
+        allow_test_fixture=allow_test_fixture_human_evidence,
+    )
 
     if prepared_pre_oos:
         _validate_prepared_pre_oos_package(package_dir, pilot_inputs)
@@ -94,6 +100,19 @@ def prepare_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
     package_dir.mkdir(parents=True)
     _write_config(package_dir, pilot_inputs)
     _write_registry(package_dir, pilot_inputs)
+
+
+def prepare_human_evidence(pilot_inputs: dict, *, allow_test_fixture: bool = False) -> dict:
+    normalized = normalize_pre_oos_human_evidence(
+        pilot_inputs.get("pre_oos_human_evidence"),
+        expected_subjects={
+            "registry_review": pilot_inputs["identifiers"]["research_family_id"],
+            "pre_oos_approval": pilot_inputs["pre_oos_seal"]["manifest_hash"],
+        },
+        allow_test_fixture=allow_test_fixture,
+    )
+    pilot_inputs["_normalized_pre_oos_human_evidence"] = normalized
+    return normalized
 
 
 def _validate_prepared_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
@@ -188,6 +207,7 @@ def config_document(pilot_inputs: dict) -> dict:
         "oos_opening_gate": pilot_inputs["oos_opening_gate"],
         "incubation_plan": pilot_inputs["incubation_plan"],
         "reproducibility_manifest": pilot_inputs["reproducibility_manifest"],
+        "pre_oos_human_evidence": _human_evidence(pilot_inputs),
         "document_hash": identifiers["document_hash"],
     }
 
@@ -399,6 +419,10 @@ def _min_annualized_return_threshold(economic_gate: dict, *, sessions_per_year: 
 
 def _pre_oos_sealing_report(pilot_inputs: dict) -> dict:
     seal_inputs = dict(pilot_inputs["pre_oos_seal"])
+    seal_inputs["independent_approval"] = evidence_gate(
+        _human_evidence(pilot_inputs),
+        "pre_oos_approval",
+    ) == "PASS"
     fixture_sealed_at = seal_inputs.pop("fixture_sealed_at", None)
     clock = None
     if fixture_sealed_at is not None:
@@ -493,7 +517,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -
         "registry_initialized": _g2_registry_initialized_gate(registry_review, registered_candidates),
         "candidate_catalog": _g2_candidate_catalog_gate(search_space),
         "local_matrix": _g2_local_matrix_gate(candidate_matrix, registry_review),
-        "independent_registry_review": True,
+        "independent_registry_review": evidence_gate(_human_evidence(pilot_inputs), "registry_review"),
         "selection_rule": _g3_selection_rule_gate(procedure_reports["complexity_selection"]),
         "train_only_calibration_log": _g3_train_calibration_gate(
             procedure_reports["optimization_log"],
@@ -513,7 +537,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -
         "pre_oos_manifest": sealing_status,
         "frozen_config": sealing_status,
         "test_reports": _test_reports_gate(procedure_reports),
-        "independent_pre_oos_approval": True,
+        "independent_pre_oos_approval": evidence_gate(_human_evidence(pilot_inputs), "pre_oos_approval"),
         "oos_access_log": oos_access_gate,
         "opening_authorization": oos_access_gate,
         "single_oos_execution_log": oos_access_gate,
@@ -837,7 +861,10 @@ def _oos_access_request(pilot_inputs: dict, wrc: dict, robustness: dict, sealing
         "wrc_pass": wrc.get("verdict") == "PASS",
         "robustness_pass": robustness["status"] == "PASS",
         "execution_pass": pilot_inputs["execution_report"]["status"] == "PASS",
-        "independent_approval": pilot_inputs["pre_oos_seal"]["independent_approval"],
+        "independent_approval": evidence_gate(
+            _human_evidence(pilot_inputs),
+            "pre_oos_approval",
+        ) == "PASS",
         "bias_gate_pass": g_bias["status"] == "PASS",
     }
 
@@ -868,6 +895,13 @@ def _decision_lock_payload(pilot_inputs: dict) -> dict:
         "slippage_model": pilot_inputs["execution_model"].get("slippage_model", "pilot_fixed_spread"),
         "execution_assumptions": pilot_inputs["execution_model"],
     }
+
+
+def _human_evidence(pilot_inputs: dict) -> dict:
+    normalized = pilot_inputs.get("_normalized_pre_oos_human_evidence")
+    if not isinstance(normalized, dict):
+        normalized = prepare_human_evidence(pilot_inputs)
+    return normalized
 
 
 def _registry_events(pilot_inputs: dict, candidate_ids: list[str]) -> list[dict[str, object]]:

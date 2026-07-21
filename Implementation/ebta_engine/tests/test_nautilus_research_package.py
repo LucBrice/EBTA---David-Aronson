@@ -8,7 +8,10 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from ebta_engine.package_builder.nautilus_research_package import build_nautilus_inputs, build_nautilus_research_package
+from ebta_engine.package_builder.nautilus_research_package import (
+    build_nautilus_inputs as _build_nautilus_inputs,
+    build_nautilus_research_package as _build_nautilus_research_package,
+)
 from ebta_engine.procedures._utils import canonical_json
 from ebta_engine.strategies.contracts import SimulationResult
 
@@ -162,6 +165,31 @@ class NautilusRobustnessGateProductionTests(unittest.TestCase):
 
 
 class NautilusChronologyProductionTests(unittest.TestCase):
+    def test_missing_human_evidence_denies_oos_before_runner_access(self):
+        calls = []
+
+        def runner(**kwargs):
+            calls.append(kwargs["seed"])
+            return _fake_segment_runner(**kwargs)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            package_dir = root / "research_package"
+            inputs = _build_nautilus_inputs(
+                package_dir=package_dir,
+                data_root=_write_fixture_data(root / "data"),
+                assets=["NASDAQ"],
+                segment_runner=runner,
+            )
+            oos_log_exists = (package_dir / "oos_access_log.jsonl").exists()
+
+        decision = inputs["_build_outcome"]["oos_access_decision"]
+        self.assertEqual(inputs["_build_outcome"]["status"], "DENIED")
+        self.assertEqual(decision["status"], "DENIED")
+        self.assertIn("independent_approval", decision["missing_requirements"])
+        self.assertNotIn(29, calls)
+        self.assertFalse(oos_log_exists)
+
     def test_pre_oos_benchmark_scope_stops_even_when_gates_authorize(self):
         calls = []
 
@@ -377,6 +405,41 @@ def _losing_segment_runner(**kwargs) -> SimulationResult:
         total_costs=0.0,
         metadata={"source": "fake_nautilus_losing_test_runner", "total_orders": 2},
     )
+
+
+def build_nautilus_inputs(*args, **kwargs):
+    kwargs.setdefault("pre_oos_human_evidence", _nautilus_test_human_evidence())
+    kwargs.setdefault("allow_test_fixture_human_evidence", True)
+    return _build_nautilus_inputs(*args, **kwargs)
+
+
+def build_nautilus_research_package(*args, **kwargs):
+    kwargs.setdefault("pre_oos_human_evidence", _nautilus_test_human_evidence())
+    kwargs.setdefault("allow_test_fixture_human_evidence", True)
+    return _build_nautilus_research_package(*args, **kwargs)
+
+
+def _nautilus_test_human_evidence():
+    common = {
+        "reviewer_id": "REVIEWER-NAUTILUS-TEST",
+        "status": "APPROVED",
+        "evidence_scope": "TEST_FIXTURE",
+        "approved_at": "2026-07-21T12:00:00Z",
+        "source_reference": "test-fixture://nautilus-package",
+        "independence_attested": True,
+    }
+    return {
+        "registry_review": {
+            **common,
+            "evidence_id": "REGISTRY-REVIEW-NAUTILUS-TEST",
+            "subject_id": "FAM-LIQUIDITY-SWEEP-NAUTILUS",
+        },
+        "pre_oos_approval": {
+            **common,
+            "evidence_id": "PRE-OOS-APPROVAL-NAUTILUS-TEST",
+            "subject_id": "PREOOS-HASH-PILOT",
+        },
+    }
 
 
 def _statistical_fail_segment_runner(**kwargs) -> SimulationResult:

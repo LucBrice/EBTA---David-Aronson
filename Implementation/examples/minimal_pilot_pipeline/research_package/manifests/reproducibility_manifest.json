@@ -1,7 +1,5 @@
 {
-  "approvals": [
-    "runtime_fixture_approval"
-  ],
+  "approvals": [],
   "artifacts": [
     {
       "artifact_role": "configuration",
@@ -9,7 +7,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "config.json",
       "produced_by": "ebta_engine",
-      "sha256": "A20106AB02811581A31D04C5B72E7290A99D349A468DDF98D5A7698269A88CF6",
+      "sha256": "E6F7591FBFACE85AF5C763C5082D6297E079E60A9D696CD4BD8383E72F1DADCD",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1"
     },
     {
@@ -108,7 +106,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/g_bias.json",
       "produced_by": "ebta_engine",
-      "sha256": "C2CD651343ECE9A4B9A7C011EBB9DAFF8AD256E96381E0D82941A77A9915849A",
+      "sha256": "511F742F26B445FAC6E3691FB8B3424BF75346B944BF5E2FC8A699E8FFE8D554",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -117,7 +115,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/gates.json",
       "produced_by": "ebta_engine",
-      "sha256": "B359A50539E11A43E957C78F16688719C60FE1F752789ACD796905B8080D9F9D",
+      "sha256": "A5509EFD9EB6127B3497B4BF10908DB682EE0F49F195D251388BFE546803A8FB",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -144,7 +142,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/invariant_evidence.json",
       "produced_by": "ebta_engine",
-      "sha256": "451AF1976D97C51003422176ECB604B5206333CEF3EB1F7D4DA7F824B9DB5439",
+      "sha256": "DE59324B64E9F4DA32D2172614AA1817AB08832492364BFD3DF1327B80473DBD",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -198,7 +196,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/oos_access_decision.json",
       "produced_by": "ebta_engine",
-      "sha256": "E091075C1CBAFE17C4F8DD6912F265A28E1BB3C0B78046E3E9773442C08CEB23",
+      "sha256": "947A023F2DD946F843D98EAD55C8411BE90C5906B89E6852C01AE3F893E47BFF",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -252,7 +250,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/sealing.json",
       "produced_by": "ebta_engine",
-      "sha256": "C5637F2A81FCB9727D30CD93180005E3053A803FB4C14C59E9A80787D31487EA",
+      "sha256": "F173E5E1A7E05B84D367CC0811A801BCB909C48081AA176CB0FA2D6E560CA655",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -292,7 +290,7 @@
     "runtime": "EBTA-ENGINE-0.1.0"
   },
   "configuration": {
-    "config_hash": "A20106AB02811581A31D04C5B72E7290A99D349A468DDF98D5A7698269A88CF6",
+    "config_hash": "E6F7591FBFACE85AF5C763C5082D6297E079E60A9D696CD4BD8383E72F1DADCD",
     "config_id": "CFG-PILOT-001",
     "config_path": "config.json"
   },
@@ -327,9 +325,7 @@
     "wrc_seed": 13
   },
   "research_family_id": "FAM-PILOT",
-  "reviewers": [
-    "independent_reviewer"
-  ],
+  "reviewers": [],
   "schema_version": "1.0.0",
   "test_matrices": [
     "reports/candidate_matrix.json"

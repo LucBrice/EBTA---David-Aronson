@@ -1,7 +1,7 @@
 {
   "artifact_type": "sealing_report",
-  "sealed_at": "2026-01-01T00:00:00Z",
-  "sealed_at_source": "INJECTED_FIXTURE_CLOCK",
-  "status": "PASS",
-  "violations": []
+  "status": "FAIL",
+  "violations": [
+    "missing_independent_approval"
+  ]
 }

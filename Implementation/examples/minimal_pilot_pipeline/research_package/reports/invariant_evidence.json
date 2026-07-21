@@ -100,7 +100,7 @@
     "DEPLOYMENT_CERTIFIED",
     "LIVE_LIMITED_STARTED"
   ],
-  "pre_oos_sealed_at": "2026-01-01T00:00:00Z",
+  "pre_oos_sealed_at": null,
   "registered_candidates": [
     "CAND-01252661EDAA",
     "CAND-0FED98B76946",

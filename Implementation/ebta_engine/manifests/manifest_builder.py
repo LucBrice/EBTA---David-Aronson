@@ -6,11 +6,13 @@ import json
 from pathlib import Path
 
 from ebta_engine.constants import PROTOCOL_VERSION, SCHEMA_VERSION
+from ebta_engine.governance.human_evidence import manifest_human_evidence
 from ebta_engine.manifests.hash_utils import sha256_file
 
 
 def build_manifest(package_dir: Path, artifact_paths: list[str], package_stage: str) -> dict:
     config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
+    reviewers, approvals = manifest_human_evidence(config.get("pre_oos_human_evidence", {}))
     artifacts = [
         {
             "path": path,
@@ -48,8 +50,8 @@ def build_manifest(package_dir: Path, artifact_paths: list[str], package_stage: 
         "execution_logs": ["reports/execution.json"],
         "oos_access_logs": ["oos_access_log.jsonl"],
         "artifacts": artifacts,
-        "reviewers": ["independent_reviewer"],
-        "approvals": ["runtime_fixture_approval"],
+        "reviewers": reviewers,
+        "approvals": approvals,
     }
 
 

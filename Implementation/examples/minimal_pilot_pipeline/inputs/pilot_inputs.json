@@ -149,7 +149,6 @@
   "pre_oos_seal": {
     "package_stage": "PRE_OOS_SEALED",
     "manifest_hash": "PREOOS-HASH-PILOT",
-    "independent_approval": true,
     "fixture_sealed_at": "2026-01-01T00:00:00Z"
   },
   "registry_timestamp": "2026-01-01T00:00:00Z",

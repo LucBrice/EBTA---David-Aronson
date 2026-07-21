@@ -80,6 +80,49 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-21 - Contrat explicite des preuves humaines pre-OOS
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | GOVERNANCE / IMPLEMENTATION_DETAIL |
+| Statut | ACCEPTED |
+| Source normative | SOP 03 ; SOP 10 ; SOP 12 ; decision humaine `3A` du 2026-07-21 |
+| Fichiers impactes | `ebta_engine/governance/human_evidence.py`, builder pilote, manifest builder, builder Nautilus, tests et package pilote genere |
+| Impact protocole | NONE |
+| Verification | Absence : G2/G7 INCONCLUSIVE, seal FAIL, OOS DENIED, manifeste vide ; fixture refusee par defaut ; 208 tests venv PASS ; Pyrefly 0 erreur |
+
+### Contexte
+
+Le builder presentait deux booleens `True` comme revues independantes et le
+manifeste fabriquait les valeurs `independent_reviewer` et
+`runtime_fixture_approval`. Le scellement et l'autorisation OOS lisaient aussi
+une approbation fixture de l'input par defaut.
+
+### Decision
+
+Un contrat optionnel `pre_oos_human_evidence` valide deux preuves liees a leur
+objet exact : revue du registre et approbation pre-OOS. Une preuve exige un ID,
+un reviewer, un statut APPROVED, un scope, un timestamp UTC, une source, un
+`subject_id` exact et une attestation d'independance. `TEST_FIXTURE` est refuse
+par defaut et ne peut etre active que par un argument explicite de test.
+
+La version normalisee est scellee dans `config.json`, puis reutilisee par le
+scellement, la decision OOS, G2/G7 et le manifeste. Une fixture acceptee en test
+est prefixee `TEST_FIXTURE:` dans le manifeste.
+
+### Impact
+
+Sans preuve, aucune identite n'est fabriquee : gates `INCONCLUSIVE`, seal
+`FAIL`, acces OOS `DENIED`, tableaux reviewers/approvals vides. Le runner
+Nautilus n'est jamais appele sur OOS. Les champs post-OOS/live restent hors
+scope et aucun schema/validateur/Protocole n'est modifie.
+
+### Suite
+
+Le chantier mere Lot 3 peut auditer ses trois enfants. Une vraie ouverture OOS
+reste conditionnee a des preuves externes effectivement fournies.
+
 ## 2026-07-21 - Calibration R5 et stress economiques R6 executables
 
 | Champ | Valeur |

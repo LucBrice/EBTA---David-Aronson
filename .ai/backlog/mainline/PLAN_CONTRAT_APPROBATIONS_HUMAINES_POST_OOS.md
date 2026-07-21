@@ -256,12 +256,12 @@ doit partir de l'absence totale de preuve et constater le refus avant OOS.
 
 ## 12. Definition of Done
 
-- [ ] Absence => seal non PASS, gates non PASS, DENIED, 0 OOS, manifeste vide.
-- [ ] EXTERNAL valide => IDs exacts propages et autorisation conditionnelle.
-- [ ] TEST_FIXTURE refuse par defaut, accepte seulement avec option explicite.
-- [ ] Aucun placeholder/litteral de preuve ne subsiste.
-- [ ] Aucun fichier interdit touche.
-- [ ] Tests cibles, suite venv, bug-hunter et conformance PASS.
+- [x] Absence => seal non PASS, gates non PASS, DENIED, 0 OOS, manifeste vide.
+- [x] EXTERNAL valide => IDs exacts propages et autorisation conditionnelle.
+- [x] TEST_FIXTURE refuse par defaut, accepte seulement avec option explicite.
+- [x] Aucun placeholder/litteral de preuve ne subsiste.
+- [x] Aucun fichier interdit touche.
+- [x] Tests cibles, suite venv, bug-hunter et conformance PASS.
 
 ## 13. Cloture
 
@@ -273,6 +273,10 @@ checkpoint et committer uniquement le delta de cloture.
 | Date | Phase | Validation | Resultat |
 |---|---|---|---|
 | 2026-07-21 | Preparation | `/evaluate` brouillon x2 | Convergent |
+| 2026-07-21 | Phases 0-2 | Contrat SSoT, seal/OOS, G2/G7 et manifeste | 30 tests cibles PASS ; package pilote absent => INCONCLUSIVE/FAIL/DENIED/tableaux vides | PASS |
+| 2026-07-21 | Phase 3 | Contraste fixture et non-regression | TEST_FIXTURE refusee par defaut/prefixee si autorisee ; 208 tests venv PASS | PASS |
+| 2026-07-21 | bug-hunter | Pyrefly sur tous les Python touches | 1 contrat de dict heterogene corrige ; 0 erreur final | PASS |
+| 2026-07-21 | plan-conformance-audit | Six criteres DoD contre diff depuis `f561884` | 6 IMPLEMENTE ; 0 MANQUANT ; 0 non-goal viole | PASS |
 
 ## 14. Journal d'audits post-hoc
 
@@ -280,3 +284,14 @@ checkpoint et committer uniquement le delta de cloture.
 |---|---|---|
 | 2026-07-21 | Plan route passe 1 | Liaison obligatoire de chaque preuve a son `subject_id` et attestation d'independance ajoutees |
 | 2026-07-21 | Plan route passe 2 | Normalisation unique avant config scellee et prefixe manifeste `TEST_FIXTURE:` ajoutes ; aucun nouveau blind spot majeur, convergence |
+
+### Plan-conformance-audit final — 2026-07-21
+
+| Critere | Classification | Preuve |
+|---|---|---|
+| Absence non-PASS, DENIED, 0 OOS, manifeste vide | IMPLEMENTE | Test pilote lit G2/G7, seal, decision et manifeste ; test Nautilus espion prouve aucun seed OOS |
+| EXTERNAL valide et IDs exacts | IMPLEMENTE | `test_external_evidence_is_bound_to_exact_subjects` ; normalisation `subject_id`/UTC/independance et extraction manifeste |
+| Fixture test-only | IMPLEMENTE | Refus par defaut, option explicite dans wrappers de tests, prefixe `TEST_FIXTURE:` |
+| Aucun placeholder/litteral de preuve | IMPLEMENTE | Recherche cible : aucune occurrence des deux `True` ni de `runtime_fixture_approval` dans le perimetre production/manifeste regenere |
+| Aucun fichier interdit | IMPLEMENTE | Diff sans `Protocole/`, schema, validateur, BACKTRADER ni champ live/post-OOS |
+| Audits finaux | IMPLEMENTE | 208 tests venv PASS ; Pyrefly 0 erreur ; present audit 0 manquant |

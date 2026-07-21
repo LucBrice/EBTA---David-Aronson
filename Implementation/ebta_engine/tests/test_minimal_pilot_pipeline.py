@@ -14,6 +14,30 @@ PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_pa
 
 
 class MinimalPilotPipelineTests(unittest.TestCase):
+    def test_missing_human_evidence_cannot_pass_gates_or_populate_manifest(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "research_package"
+            module.build_package(package_dir)
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+            sealing = json.loads((package_dir / "reports" / "sealing.json").read_text(encoding="utf-8"))
+            access = json.loads((package_dir / "reports" / "oos_access_decision.json").read_text(encoding="utf-8"))
+            manifest = json.loads(
+                (package_dir / "manifests" / "reproducibility_manifest.json").read_text(encoding="utf-8")
+            )
+
+        self.assertEqual(gates["independent_registry_review"], "INCONCLUSIVE")
+        self.assertEqual(gates["independent_pre_oos_approval"], "INCONCLUSIVE")
+        self.assertNotEqual(sealing["status"], "PASS")
+        self.assertEqual(access["status"], "DENIED")
+        self.assertIn("independent_approval", access["missing_requirements"])
+        self.assertEqual(manifest["reviewers"], [])
+        self.assertEqual(manifest["approvals"], [])
+
     def test_mechanical_attestation_helpers_contrast_present_missing_false_and_unsafe_paths(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
         assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
@@ -89,9 +113,14 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             pilot_inputs = module.load_pilot_inputs()
+            pilot_inputs["pre_oos_human_evidence"] = _test_human_evidence(pilot_inputs)
             package_shape = module.load_package_shape()
             package_dir = Path(temp_dir) / "research_package"
-            report = module.build_package(package_dir)
+            report = module.build_package(
+                package_dir,
+                pilot_inputs=pilot_inputs,
+                allow_test_fixture_human_evidence=True,
+            )
             reports_dir = package_dir / "reports"
             self.assertTrue((reports_dir / "search_space.json").exists())
             self.assertTrue((reports_dir / "candidate_matrix.json").exists())
@@ -322,6 +351,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         spec.loader.exec_module(module)
 
         pilot_inputs = deepcopy(module.load_pilot_inputs())
+        pilot_inputs["pre_oos_human_evidence"] = _test_human_evidence(pilot_inputs)
         pilot_inputs["pre_oos_seal"]["fixture_sealed_at"] = "2026-01-01T12:34:56Z"
         pilot_inputs["ml_manifest"]["transformations"] = [
             {"name": "winsorize", "fit_segment": "Train_k"}
@@ -335,7 +365,11 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             package_dir = Path(temp_dir) / "research_package"
-            module.build_package(package_dir, pilot_inputs=pilot_inputs)
+            module.build_package(
+                package_dir,
+                pilot_inputs=pilot_inputs,
+                allow_test_fixture_human_evidence=True,
+            )
             reports_dir = package_dir / "reports"
             sealing = json.loads((reports_dir / "sealing.json").read_text(encoding="utf-8"))
             evidence = json.loads((reports_dir / "invariant_evidence.json").read_text(encoding="utf-8"))
@@ -419,6 +453,29 @@ class MinimalPilotPipelineTests(unittest.TestCase):
 
         self.assertEqual(report["status"], "FAIL")
         self.assertTrue(any(failure.startswith("INV-017 FAIL") for failure in report["invariant_failures"]))
+
+
+def _test_human_evidence(pilot_inputs):
+    common = {
+        "reviewer_id": "REVIEWER-TEST-001",
+        "status": "APPROVED",
+        "evidence_scope": "TEST_FIXTURE",
+        "approved_at": "2026-01-01T00:00:00Z",
+        "source_reference": "test-fixture://minimal-pilot",
+        "independence_attested": True,
+    }
+    return {
+        "registry_review": {
+            **common,
+            "evidence_id": "REGISTRY-REVIEW-TEST-001",
+            "subject_id": pilot_inputs["identifiers"]["research_family_id"],
+        },
+        "pre_oos_approval": {
+            **common,
+            "evidence_id": "PRE-OOS-APPROVAL-TEST-001",
+            "subject_id": pilot_inputs["pre_oos_seal"]["manifest_hash"],
+        },
+    }
 
 
 if __name__ == "__main__":
