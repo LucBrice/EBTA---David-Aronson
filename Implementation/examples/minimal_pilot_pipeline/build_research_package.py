@@ -92,6 +92,33 @@ def build_package(
     return validate_package_dir(package_dir)
 
 
+def build_denied_pre_oos_evidence_package(
+    package_dir: Path,
+    *,
+    pilot_inputs: dict,
+    package_shape: dict | None = None,
+) -> dict:
+    """Persist only evidence available before a denied OOS opening.
+
+    This deliberately does not call ``_write_reports``: that writer targets a
+    complete VALIDATION_READY package and also consumes post-OOS/incubation/live
+    inputs. A denied package must keep those artifacts absent.
+    """
+
+    package_shape = package_shape or load_package_shape()
+    _validate_pilot_contract(pilot_inputs, package_shape)
+    if not isinstance(pilot_inputs.get("_normalized_pre_oos_human_evidence"), dict):
+        raise ValueError("pre-OOS human evidence must be normalized before materializing a denied package")
+    _validate_prepared_denied_pre_oos_package(package_dir, pilot_inputs)
+    reports = _denied_pre_oos_report_payloads(pilot_inputs, package_dir=package_dir)
+    for filename, payload in reports.items():
+        atomic_write_json(package_dir / "reports" / filename, payload)
+
+    validation = validate_package_dir(package_dir)
+    atomic_write_json(package_dir / "reports" / "package_validation.json", validation)
+    return validation
+
+
 def prepare_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
     """Create the durable config and append-only registry before Test execution."""
 
@@ -116,7 +143,39 @@ def prepare_human_evidence(pilot_inputs: dict, *, allow_test_fixture: bool = Fal
 
 
 def _validate_prepared_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
-    expected_files = {"config.json", "registry.jsonl", "oos_access_log.jsonl"}
+    _validate_prepared_pre_oos_base(
+        package_dir,
+        pilot_inputs,
+        expected_files={"config.json", "registry.jsonl", "oos_access_log.jsonl"},
+    )
+    access_events = [
+        json.loads(line)
+        for line in (package_dir / "oos_access_log.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    if access_events != pilot_inputs["oos_access_log"]:
+        raise ValueError("prepared OOS access log does not match current pilot inputs")
+
+
+def _validate_prepared_denied_pre_oos_package(package_dir: Path, pilot_inputs: dict) -> None:
+    pre_oos = _resolved_pre_oos_reports(pilot_inputs)
+    if pre_oos["oos_access_decision"].get("status") != "DENIED":
+        raise ValueError("denied pre-OOS evidence package requires a DENIED access decision")
+    if pilot_inputs.get("oos_access_log"):
+        raise ValueError("denied pre-OOS evidence package cannot contain OOS access events")
+    _validate_prepared_pre_oos_base(
+        package_dir,
+        pilot_inputs,
+        expected_files={"config.json", "registry.jsonl"},
+    )
+
+
+def _validate_prepared_pre_oos_base(
+    package_dir: Path,
+    pilot_inputs: dict,
+    *,
+    expected_files: set[str],
+) -> None:
     actual_files = {
         path.relative_to(package_dir).as_posix()
         for path in package_dir.rglob("*")
@@ -124,7 +183,7 @@ def _validate_prepared_pre_oos_package(package_dir: Path, pilot_inputs: dict) ->
     } if package_dir.exists() else set()
     if actual_files != expected_files:
         raise ValueError(
-            "prepared authorized package must contain exactly config.json, registry.jsonl and oos_access_log.jsonl; "
+            "prepared pre-OOS package contains unexpected files; "
             f"got {sorted(actual_files)}"
         )
     actual_config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
@@ -140,13 +199,6 @@ def _validate_prepared_pre_oos_package(package_dir: Path, pilot_inputs: dict) ->
         raise ValueError(f"prepared pre-OOS registry event count mismatch: expected {expected_count}, got {len(registry_events)}")
     if any(event.get("timestamp") != pilot_inputs["registry_timestamp"] for event in registry_events):
         raise ValueError("prepared pre-OOS registry timestamp does not match current pilot inputs")
-    access_events = [
-        json.loads(line)
-        for line in (package_dir / "oos_access_log.jsonl").read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    if access_events != pilot_inputs["oos_access_log"]:
-        raise ValueError("prepared OOS access log does not match current pilot inputs")
 
 
 def _validate_pilot_contract(pilot_inputs: dict, package_shape: dict) -> None:
@@ -204,10 +256,12 @@ def config_document(pilot_inputs: dict) -> dict:
         "statistical_plan": pilot_inputs["statistical_plan"],
         "execution_model": pilot_inputs["execution_model"],
         "robustness_plan": {"required_before_oos": pilot_inputs["robustness_plan"]["required_before_oos"]},
-        "oos_opening_gate": pilot_inputs["oos_opening_gate"],
+        "oos_opening_gate": {
+            **pilot_inputs["oos_opening_gate"],
+            "pre_oos_human_evidence": _human_evidence(pilot_inputs),
+        },
         "incubation_plan": pilot_inputs["incubation_plan"],
         "reproducibility_manifest": pilot_inputs["reproducibility_manifest"],
-        "pre_oos_human_evidence": _human_evidence(pilot_inputs),
         "document_hash": identifiers["document_hash"],
     }
 
@@ -654,6 +708,233 @@ def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -
     }
     for filename, payload in static_reports.items():
         atomic_write_json(package_dir / "reports" / filename, payload)
+
+
+def _denied_pre_oos_report_payloads(pilot_inputs: dict, *, package_dir: Path) -> dict[str, dict]:
+    pre_oos = _resolved_pre_oos_reports(pilot_inputs)
+    search_space = pre_oos["search_space"]
+    optimization_log = pre_oos["optimization_log"]
+    complexity_selection = pre_oos["complexity_selection"]
+    candidate_matrix = pre_oos["candidate_matrix"]
+    wrc = pre_oos["wrc"]
+    robustness = pre_oos["robustness"]
+    sealing = pre_oos["sealing"]
+    g_bias = pre_oos["g_bias"]
+    oos_access_decision = pre_oos["oos_access_decision"]
+    execution = pilot_inputs["execution_report"]
+
+    registered_candidates = _registered_candidates_from_registry(package_dir)
+    registry_review = review_registry_lineage(
+        registered_candidates,
+        candidate_matrix["candidate_ids"],
+        lineage_events=_registry_lineage_events(package_dir),
+    )
+    data_availability = validate_availability(pilot_inputs["data_availability_checks"])
+    fold_schedule = validate_walk_forward_schedule(
+        pilot_inputs["walk_forward_schedule"],
+        information_stop_criterion=pilot_inputs["information_stop_criterion"],
+    )
+    ml_inputs = pilot_inputs["ml_manifest"]
+    ml_manifest = build_ml_manifest(
+        ml_inputs["ml_id"],
+        train_segment=ml_inputs["train_segment"],
+        features=ml_inputs["features"],
+        transformations=ml_inputs["transformations"],
+        hyperparameters=ml_inputs["hyperparameters"],
+        seeds=ml_inputs["seeds"],
+        complexity_levels=ml_inputs["complexity_levels"],
+        selection_rule=ml_inputs["selection_rule"],
+    )
+    detrending_inputs = pilot_inputs["detrending"]
+    detrending = detrend_returns(
+        detrending_inputs["portfolio_returns"],
+        detrending_inputs["benchmark_returns"],
+        detrending_inputs["cash_returns"],
+        detrending_inputs["betas"],
+        segment_id=detrending_inputs["segment_id"],
+    )
+
+    gates = _denied_pre_oos_gate_evidence(
+        pilot_inputs,
+        search_space=search_space,
+        optimization_log=optimization_log,
+        ml_manifest=ml_manifest,
+        complexity_selection=complexity_selection,
+        candidate_matrix=candidate_matrix,
+        wrc=wrc,
+        robustness=robustness,
+        execution=execution,
+        sealing=sealing,
+        oos_access_decision=oos_access_decision,
+        registered_candidates=registered_candidates,
+        registry_review=registry_review,
+        data_availability=data_availability,
+    )
+    invariant_evidence = _denied_pre_oos_invariant_evidence(
+        pilot_inputs,
+        search_space=search_space,
+        candidate_matrix=candidate_matrix,
+        wrc=wrc,
+        robustness=robustness,
+        ml_manifest=ml_manifest,
+        registered_candidates=registered_candidates,
+    )
+    return {
+        "gates.json": gates,
+        "invariant_evidence.json": invariant_evidence,
+        "wrc.json": _compact_wrc_report_with_locals(wrc, pre_oos["wrc_local_reports"]),
+        "robustness.json": robustness,
+        "execution.json": execution,
+        "sealing.json": sealing,
+        "oos_access_decision.json": oos_access_decision,
+        "search_space.json": search_space,
+        "optimization_log.json": optimization_log,
+        "ml_manifest.json": ml_manifest,
+        "complexity_selection.json": complexity_selection,
+        "candidate_matrix.json": candidate_matrix,
+        "data_availability.json": data_availability,
+        "fold_schedule.json": fold_schedule,
+        "registry_review.json": registry_review,
+        "detrending.json": detrending,
+        "g_bias.json": g_bias,
+    }
+
+
+def _denied_pre_oos_gate_evidence(
+    pilot_inputs: dict,
+    *,
+    search_space: dict,
+    optimization_log: dict,
+    ml_manifest: dict,
+    complexity_selection: dict,
+    candidate_matrix: dict,
+    wrc: dict,
+    robustness: dict,
+    execution: dict,
+    sealing: dict,
+    oos_access_decision: dict,
+    registered_candidates: list[str],
+    registry_review: dict,
+    data_availability: dict,
+) -> dict[str, object]:
+    identifiers = pilot_inputs["identifiers"]
+    data_status = _gate_verdict(data_availability.get("status"))
+    access_status = _g8_oos_access_gate(oos_access_decision)
+    reports_present = all(
+        _presence_gate(report, required) == "PASS"
+        for report, required in (
+            (candidate_matrix, ["candidate_ids", "rows", "matrix_id"]),
+            (wrc, ["candidate_ids", "verdict", "wrc_pvalue"]),
+            (robustness, ["artifact_type", "status"]),
+            (execution, ["status", "cost_model", "nav_reconciliation"]),
+        )
+    )
+    gates: dict[str, object] = {
+        "config_id": identifiers["config_id"],
+        "project_id": identifiers["project_id"],
+        "research_family_id": identifiers["research_family_id"],
+        "hypothesis_id": identifiers["hypothesis_id"],
+        "process_version_id": identifiers["process_version_id"],
+        "template_hash": identifiers["template_hash"],
+        "data_snapshots": data_status,
+        "availability_timestamps": data_status,
+        "anti_leakage_report": data_status,
+        "registry_initialized": _g2_registry_initialized_gate(registry_review, registered_candidates),
+        "candidate_catalog": _g2_candidate_catalog_gate(search_space),
+        "local_matrix": _g2_local_matrix_gate(candidate_matrix, registry_review),
+        "independent_registry_review": evidence_gate(_human_evidence(pilot_inputs), "registry_review"),
+        "selection_rule": _g3_selection_rule_gate(complexity_selection),
+        "train_only_calibration_log": _g3_train_calibration_gate(optimization_log, ml_manifest),
+        "selected_candidate_id": complexity_selection.get("selected_candidate_id") or "INCONCLUSIVE",
+        "wrc_report": _g4_wrc_report_gate(wrc),
+        "wrc_status": _gate_verdict(wrc.get("verdict")),
+        "wrc_family_matrix": _g4_wrc_family_matrix_gate(wrc, candidate_matrix),
+        "robustness_report": _g5_robustness_report_gate(robustness),
+        "robustness_matrix": _g5_robustness_matrix_gate(robustness),
+        "pre_oos_robustness_verdict": _gate_verdict(robustness.get("status")),
+        "execution_report": _gate_verdict(execution.get("status")),
+        "cost_model": _g6_cost_model_gate(pilot_inputs, execution),
+        "capacity_grid": "INCONCLUSIVE",
+        "nav_reconciliation": _gate_verdict(execution.get("nav_reconciliation")),
+        "pre_oos_manifest": _gate_verdict(sealing.get("status")),
+        "frozen_config": _gate_verdict(sealing.get("status")),
+        "test_reports": "PASS" if reports_present else "INCONCLUSIVE",
+        "independent_pre_oos_approval": evidence_gate(_human_evidence(pilot_inputs), "pre_oos_approval"),
+        "oos_access_log": access_status,
+        "opening_authorization": access_status,
+        "single_oos_execution_log": access_status,
+    }
+    for field in (
+        "oos_report",
+        "concatenated_oos_series",
+        "oos_bootstrap_report",
+        "power_report",
+        "economic_report",
+        "statistical_gate_report",
+        "economic_gate_report",
+        "validation_ready_manifest",
+        "reproduction_report",
+        "incubation_approval",
+        "incubation_report",
+        "paper_trading_log",
+        "monitoring_plan",
+        "deployment_certified_manifest",
+        "live_version_id",
+        "kill_switch",
+        "live_approval",
+        "lifecycle_archive",
+        "incident_log",
+        "retention_policy",
+    ):
+        gates[field] = "INCONCLUSIVE"
+    return gates
+
+
+def _denied_pre_oos_invariant_evidence(
+    pilot_inputs: dict,
+    *,
+    search_space: dict,
+    candidate_matrix: dict,
+    wrc: dict,
+    robustness: dict,
+    ml_manifest: dict,
+    registered_candidates: list[str],
+) -> dict[str, object]:
+    candidate_ids = candidate_matrix["candidate_ids"]
+    return {
+        "oos_access_log": [],
+        "oos_openings": [],
+        "influential_candidates": candidate_ids,
+        "registered_candidates": registered_candidates,
+        "applicable_candidates": candidate_ids,
+        "wrc_matrix_candidates": wrc.get("candidate_ids", []),
+        "asset_selection_axis": search_space.get("asset_selection_axis"),
+        "asset_universe": search_space.get("asset_universe"),
+        "candidate_assets": search_space.get("candidate_asset_map"),
+        "transformation_fits": [dict(item) for item in ml_manifest["transformations"]],
+        "decision_events": [
+            {
+                "decision_at": event["decision_at"],
+                "data_available_at": event["available_at"],
+            }
+            for event in pilot_inputs["data_availability_checks"]
+        ],
+        "gate_reports": {
+            "statistical": _gate_verdict(wrc.get("verdict")),
+            "economic": "INCONCLUSIVE",
+            "final": "INCONCLUSIVE",
+            "final_components": ["statistical", "economic"],
+        },
+        "robustness_checks": [
+            {
+                "name": scenario.get("stress_id", scenario.get("classification", "pre_oos_stress")),
+                "uses_observed_oos": False,
+            }
+            for scenario in robustness.get("scenarios", [])
+        ],
+        "same_oos_reruns": [],
+        "package_stages": [],
+    }
 
 
 def _pre_oos_reports(pilot_inputs: dict) -> dict:

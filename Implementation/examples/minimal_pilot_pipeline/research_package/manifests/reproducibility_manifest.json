@@ -7,7 +7,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "config.json",
       "produced_by": "ebta_engine",
-      "sha256": "E6F7591FBFACE85AF5C763C5082D6297E079E60A9D696CD4BD8383E72F1DADCD",
+      "sha256": "F79A6F9E1F616C976FEBF5A7CAFCEAE87C9444D9A78F2C57826FBEFD383BEF92",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1"
     },
     {
@@ -106,7 +106,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/g_bias.json",
       "produced_by": "ebta_engine",
-      "sha256": "511F742F26B445FAC6E3691FB8B3424BF75346B944BF5E2FC8A699E8FFE8D554",
+      "sha256": "59971419120EC64623F9D34D499AB3F1792243E60336D813C4E6E05AA3C52E72",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -290,7 +290,7 @@
     "runtime": "EBTA-ENGINE-0.1.0"
   },
   "configuration": {
-    "config_hash": "E6F7591FBFACE85AF5C763C5082D6297E079E60A9D696CD4BD8383E72F1DADCD",
+    "config_hash": "F79A6F9E1F616C976FEBF5A7CAFCEAE87C9444D9A78F2C57826FBEFD383BEF92",
     "config_id": "CFG-PILOT-001",
     "config_path": "config.json"
   },

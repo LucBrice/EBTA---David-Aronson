@@ -92,13 +92,37 @@ class NautilusStatisticalGateProductionTests(unittest.TestCase):
             )
             config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
             files = {path.relative_to(package_dir).as_posix() for path in package_dir.rglob("*") if path.is_file()}
+            validation = json.loads(
+                (package_dir / "reports" / "package_validation.json").read_text(encoding="utf-8")
+            )
 
         self.assertEqual(config["config_id"], "CFG-NAUTILUS-MVP-001")
         self.assertEqual(report["status"], "DENIED")
         self.assertFalse(report["package_built"])
         self.assertIn("wrc_pass", report["oos_access_decision"]["missing_requirements"])
         self.assertNotIn(29, calls)
-        self.assertEqual(files, {"config.json", "registry.jsonl"})
+        self.assertTrue(
+            {
+                "config.json",
+                "registry.jsonl",
+                "reports/gates.json",
+                "reports/wrc.json",
+                "reports/robustness.json",
+                "reports/execution.json",
+                "reports/package_validation.json",
+            }.issubset(files)
+        )
+        self.assertTrue(
+            {
+                "oos_access_log.jsonl",
+                "reports/oos.json",
+                "reports/economic.json",
+                "series/oos_primary_returns.json",
+                "manifests/reproducibility_manifest.json",
+            }.isdisjoint(files)
+        )
+        self.assertEqual(validation["status"], "FAIL")
+        self.assertEqual(validation["schema_errors"], [])
 
 
 class NautilusRobustnessGateProductionTests(unittest.TestCase):
@@ -182,6 +206,11 @@ class NautilusChronologyProductionTests(unittest.TestCase):
                 segment_runner=runner,
             )
             oos_log_exists = (package_dir / "oos_access_log.jsonl").exists()
+            files = {path.relative_to(package_dir).as_posix() for path in package_dir.rglob("*") if path.is_file()}
+            gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+            validation = json.loads(
+                (package_dir / "reports" / "package_validation.json").read_text(encoding="utf-8")
+            )
 
         decision = inputs["_build_outcome"]["oos_access_decision"]
         self.assertEqual(inputs["_build_outcome"]["status"], "DENIED")
@@ -189,6 +218,32 @@ class NautilusChronologyProductionTests(unittest.TestCase):
         self.assertIn("independent_approval", decision["missing_requirements"])
         self.assertNotIn(29, calls)
         self.assertFalse(oos_log_exists)
+        self.assertTrue(inputs["_build_outcome"]["pre_oos_evidence_built"])
+        self.assertEqual(inputs["_build_outcome"]["validation_status"], "FAIL")
+        self.assertEqual(gates["independent_registry_review"], "INCONCLUSIVE")
+        self.assertEqual(gates["independent_pre_oos_approval"], "INCONCLUSIVE")
+        self.assertEqual(gates["execution_report"], "PASS")
+        self.assertEqual(gates["cost_model"], "PASS")
+        self.assertEqual(gates["nav_reconciliation"], "PASS")
+        self.assertEqual(gates["capacity_grid"], "INCONCLUSIVE")
+        self.assertEqual(gates["oos_report"], "INCONCLUSIVE")
+        self.assertEqual(gates["economic_report"], "INCONCLUSIVE")
+        self.assertEqual(validation["status"], "FAIL")
+        self.assertEqual(validation["schema_errors"], [])
+        gate_statuses = {row["gate_id"]: row["status"] for row in validation["gate_report"]["gates"]}
+        self.assertEqual(gate_statuses["G5"], "PASS")
+        self.assertEqual(gate_statuses["G6"], "INCONCLUSIVE")
+        self.assertEqual(gate_statuses["G7"], "INCONCLUSIVE")
+        self.assertEqual(gate_statuses["G8"], "INCONCLUSIVE")
+        self.assertTrue(
+            {
+                "oos_access_log.jsonl",
+                "reports/oos.json",
+                "reports/economic.json",
+                "series/oos_primary_returns.json",
+                "manifests/reproducibility_manifest.json",
+            }.isdisjoint(files)
+        )
 
     def test_pre_oos_benchmark_scope_stops_even_when_gates_authorize(self):
         calls = []

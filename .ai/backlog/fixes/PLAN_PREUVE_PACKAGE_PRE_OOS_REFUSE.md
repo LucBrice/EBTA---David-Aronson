@@ -39,7 +39,7 @@ Sans objet : plan `SINGLE_CHANTIER`.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `TRIAGED - PRET POUR ROUTAGE` |
+| Statut | `PRET_A_CLOTURER - IMPLEMENTATION ET AUDITS PASS` |
 | Date | 2026-07-21 |
 | Classification | `IMPLEMENTATION_DETAIL` |
 | Autorite normative | SOP 10 pour le refus d'acces OOS; SOP 12 pour la fidelite du paquet; paquet d'execution pour G0-G14. |
@@ -265,20 +265,20 @@ satisfait aucun Exit criterion.
 
 ## 12. Definition of Done
 
-- [ ] Build production sans preuve `DENIED`, zero OOS.
-- [ ] Rapports pre-OOS et gates materialises.
-- [ ] G5/G6 reels; G7/G8 non-PASS; G9/G10 et post-OOS `INCONCLUSIVE`.
-- [ ] Aucun fichier OOS, serie ou manifeste.
-- [ ] Rapport validateur `FAIL` persiste et reproductible.
-- [ ] Tests, Pyrefly, bug-hunter et plan-conformance PASS.
-- [ ] Historique runtime et parent synchronises.
+- [x] Build production sans preuve `DENIED`, zero OOS.
+- [x] Rapports pre-OOS et gates materialises.
+- [x] G5/G6 reels; G7/G8 non-PASS; G9/G10 et post-OOS `INCONCLUSIVE`.
+- [x] Aucun fichier OOS, serie ou manifeste.
+- [x] Rapport validateur `FAIL` persiste et reproductible.
+- [x] Tests, Pyrefly, bug-hunter et plan-conformance PASS.
+- [x] Historique runtime synchronise; parent a synchroniser apres `/close` de cet enfant.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir apres execution. |
-| Ecarts | Aucun connu avant implementation. |
+| Resultat final | `PRET_A_CLOTURER` - paquet partiel pre-OOS auditable et refus conserve. |
+| Ecarts | G6 reste `INCONCLUSIVE` uniquement sur `capacity_grid`, explicitement non calibree; aucun ecart de perimetre. |
 | Suites | Reprendre la cloture generale du parent. |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
@@ -286,6 +286,8 @@ satisfait aucun Exit criterion.
 | Date | Phase | Resultat |
 | --- | --- | --- |
 | 2026-07-21 | Audit preparatoire | Perte de preuve confirmee; chemin correctif borne defini. |
+| 2026-07-21 | Implementation | Writer a liste blanche, gates/invariants pre-OOS, validation persistee et serialization config conforme au schema existant. |
+| 2026-07-21 | Build reel | 96 executions pre-OOS; `DENIED`; zero OOS; `FAIL` attendu; zero erreur schema/semantique; hash config exact. |
 
 ## 14. Journal d'audits post-hoc
 
@@ -295,3 +297,26 @@ satisfait aucun Exit criterion.
 | 2026-07-21 | Brouillon `/evaluate` 2 | Frontieres pilote/Nautilus et preuve de validateur clarifiees; convergence. |
 | 2026-07-21 | Plan route `/evaluate` 1 | Angle mort `invariant_evidence` corrige : liste blanche pre-OOS et absence explicite pour toute preuve OOS/stade. |
 | 2026-07-21 | Plan route `/evaluate` 2 | `economic.json` retire de la liste blanche : G10 depend de l'OOS et les inputs pilotes pre-OOS ne sont pas une preuve. Contrats de sortie et ordre d'ecriture revalides; convergence. |
+
+### Bug-hunter final - 2026-07-21
+
+| Controle | Resultat |
+| --- | --- |
+| Pyrefly cible | 0 erreur sur les deux builders et le test Nautilus. |
+| Vrais bugs de contrat observes en build | Le config multi-actifs manquait les champs requis `fill_model`/`fee_model` et `instrument_id`/`symbol`/`venue`; la preuve humaine etait serialisee hors schema. Corriges sans modifier le schema. |
+| Suite runtime | 208 tests `PASS`. |
+| Pilote minimal | `FAIL` attendu G2/G7/G8/G14; zero erreur schema. |
+
+### Plan-conformance-audit final - 2026-07-21
+
+| Exit criterion | Classement | Preuve |
+| --- | --- | --- |
+| Refus et zero OOS | IMPLEMENTE | Test `test_missing_human_evidence_denies_oos_before_runner_access`; build reel `DENIED`, seed 29 absent. |
+| Rapports pre-OOS/G5/G6 | IMPLEMENTE | `build_denied_pre_oos_evidence_package()` et package persistant; robustesse `FAIL`, execution `PASS`, cout 11,564. |
+| Gates honnetes | IMPLEMENTE | Validateur : G5/G6/G7/G8 `INCONCLUSIVE` pour leurs exigences exactes; G9-G14 non-PASS. |
+| Aucun artefact OOS/manifeste | IMPLEMENTE | Controle de liste noire et test de contraste. |
+| Validateur persiste | IMPLEMENTE | `reports/package_validation.json`, statut `FAIL`, `schema_errors=[]`, `semantic_errors=[]`. |
+| Audits finaux | IMPLEMENTE | 13 tests cibles, 208 tests complets, Pyrefly 0, diff-check PASS. |
+
+Aucun `Non-goal` viole : `Protocole/`, schemas, validateurs, seuils,
+calibrations, mappings Nautilus et BACKTRADER sont inchanges.

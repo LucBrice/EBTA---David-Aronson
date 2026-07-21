@@ -80,6 +80,50 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-21 - Paquet de preuve pre-OOS materialise sur refus
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | IMPLEMENTATION_DETAIL / CONTRACT_ENCODING |
+| Statut | ACCEPTED |
+| Source normative | SOP 10 (autorisation OOS) ; SOP 12 (fidelite du paquet) ; `Protocole/PAQUET D'EXECUTION EBTA.md` gates G0-G14 ; decision humaine `3A` du 2026-07-21 |
+| Fichiers impactes | `Implementation/examples/minimal_pilot_pipeline/build_research_package.py`, `Implementation/ebta_engine/package_builder/nautilus_research_package.py`, `Implementation/ebta_engine/tests/test_nautilus_research_package.py`, package pilote regenere |
+| Impact protocole | NONE |
+| Verification | 13 tests Nautilus PASS ; suite runtime 208 PASS ; Pyrefly 0 erreur ; build Nautilus reel `DENIED` ; `validate_package_dir()` `FAIL` attendu, zero erreur schema/semantique |
+
+### Contexte
+
+Le builder Nautilus calculait les rapports Test/WRC/robustesse/execution puis,
+en cas de refus d'ouverture OOS, quittait avant de les materialiser. Le
+repertoire persistant ne permettait donc pas d'auditer G5/G6, alors que la
+decision de refus les avait deja consommes.
+
+### Decision
+
+- ajouter un writer a liste blanche pour les seules preuves disponibles avant
+  OOS ;
+- persister `gates.json`, `invariant_evidence.json` et le rapport exact du
+  validateur sans creer de journal, serie, rapport OOS ou manifeste de stade ;
+- conserver `DENIED` et `package_built=false`, avec une preuve partielle
+  explicitement `FAIL` ;
+- rendre `config.json` conforme au schema existant en conservant les preuves
+  humaines sous `oos_opening_gate` et en donnant aux descripteurs agreges
+  multi-actifs les champs de contrat requis.
+
+### Impact
+
+Un refus pre-OOS devient auditable sans etre transforme en succes. Sur le build
+reel, G5 expose le stress `PLAUSIBLE_BASE` rejete, G6 expose 11,564 unites de
+cout de spread et une NAV reconciliee, tandis que G7/G8 et tous les gates
+post-OOS restent `INCONCLUSIVE`. Aucun OOS n'est lu ou execute.
+
+### Suite
+
+Utiliser ce paquet partiel et le benchmark R4-long comme preuve globale de
+l'EPIC de maturite. Une approbation externe future pourra produire un nouveau
+paquet complet sans changer ce contrat de refus.
+
 ## 2026-07-21 - Contrat explicite des preuves humaines pre-OOS
 
 | Champ | Valeur |

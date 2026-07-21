@@ -67,27 +67,27 @@
     "requires_validation_ready": true
   },
   "oos_opening_gate": {
-    "requires_pre_oos_sealed": true
-  },
-  "pre_oos_human_evidence": {
-    "all_required_approved": false,
-    "entries": {
-      "pre_oos_approval": {
-        "decision_status": "INCONCLUSIVE",
-        "expected_subject_id": "PREOOS-HASH-PILOT",
-        "failures": [
-          "missing_evidence"
-        ]
+    "pre_oos_human_evidence": {
+      "all_required_approved": false,
+      "entries": {
+        "pre_oos_approval": {
+          "decision_status": "INCONCLUSIVE",
+          "expected_subject_id": "PREOOS-HASH-PILOT",
+          "failures": [
+            "missing_evidence"
+          ]
+        },
+        "registry_review": {
+          "decision_status": "INCONCLUSIVE",
+          "expected_subject_id": "FAM-PILOT",
+          "failures": [
+            "missing_evidence"
+          ]
+        }
       },
-      "registry_review": {
-        "decision_status": "INCONCLUSIVE",
-        "expected_subject_id": "FAM-PILOT",
-        "failures": [
-          "missing_evidence"
-        ]
-      }
+      "schema_version": "1.0.0"
     },
-    "schema_version": "1.0.0"
+    "requires_pre_oos_sealed": true
   },
   "process_version_id": "PROC-PILOT-001",
   "project_id": "PRJ-PILOT",

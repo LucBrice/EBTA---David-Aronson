@@ -126,6 +126,8 @@ def build_nautilus_inputs(
     )
     inputs["execution_model"]["cost_model"] = {
         "model_id": "R5-R6-CENTRAL-BY-ASSET",
+        "fill_model": "ASSET_SPECIFIC_NAUTILUS_FILL_MODELS",
+        "fee_model": "ASSET_SPECIFIC_MAKER_TAKER_MODELS",
         "composition": "ASSET_SPECIFIC_CALIBRATED_MODELS",
     }
     inputs["execution_model"]["cost_models_by_scenario"] = {
@@ -136,6 +138,9 @@ def build_nautilus_inputs(
         for scenario in ("CENTRAL", "PLAUSIBLE_BASE", "EXTREME")
     }
     inputs["execution_model"]["instrument_config"] = {
+        "instrument_id": "MULTI_ASSET.SIM",
+        "symbol": "MULTI_ASSET",
+        "venue": "SIM",
         "composition": "ASSET_SPECIFIC_NAUTILUS_INSTRUMENTS",
         "instruments_by_asset": {asset: _instrument_config(asset).to_dict() for asset in assets},
     }
@@ -372,9 +377,15 @@ def build_nautilus_inputs(
         }
         return inputs
     if oos_access_decision["status"] != "AUTHORIZED":
+        validation_report = pilot.build_denied_pre_oos_evidence_package(
+            package_dir,
+            pilot_inputs=inputs,
+        )
         inputs["_build_outcome"] = {
             "status": "DENIED",
             "package_built": False,
+            "pre_oos_evidence_built": True,
+            "validation_status": validation_report["status"],
             "oos_access_decision": copy.deepcopy(oos_access_decision),
             "pre_oos_reports_hash": pre_oos_reports["content_hash"],
         }
