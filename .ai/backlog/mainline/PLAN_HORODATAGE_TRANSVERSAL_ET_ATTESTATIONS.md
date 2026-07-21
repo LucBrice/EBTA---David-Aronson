@@ -316,18 +316,18 @@ production.
 
 - [x] Enfant 1 `DONE` - commit implementation `85b8751`, cloture `83deb27`.
 - [x] Enfant 2 `DONE` - commit implementation `f2e1269`, cloture `ecf2224`.
-- [ ] Enfant 3 `DONE` (contrat explicite meme si les preuves restent absentes).
-- [ ] Aucun OOS avant autorisation.
-- [ ] Aucun timestamp/approval fixture presente comme runtime reel.
-- [ ] Audits globaux PASS.
+- [x] Enfant 3 `DONE` (contrat explicite meme si les preuves restent absentes) - commit implementation `f938637`, cloture `eef0522`.
+- [x] Aucun OOS avant autorisation.
+- [x] Aucun timestamp/approval fixture presente comme runtime reel.
+- [x] Audits globaux PASS.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir |
-| Ecarts | A remplir |
-| Suites | Retour au Lot 2 R5/R6 ou Lot 4 selon decisions. |
+| Resultat final | Trois enfants `DONE`; chronologie pre-OOS/OOS, attestations mecaniques et preuves humaines sans facade. |
+| Ecarts | Aucun ecart normatif. Package pilote `FAIL` attendu : G2/G7/G8 sans preuves externes/OOS et G14 post-OOS/live hors scope. |
+| Suites | Retour a l'EPIC mere pour son gate global et la reconciliation finale. |
 
 ## 13. Journal d'audits post-hoc
 
@@ -340,3 +340,5 @@ production.
 | 2026-07-20 | Passe plan route 2 : aucun nouvel angle mort majeur; convergence actee. | Les trois enfants ont des criteres binaires, les dependances humaines sont localisees, et la mere reste un suivi pur compatible avec le backend. |
 | 2026-07-20 | Enfant 1 clos `DONE` : registre avant Test, preuves pre-OOS scellees et reutilisees, refus sans OOS, acces UTC fold-par-fold. | 182 tests PASS, Pyrefly 0, pilote PASS; smoke reel `DENIED` sur `wrc_pass` sans OOS. Enfant suivant : attestations mecaniques. |
 | 2026-07-20 | Enfant 2 clos `DONE` : live version/kill-switch derives et G14 fonde sur artefacts declares/presents. | 183 tests PASS, Pyrefly 0; package VALIDATION_READY honnetement FAIL sur G14 seul. Enfant suivant : approbations humaines/post-OOS. |
+| 2026-07-21 | Enfant 3 clos `DONE` : contrat `pre_oos_human_evidence`, fixtures test-only et retrait des placeholders. | 208 tests PASS, Pyrefly 0; absence => G2/G7 INCONCLUSIVE, seal FAIL, OOS DENIED, manifeste vide et zero runner OOS. |
+| 2026-07-21 | Audit global de la mere | Trois enfants checkpoint `DONE`; Pyrefly global 0 erreur; suite 208 PASS; package pilote FAIL attendu G2/G7/G8/G14; 7 Exit criteria IMPLEMENTE, 0 MANQUANT, aucun non-goal viole. |
