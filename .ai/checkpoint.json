@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -829,10 +829,10 @@
       "id": "PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS",
       "title": "Contrat des approbations humaines pre-OOS",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/mainline/PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS.md",
+      "source_path": ".ai/archive/20260721_PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260721_PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-21",
@@ -842,9 +842,9 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
