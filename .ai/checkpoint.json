@@ -824,6 +824,26 @@
       "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS",
+      "title": "Contrat des approbations humaines pre-OOS",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/mainline/PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260721_PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-21",
+      "last_moved_at": "2026-07-21",
+      "routing_decision": "mainline",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
