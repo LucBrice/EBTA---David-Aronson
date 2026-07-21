@@ -80,6 +80,49 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-21 - Calibration R5 et stress economiques R6 executables
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.0 |
+| Type | IMPLEMENTATION_DETAIL / ADAPTER_MAPPING |
+| Statut | ACCEPTED |
+| Source normative | SOP 05 ; SOP 09B ; choix humains `1B` et `2A` du 2026-07-21 |
+| Fichiers impactes | `calibrations/r5_r6/`, `ebta_engine/package_builder/execution_calibration.py`, `ebta_engine/strategies/contracts.py`, `ebta_engine/adapters/nautilus_mapping.py`, `ebta_engine/package_builder/nautilus_research_package.py`, tests et notes API Nautilus |
+| Impact protocole | NONE |
+| Verification | 181 713 218 ticks valides, hashes de regeneration identiques, 201 tests PASS dans le venv Nautilus, Pyrefly 0 erreur, validation reelle `PRE_OOS_ONLY` sur 96 segments |
+
+### Contexte
+
+Le chemin Nautilus utilisait encore des maker/taker fees indicatifs, une
+latence nulle, un slippage nul et trois scenarios de robustesse alimentes par
+les memes resultats avec un hurdle `-1.0`.
+
+### Decision
+
+La calibration R5 combine le spread NASDAQ local exhaustif 2023-2025 avec un
+snapshot de sources officielles multi-brokers, toujours distingue comme proxy
+pour XAUUSD, latence, fill et frais. Les couts sont decomposes entre commission
+native, spread, slippage et overlay ; le spread est debite dans un ledger
+horodate qui ajuste la NAV et les retours consommes par les gates. La
+probabilite Nautilus de slippage conserve sa vraie semantique d'un tick.
+
+R6 relance le chemin Test pour CENTRAL/p50, PLAUSIBLE_BASE/p95 et EXTREME/p99
+avec `minimum_mean_return = 0.0`. La preuve reelle obtient CENTRAL `PASS`, puis
+p95 et p99 `REJECTED_ECONOMIC` sans ouvrir l'OOS.
+
+### Impact
+
+Le realisme economique n'est plus une etiquette : 32 segments par scenario
+sont executes et les couts nets affectent les series evaluees. Les limites de
+provenance restent visibles (`UNVERIFIED_LOCAL_EXPORT`, `BROKER_PROXY`, fill
+rate non mappe). Aucun changement de `Protocole/` ni de validateur.
+
+### Suite
+
+Le package complet sera regenere au gate global de l'EPIC apres remplacement
+des auto-attestations residuelles par les inputs humains explicites du Lot 3.
+
 ## 2026-07-20 - Derivation des attestations mecaniques G13/G14
 
 | Champ | Valeur |

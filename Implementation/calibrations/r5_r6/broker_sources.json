@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.0.0",
+  "retrieved_at": "2026-07-21",
+  "policy": {
+    "classification": "BROKER_PROXY",
+    "mean_rule": "Arithmetic mean only after unit normalization; constituents and statistic kinds remain visible.",
+    "quantile_rule": "Linear interpolation on the small cross-broker sample; descriptive only, never observed execution.",
+    "local_priority_rule": "For NASDAQ spread, the full local tick quantile governs when it is more conservative than the comparable broker proxy.",
+    "missing_rule": "An unavailable or incomparable component is INCONCLUSIVE, never a silent zero."
+  },
+  "series": {
+    "NASDAQ_SPREAD_POINTS": {
+      "asset": "NASDAQ",
+      "component": "spread",
+      "unit": "index_point",
+      "observations": [
+        {
+          "broker": "IG",
+          "value": 1.0,
+          "statistic_kind": "main_session_spread",
+          "url": "https://www.ig.com/en/help-and-support/articles/691241-what-are-ig-s-indices-cfd-product-details",
+          "limit": "US Tech 100 main-session quote; IG also publishes wider out-of-session and break regimes."
+        },
+        {
+          "broker": "Pepperstone",
+          "value": 1.2,
+          "statistic_kind": "average",
+          "url": "https://pepperstone.com/en-eu/markets/index-cfds/",
+          "limit": "Published average for April 1-30 2026 across all sessions including rollover."
+        },
+        {
+          "broker": "IC Markets",
+          "value": 1.807,
+          "statistic_kind": "average",
+          "url": "https://www.icmarkets.com/global/en/trading-markets/indices",
+          "limit": "Published USTEC average; account and jurisdiction remain source-specific."
+        },
+        {
+          "broker": "CMC Markets",
+          "value": 1.0,
+          "statistic_kind": "minimum",
+          "url": "https://www.cmcmarkets.com/en-sg/indices",
+          "limit": "Published minimum, not a realized average."
+        }
+      ]
+    },
+    "XAUUSD_SPREAD_POINTS": {
+      "asset": "XAUUSD",
+      "component": "spread",
+      "unit": "gold_point",
+      "observations": [
+        {
+          "broker": "IG",
+          "value": 0.3,
+          "statistic_kind": "published_spread",
+          "url": "https://www.ig.com/en/help-and-support/articles/691957-what-are-ig-s-commodities-cfd-product-details",
+          "limit": "Spot Gold 100 oz product quote."
+        },
+        {
+          "broker": "Pepperstone",
+          "value": 0.1,
+          "statistic_kind": "from_minimum",
+          "url": "https://pepperstone.com/en-eu/markets/commodities/",
+          "limit": "From value, not a realized average."
+        },
+        {
+          "broker": "IC Markets",
+          "value": 0.07,
+          "statistic_kind": "average",
+          "url": "https://cdn.icmarkets.com/uploads/SCB/Commodity-Specification-Sheet.pdf",
+          "limit": "SCB product sheet; account and jurisdiction remain source-specific."
+        },
+        {
+          "broker": "CMC Markets",
+          "value": 0.2,
+          "statistic_kind": "published_spread",
+          "url": "https://www.cmcmarkets.com/en-sg/commodities",
+          "limit": "Published Gold spread; source-specific product conventions apply."
+        }
+      ]
+    },
+    "BROKER_EXECUTION_LATENCY_MS": {
+      "asset": "CROSS_ASSET",
+      "component": "latency",
+      "unit": "millisecond",
+      "observations": [
+        {
+          "broker": "IG",
+          "value": 10.7,
+          "statistic_kind": "api_fill_time",
+          "url": "https://www.ig.com/en/trading-platforms/trading-apis/how-to-use-ig-api",
+          "limit": "Broker-side historical measurement, not end-to-end latency from this machine."
+        },
+        {
+          "broker": "Pepperstone",
+          "value": 50.0,
+          "statistic_kind": "from_execution_time",
+          "url": "https://pepperstone.com/en-gb/platforms/pepperstone-mobile-app",
+          "limit": "From claim; platform perimeter differs from other observations."
+        },
+        {
+          "broker": "IC Markets",
+          "value": 40.0,
+          "statistic_kind": "conservative_upper_bound",
+          "url": "https://www.icmarkets.com/global/jp/trading-pricing/trading-conditions",
+          "limit": "Source states under 40 ms after receipt; 40 ms retained conservatively."
+        },
+        {
+          "broker": "CMC Markets",
+          "value": 4.0,
+          "statistic_kind": "median",
+          "url": "https://www.cmcmarkets.com/en/trading-platforms/order-execution",
+          "limit": "Broker-side CFD execution median, not end-to-end latency."
+        }
+      ]
+    },
+    "INDEX_ADVERSE_SLIPPAGE_PROBABILITY": {
+      "asset": "NASDAQ",
+      "component": "prob_slippage",
+      "unit": "probability",
+      "observations": [
+        {
+          "broker": "IG",
+          "value": 0.32,
+          "statistic_kind": "aggregate_index_stop_negative_slippage_rate",
+          "url": "https://www.ig.com/en/best-execution",
+          "limit": "Aggregate indices and stop orders, not NASDAQ-specific; used only as a one-tick FillModel proxy."
+        }
+      ]
+    },
+    "BROKER_FILL_RATE_PERCENT": {
+      "asset": "CROSS_ASSET",
+      "component": "fill_rate",
+      "unit": "percent",
+      "observations": [
+        {
+          "broker": "IG",
+          "value": 98.97,
+          "statistic_kind": "overall_order_fill_rate",
+          "url": "https://www.ig.com/en/best-execution",
+          "limit": "April-June 2024 overall fill rate; not a limit-order fill probability."
+        },
+        {
+          "broker": "Pepperstone",
+          "value": 99.32,
+          "statistic_kind": "platform_fill_rate",
+          "url": "https://pepperstone.com/en-gb/platforms/pepperstone-mobile-app",
+          "limit": "Platform claim; product and order-type mix are not normalized."
+        },
+        {
+          "broker": "CMC Markets",
+          "value": 99.8,
+          "statistic_kind": "platform_fill_rate",
+          "url": "https://www.cmcmarkets.com/en/trading-platforms/order-execution",
+          "limit": "Platform claim; product and order-type mix are not normalized."
+        }
+      ]
+    },
+    "STANDARD_CFD_COMMISSION_RATE": {
+      "asset": "CROSS_ASSET",
+      "component": "commission_rate",
+      "unit": "notional_fraction",
+      "observations": [
+        {
+          "broker": "Pepperstone",
+          "value": 0.0,
+          "statistic_kind": "published_standard_cfd_commission",
+          "url": "https://pepperstone.com/en-eu/markets/index-cfds/",
+          "limit": "Zero commission is explicit for the cited spread-based index CFD model; it is not generalized to raw accounts."
+        },
+        {
+          "broker": "Pepperstone",
+          "value": 0.0,
+          "statistic_kind": "published_standard_cfd_commission",
+          "url": "https://pepperstone.com/en-eu/markets/commodities/",
+          "limit": "Zero commission is explicit for the cited spread-based commodity CFD model."
+        }
+      ]
+    }
+  }
+}

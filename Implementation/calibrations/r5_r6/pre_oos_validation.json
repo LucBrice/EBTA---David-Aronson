@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "executed_at": "2026-07-21",
+  "execution_scope": "PRE_OOS_BENCHMARK",
+  "status": "PRE_OOS_ONLY",
+  "oos_segment_count": 0,
+  "source_snapshot_sha256": "2dea34565beca037158f8899dd574ab0ecdc8a3d93bb875e97acc4b7be00a537",
+  "runtime": {
+    "engine": "nautilus_trader",
+    "python": "Implementation/adapters/nautilus_env/venv/Scripts/python.exe",
+    "candidate_count": 16,
+    "fold_count": 2,
+    "segments_per_scenario": 32,
+    "scenario_count": 3,
+    "test_bar_evaluation_count": 46080,
+    "nav_observation_count": 46080,
+    "total_orders_central": 42
+  },
+  "central_execution": {
+    "status": "PASS",
+    "nav_reconciliation": "PASS",
+    "nav_positive": true,
+    "nav_non_flat": true,
+    "native_commission": 0.0,
+    "spread_cost": 11.564000000000004,
+    "slippage_cost_overlay": 0.0,
+    "native_slippage_accounting": "EMBEDDED_IN_NAUTILUS_FILL_PRICE_NOT_SEPARATELY_REPORTED",
+    "commission_overlay": 0.0,
+    "total_execution_cost": 11.564000000000004,
+    "classified_result_count": 32,
+    "result_count": 32
+  },
+  "scenarios": [
+    {
+      "classification": "CENTRAL",
+      "stress_id": "ROB-NAUTILUS-CENTRAL",
+      "minimum_mean_return": 0.0,
+      "mean_return": 2.858028194100337e-07,
+      "scenario_verdict": "PASS"
+    },
+    {
+      "classification": "PLAUSIBLE_BASE",
+      "stress_id": "ROB-NAUTILUS-PLAUSIBLE",
+      "minimum_mean_return": 0.0,
+      "mean_return": -3.961375059518784e-08,
+      "scenario_verdict": "REJECTED_ECONOMIC"
+    },
+    {
+      "classification": "EXTREME",
+      "stress_id": "ROB-NAUTILUS-EXTREME",
+      "minimum_mean_return": 0.0,
+      "mean_return": -4.795326181675023e-08,
+      "scenario_verdict": "REJECTED_ECONOMIC"
+    }
+  ],
+  "limitations": [
+    "This evidence is TEST_ONLY and opens no OOS segment.",
+    "The full package is deliberately deferred until explicit human approval inputs replace residual auto-attestations in Lot 3.",
+    "Native one-tick slippage changes fill prices and NAV but Nautilus does not report it as a separate monetary commission field."
+  ]
+}

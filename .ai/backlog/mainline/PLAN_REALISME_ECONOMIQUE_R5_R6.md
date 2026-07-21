@@ -10,7 +10,7 @@
 | Scope | Calibrer les frictions NASDAQ/XAUUSD, les propager dans les resultats nets du package Nautilus MVP, puis executer trois stress p50/p95/p99 reellement distincts avec hurdle nul. |
 | Non-goals | Modifier le Protocole ; certifier les donnees locales ; simuler une microstructure complete ; toucher BACKTRADER ; ouvrir l'OOS ; relacher un validateur. |
 | Source | `0 - HUMAN START HERE/archive/20260721_PLAN_REALISME_ECONOMIQUE_R5_R6.md` |
-| Exit criteria | Calibration gelee et reproductible ; couts nets itemises dans NAV/retours ; trois executions distinctes ; `minimum_mean_return=0.0` ; test de contraste echouable ; package valide structurellement avec verdict derive. |
+| Exit criteria | Calibration gelee et reproductible ; couts nets itemises dans NAV/retours ; trois executions distinctes ; `minimum_mean_return=0.0` ; test de contraste echouable ; validation integree pre-OOS reelle avec verdict derive. Le package complet est regenere au gate global de l'EPIC apres le Lot 3 des approbations explicites. |
 
 - [x] Aucun chantier actif ne couvre ce perimetre au 2026-07-21.
 - [x] Les decisions humaines R5 `1B` et R6 `2A` sont journalisees.
@@ -215,7 +215,7 @@ contrat de calibration et erreurs explicites.
 Verification :
 
 ```powershell
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_execution_calibration.py
+python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_execution_calibration.py
 ```
 
 ### Phase 1 - Calibration NASDAQ et proxy XAUUSD
@@ -230,7 +230,7 @@ presenter comme observations realisees.
 Verification :
 
 ```powershell
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.execution_calibration --data-root $env:EBTA_DATA_ROOT --output Implementation\calibrations\r5_r6
+python -m ebta_engine.package_builder.execution_calibration --data-root $env:EBTA_DATA_ROOT --output Implementation\calibrations\r5_r6
 # Relancer exactement la commande precedente une seconde fois, puis :
 git diff --exit-code -- Implementation/calibrations/r5_r6
 ```
@@ -246,8 +246,8 @@ double comptage, compatibilite et serialisation subprocess.
 Verification :
 
 ```powershell
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_r2_extraction.py
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase5_run_segment.py
+python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_r2_extraction.py
+python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_phase5_run_segment.py
 ```
 
 ### Phase 3 - Trois stress R6 reels
@@ -260,34 +260,45 @@ verdict avec `minimum_mean_return = 0.0`.
 Verification :
 
 ```powershell
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_risk_robustness.py
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py
+python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_risk_robustness.py
+python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation -p test_nautilus_research_package.py
 ```
 
-### Phase 4 - Package, non-regression et preuves
+### Phase 4 - Validation integree pre-OOS, non-regression et preuves
 
-Regenerer par le chemin reel, accepter son statut, valider la structure, lancer
-la suite complete et documenter les resultats dans le plan.
+Executer le chemin reel avec `execution_scope=PRE_OOS_BENCHMARK`, accepter son
+statut, lancer la suite complete et documenter les resultats dans le plan. Ne
+pas ouvrir l'OOS via les auto-attestations residuelles connues : le Lot 3 doit
+d'abord les remplacer par les inputs humains explicites choisis en `3A`. La
+regeneration/validation du package complet appartient ensuite au gate global
+de l'EPIC, apres fermeture du Lot 3.
 
 Verification :
 
 ```powershell
-.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package
-python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation
-python -c "from pathlib import Path; from ebta_engine.validators.package_validator import validate_package_dir; print(validate_package_dir(Path('Implementation/research_packages/nautilus_mvp'))['status'])"
+Push-Location Implementation
+.\adapters\nautilus_env\venv\Scripts\python.exe -m unittest discover -s ebta_engine\tests -t .
+@'
+from pathlib import Path
+from ebta_engine.package_builder.nautilus_research_package import build_nautilus_inputs
+result = build_nautilus_inputs(package_dir=Path('../.ai/tmp/r5_r6_pre_oos_validation'), execution_scope='PRE_OOS_BENCHMARK')
+print(result['_build_outcome']['status'])
+'@ | .\adapters\nautilus_env\venv\Scripts\python.exe -
+Pop-Location
 ```
 
 ### Chemin critique (ordre des phases)
 
-`P0 sources -> P1 calibration -> P2 propagation nette -> P3 stress -> P4 package`
+`P0 sources -> P1 calibration -> P2 propagation nette -> P3 stress -> P4 pre-OOS`
 
 ## 7. Artefacts produits
 
 - Snapshot broker avec URLs officielles et date du 2026-07-21.
 - Calibration JSON machine-readable et rapport Markdown humain.
 - Hashes et rapport qualite des 36 fichiers NASDAQ sans copie des donnees.
-- Ledger de couts par composante dans les resultats/package.
-- Trois scenarios package-visibles avec resultats et verdicts derives.
+- Ledger de couts par composante dans les resultats et la configuration pre-OOS.
+- Trois scenarios pre-OOS visibles avec resultats et verdicts derives.
+- Regeneration du package complet reservee au gate global post-Lot 3.
 - Tests de contraste et historique moteur.
 
 ## 8. Invariants absolus et NO GO
@@ -367,16 +378,17 @@ prouvent pas trois executions. Chaque preuve doit suivre le chemin de production
 
 ## 12. Definition of Done
 
-- [ ] Les 36 fichiers NASDAQ ont un rapport qualite/hash et p50/p95/p99 reproductibles.
-- [ ] Le snapshot broker contient valeurs, URLs, dates, unites, N, formule et limites.
-- [ ] XAUUSD reste `BROKER_PROXY`; aucune provenance n'est surevaluee.
-- [ ] Spread, slippage, commission, latence et fill sont separes.
-- [ ] La NAV et les retours utilises par les gates sont nets des couts itemises.
-- [ ] Trois executions distinctes alimentent CENTRAL/PLAUSIBLE_BASE/EXTREME.
-- [ ] Les trois seuils `minimum_mean_return` valent `0.0`.
-- [ ] Un test de contraste prouve un rejet economique possible.
-- [ ] Build et validation package reels sont journalises, meme si le statut est rouge.
-- [ ] Suite complete, bug-hunter et plan-conformance-audit sont propres.
+- [x] Les 36 fichiers NASDAQ ont un rapport qualite/hash et p50/p95/p99 reproductibles.
+- [x] Le snapshot broker contient valeurs, URLs, dates, unites, N, formule et limites.
+- [x] XAUUSD reste `BROKER_PROXY`; aucune provenance n'est surevaluee.
+- [x] Spread, slippage, commission, latence et fill sont separes.
+- [x] La NAV et les retours utilises par les gates sont nets des couts itemises.
+- [x] Trois executions distinctes alimentent CENTRAL/PLAUSIBLE_BASE/EXTREME.
+- [x] Les trois seuils `minimum_mean_return` valent `0.0`.
+- [x] Un test de contraste prouve un rejet economique possible.
+- [x] Validation integree pre-OOS reelle journalisee ; aucune ouverture OOS par auto-attestation residuelle.
+- [x] La regeneration du package complet est rattachee au gate global de l'EPIC apres le Lot 3.
+- [x] Suite complete, bug-hunter et plan-conformance-audit sont propres.
 
 ## 13. Cloture
 
@@ -389,6 +401,11 @@ de cockpit touches et creer uniquement le commit de cloture autorise.
 | Date | Phase | Modifications | Validations | Resultat |
 |---|---|---|---|---|
 | 2026-07-21 | Preparation | Recherche broker, brouillon et plan normalise | `/evaluate` brouillon x2 | Pret pour routage |
+| 2026-07-21 | Phase 1 | Snapshot officiel multi-brokers et calibration exhaustive 36 mois | 181 713 218/181 713 218 ticks valides ; 0 invalide ; 0 croise ; regeneration hashes identiques | PASS |
+| 2026-07-21 | Phases 2-3 | Contrats de cout, ledger NAV net et trois runs p50/p95/p99 | Tests cibles PASS ; CENTRAL PASS, p95/p99 REJECTED_ECONOMIC | PASS |
+| 2026-07-21 | Phase 4 | Validation integree reelle Test-only | 96 segments ; 0 OOS ; NAV PASS ; cout central 11.564 ; 201 tests venv PASS | PRE_OOS_ONLY attendu |
+| 2026-07-21 | bug-hunter | Balayage Pyrefly de tous les Python touches | 1 contrat de dict heterogene corrige, puis 0 erreur ; 201 tests PASS apres correction | PASS |
+| 2026-07-21 | plan-conformance-audit | Onze criteres DoD compares au diff depuis `d215b61` et aux preuves reelles | 11 IMPLEMENTE ; 0 MANQUANT ; 0 non-goal viole | PASS |
 
 ## 14. Journal d'audits post-hoc
 
@@ -398,3 +415,23 @@ de cockpit touches et creer uniquement le commit de cloture autorise.
 | 2026-07-21 | Brouillon passe 2 | Ledger horodate, conversion points/bps et limites proxy ajoutes ; convergence |
 | 2026-07-21 | Plan route `/evaluate` 1 | Pointeur du brouillon archive et commandes Python/module invalides corriges ; architecture conservee |
 | 2026-07-21 | Plan route `/evaluate` 2 | Quantiles locaux exacts et bornes en memoire ; chemins machine exclus du hash canonique ; aucun nouveau blind spot majeur, convergence |
+| 2026-07-21 | Audit d'execution | L'ouverture OOS utiliserait encore les auto-attestations que le choix `3A` doit supprimer. Phase 4 bornee a `PRE_OOS_BENCHMARK`; package complet reporte au gate global post-Lot 3, sans changer l'ordre des workstreams. |
+
+### Plan-conformance-audit final — 2026-07-21
+
+| Critere | Classification | Preuve |
+|---|---|---|
+| 36 fichiers NASDAQ, qualite/hash, p50/p95/p99 | IMPLEMENTE | `calibration.json` : 181 713 218 lignes valides, 0 invalide/croisee, 36 hashes ; regeneration bit-a-bit identique |
+| Snapshot broker complet et limite | IMPLEMENTE | `broker_sources.json` + `calibration_report.md` : URLs, date, unites, N, constituants, moyennes et limites |
+| Provenance XAUUSD non surevaluee | IMPLEMENTE | `BROKER_PROXY` propage jusque dans chaque `CostModel` |
+| Composantes economiques separees | IMPLEMENTE | contrat `CostModel`, notes API un-tick, ledger et `cost_breakdown`; fill rates non mappes explicitement |
+| NAV/retours nets | IMPLEMENTE | `_net_nav_after_execution_costs()` et tests d'affectation temporelle/double debit |
+| Trois executions distinctes | IMPLEMENTE | 96 segments reels ; 32 par CENTRAL/p50, PLAUSIBLE_BASE/p95 et EXTREME/p99 |
+| Hurdle `0.0` | IMPLEMENTE | `_nautilus_robustness_grid()` et preuve JSON pour les trois scenarios |
+| Contraste echouable | IMPLEMENTE | CENTRAL `PASS`, p95/p99 `REJECTED_ECONOMIC`, test permanent equivalent |
+| Validation integree pre-OOS | IMPLEMENTE | `pre_oos_validation.json` : `PRE_OOS_ONLY`, 0 segment OOS, NAV `PASS` |
+| Package complet rattache au gate global | IMPLEMENTE | Phase 4 et DoD de ce plan ; Exit criterion global du parent EPIC post-Lot 3 |
+| Audits finaux | IMPLEMENTE | Pyrefly 0 erreur ; 201 tests venv PASS ; present audit 0 manquant |
+
+Non-goals verifies : aucun diff dans `Protocole/`, BACKTRADER, validateurs ou
+schemas ; aucune donnee brute versionnee ; aucun appel reseau pendant le build.

@@ -55,6 +55,8 @@ class CostModel:
     fee_model: str
     commission_per_lot: float = 0.0
     slippage_bps: float = 0.0
+    spread_points: float = 0.0
+    point_value: float = 1.0
     financing_rate_daily: float = 0.0
     impact_model: str = "none"
     latency_nanos: int = 0
@@ -71,6 +73,15 @@ class CostModel:
             raise ValueError("fee_model is required")
         if self.latency_nanos < 0:
             raise ValueError("latency_nanos must be non-negative")
+        for name, value in {
+            "commission_per_lot": self.commission_per_lot,
+            "slippage_bps": self.slippage_bps,
+            "spread_points": self.spread_points,
+            "point_value": self.point_value,
+            "financing_rate_daily": self.financing_rate_daily,
+        }.items():
+            if value < 0.0:
+                raise ValueError(f"{name} must be non-negative")
         for name, value in {
             "prob_fill_on_limit": self.prob_fill_on_limit,
             "prob_slippage": self.prob_slippage,

@@ -1,0 +1,511 @@
+{
+  "as_of_date": "2026-07-21",
+  "broker_proxy": {
+    "BROKER_EXECUTION_LATENCY_MS": {
+      "arithmetic_mean": 26.175,
+      "classification": "BROKER_PROXY",
+      "constituents": [
+        10.7,
+        50.0,
+        40.0,
+        4.0
+      ],
+      "quantiles": {
+        "CENTRAL": 25.35,
+        "EXTREME": 49.699999999999996,
+        "PLAUSIBLE_BASE": 48.5
+      },
+      "sample_size": 4,
+      "statistic_kinds": [
+        "api_fill_time",
+        "from_execution_time",
+        "conservative_upper_bound",
+        "median"
+      ],
+      "unit": "millisecond"
+    },
+    "BROKER_FILL_RATE_PERCENT": {
+      "arithmetic_mean": 99.36333333333333,
+      "classification": "BROKER_PROXY",
+      "constituents": [
+        98.97,
+        99.32,
+        99.8
+      ],
+      "quantiles": {
+        "CENTRAL": 99.32,
+        "EXTREME": 99.7904,
+        "PLAUSIBLE_BASE": 99.752
+      },
+      "sample_size": 3,
+      "statistic_kinds": [
+        "overall_order_fill_rate",
+        "platform_fill_rate",
+        "platform_fill_rate"
+      ],
+      "unit": "percent"
+    },
+    "INDEX_ADVERSE_SLIPPAGE_PROBABILITY": {
+      "arithmetic_mean": 0.32,
+      "classification": "BROKER_PROXY",
+      "constituents": [
+        0.32
+      ],
+      "quantiles": {
+        "CENTRAL": 0.32,
+        "EXTREME": 0.32,
+        "PLAUSIBLE_BASE": 0.32
+      },
+      "sample_size": 1,
+      "statistic_kinds": [
+        "aggregate_index_stop_negative_slippage_rate"
+      ],
+      "unit": "probability"
+    },
+    "NASDAQ_SPREAD_POINTS": {
+      "arithmetic_mean": 1.25175,
+      "classification": "BROKER_PROXY",
+      "constituents": [
+        1.0,
+        1.2,
+        1.807,
+        1.0
+      ],
+      "quantiles": {
+        "CENTRAL": 1.1,
+        "EXTREME": 1.7887899999999997,
+        "PLAUSIBLE_BASE": 1.7159499999999996
+      },
+      "sample_size": 4,
+      "statistic_kinds": [
+        "main_session_spread",
+        "average",
+        "average",
+        "minimum"
+      ],
+      "unit": "index_point"
+    },
+    "STANDARD_CFD_COMMISSION_RATE": {
+      "arithmetic_mean": 0.0,
+      "classification": "BROKER_PROXY",
+      "constituents": [
+        0.0,
+        0.0
+      ],
+      "quantiles": {
+        "CENTRAL": 0.0,
+        "EXTREME": 0.0,
+        "PLAUSIBLE_BASE": 0.0
+      },
+      "sample_size": 2,
+      "statistic_kinds": [
+        "published_standard_cfd_commission",
+        "published_standard_cfd_commission"
+      ],
+      "unit": "notional_fraction"
+    },
+    "XAUUSD_SPREAD_POINTS": {
+      "arithmetic_mean": 0.1675,
+      "classification": "BROKER_PROXY",
+      "constituents": [
+        0.3,
+        0.1,
+        0.07,
+        0.2
+      ],
+      "quantiles": {
+        "CENTRAL": 0.15000000000000002,
+        "EXTREME": 0.297,
+        "PLAUSIBLE_BASE": 0.285
+      },
+      "sample_size": 4,
+      "statistic_kinds": [
+        "published_spread",
+        "from_minimum",
+        "average",
+        "published_spread"
+      ],
+      "unit": "gold_point"
+    }
+  },
+  "limitations": [
+    "The NASDAQ local export has no externally attested provider provenance.",
+    "Broker samples mix published averages, minimums, medians, and bounds; cross-broker quantiles are descriptive proxies with small N.",
+    "Broker latency is not end-to-end latency from the EBTA execution machine.",
+    "The adverse slippage probability is an aggregate IG index-stop proxy, not an asset-specific observed distribution.",
+    "Published overall fill rates are retained as evidence but are not mapped to prob_fill_on_limit because the contracts are not equivalent.",
+    "XAUUSD spread is BROKER_PROXY because no local ask/bid tick source is available."
+  ],
+  "nasdaq_local": {
+    "classification": "UNVERIFIED_LOCAL_EXPORT",
+    "crossed_market_rows": 0,
+    "directory_id": "NASDAQ tick",
+    "file_count": 36,
+    "files": [
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-01-01-2023-01-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "90642601bafe6027e7cebcacb8b05a0ddf7b5a65ec1231abdce36d9f0bcd9ee0",
+        "total_rows": 6467706,
+        "valid_rows": 6467706
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-02-01-2023-02-28.csv",
+        "invalid_price_rows": 0,
+        "sha256": "a65b18c6bfa8554b772562cbbe945b1e83107429514cab1d99923e880e3f040c",
+        "total_rows": 6339564,
+        "valid_rows": 6339564
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-03-01-2023-03-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "31fcc129d71864a339a3e2c0a0520c3f31aeb301ab081ed939bc37d0d7d88225",
+        "total_rows": 7932268,
+        "valid_rows": 7932268
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-04-01-2023-04-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "7bb611cd6b5860d463c72ff56604b52932f2c9b27f1132e116ab28a268157fa5",
+        "total_rows": 5634326,
+        "valid_rows": 5634326
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-05-01-2023-05-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "8c36a6379ef522549aa13f3c6d44a77446330b4994d0405b27b2c844f5448869",
+        "total_rows": 5598340,
+        "valid_rows": 5598340
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-06-01-2023-06-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "c76bcbf3ed384d7cda093308928f455150a62b9cad430c813622e4c6a8a614a0",
+        "total_rows": 6068390,
+        "valid_rows": 6068390
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-07-01-2023-07-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "e534669c58881a90a820f12aa3508cd88478547b2a7920612894661b8f0f32b5",
+        "total_rows": 5104474,
+        "valid_rows": 5104474
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-08-01-2023-08-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "08e4c13098a3d871e07d19f4ad536d14c3e202c863c81815e89d39937c4058b9",
+        "total_rows": 7071270,
+        "valid_rows": 7071270
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-09-01-2023-09-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "4c359eb7ba83580ff2a7b0c662accabb57e092d4b5f6abfa1d6e623b84108b26",
+        "total_rows": 6418580,
+        "valid_rows": 6418580
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-10-01-2023-10-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "5f9d31601badc2b2cb9d624e612bd15617db34e9a33ed4e352194424e4f8a1bf",
+        "total_rows": 7578716,
+        "valid_rows": 7578716
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-11-01-2023-11-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "27abc831d994508e57075db016e34a70fae0945ae832546304d394e2c7428aa0",
+        "total_rows": 5245657,
+        "valid_rows": 5245657
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2023-12-01-2023-12-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "134202a0fde5ce0a72c7b57306176f9db47e50c80742da28e1ac97dcddb19a45",
+        "total_rows": 3042714,
+        "valid_rows": 3042714
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-01-01-2024-01-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "a48f5854e8d785695bc28bb950af88de942196bfb388b03260c9bab9376ed13f",
+        "total_rows": 3636262,
+        "valid_rows": 3636262
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-02-01-2024-02-29.csv",
+        "invalid_price_rows": 0,
+        "sha256": "4d2887db62089e0d5accdfe24a878b7a3ed148a5d6f6ab08ff150ae04324c672",
+        "total_rows": 3362586,
+        "valid_rows": 3362586
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-03-01-2024-03-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "4c1cbeda341ea6cd2c40aa9c686288604f14bcbd89ff181677746d52d05783a8",
+        "total_rows": 3486223,
+        "valid_rows": 3486223
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-04-01-2024-04-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "53cc3e8115a82f9ad6c2d256a076f590c8af8352d65270adcbbd9ee1a4bd0923",
+        "total_rows": 4076467,
+        "valid_rows": 4076467
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-05-01-2024-05-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "5df59cdfaea0ec8dd71ae136bf49b417fe9f137f68f5c289681d223c461cff24",
+        "total_rows": 3420802,
+        "valid_rows": 3420802
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-06-01-2024-06-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "fdddc6bb54dc94b99ad272bad979546153666d795ff5df7f25be8a5cf547b537",
+        "total_rows": 3429149,
+        "valid_rows": 3429149
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-07-01-2024-07-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "761cff65c2faa71d547f9e65ed36de9c801b3f4156c3e796b81dd391e9e7b18e",
+        "total_rows": 4239594,
+        "valid_rows": 4239594
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-08-01-2024-08-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "8f838b963f5ed22a073d9eb4b816018aecd908d00c113114d58bd7d57dd453f2",
+        "total_rows": 4778924,
+        "valid_rows": 4778924
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-09-01-2024-09-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "f83bde32f2d864f41dc0532193651869adeedbe26fd00a7c163bad22e32f28e2",
+        "total_rows": 4168205,
+        "valid_rows": 4168205
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-10-01-2024-10-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "c4a8a397a6f41ff1513bc78f9fce11f6d4e0d40f846fbab53e43cf83de45f58a",
+        "total_rows": 4367454,
+        "valid_rows": 4367454
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-11-01-2024-11-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "f90d7f0762e1d949b00ae03793d1dc59ba8fda7bd0826b14d2161577db2d7359",
+        "total_rows": 4210843,
+        "valid_rows": 4210843
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2024-12-01-2024-12-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "278295f589dbde22869dcffe6a9630240cd5586d64e0edd389911b3bf517b9dd",
+        "total_rows": 3761041,
+        "valid_rows": 3761041
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-01-01-2025-01-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "660dc4efbf16a3d69a87df1ba88f8f1d8fb274e247396b8b97b42f33ed29b460",
+        "total_rows": 4911635,
+        "valid_rows": 4911635
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-02-01-2025-02-28.csv",
+        "invalid_price_rows": 0,
+        "sha256": "b3a4e09c150487836f0a90a350db958b9681a1698436795446e2e659d3eb443b",
+        "total_rows": 4035658,
+        "valid_rows": 4035658
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-03-01-2025-03-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "c528a8af5482017d12056aac7e5474491dbe8538bde162e213f6323445d101ef",
+        "total_rows": 5405907,
+        "valid_rows": 5405907
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-04-01-2025-04-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "c4267d64c7de4b23becfd8f21fb8b5f2b01e418ed23214d1322efba8cd3df08d",
+        "total_rows": 6142612,
+        "valid_rows": 6142612
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-05-01-2025-05-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "734048fa51fd017883aa9069bea33f0d6bab7e4fe705921de05fde6f39693688",
+        "total_rows": 5243705,
+        "valid_rows": 5243705
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-06-01-2025-06-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "ff1565c87237c206b1115ec0459256d2ee375ce8216a37df16859cbfacab7d2a",
+        "total_rows": 4729494,
+        "valid_rows": 4729494
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-07-01-2025-07-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "a21b97d80ad2d09be6fb4fc3c8b2ecb4ff65576b5920ca24a02df2bc7c67cfd5",
+        "total_rows": 4577855,
+        "valid_rows": 4577855
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-08-01-2025-08-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "c53220d692d5615120a995caf3901d21f423e11544352cbf4b28e04356504b83",
+        "total_rows": 4763389,
+        "valid_rows": 4763389
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-09-01-2025-09-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "20085ea5662ce85302eb026baed82659a88a2c320d6d7eb4a9b81df8eab374f7",
+        "total_rows": 4447092,
+        "valid_rows": 4447092
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-10-01-2025-10-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "01f2b414d01b7db366c604f43b6208a683dc432ba7983ab7d2c55904162ed2cf",
+        "total_rows": 5831931,
+        "valid_rows": 5831931
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-11-01-2025-11-30.csv",
+        "invalid_price_rows": 0,
+        "sha256": "a8486824129cd2e528fd9f057fa6031bfaa4fcce0b918ecd6d0aee1b5019a42d",
+        "total_rows": 6655014,
+        "valid_rows": 6655014
+      },
+      {
+        "crossed_market_rows": 0,
+        "file_id": "NASDAQ tick/USATECH.IDXUSD-tick-bid-2025-12-01-2025-12-31.csv",
+        "invalid_price_rows": 0,
+        "sha256": "8ec2ccf488a0b6d69691482fa9f8060da3afc5e94959ea9b922c31ba466a648d",
+        "total_rows": 5529371,
+        "valid_rows": 5529371
+      }
+    ],
+    "invalid_price_rows": 0,
+    "period": {
+      "end": "2025-12-31",
+      "start": "2023-01-01"
+    },
+    "quantile_method": "linear_interpolation_on_exact_decimal_frequency_table",
+    "quantiles": {
+      "CENTRAL": 1.502,
+      "EXTREME": 3.558,
+      "PLAUSIBLE_BASE": 3.515
+    },
+    "spread_scale": 1000,
+    "spread_unit": "index_point",
+    "total_rows": 181713218,
+    "valid_rows": 181713218
+  },
+  "scenarios": {
+    "CENTRAL": {
+      "NASDAQ": {
+        "commission_rate": 0.0,
+        "latency_nanos": 25350000,
+        "prob_slippage": 0.32,
+        "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
+        "spread_points": 1.502,
+        "spread_provenance": "UNVERIFIED_LOCAL_EXPORT"
+      },
+      "XAUUSD": {
+        "commission_rate": 0.0,
+        "latency_nanos": 25350000,
+        "prob_slippage": 0.32,
+        "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
+        "spread_points": 0.15000000000000002,
+        "spread_provenance": "BROKER_PROXY"
+      }
+    },
+    "EXTREME": {
+      "NASDAQ": {
+        "commission_rate": 0.0,
+        "latency_nanos": 49700000,
+        "prob_slippage": 0.32,
+        "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
+        "spread_points": 3.558,
+        "spread_provenance": "UNVERIFIED_LOCAL_EXPORT"
+      },
+      "XAUUSD": {
+        "commission_rate": 0.0,
+        "latency_nanos": 49700000,
+        "prob_slippage": 0.32,
+        "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
+        "spread_points": 0.297,
+        "spread_provenance": "BROKER_PROXY"
+      }
+    },
+    "PLAUSIBLE_BASE": {
+      "NASDAQ": {
+        "commission_rate": 0.0,
+        "latency_nanos": 48500000,
+        "prob_slippage": 0.32,
+        "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
+        "spread_points": 3.515,
+        "spread_provenance": "UNVERIFIED_LOCAL_EXPORT"
+      },
+      "XAUUSD": {
+        "commission_rate": 0.0,
+        "latency_nanos": 48500000,
+        "prob_slippage": 0.32,
+        "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
+        "spread_points": 0.285,
+        "spread_provenance": "BROKER_PROXY"
+      }
+    }
+  },
+  "schema_version": "1.0.0",
+  "source_snapshot": {
+    "file_id": "broker_sources.json",
+    "sha256": "2dea34565beca037158f8899dd574ab0ecdc8a3d93bb875e97acc4b7be00a537"
+  }
+}

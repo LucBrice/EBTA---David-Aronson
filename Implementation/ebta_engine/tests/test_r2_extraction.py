@@ -5,6 +5,7 @@ import pandas as pd
 
 from ebta_engine.adapters.nautilus_mapping import extract_simulation_result
 from ebta_engine.data.local_ohlcv import OhlcvBar
+from ebta_engine.strategies.contracts import CostModel
 
 
 class R2ExtractionTests(unittest.TestCase):
@@ -74,6 +75,64 @@ class R2ExtractionTests(unittest.TestCase):
         )
 
         self.assertEqual(result.positions[0]["exit_price"], 0.0)
+
+    def test_execution_overlay_debits_each_fill_once_and_recomputes_returns(self):
+        engine = _Engine(
+            strategy=_Strategy(
+                [
+                    (_nanos("2026-01-01T00:00:00Z"), 1000.0, 100.0),
+                    (_nanos("2026-01-01T00:01:00Z"), 1001.0, 100.0),
+                    (_nanos("2026-01-01T00:02:00Z"), 1002.0, 0.0),
+                ]
+            ),
+            fills=_fills(commission=[0.0, 0.0]),
+            positions=_positions(realized_pnl=2.0),
+            is_flat=True,
+        )
+        cost_model = CostModel(
+            "CALIBRATED",
+            "fill_model",
+            "maker_taker",
+            spread_points=2.0,
+            point_value=1.0,
+            metadata={"classification": "BROKER_PROXY"},
+        )
+
+        result = extract_simulation_result(
+            candidate_id="CAND",
+            instrument_id="XAUUSD.SIM",
+            source_bars=_bars(),
+            engine=engine,
+            starting_nav=1000.0,
+            quantity=1.0,
+            cost_model=cost_model,
+        )
+
+        self.assertEqual(result.nav, [999.0, 1000.0, 1000.0])
+        self.assertEqual(result.total_costs, 2.0)
+        self.assertAlmostEqual(result.daily_returns[1], 1.0 / 999.0)
+        self.assertEqual(result.metadata["execution_costs"]["spread_cost"], 2.0)
+        self.assertEqual(len(result.metadata["execution_costs"]["ledger"]), 2)
+
+    def test_fill_after_final_snapshot_is_rejected(self):
+        fills = _fills(commission=[0.0, 0.0])
+        fills.loc[1, "ts_last"] = "2026-01-01T00:03:00Z"
+        engine = _Engine(
+            strategy=_Strategy([(_nanos("2026-01-01T00:00:00Z"), 1000.0, 0.0)]),
+            fills=fills,
+            positions=_positions(realized_pnl=0.0),
+            is_flat=True,
+        )
+        with self.assertRaisesRegex(ValueError, "later than the final NAV snapshot"):
+            extract_simulation_result(
+                candidate_id="CAND",
+                instrument_id="XAUUSD.SIM",
+                source_bars=_bars(),
+                engine=engine,
+                starting_nav=1000.0,
+                quantity=1.0,
+                cost_model=CostModel("CALIBRATED", "fill_model", "maker_taker", spread_points=1.0),
+            )
 
     def test_no_model_requires_flat_portfolio_empty_fills_and_no_nav_snapshots(self):
         engine = _Engine(

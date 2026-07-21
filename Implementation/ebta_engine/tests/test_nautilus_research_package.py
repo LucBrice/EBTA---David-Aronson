@@ -124,6 +124,42 @@ class NautilusRobustnessGateProductionTests(unittest.TestCase):
         self.assertNotIn(29, calls)
         self.assertFalse((package_dir / "oos_access_log.jsonl").exists())
 
+    def test_r5_r6_cost_scenarios_execute_distinct_models_and_can_reject(self):
+        observed_spreads = []
+
+        def runner(**kwargs):
+            spread = kwargs["cost_model"].spread_points
+            observed_spreads.append(spread)
+            bars = kwargs["bars"]
+            daily_return = 0.002 - spread / 1000.0
+            return SimulationResult(
+                candidate_id=kwargs["candidate"].candidate_id,
+                instrument_id=kwargs["instrument_config"].instrument_id,
+                timestamps=[bar.timestamp.isoformat().replace("+00:00", "Z") for bar in bars],
+                daily_returns=[daily_return for _ in bars],
+                daily_exposure=[0.1 for _ in bars],
+                nav=[1000.0 * (1.0 + daily_return) ** (index + 1) for index, _ in enumerate(bars)],
+                total_costs=spread * 2.0,
+                metadata={"source": "cost_sensitive_test_runner", "total_orders": 2},
+            )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            inputs = build_nautilus_inputs(
+                data_root=_write_fixture_data(root / "data"),
+                assets=["NASDAQ"],
+                package_dir=root / "research_package",
+                segment_runner=runner,
+                execution_scope="PRE_OOS_BENCHMARK",
+            )
+
+        scenarios = {row["classification"]: row for row in inputs["robustness_plan"]["scenarios"]}
+        self.assertEqual(sorted(set(observed_spreads)), [1.502, 3.515, 3.558])
+        self.assertEqual(scenarios["CENTRAL"]["scenario_verdict"], "PASS")
+        self.assertEqual(scenarios["PLAUSIBLE_BASE"]["scenario_verdict"], "REJECTED_ECONOMIC")
+        self.assertEqual(scenarios["EXTREME"]["scenario_verdict"], "REJECTED_ECONOMIC")
+        self.assertGreater(scenarios["CENTRAL"]["mean_return"], scenarios["EXTREME"]["mean_return"])
+
 
 class NautilusChronologyProductionTests(unittest.TestCase):
     def test_pre_oos_benchmark_scope_stops_even_when_gates_authorize(self):

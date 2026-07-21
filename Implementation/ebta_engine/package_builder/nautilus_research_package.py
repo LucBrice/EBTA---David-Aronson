@@ -17,6 +17,7 @@ from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
 from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars, resolve_data_root
 from ebta_engine.data.walk_forward import WalkForwardSplitter
 from ebta_engine.package_builder.economic_calibration import compute_economic_pass_flags, economic_observed_values
+from ebta_engine.package_builder.execution_calibration import load_execution_calibration
 from ebta_engine.procedures._utils import canonical_json
 from ebta_engine.risk.robustness import compute_robustness_scenarios
 from ebta_engine.strategies.contracts import Candidate, CostModel, InstrumentConfig, SimulationResult
@@ -79,10 +80,12 @@ def build_nautilus_inputs(
     package_dir: Path,
     clock: RuntimeClock | None = None,
     execution_scope: ExecutionScope = "FULL_RESEARCH_PACKAGE",
+    execution_calibration: dict[str, Any] | None = None,
 ) -> dict:
     if execution_scope not in {"FULL_RESEARCH_PACKAGE", "PRE_OOS_BENCHMARK"}:
         raise ValueError(f"unsupported execution_scope: {execution_scope}")
     effective_data_root = resolve_data_root(data_root)
+    calibration = copy.deepcopy(execution_calibration or load_execution_calibration())
     assets = sorted(assets or DEFAULT_NAUTILUS_ASSETS)
     pilot = _load_pilot_module()
     inputs = copy.deepcopy(pilot.load_pilot_inputs())
@@ -119,7 +122,43 @@ def build_nautilus_inputs(
             "stability_criteria": ["payload_complexity_tie_break", "turnover_cost_exposure_tie_break"],
         }
     )
-    inputs["execution_model"]["cost_model"] = _nautilus_cost_model().to_dict()
+    inputs["execution_model"]["cost_model"] = {
+        "model_id": "R5-R6-CENTRAL-BY-ASSET",
+        "composition": "ASSET_SPECIFIC_CALIBRATED_MODELS",
+    }
+    inputs["execution_model"]["cost_models_by_scenario"] = {
+        scenario: {
+            asset: _nautilus_cost_model(asset, scenario, calibration).to_dict()
+            for asset in assets
+        }
+        for scenario in ("CENTRAL", "PLAUSIBLE_BASE", "EXTREME")
+    }
+    inputs["execution_model"]["instrument_config"] = {
+        "composition": "ASSET_SPECIFIC_NAUTILUS_INSTRUMENTS",
+        "instruments_by_asset": {asset: _instrument_config(asset).to_dict() for asset in assets},
+    }
+    inputs["execution_model"]["slippage_model"] = (
+        "NAUTILUS_ONE_TICK_PROBABILITY_PLUS_EXPLICIT_SPREAD_LEDGER"
+    )
+    inputs["execution_model"]["calibration_evidence"] = {
+        "schema_version": calibration["schema_version"],
+        "as_of_date": calibration["as_of_date"],
+        "source_snapshot": copy.deepcopy(calibration["source_snapshot"]),
+        "nasdaq_local": {
+            key: copy.deepcopy(calibration["nasdaq_local"][key])
+            for key in (
+                "classification",
+                "period",
+                "file_count",
+                "total_rows",
+                "valid_rows",
+                "invalid_price_rows",
+                "crossed_market_rows",
+                "quantiles",
+            )
+        },
+        "limitations": copy.deepcopy(calibration["limitations"]),
+    }
 
     run_one = segment_runner or _subprocess_segment_runner
     segment_workers = 1 if segment_runner is not None else NAUTILUS_SEGMENT_WORKERS
@@ -182,7 +221,7 @@ def build_nautilus_inputs(
                         fold_id=fold["fold_id"],
                     ),
                     "bars": _slice_bars_by_date_range(raw_bars_by_asset[asset], *asset_fold["schedule"]["test"]),
-                    "cost_model": _nautilus_cost_model(),
+                    "cost_model": _nautilus_cost_model(asset, "CENTRAL", calibration),
                     "instrument_config": _instrument_config(asset),
                     "seed": 13,
                     "starting_nav": 1000.0,
@@ -248,7 +287,7 @@ def build_nautilus_inputs(
                         complexity=int(parameters.get("complexity", 1)),
                         fold_id=fold["fold_id"],
                     ),
-                    "cost_model": _nautilus_cost_model(),
+                    "cost_model": _nautilus_cost_model(asset, "CENTRAL", calibration),
                     "instrument_config": _instrument_config(asset),
                     "seed": 29,
                     "starting_nav": 1000.0,
@@ -269,13 +308,32 @@ def build_nautilus_inputs(
         for timestamp in result.timestamps
     ]
     test_results = [result for results in result_by_candidate.values() for result in results]
-    inputs["execution_report"] = _execution_report(test_results, [], require_oos=False)
+    results_by_scenario = {"ROB-NAUTILUS-CENTRAL": test_results}
+    for scenario, stress_id in (
+        ("PLAUSIBLE_BASE", "ROB-NAUTILUS-PLAUSIBLE"),
+        ("EXTREME", "ROB-NAUTILUS-EXTREME"),
+    ):
+        stressed_inputs = [
+            {
+                **item,
+                "cost_model": _nautilus_cost_model(item["candidate"].asset, scenario, calibration),
+            }
+            for item in segment_inputs
+        ]
+        stressed_outputs = run_multifold_segments(
+            stressed_inputs,
+            runner=run_one,
+            max_workers=segment_workers,
+        )
+        results_by_scenario[stress_id] = [output["simulation_result"] for output in stressed_outputs]
+    inputs["execution_report"] = _execution_report(
+        test_results,
+        [],
+        require_oos=False,
+        cost_model_id="R5-R6-CENTRAL-BY-ASSET",
+    )
     inputs["robustness_plan"]["scenarios"] = compute_robustness_scenarios(
-        {
-            "ROB-NAUTILUS-CENTRAL": test_results,
-            "ROB-NAUTILUS-PLAUSIBLE": test_results,
-            "ROB-NAUTILUS-EXTREME": test_results,
-        },
+        results_by_scenario,
         scenario_grid=_nautilus_robustness_grid(),
     )
     if clock is not None:
@@ -361,7 +419,12 @@ def build_nautilus_inputs(
         {"available_at": snapshot["available_at"], "decision_at": fold["schedule"]["information_cutoff"]}
         for fold in reference_folds
     ]
-    inputs["execution_report"] = _execution_report(all_simulation_results, oos_results, require_oos=True)
+    inputs["execution_report"] = _execution_report(
+        all_simulation_results,
+        oos_results,
+        require_oos=True,
+        cost_model_id="R5-R6-CENTRAL-BY-ASSET",
+    )
     inputs["reproduction_report"]["commands"] = [
         "Implementation\\adapters\\nautilus_env\\venv\\Scripts\\python.exe -m ebta_engine.package_builder.nautilus_research_package"
     ]
@@ -441,21 +504,38 @@ def _payloads_by_axis(assets: list[str], research_family_id: str, fold_id: str) 
     }
 
 
-def _nautilus_cost_model() -> CostModel:
-    # Indicative maker/taker fee rates (2026-07-10 calibration decision, see
-    # .ai/backlog/fixes/PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION.md
-    # section 10): generic retail CFD-style rates, not yet sourced from a
-    # real broker. maker_fee/taker_fee live on InstrumentConfig
-    # (_instrument_config) and are consumed by Nautilus's MakerTakerFeeModel
-    # via fee_model="maker_taker" below (nautilus_mapping.py::_fee_model()).
+def _nautilus_cost_model(
+    asset: str = "NASDAQ",
+    scenario: str = "CENTRAL",
+    calibration: dict[str, Any] | None = None,
+) -> CostModel:
+    calibration = calibration or load_execution_calibration()
+    try:
+        parameters = calibration["scenarios"][scenario][asset]
+    except KeyError as exc:
+        raise ValueError(f"missing execution calibration for {scenario}/{asset}") from exc
     return CostModel(
-        model_id="NAUTILUS-MAKER-TAKER-INDICATIVE",
-        fill_model="deterministic",
+        model_id=f"R5-R6-{asset}-{scenario}",
+        fill_model="fill_model",
         fee_model="maker_taker",
-        commission_per_lot=0.0,
-        latency_nanos=0,
+        commission_per_lot=float(parameters["commission_rate"]),
+        slippage_bps=0.0,
+        spread_points=float(parameters["spread_points"]),
+        point_value=1.0,
+        latency_nanos=int(parameters["latency_nanos"]),
         prob_fill_on_limit=1.0,
-        prob_slippage=0.0,
+        prob_slippage=float(parameters["prob_slippage"]),
+        metadata={
+            "calibration_schema_version": calibration["schema_version"],
+            "calibration_as_of_date": calibration["as_of_date"],
+            "scenario": scenario,
+            "asset": asset,
+            "spread_provenance": parameters["spread_provenance"],
+            "spread_conversion": parameters["spread_conversion"],
+            "slippage_semantics": "NAUTILUS_ONE_TICK_PROBABILITY",
+            "fill_probability_status": "INCONCLUSIVE_NOT_MAPPED_FROM_AGGREGATE_FILL_RATE",
+            "commission_status": "EXPLICIT_ZERO_SPREAD_BASED_CFD_PROXY",
+        },
     )
 
 
@@ -471,12 +551,15 @@ def _instrument_config(asset: str) -> InstrumentConfig:
             size_increment="0.01",
             margin_init="0",
             margin_maint="0",
-            maker_fee="0.0002",
-            taker_fee="0.0005",
+            maker_fee="0",
+            taker_fee="0",
             base_currency="XAU",
             quote_currency="USD",
             asset_class="CFD",
-            metadata={"underlying_asset_class": "COMMODITY"},
+            metadata={
+                "underlying_asset_class": "COMMODITY",
+                "fee_provenance": "EXPLICIT_ZERO_SPREAD_BASED_CFD_PROXY",
+            },
         )
     if asset == "NASDAQ":
         return InstrumentConfig(
@@ -489,10 +572,13 @@ def _instrument_config(asset: str) -> InstrumentConfig:
             size_increment="1",
             margin_init="0",
             margin_maint="0",
-            maker_fee="0.0002",
-            taker_fee="0.0005",
+            maker_fee="0",
+            taker_fee="0",
             asset_class="CFD",
-            metadata={"underlying_asset_class": "INDEX"},
+            metadata={
+                "underlying_asset_class": "INDEX",
+                "fee_provenance": "EXPLICIT_ZERO_SPREAD_BASED_CFD_PROXY",
+            },
         )
     raise ValueError(f"unsupported Nautilus package asset: {asset}")
 
@@ -672,14 +758,18 @@ def _execution_report(
     oos_results: list[SimulationResult],
     *,
     require_oos: bool,
+    cost_model_id: str,
 ) -> dict[str, Any]:
     evidence = _execution_nav_evidence(all_results, oos_results, require_oos=require_oos)
+    cost_breakdown = _execution_cost_breakdown(all_results)
     return {
         "status": evidence["status"],
-        "cost_model": _nautilus_cost_model().model_id,
+        "cost_model": cost_model_id,
         "central_scenario": "tradable_net",
         "orders": [{"order_id": "ORDER-NAUTILUS-MVP-SUMMARY", "status": "FILLED", "fill_id": "FILL-NAUTILUS-MVP-SUMMARY"}],
         "total_orders": _total_orders(all_results),
+        "total_costs": sum(result.total_costs for result in all_results),
+        "cost_breakdown": cost_breakdown,
         "oos_total_orders": _total_orders(oos_results),
         "nav_reconciliation": evidence["nav_reconciliation"],
         "nav_observation_count": evidence["nav_observation_count"],
@@ -694,6 +784,45 @@ def _execution_report(
     }
 
 
+def _execution_cost_breakdown(results: list[SimulationResult]) -> dict[str, Any]:
+    fields = (
+        "native_commission",
+        "spread_cost",
+        "slippage_cost",
+        "commission_overlay",
+        "overlay_total",
+        "total_execution_cost",
+    )
+    totals = {field: 0.0 for field in fields}
+    classified_result_count = 0
+    model_ids: set[str] = set()
+    for result in results:
+        evidence = result.metadata.get("execution_costs")
+        if not isinstance(evidence, dict):
+            continue
+        classified_result_count += 1
+        for field in fields:
+            totals[field] += float(evidence.get(field, 0.0))
+        model_id = evidence.get("model_id")
+        if model_id:
+            model_ids.add(str(model_id))
+    reported_total = sum(result.total_costs for result in results)
+    unclassified_cost = reported_total - totals["total_execution_cost"]
+    if abs(unclassified_cost) < 1e-12:
+        unclassified_cost = 0.0
+    summary: dict[str, Any] = dict(totals)
+    summary.update(
+        {
+            "classified_result_count": classified_result_count,
+            "result_count": len(results),
+            "unclassified_cost": unclassified_cost,
+            "model_ids": sorted(model_ids),
+            "native_slippage_accounting": "EMBEDDED_IN_NAUTILUS_FILL_PRICE_NOT_SEPARATELY_REPORTED",
+        }
+    )
+    return summary
+
+
 def _series_non_flat(values: list[float]) -> bool:
     return bool(values) and any(value != values[0] for value in values[1:])
 
@@ -705,21 +834,21 @@ def _nautilus_robustness_grid() -> dict[str, Any]:
                 "stress_id": "ROB-NAUTILUS-CENTRAL",
                 "classification": "CENTRAL",
                 "blocking": True,
-                "minimum_mean_return": -1.0,
+                "minimum_mean_return": 0.0,
                 "stress_family": "central_execution",
             },
             {
                 "stress_id": "ROB-NAUTILUS-PLAUSIBLE",
                 "classification": "PLAUSIBLE_BASE",
                 "blocking": True,
-                "minimum_mean_return": -1.0,
+                "minimum_mean_return": 0.0,
                 "stress_family": "plausible_execution",
             },
             {
                 "stress_id": "ROB-NAUTILUS-EXTREME",
                 "classification": "EXTREME",
                 "blocking": False,
-                "minimum_mean_return": -1.0,
+                "minimum_mean_return": 0.0,
                 "stress_family": "extreme_diagnostic",
             },
         ]

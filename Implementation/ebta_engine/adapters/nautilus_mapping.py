@@ -283,6 +283,7 @@ def run_segment(
             engine=eng,
             starting_nav=starting_nav,
             quantity=float(trade_size),
+            cost_model=cost_model,
         )
     finally:
         if owns_engine:
@@ -297,6 +298,7 @@ def extract_simulation_result(
     engine: Any,
     starting_nav: float,
     quantity: float,
+    cost_model: CostModel | None = None,
 ) -> SimulationResult:
     fills = engine.trader.generate_order_fills_report()
     positions = engine.trader.generate_positions_report()
@@ -307,12 +309,20 @@ def extract_simulation_result(
 
     if nav_series:
         timestamps = [item[0] for item in nav_series]
-        nav = [item[1] for item in nav_series]
-        daily_exposure = [(item[2] / item[1]) if item[1] else 0.0 for item in nav_series]
+        raw_nav = [item[1] for item in nav_series]
+        net_nav, execution_costs = _net_nav_after_execution_costs(
+            timestamps,
+            raw_nav,
+            fills,
+            cost_model,
+        )
+        nav = net_nav
+        daily_exposure = [(item[2] / net_value) if net_value else 0.0 for item, net_value in zip(nav_series, nav)]
     else:
         timestamps = [_timestamp_to_z(bar.timestamp) for bar in source_bars]
         nav = [starting_nav for _ in source_bars]
         daily_exposure = [0.0 for _ in source_bars]
+        execution_costs = _empty_execution_costs(_extract_costs(fills))
 
     daily_returns = _returns_from_nav(nav)
 
@@ -323,7 +333,7 @@ def extract_simulation_result(
         daily_returns=daily_returns,
         daily_exposure=daily_exposure,
         nav=nav,
-        total_costs=_extract_costs(fills),
+        total_costs=execution_costs["total_execution_cost"],
         orders=_fills_to_records(fills, "avg_px", "quantity", "ts_init"),
         fills=_fills_to_records(fills, "avg_px", "filled_qty", "ts_last"),
         positions=_extract_positions(positions),
@@ -331,6 +341,7 @@ def extract_simulation_result(
             "source": "nautilus_trader",
             "total_orders": int(engine.get_result().total_orders),
             "total_positions": int(engine.get_result().total_positions),
+            "execution_costs": execution_costs,
             **dict(getattr(strategy, "_metadata", {})),
         },
     )
@@ -408,6 +419,105 @@ def _extract_costs(fills_report: Any) -> float:
     if _report_empty(fills_report) or "commission" not in fills_report:
         return 0.0
     return sum(_money_float(value) for value in fills_report["commission"])
+
+
+def _net_nav_after_execution_costs(
+    timestamps: Sequence[str],
+    raw_nav: Sequence[float],
+    fills_report: Any,
+    cost_model: CostModel | None,
+) -> tuple[list[float], dict[str, Any]]:
+    native_commission = _extract_costs(fills_report)
+    if cost_model is None or _report_empty(fills_report):
+        return list(raw_nav), _empty_execution_costs(native_commission)
+    snapshot_nanos = [_timestamp_value_to_nanos(value) for value in timestamps]
+    debits = [0.0 for _ in timestamps]
+    ledger: list[dict[str, Any]] = []
+    spread_total = 0.0
+    slippage_total = 0.0
+    commission_overlay_total = 0.0
+    for _, row in fills_report.iterrows():
+        fill_timestamp = row.get("ts_last", row.get("ts_init"))
+        fill_nanos = _timestamp_value_to_nanos(fill_timestamp)
+        snapshot_index = next(
+            (index for index, timestamp_nanos in enumerate(snapshot_nanos) if timestamp_nanos >= fill_nanos),
+            None,
+        )
+        if snapshot_index is None:
+            raise ValueError("fill timestamp is later than the final NAV snapshot")
+        quantity = abs(_row_float(row, "filled_qty", "quantity", default=0.0))
+        price = abs(_row_float(row, "avg_px", "price", default=0.0))
+        spread_cost = quantity * cost_model.spread_points * cost_model.point_value / 2.0
+        slippage_cost = quantity * price * cost_model.slippage_bps / 10_000.0
+        commission_overlay = quantity * cost_model.commission_per_lot
+        overlay_total = spread_cost + slippage_cost + commission_overlay
+        debits[snapshot_index] += overlay_total
+        spread_total += spread_cost
+        slippage_total += slippage_cost
+        commission_overlay_total += commission_overlay
+        ledger.append(
+            {
+                "timestamp": _timestamp_nanos_to_z(fill_nanos),
+                "snapshot_timestamp": timestamps[snapshot_index],
+                "quantity": quantity,
+                "price": price,
+                "spread_cost": spread_cost,
+                "slippage_cost": slippage_cost,
+                "commission_overlay": commission_overlay,
+                "overlay_total": overlay_total,
+            }
+        )
+    cumulative = 0.0
+    net_nav: list[float] = []
+    for value, debit in zip(raw_nav, debits):
+        cumulative += debit
+        net_nav.append(float(value) - cumulative)
+    overlay_total = spread_total + slippage_total + commission_overlay_total
+    return net_nav, {
+        "native_commission": native_commission,
+        "spread_cost": spread_total,
+        "slippage_cost": slippage_total,
+        "commission_overlay": commission_overlay_total,
+        "overlay_total": overlay_total,
+        "total_execution_cost": native_commission + overlay_total,
+        "ledger": ledger,
+        "nav_basis": "NAUTILUS_EQUITY_NET_OF_NATIVE_COMMISSION_PLUS_EXPLICIT_OVERLAY",
+        "model_id": cost_model.model_id,
+        "provenance": dict(cost_model.metadata),
+    }
+
+
+def _empty_execution_costs(native_commission: float) -> dict[str, Any]:
+    return {
+        "native_commission": native_commission,
+        "spread_cost": 0.0,
+        "slippage_cost": 0.0,
+        "commission_overlay": 0.0,
+        "overlay_total": 0.0,
+        "total_execution_cost": native_commission,
+        "ledger": [],
+        "nav_basis": "NAUTILUS_EQUITY_NET_OF_NATIVE_COMMISSION",
+    }
+
+
+def _timestamp_value_to_nanos(value: Any) -> int:
+    if isinstance(value, datetime):
+        timestamp = value if value.tzinfo is not None else value.replace(tzinfo=timezone.utc)
+        return _datetime_to_nanos(timestamp)
+    if isinstance(value, (int, float)):
+        numeric = int(value)
+        return numeric if abs(numeric) >= 10**14 else numeric * 1_000_000_000
+    text = str(value).strip()
+    if text.isdigit():
+        return _timestamp_value_to_nanos(int(text))
+    timestamp = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.replace(tzinfo=timezone.utc)
+    return _datetime_to_nanos(timestamp)
+
+
+def _timestamp_nanos_to_z(value: int) -> str:
+    return datetime.fromtimestamp(value / 1_000_000_000, timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _extract_positions(positions_report: Any) -> list[dict[str, Any]]:

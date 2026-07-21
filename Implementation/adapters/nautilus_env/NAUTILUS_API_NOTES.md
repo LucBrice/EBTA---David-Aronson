@@ -322,6 +322,12 @@ Ce fichier est un cache technique, pas une source normative EBTA :
   `LatencyModel`.
 - **Vérifié empiriquement** : `FillModel(prob_fill_on_limit=0.5,
   prob_slippage=0.25, random_seed=42)` s'instancie.
+- **Vérifié empiriquement le 2026-07-21 sur `nautilus_trader==1.230.0`** :
+  la docstring runtime de `FillModel.prob_slippage` définit ce paramètre comme
+  la probabilité que le prix de fill glisse de **un tick**. Il ne porte ni une
+  magnitude en bps, ni un spread. R5/R6 conserve donc `prob_slippage` pour ce
+  mécanisme natif et applique séparément les magnitudes économiques calibrées
+  dans le ledger d'extraction EBTA.
 - **Vérifié empiriquement** : classes présentes :
   `FillModel`, `BestPriceFillModel`, `ThreeTierFillModel`,
   `SizeAwareFillModel`, `TwoTierFillModel`, `VolumeSensitiveFillModel`,
