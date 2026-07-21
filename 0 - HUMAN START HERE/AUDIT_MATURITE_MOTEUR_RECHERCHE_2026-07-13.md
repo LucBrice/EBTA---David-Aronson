@@ -6,12 +6,13 @@
 > Ce fichier reste `INTAKE`, non executable, tant qu'un humain ne l'a pas
 > audite et route vers `.ai/backlog/`.
 
-## Mode de lecture — 2026-07-20
+## Mode de lecture — 2026-07-21
 
 Ce document est separe en deux parties.
 
 - **Partie A — Etat actuel et suites** : ce qu'il faut lire pour savoir ou le
-  moteur en est aujourd'hui et quels plans ouvrir ensuite.
+  moteur en est aujourd'hui. La section 0 est la synthese primaire au
+  2026-07-21 ; les sections 1 a 4 sont la photo intermediaire du 2026-07-20.
 - **Partie B — Historique initial** : diagnostic du 2026-07-13 conserve pour
   comprendre l'origine des corrections, sans le relire comme l'etat courant.
 
@@ -19,18 +20,79 @@ Pour eviter l'ambiguite :
 
 | Marqueur | Sens |
 | --- | --- |
-| **ACTUEL 2026-07-20** | Etat courant apres les plans deja routes, executes et clotures. |
+| **ACTUEL 2026-07-21** | Etat courant apres la cloture de l'EPIC de maturite et sa preuve globale pre-OOS. |
+| **INTERMEDIAIRE 2026-07-20** | Photo de reprise conservee : utile pour comprendre le chemin parcouru, mais depassee par la section 0 si elle diverge. |
 | **HISTORIQUE 2026-07-13** | Diagnostic initial conserve pour expliquer pourquoi les plans etaient necessaires ; ne pas le lire comme l'etat courant s'il contredit une mise a jour datee. |
 | **RESIDUEL** | Risque encore ouvert, a transformer en plan separe si priorise. |
 
-Lecture rapide : lire les sections **1 a 4**. La partie historique commence
+Lecture rapide : lire la section **0**, en particulier son bloc
+**RESIDUEL** si une suite doit etre priorisee. Les sections **1 a 4** et la
+partie historique servent de trace. La partie historique commence
 apres le separateur **"Partie B — Historique initial"**.
 
 ---
 
 # Partie A — Etat actuel et suites
 
-## 1. Etat courant resume — ACTUEL 2026-07-20
+## 0. Etat courant faisant foi — ACTUEL 2026-07-21
+
+### Verdict
+
+L'EPIC `EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE` est `DONE` et aucun
+workstream n'est actif dans `.ai/checkpoint.json`. Le moteur a demontre sa
+**capacite de conduire une campagne de recherche pre-OOS reproductible,
+calibree, stressee et auditable**. Ce verdict porte sur la capacite du moteur,
+pas sur la validation d'une strategie : le package reel reste honnetement
+refuse tant que les preuves humaines pre-OOS independantes ne sont pas
+fournies.
+
+La source de suivi executable est l'archive
+`.ai/archive/20260721_EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE.md`; le present
+fichier reste une note d'intake et de lecture humaine. La cloture est tracee
+par le commit `f34cad1`.
+
+### Ce qui est cloture
+
+| Axe | Etat au 2026-07-21 | Preuve utile |
+| --- | --- | --- |
+| R7 — reproductibilite | **DONE** | Data root explicite et parametrable; hash de configuration SHA-256 reel; environnement Nautilus documente et recreable. |
+| R5 — couts, slippage, latence | **DONE** | Calibration `1.0.0` mixte : spreads NASDAQ locaux et proxies conservateurs de plusieurs brokers officiels lorsque la grandeur est comparable; aucune composante inconnue n'est remplacee par zero. |
+| R6 — robustesse | **DONE** | Scenarios `CENTRAL`, `PLAUSIBLE_BASE` et `EXTREME` reellement distincts; le rejet economique de `PLAUSIBLE_BASE` prouve que le gate peut echouer. |
+| Lot 3 — chronologie et attestations | **DONE** | Chronologie UTC et registre pre-OOS controles; attestations humaines explicites et optionnelles; leur absence donne `INCONCLUSIVE`/`DENIED`; fixtures reservees aux tests. |
+| R4-long — volume et scalabilite | **DONE** | Benchmark canonique 1 mois / 3 mois / 1 an `COMPLETED`, avec temps, RSS, ordres et exposition OOS documentes; scope `PRE_OOS_TEST_ONLY`. |
+| Preuve globale Phase 5 | **DONE** | Package reel pre-OOS materialise apres refus, validation executee sans erreur de schema ni erreur semantique; conformance parent complete. |
+
+Les validations de cloture sont : suite runtime **208 PASS**, Pyrefly global
+**0 erreur**, audit de conformite parent sans critere manquant et validation du
+checkpoint contre son schema **PASS**.
+
+### Etat exact du package reel
+
+L'absence de `pre_oos_human_evidence` laisse volontairement le package
+`nautilus_mvp` en `DENIED` et `validate_package_dir()` en `FAIL`. Ce n'est pas
+un defaut masque : les rapports strictement pre-OOS sont maintenant
+materialises et auditables. Le validateur retourne 3 gates `PASS`, 12
+`INCONCLUSIVE`, `schema_errors=[]` et `semantic_errors=[]`.
+
+Le package n'ouvre pas l'OOS : il ne contient ni journal d'acces OOS, ni
+rapport ou serie OOS, ni rapport economique final, ni manifeste de stade. Les
+preuves d'execution et de NAV pre-OOS sont reelles (42 ordres; cout total
+11,564) et les stress font apparaitre le rejet attendu de
+`PLAUSIBLE_BASE`.
+
+### RESIDUEL — apres cloture de l'EPIC
+
+Ces sujets ne rouvrent pas l'EPIC de maturite. Ils ne deviennent des plans que
+si un humain decide de franchir l'etape correspondante :
+
+1. **Ouvrir l'OOS de maniere gouvernee** : fournir les preuves humaines
+   independantes pre-OOS requises, puis autoriser une execution OOS selon le
+   Protocole. Sans ces elements, `DENIED` reste le resultat correct.
+2. **R10 — incubation, live, kill-switch et monitoring** : reste hors du
+   perimetre recherche actuel et ne peut etre envisage qu'apres la survie
+   d'une strategie a un OOS reellement autorise.
+
+## 1. Etat courant resume — INTERMEDIAIRE 2026-07-20
 
 Cette note reste une **photo d'audit du 2026-07-13**. Depuis cet audit, neuf
 blocs critiques ont ete traites et clotures dans le cockpit `.ai/` :
@@ -101,7 +163,7 @@ derivees. Les sujets residuels sont des plans separes : deriver ou expliciter
 ces attestations legitimes, generaliser l'horodatage automatique aux autres
 jalons, puis durcir les scenarios de robustesse eux-memes.
 
-## 2. Audit complet de reprise — ACTUEL 2026-07-20
+## 2. Audit complet de reprise — INTERMEDIAIRE 2026-07-20
 
 Cet audit de reprise compare l'audit initial du 2026-07-13 a l'etat reel apres
 les workstreams clos jusqu'au commit courant `0bfd32e`. Il ne s'appuie pas
@@ -220,7 +282,7 @@ pas une regression a masquer.
    automatique des autres jalons doivent rester explicites ou devenir des plans
    dedies.
 
-## 3. Suites actualisees — ACTUEL 2026-07-20
+## 3. Suites actualisees — INTERMEDIAIRE 2026-07-20
 
 Les plans R1/R2, R4, la correction ciblee du WRC masque, la correction du statut
 global de package, la correction G5, la documentation du `PASS` R4 artefactuel
@@ -260,7 +322,7 @@ Backlog d'idees a transformer en plans si priorisees :
    comme filet mecanique et ouvrir des plans dedies pour robustesse, puissance,
    realisme economique et qualite de recherche.
 
-## 4. Question d'architecture residuelle — ACTUEL 2026-07-20
+## 4. Question d'architecture residuelle — INTERMEDIAIRE 2026-07-20
 
 La decision la plus risquee a long terme n'est pas Nautilus, c'est la porosite
 entre la couche qui calcule les preuves et celle qui les declare. Le risque
