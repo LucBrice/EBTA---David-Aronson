@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -682,10 +682,10 @@
       "id": "EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE",
       "title": "Maturite du moteur EBTA pour une vraie campagne de recherche",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/mainline/EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE.md",
+      "source_path": ".ai/archive/20260721_EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260720_EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-20",
@@ -695,9 +695,9 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Lots R7, R5/R6, horodatage/attestations et R4-long DONE; correctif Phase 5 DONE; package pre-OOS reel DENIED/FAIL attendu mais auditable, zero erreur schema/semantique, zero OOS; benchmark COMPLETED; 208 tests et Pyrefly global PASS; conformance parent sans manque.",
       "non_goals": [],
-      "is_active": true
+      "is_active": false
     },
     {
       "id": "PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7",
