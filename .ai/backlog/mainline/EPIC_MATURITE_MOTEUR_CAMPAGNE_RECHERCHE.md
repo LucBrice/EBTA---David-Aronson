@@ -107,7 +107,7 @@ ouverture, pas ici).
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `EN_COURS - LOTS 1 R7 ET 4 R4-LONG DONE; LOT 3 ENFANTS 1-2/3 DONE` |
+| Statut | `EN_COURS - LOTS 1 A 4 DONE; PREUVE GLOBALE BLOQUEE PAR ABSENCE DE PREUVES HUMAINES EXTERNES` |
 | Date de creation | 2026-07-20 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/PROTOCOLE EBTA.md` ; SOP 05 (robustesse pre-OOS, Lot 2/R6) ; SOP 09B (modele d'execution/frictions/couts, Lot 2/R5) ; SOP 12 (reproductibilite/scellement, Lot 1/R7) - gelees, non modifiees par ce chantier |
@@ -123,7 +123,7 @@ ouverture, pas ici).
 | Autorite et lecture minimale | Lire `AGENTS.md`, `.ai/README.md`, `.ai/checkpoint.json`, ce plan, puis `.agents/skills/epic-orchestrator/SKILL.md` (procedure "Boucle par lot"), puis le plan de chaque lot au moment ou il est route. `Protocole/` et les SOP citees priment. |
 | Perimetre autorise | Ce chantier mere ne modifie que lui-meme (mise a jour de statut apres chaque cloture de lot). Chaque sous-chantier porte son propre perimetre ferme. |
 | Interdits absolus | Ne pas modifier `Protocole/` ni `Implementation/` depuis ce document ; ne pas fusionner deux lots ; ne pas construire R10 (live) ; ne pas exiger un package `PASS`. |
-| Phase de reprise | Lot 2 (R5/R6) - revalider le code, reappliquer le test multi-lot et obtenir les decisions humaines de calibration/stress avant implementation. |
+| Phase de reprise | Phase 5 - obtenir deux preuves humaines externes valides (revue independante du registre puis approbation du scellement pre-OOS), regenerer `nautilus_mvp`, valider et auditer la cloture. |
 | Preuve attendue | Chaque lot `DONE` dans `.ai/checkpoint.json` ; puis la preuve globale de l'Exit criteria (5) (package regenere + `validate_package_dir()` + rapport gate-par-gate + budget benchmark). |
 | Arret et escalade | S'arreter pour demander une decision humaine sur : les seuils de calibration R5, la magnitude de stress R6, le perimetre des attestations Lot 3, ou si un prerequis factuel (donnees longues, venv) s'avere manquant/bloquant. Ne jamais inventer un seuil ou une methode. |
 
@@ -439,6 +439,17 @@ Actions :
 - Appliquer bug-hunter en balayage complet sur l'union des fichiers touches par tous les lots (`git diff --stat <baseline>..HEAD`) et plan-conformance-audit contre les Exit criteria de CE chantier mere.
 - `plan.ps1 close` sur le chantier mere.
 
+Etat au 2026-07-21 : **BLOQUE HONNETEMENT AVANT OOS**. Les quatre lots sont
+`DONE`, mais l'execution de production sans `pre_oos_human_evidence` s'arrete
+apres la preparation pre-OOS avec `oos_access_decision.status = DENIED`. Le
+repertoire persistant `Implementation/research_packages/nautilus_mvp/` ne
+contient alors que `config.json` et `registry.jsonl`; son
+`validate_package_dir()` retourne `FAIL` avec 15 gates `INCONCLUSIVE`. Ce
+resultat respecte le choix humain `3A`, mais ne satisfait pas encore le
+critere package-visible R5/R6 de l'Exit criterion (5). Une fixture
+`TEST_FIXTURE` est interdite comme preuve globale. La phase reprendra quand
+les deux preuves `EXTERNAL` liees aux sujets exacts seront fournies.
+
 Critere de sortie :
 
 - Les six Exit criteria (section Triage) satisfaits et documentes.
@@ -542,12 +553,12 @@ remplacer une valeur inerte par une autre valeur inerte sous couvert de
 ## 9. Definition of Done
 
 - [x] Lot 1 R7 `DONE` (`683e5fe` implementation ; `7636c73` cloture).
-- [ ] Lot 2 R5/R6 `DONE` (directement ou via sa propre cloture generale s'il devient mere).
-- [ ] Lot 3 horodatage/attestations `DONE` ou explicitement differe par decision humaine documentee (section 10).
+- [x] Lot 2 R5/R6 `DONE` (`8194294` implementation ; `e791dd2` cloture).
+- [x] Lot 3 horodatage/attestations `DONE` (`45d8c62` audit global ; `7edf19a` cloture ; trois enfants `DONE`).
 - [x] Lot 4 R4-long `DONE` (`e5fb08c` implementation ; `251f700` cloture).
 - [ ] Preuve globale (Exit criteria (5)) produite et documentee (Phase 5).
-- [ ] Aucune modification hors perimetre par ce document lui-meme (section 4).
-- [ ] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier.
+- [x] Aucune modification hors perimetre par ce document lui-meme (section 4).
+- [x] Checklist post-modification `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee a chaque sous-chantier.
 - [ ] Aucune implementation partielle/stub/placeholder ne subsiste comme substitut a une brique prevue.
 
 ---
@@ -614,9 +625,10 @@ Prerequis factuels a statuer (a l'ouverture du lot) :
 | Lot | Etat | Preuve / action suivante |
 | --- | --- | --- |
 | 1 - R7 | `DONE` | Workstream archive ; 179 tests, pilote minimal, smoke venv, Pyrefly, bug-hunter et conformance PASS. |
-| 2 - R5/R6 | `NEXT - PRET POUR /START` | Choix `1B/2A` journalises. Finaliser la note de calibration multi-brokers, appliquer `/evaluate` x2 au brouillon, puis router `PLAN_REALISME_ECONOMIQUE_R5_R6`. |
-| 3 - Horodatage | `ENFANTS 1-2/3 DONE - ENFANT 3 PRET POUR /START` | Choix `3A` journalise : inputs de preuve explicites, absence `INCONCLUSIVE`/DENIED, fixtures limitees aux tests. Router apres le cycle R5/R6 pour ne pas fusionner les lots. |
+| 2 - R5/R6 | `DONE` | Calibration multi-brokers et locale gelee; couts propages; trois scenarios reels; 96 executions pre-OOS; commits `8194294`/`e791dd2`. |
+| 3 - Horodatage | `DONE` | Trois enfants clos; chronologie runtime, attestations mecaniques et contrat de preuves humaines explicites; commits mere `45d8c62`/`7edf19a`. |
 | 4 - R4-long | `DONE` | Canonique 1/3/12 mois `COMPLETED`, 195 tests PASS, Pyrefly 0, OOS zero; commits `e5fb08c`/`251f700`. |
+| 5 - Preuve globale | `BLOQUEE AVANT OOS` | Les quatre lots sont `DONE`. Fournir les preuves humaines `EXTERNAL` exactes, puis regenerer `nautilus_mvp`; aucune fixture ne peut lever ce blocage. |
 
 ---
 
@@ -629,6 +641,7 @@ Prerequis factuels a statuer (a l'ouverture du lot) :
 | Donnees longues absentes/insuffisantes au data root - `RESOLU` | Aucun impact residuel sur Lot 4 clos | 72 CSV mensuels/actif verifies; canonique 1 an `COMPLETED`. |
 | Un lot s'avere multi-lot (recursion) | Sous-estimation de charge | Reappliquer le test de detection a l'ouverture ; le lot devient mere, route ses propres enfants, sans nesting preventif. |
 | La correction R5/R6 fait basculer des gates vers `FAIL`/`INCONCLUSIVE` | Le package reste ou devient rouge | Verdict EBTA legitime, documente en Phase 5, jamais masque (invariant 4). |
+| Preuves humaines externes absentes | `nautilus_mvp` s'arrete apres preparation pre-OOS; les rapports package-visibles R5/R6 ne sont pas produits et l'Exit criterion (5) reste manquant | Fournir une revue independante du registre liee a `FAM-LIQUIDITY-SWEEP-NAUTILUS` et une approbation pre-OOS liee au hash du scellement courant, toutes deux `EXTERNAL`, UTC et attestant l'independance. Ne jamais substituer une fixture. |
 
 ---
 
@@ -654,3 +667,6 @@ report explicite, et production de la preuve globale Phase 5).
 | 2026-07-20 | Lot 3 enfant 1/3 `PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME` clos `DONE` (`85b8751`, `83deb27`). | Le chemin reel persiste le registre avant Test, refuse l'OOS si WRC/gates manquent et journalise chaque fold juste avant acces; le smoke reel s'arrete sur `wrc_pass`. |
 | 2026-07-20 | Lot 3 enfant 2/3 `PLAN_DERIVATION_ATTESTATIONS_MECANIQUES` clos `DONE` (`f2e1269`, `ecf2224`). | Cinq facades mecaniques retirees; G14 courant devient INCONCLUSIVE faute d'artefacts lifecycle, sans toucher les approbations humaines. |
 | 2026-07-20 | Lot 4 `PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG` clos `DONE` (`e5fb08c`, `251f700`). | Rapport canonique 1/3/12 mois sous budgets, qualite exacte, couverture unique distinguee des evaluations, validator pre-OOS FAIL explicite et zero OOS. |
+| 2026-07-21 | Lot 2 `PLAN_REALISME_ECONOMIQUE_R5_R6` clos `DONE` (`8194294`, `e791dd2`). | Calibration R5 gelee, trois stress R6 reels et echouables, validation pre-OOS sur 96 executions Nautilus, suite 201 PASS. |
+| 2026-07-21 | Lot 3 `PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS` clos `DONE` (`45d8c62`, `7edf19a`). | Trois enfants DONE; preuves humaines explicites et optionnelles, absence non-PASS/DENIED, fixtures test-only, suite 208 PASS. |
+| 2026-07-21 | Audit Phase 5 apres activation de la mere. | Quatre lots DONE. `nautilus_mvp` courant : seulement `config.json`/`registry.jsonl`; validateur `FAIL`, 15/15 gates `INCONCLUSIVE`. Le package ne porte pas encore R5/R6; Exit criterion (5) `MANQUANT`. Cloture interdite jusqu'aux deux preuves humaines externes. |
