@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-21",
+  "updated_at": "2026-07-29",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -866,6 +866,26 @@
       "closure_reason": "Paquet pre-OOS refuse materialise sans acces OOS; G5/G6 auditables; validateur FAIL attendu sans erreur schema/semantique; 208 tests PASS; Pyrefly et conformance PASS.",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_FORMALISATION_WORKFLOWS_IA_ET_TROIS_SKILLS",
+      "title": "Formalisation des workflows IA et des trois skills",
+      "track": "annexe",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/annexes/PLAN_FORMALISATION_WORKFLOWS_IA_ET_TROIS_SKILLS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260729_PROPOSITION_FORMALISATION_WORKFLOWS_IA_ADVERSARIAL_EXPERT_PANEL.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-29",
+      "last_moved_at": "2026-07-29",
+      "routing_decision": "annexe",
+      "routing_reason": "Gouvernance IA : trois skills (adversarial-tester, expert-panel, agent-architecte) plus registre .ai/workflows/ et reduction d'AGENTS.md en routeur mince. Route annexe (precedent EPIC_AI_GOVERNANCE_LAYER) : n'avance pas la mainline runtime. SINGLE apres test de detection epic-orchestrator. Boucle /evaluate d'intake executee le 2026-07-29 : 5 passes, convergence, 18 corrections au brouillon. Phase 0 de deblocage bloquante encodant quatre decisions humaines D1-D4.",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {

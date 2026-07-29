@@ -39,11 +39,27 @@
   pas encore tant qu'il n'y a qu'un seul workflow actif. Pas de journal
   séparé des trouvailles d'`adversarial-tester` — les tests de régression
   suffisent déjà comme mémoire.
-- **Trois fils discutés mais laissés ouverts, pas perdus** (détail en fin de
+- **Quatre fils discutés mais laissés ouverts, pas perdus** (détail en fin de
   document, section « Fils ouverts ») : la toute première proposition
-  (`POLICIES.md`/mémoire opérationnelle/preuve de session), et deux trous
+  (`POLICIES.md`/mémoire opérationnelle/preuve de session), deux trous
   d'entrée vérifiés dans le code réel (`config.json` validé seulement
-  après coup, aucun Policy Engine côté actions IA).
+  après coup, aucun Policy Engine côté actions IA), et une contradiction de
+  gouvernance non tranchée (cinq rôles d'agents committés dans un brouillon
+  UX vs « une seule IA exécutante » — Fil D, ouvert à la passe 1 de la
+  boucle `/evaluate` d'intake).
+- **Ce document a été révisé** par la boucle `/evaluate` d'intake du
+  2026-07-29 — **5 passes, convergence atteinte** (chronologie, étapes 20 à
+  20 quinquies) : 18 corrections appliquées en place, charpente inchangée
+  (aucun skill supprimé, aucune phase déplacée, aucune coupe des étapes
+  11-12 remise en cause). La révision la plus lourde découle d'une décision
+  humaine du même jour — le workflow UX qui occupait `.ai/workflows/` est
+  reclassé `INTAKE`, donc **le dépôt n'a aujourd'hui aucun workflow
+  formalisé**.
+- **Quatre décisions humaines restent à prendre** avant/pendant `/start`,
+  identifiées par la boucle et délibérément non tranchées par elle : le
+  verrou de gouvernance sur la réduction d'`AGENTS.md`, le découpage de la
+  boucle `/evaluate` entre règle universelle et règle `core-engine`, le
+  routage de `_call_float` en chantier `fix` séparé, et le Fil ouvert D.
 - **Suite directe de cette discussion** : une nouvelle section audite
   systématiquement l'architecture agentique du repo face aux **13 documents**
   de la veille IA (`D:\Livre\Veille\IA\`), un par un, avec pour chacun où se
@@ -124,7 +140,12 @@ flowchart TD
     P16 --> P17["17. Audit systematique<br/>13 documents de veille vs etat reel<br/>+ feuille de route priorisee"]
     P17 --> P18["18. Debat conseil des 5<br/>mono vs multi-boucle<br/>naissance de l'Agent Architecte"]
     P18 --> P19["19. Clarification<br/>invocation a la demande uniquement<br/>+ paliers non lineaires"]
-    P19 --> FIN["Ce document"]
+    P19 --> P20["20. Boucle /evaluate d'intake — passe 1<br/>7 corrections<br/>decision humaine : workflow UX -> INTAKE"]
+    P20 --> P20b["20 bis. Passe 2<br/>ledger auto-scellant<br/>+ type de chantier SINGLE"]
+    P20b --> P20c["20 ter. Passe 3<br/>migration evaluate trop large<br/>+ verrou gouvernance AGENTS.md"]
+    P20c --> P20d["20 quater. Passe 4<br/>exemple canonique requalifie"]
+    P20d --> P20e["20 quinquies. Passe 5<br/>CONVERGENCE"]
+    P20e --> FIN["Ce document"]
 ```
 
 ### 1–2. Point de départ : veille IA et proposition initiale
@@ -197,14 +218,21 @@ Avant de concevoir quoi que ce soit, le repo a été exploré directement
 (deux agents `Explore` en parallèle, plus lecture directe de fichiers) pour
 ne rien supposer :
 
-- `.agents/skills/` contient exactement 6 skills, tous au même format
-  (frontmatter `name`+`description`, corps français, section finale « Ce
-  que ce skill ne fait pas »). Deux ont un stub `.claude/skills/`
-  (déclenchement automatique — `code-architecture-evaluator`,
-  `nautilus-docs-research`) ; les quatre autres (`bug-hunter`,
-  `epic-orchestrator`, `plan-conformance-audit`, `EBTA_Protocol_Guardian`)
-  n'en ont pas — ce sont des gates procéduraux invoqués à un point précis
-  du cycle, sans déclenchement flou.
+- `.agents/skills/` contient exactement 6 skills, tous avec le même
+  frontmatter (`name`+`description`) et un corps français. **Correction
+  apportée à la passe 1 de la boucle `/evaluate` d'intake (2026-07-29)** :
+  la version initiale de ce document affirmait que les 6 partageaient une
+  section finale « Ce que ce skill ne fait pas ». C'est faux — elle n'est
+  présente que dans **3 sur 6** (`bug-hunter`, `epic-orchestrator`,
+  `plan-conformance-audit`), et `EXAMPLE_REPORT.md` n'existe que dans
+  **4 sur 6**. Le découpage réel est fonctionnel, pas cosmétique : les 3
+  skills qui portent cette section sont exactement les **gates procéduraux**
+  (invoqués à un point précis du cycle, verdict bloquant), les 3 autres sont
+  des skills d'analyse à déclenchement plus souple. Deux ont un stub
+  `.claude/skills/` (déclenchement automatique —
+  `code-architecture-evaluator`, `nautilus-docs-research`) ; les quatre
+  autres (`bug-hunter`, `epic-orchestrator`, `plan-conformance-audit`,
+  `EBTA_Protocol_Guardian`) n'en ont pas.
 - `.ai/governance/` porte déjà **4 taxonomies de classification séparées**
   (conflits, knowledge intake, workstream `classification`, hiérarchie
   normative), toutes **purement descriptives** — aucun routage
@@ -352,8 +380,12 @@ tel qu'il existait alors :
    robustesse »*. Argument retenu.
 3. **La mécanique interne d'`adversarial-tester`** (catégories a-e, double
    contrôle entrée/sortie) — jugée en soi réductible à une phrase, mais
-   défendue car cohérente avec le formalisme déjà utilisé par les 5 autres
-   skills existants du repo. Argument **pas** retenu comme coupe.
+   défendue car cohérente avec le formalisme déjà utilisé par les **gates
+   procéduraux** existants du repo (`bug-hunter`, `epic-orchestrator`,
+   `plan-conformance-audit` — les 3 skills qui portent réellement une
+   section « Ce que ce skill ne fait pas », cf. correction de l'étape 6).
+   `adversarial-tester` appartient à cette même famille : verdict bloquant
+   à un point précis du cycle. Argument **pas** retenu comme coupe.
 
 **Décision / Statut : `FINDINGS_LOG.md` supprimé du périmètre ; la
 mécanique de routage `workflow` (schéma/CLI/gabarit/pointeurs) reportée
@@ -532,12 +564,19 @@ suffirait. Une automatisation bornée (« avis + plan INTAKE si modification
 nécessaire, l'humain fait `/start` s'il veut ») a été jugée sûre par
 construction, puisque `0 - HUMAN START HERE/` est déjà, par la bannière de
 ce document lui-même, un cul-de-sac non exécutable. La question du **quel
-outil** a ensuite mis en évidence une contrainte concrète : ce repo est un
-dossier Windows local sans remote GitHub confirmé, ce qui écarte la
-planification cloud native de cette plateforme (accès disque local
-incertain) au profit d'un Planificateur de tâches Windows local — mais
-cette option elle-même impliquerait de créer une configuration système
-persistante, hors du périmètre de simple documentation de ce lot.
+outil** a ensuite été discutée.
+
+> **Correction apportée à la passe 1 de la boucle `/evaluate` d'intake
+> (2026-07-29).** La version initiale de ce paragraphe justifiait le choix
+> par une contrainte technique : « ce repo est un dossier Windows local sans
+> remote GitHub confirmé », ce qui aurait écarté la planification cloud au
+> profit d'un Planificateur de tâches Windows local. C'est **faux** :
+> `git remote -v` retourne
+> `origin https://github.com/LucBrice/EBTA---David-Aronson.git`. Aucune
+> impossibilité technique n'écartait donc l'automatisation. La décision
+> ci-dessous reste valide, mais elle repose uniquement sur le principe de
+> simplicité déjà tranché à l'étape 12 — pas sur une contrainte
+> d'outillage inexistante.
 
 **Décision / Statut : l'utilisateur a tranché pour la simplicité —
 invocation strictement à la demande humaine, aucune automatisation. La
@@ -584,6 +623,190 @@ différées, pas uniquement un traitement du delta du jour. Voir la
 procédure révisée dans « 3. `.agents/skills/agent-architecte/SKILL.md` »
 ci-dessous.**
 
+### 20. Boucle `/evaluate` d'intake — passe 1 (2026-07-29)
+
+Demande de `/start` sur ce document. Conformément à `AGENTS.md`
+(« Conversational Commands »), `/start` ne procède à l'audit et à la
+restructuration qu'**après** une boucle d'affinage architectural menée sur
+le brouillon tel quel, en place dans `0 - HUMAN START HERE/` — le but étant
+d'attraper une idée fondamentalement bancale avant d'investir du temps à la
+structurer. La passe 1 de cette boucle a produit sept corrections, dont
+trois classées critiques.
+
+**Le constat structurant de cette passe** : ce document avait été rédigé
+sans voir `.ai/workflows/WORKFLOW_VALIDATION_UX_EBTA.updated.md`, committé
+au `6ea617c` — c'est-à-dire le commit immédiatement antérieur à celui qui a
+déposé ce brouillon (`575c249`). Ce fichier occupait déjà le dossier que ce
+plan proposait de « créer », couvrait déjà le périmètre `interface` que ce
+plan voulait laisser en stub `non démarré`, et institutionnalisait déjà un
+agent adversarial — invalidant trois affirmations structurantes du plan.
+Trois écarts de fait supplémentaires ont été relevés au passage : la
+citation de `_write_config()` pointait vers un dossier où ce symbole
+n'existe pas, l'affirmation « pas de remote GitHub confirmé » était fausse
+(`origin` est bien configuré), et la « convention commune aux 6 skills »
+n'était en réalité partagée que par 3 d'entre eux.
+
+**Décision humaine du 2026-07-29**, prise en cours de passe : le workflow UX
+est un brouillon issu d'une autre discussion, pas un workflow actif. Il a
+été déplacé vers
+`0 - HUMAN START HERE/PROPOSITION_WORKFLOW_VALIDATION_UX_EBTA.md` avec une
+bannière `INTAKE` et un relevé de ses écarts connus ; `.ai/workflows/`, une
+fois vide, a été supprimé. **Le dépôt est désormais considéré comme n'ayant
+aucun workflow formalisé** — ce qui restaure la prémisse de terrain vierge
+de ce plan, au lieu de l'obliger à réconcilier deux conventions
+concurrentes.
+
+**Décision / Statut : les sept corrections sont appliquées en place dans ce
+document** (chacune signalée par un encadré « Correction apportée à la
+passe 1 »), sans rien retirer du raisonnement d'origine. Charpente du plan
+inchangée : aucun des trois skills, aucune des coupes des étapes 11-12,
+aucune phase de la feuille de route n'a été remise en cause. Trois ajouts
+nets : un `Fil ouvert D` (contradiction de gouvernance « cinq rôles
+d'agents vs une seule IA exécutante », explicitement **non tranchée** ici),
+un neuvième fichier au périmètre (`.ai/README.md`, sans quoi
+`.ai/workflows/` renaîtrait orphelin), et une étape d'inventaire de
+migration d'`AGENTS.md` remplaçant le « relire côte à côte » jugé non
+reproductible. La boucle continue : une passe 1 ne vaut pas convergence.
+
+### 20 bis. Boucle `/evaluate` d'intake — passe 2 (2026-07-29)
+
+La passe 1 ayant porté sur les prémisses factuelles, la passe 2 s'est
+concentrée sur le composant le moins scruté de tout le document :
+`agent-architecte` et son `ARCHITECTURE_LEDGER.md`, conçus tard (étapes
+18-19) et jamais confrontés au reste.
+
+**Le constat structurant de cette passe** : le ledger est écrit et relu par
+le même skill, sans validateur externe, alors que le pilier 4 lui interdit
+de relire les veilles déjà ingérées. Ces deux propriétés ensemble rendent
+l'erreur **auto-scellante** — une pratique consignée à tort « hors scope »
+ne peut plus jamais être détrompée par sa source. C'est le pattern du
+« succès fabriqué » que ce même lot prétend chasser, transposé à la mémoire
+du skill qui l'écrit. Le parallèle revendiqué avec
+`registry.jsonl`/`oos_access_log.jsonl` est trompeur tant qu'il n'est pas
+qualifié : ces deux journaux ont un validateur réel
+(`registry_append_only_validator.py`), le ledger n'en a aucun.
+
+Quatre écarts plus légers ont accompagné ce constat : la compacité du ledger
+était annoncée absolue alors qu'un de ses deux registres croît linéairement
+avec le nombre de veilles ; la source du remplissage initial était désignée
+par « ce document », qui aura changé de chemin après `plan.ps1 start` ; la
+règle de blocage d'`adversarial-tester` était formulée comme un refus
+mécanique alors que `plan.ps1 close` ne porte aucun gate correspondant ; et
+le stub `.claude/skills/` d'`expert-panel` contredisait le « pas
+systématique » revendiqué, faute de clause `SKIP`.
+
+**Décision / Statut : les cinq corrections sont appliquées en place**, plus
+une section nouvelle (« Type de chantier — `SINGLE` ») qui documente le test
+de détection multi-lot exigé par `.agents/skills/epic-orchestrator/SKILL.md`
+au moment du `/start`, avec son résultat condition par condition. Aucun
+skill supprimé, aucune phase déplacée : les corrections durcissent la
+spécification, elles ne changent pas la conception. La passe 2 ayant fait
+surgir un angle mort critique inédit, elle **ne vaut pas convergence** — la
+boucle continue.
+
+### 20 ter. Boucle `/evaluate` d'intake — passe 3 (2026-07-29)
+
+Passes 1 et 2 ayant couvert les prémisses factuelles puis la conception des
+skills, la passe 3 a porté sur ce qu'aucune des deux n'avait regardé : **la
+migration elle-même et l'insertion des nouveaux dossiers dans `.ai/`**.
+
+**Le constat structurant de cette passe** : « déplacer le détail complet des
+boucles `/evaluate` vers `core-engine/WORKFLOW.md` » (fichier 7) rétrécit
+sans le dire une règle aujourd'hui universelle. La boucle d'affinage
+d'intake vit dans `AGENTS.md`, donc elle couvre *tout* `/start` — y compris
+celui qui a produit les trois passes en cours. Migrée telle quelle vers
+`core-engine/`, elle cesserait de couvrir un futur `/start` sur un brouillon
+d'un autre workflow, c'est-à-dire exactement le cas où un brouillon est le
+moins mûr. Trois découpages possibles sont désormais posés dans le document,
+à arbitrer avant la migration plutôt qu'en cours de route.
+
+Second constat, de nature gouvernance : **ce lot ne peut pas s'autoriser
+lui-même à réduire `AGENTS.md`**. La checklist de modification IA autorise
+sans décision normative d'*ajouter* une règle courte à `AGENTS.md` ; en
+retirer relève d'une zone grise, sur le fichier désigné « official AI
+entrypoint ». Une décision humaine explicite doit être tracée avant l'étape
+4 de l'ordre d'exécution — les étapes 1 à 3, purement additives, peuvent
+avancer sans elle.
+
+Deux écarts plus légers : `.ai/architecture/` (introduit par le ledger) est
+soumis au même risque d'orphelinat que `.ai/workflows/` et doit lui aussi
+être inscrit dans `.ai/README.md` ; et le ledger doit démontrer
+explicitement qu'il ne tombe pas sous
+`checkpoint.json::relay_contract.do_not_create` (« competing project state
+snapshots », risques `R1`/`R3`/`R6`), plutôt que de le supposer.
+
+**Décision / Statut : les quatre corrections sont appliquées en place**,
+dont une nouvelle section « 10. Décision humaine à obtenir ». La passe 3
+ayant elle aussi fait surgir des angles morts majeurs inédits, elle **ne
+vaut pas convergence** — la boucle continue.
+
+### 20 quater. Boucle `/evaluate` d'intake — passe 4 (2026-07-29)
+
+La passe 4 a porté sur la seule chose que les trois précédentes avaient
+tenue pour acquise sans la vérifier : **les deux défauts servant d'exemple
+canonique à `adversarial-tester`**. Le document les présentait depuis
+l'origine comme « deux défauts réels déjà vérifiés dans le code ». La
+vérification, faite cette fois sur leurs **sites d'appel** et pas seulement
+sur leur corps, les sépare nettement.
+
+`_call_float` est confirmé : ses deux `except Exception: return 0.0`
+alimentent `equity` et `net_exposure`, donc la réconciliation NAV, donc le
+gate G6 — une erreur y devient un nombre plausible qui remonte jusqu'à un
+verdict. `allowed_values`, en revanche, ne l'est pas : son unique appelant
+énumère l'espace de recherche des candidats, et l'effondrement de l'axe sur
+sa valeur par défaut y est le comportement voulu. Le manque réel est une
+trace, pas un verdict corrompu.
+
+**Pourquoi c'était grave** : canoniser ce second cas dans
+l'`EXAMPLE_REPORT.md` aurait appris au skill que « retomber sur une valeur
+par défaut = défaut », et produit du bruit sur chaque valeur par défaut
+légitime du dépôt. Un faux positif gravé dans l'exemple de référence d'un
+skill dont la raison d'être est de débusquer les faux succès.
+
+Second constat, de nature scope : `_call_float` est un défaut **vivant, non
+corrigé, sur le chemin de production**. S'en servir comme matériau
+documentaire sans décider de son sort reviendrait à consigner un bug connu
+que personne ne porte. Le corriger est hors périmètre (touche
+`Implementation/ebta_engine/`) — il doit donc être routé comme chantier
+`fix` séparé, l'`EXAMPLE_REPORT.md` pointant vers ce chantier.
+
+**Décision / Statut : les deux corrections sont appliquées en place** ;
+`allowed_values` est retiré de la liste des variantes du pattern et
+requalifié. Aucune autre section n'a bougé.
+
+### 20 quinquies. Boucle `/evaluate` d'intake — passe 5, convergence (2026-07-29)
+
+Passe de contrôle : relecture d'ensemble du document après quatre passes
+d'édition, à la recherche (a) d'un angle mort majeur encore non relevé et
+(b) d'incohérences internes introduites par les corrections elles-mêmes.
+
+**Aucun angle mort majeur inédit n'a été trouvé.** Les quatre familles de
+défauts relevées jusqu'ici — prémisses factuelles fausses (passe 1),
+conception du ledger (passe 2), périmètre de la migration et autorisation
+de gouvernance (passe 3), qualification des exemples canoniques (passe 4) —
+sont chacune traitée, et les passes suivantes n'en ont pas fait resurgir de
+variante. Cohérence interne vérifiée sur les points touchés : l'ordre
+d'exécution passé à cinq étapes reste aligné avec les renvois « étape 4 »
+du verrou de gouvernance et de la vérification ; les fils ouverts annoncés
+« quatre » correspondent bien à A/B/C/D ; le type de chantier `SINGLE` est
+cohérent avec le séquencement strict des phases.
+
+Une seule correction de forme : le prérequis de déblocage introduit à la
+passe 3 était numéroté « 10 » dans une liste où 1 à 9 désignent des
+fichiers, ce qui le faisait lire comme un dixième fichier à créer. Renommé
+en « Verrou de gouvernance », avec une note explicite.
+
+**Décision / Statut : convergence atteinte à la passe 5**, dans la limite
+des 5-6 passes fixée par `AGENTS.md`. Le brouillon est prêt pour l'audit et
+la restructuration de `/start`. Ce qu'il reste à trancher n'est pas de
+l'affinage mais des **décisions humaines**, explicitement listées et non
+décidées par cette boucle : le verrou de gouvernance sur la réduction
+d'`AGENTS.md`, le découpage de la boucle `/evaluate` entre universel et
+`core-engine`, le routage de `_call_float` en chantier `fix` séparé, et le
+Fil ouvert D (contradiction « cinq rôles d'agents vs une seule IA
+exécutante »). Aucune passe supplémentaire ne les résoudra — elles ne
+relèvent pas de l'analyse.
+
 ---
 
 ## Pourquoi ce lot (résumé condensé de la chronologie ci-dessus)
@@ -605,6 +828,23 @@ fait d'« adversarial testing »** — une passe qui essaie activement de casser
 ce qu'un changement est censé garantir, et transforme tout échec réel en
 test permanent. `bug-hunter` est réactif (typage + suite existante), pas
 adversarial.
+
+> **Délimitation ajoutée à la passe 1 de la boucle `/evaluate` d'intake
+> (2026-07-29).** Un dispositif adversarial existe bien **à l'état de
+> brouillon** :
+> `0 - HUMAN START HERE/PROPOSITION_WORKFLOW_VALIDATION_UX_EBTA.md` définit
+> un « Agent UX Adversarial EBTA » avec Gate A (entrées) et Gate B
+> (sorties). Il est `INTAKE`, donc aucune de ses règles n'est en vigueur —
+> le constat ci-dessus reste vrai pour l'état actif du dépôt. Mais les deux
+> objets doivent rester **disjoints par périmètre**, pas se recouvrir : ce
+> brouillon UX porte sur le frontend (parcours chercheur, écrans,
+> visualisations, lisibilité d'un verdict) ; `adversarial-tester` porte sur
+> le code moteur (`Implementation/ebta_engine/`, catégories (a)-(e)
+> ci-dessous). Cette ligne de délimitation doit être écrite **dans les deux
+> documents** le jour où le workflow `interface` démarre, sur le même modèle
+> que la délimitation déjà prévue entre `adversarial-tester` et
+> `bug-hunter`. Sans ça, le dépôt se retrouvera avec deux gates
+> adversariaux au vocabulaire disjoint chassant le même défaut.
 
 **Ce qui a déjà été vérifié dans le repo réel** (pas supposé) — voir
 chronologie, étape 6, pour le détail complet.
@@ -678,13 +918,18 @@ flowchart TD
 **Pourquoi ce pattern précis et pas un catalogue générique ?** Historique
 réel vérifié dans `checkpoint.json` — chaque bug déjà trouvé dans ce repo en
 est une variante : gates codés en dur à `True`, stub buy-and-hold,
-`LIVE_LIMITED_STARTED` auto-attesté (commit `3bcfe35`), `requires` qui
-retombe silencieusement sur le défaut
-(`strategies/payload_factory.py::StructuralAxis.allowed_values`),
-`except Exception: return 0.0` qui avale l'erreur
-(`adapters/nautilus_strategy_bridge.py::_call_float`). Zéro race condition,
-zéro corruption de schéma — jamais observées ici. D'où le choix : spécialisé
-sur ce pattern, pas générique.
+`LIVE_LIMITED_STARTED` auto-attesté (commit `3bcfe35`), et
+`except Exception: return 0.0` qui avale l'erreur puis la fait remonter
+jusqu'au gate G6 (`adapters/nautilus_strategy_bridge.py::_call_float`).
+Zéro race condition, zéro corruption de schéma — jamais observées ici. D'où
+le choix : spécialisé sur ce pattern, pas générique.
+
+*(Requalification de la passe 4 de la boucle `/evaluate` d'intake,
+2026-07-29 : `payload_factory.py::StructuralAxis.allowed_values` figurait
+ici comme cinquième variante — il en a été retiré. Vérification faite sur
+son site d'appel, l'effondrement de l'axe sur sa valeur par défaut est le
+comportement voulu, pas un verdict corrompu. Voir l'encadré sous
+`EXAMPLE_REPORT.md`.)*
 
 ---
 
@@ -720,16 +965,56 @@ bug-hunter).
   → correction + test de régression qui vérifie l'échec explicite, (4)
   relancer la suite complète.
 - **Règle de blocage** : `/close` refusé tant qu'un faux succès trouvé reste
-  non corrigé/non testé/non escaladé.
+  non corrigé/non testé/non escaladé. **Nature du refus, précisée à la
+  passe 2 de la boucle `/evaluate` d'intake (2026-07-29)** : c'est un refus
+  **procédural, pas mécanisé**. `.ai/tools/plan.ps1 close` ne porte aucun
+  gate correspondant — sa seule garde est `Assert-SubChantiersClosed`
+  (sous-chantiers `MULTI_LOT`). C'est exactement le statut qu'ont déjà
+  `bug-hunter` et `plan-conformance-audit` aujourd'hui : une règle en prose
+  dans `AGENTS.md`, appliquée par l'IA, jamais vérifiée par le script.
+  Écrire « `/close` refusé » sans ce mot serait annoncer une garantie
+  mécanique qui n'existe pas — précisément le pattern que ce skill chasse.
 - **Ce que ce skill ne fait pas** : pas de fuzzing générique ; ne remplace
   ni bug-hunter, ni EBTA_Protocol_Guardian, ni plan-conformance-audit ; un
   vrai trou normatif escalade via `NORMATIVE_CHANGE_POLICY.md`.
 
-`EXAMPLE_REPORT.md` : exemple travaillé construit sur deux défauts réels déjà
-vérifiés dans le code (`requires` en repli silencieux dans
-`payload_factory.py`, `_call_float` qui avale les exceptions dans
-`nautilus_strategy_bridge.py`), même format que `bug-hunter/
-EXAMPLE_REPORT.md`.
+`EXAMPLE_REPORT.md` : exemple travaillé, même format que
+`bug-hunter/EXAMPLE_REPORT.md`.
+
+> **Correction apportée à la passe 4 de la boucle `/evaluate` d'intake
+> (2026-07-29) — les deux exemples canoniques ne se valent pas.** Les trois
+> passes précédentes avaient tenu pour acquis que
+> `payload_factory.py::allowed_values` et
+> `nautilus_strategy_bridge.py::_call_float` étaient « deux défauts réels ».
+> Vérification faite sur les sites d'appel :
+>
+> - **`_call_float` (`nautilus_strategy_bridge.py:163-174`) — exemple
+>   solide, à garder.** Deux `except Exception: return 0.0`, dont le
+>   résultat alimente `equity` et `net_exposure` dans `_nav_snapshots`
+>   (lignes 95-97), donc la réconciliation NAV, donc le gate G6. Une erreur
+>   y devient un nombre plausible qui remonte jusqu'à un verdict : c'est le
+>   pattern « succès fabriqué » à l'état pur.
+> - **`allowed_values` (`payload_factory.py:36-40`) — exemple à
+>   requalifier.** Son seul appelant est `_axis_combinations` (ligne 169),
+>   qui énumère l'espace de recherche des candidats. Réduire un axe à
+>   `(self.default,)` quand `requires` n'est pas satisfait **est le
+>   comportement voulu** : ça évite de générer des combinaisons dénuées de
+>   sens. Le vrai manque est une **trace** (rien ne consigne pourquoi l'axe
+>   s'est effondré), pas un verdict corrompu. Le présenter comme un « repli
+>   silencieux » au même titre que `_call_float` apprendrait au skill que
+>   « retomber sur une valeur par défaut = défaut », et produirait du bruit
+>   sur chaque valeur par défaut légitime du dépôt — un faux positif
+>   canonisé dans l'exemple de référence.
+>
+> **Conséquence à trancher dans le plan réécrit** : `_call_float` est un
+> défaut **vivant, non corrigé, sur le chemin de production**. Ce lot ne peut
+> pas s'en servir comme matériau documentaire sans décider de son sort — le
+> documenter sans le suivre reviendrait à consigner un bug connu que
+> personne ne porte. Le corriger est **hors périmètre** (ça touche
+> `Implementation/ebta_engine/`, non-objectif explicite de ce lot). L'option
+> cohérente est donc de le router comme chantier `fix` séparé, et de faire
+> pointer l'`EXAMPLE_REPORT.md` vers ce chantier — pas de le laisser
+> flotter.
 
 ### 2. `.agents/skills/expert-panel/SKILL.md` (nouveau)
 
@@ -747,6 +1032,20 @@ pattern que `code-architecture-evaluator` — déclenchement semi-flou).
   qu'on vient de couper) — quand une tension réelle surgit
   (`code-architecture-evaluator`, l'IA, ou demande explicite). Recommandé,
   pas un nouveau gate bloquant.
+  **Tension relevée à la passe 2 de la boucle `/evaluate` d'intake
+  (2026-07-29)** : un stub `.claude/skills/` a précisément pour rôle le
+  *déclenchement automatique*, ce qui contredit « pas systématique ». Les
+  deux stubs existants résolvent ça par une `description` qui borne
+  explicitement le déclenchement dans les deux sens — `nautilus-docs-research`
+  porte une clause `TRIGGER` **et** une clause `SKIP` nommant les cas où le
+  skill n'apporte rien. Le stub d'`expert-panel` doit faire pareil, sans
+  quoi il se déclenchera sur toute divergence d'opinion et recréera
+  mécaniquement la cérémonie coupée à l'étape 12. Clause `SKIP` minimale à
+  rédiger : ne pas se déclencher quand la question a une réponse
+  conventionnelle, quand l'arbitrage appartient à l'humain (décision
+  normative), ou quand `code-architecture-evaluator` suffit (tension de
+  structure, pas de valeurs). Même exigence pour le stub
+  d'`agent-architecte`.
 - **Procédure** : (1) formuler la tension comme question fermée, (2) choisir
   3-5 personas orthogonaux *pertinents au sujet précis* (composition au cas
   par cas), (3) chaque persona argumente sur le contexte réel, désaccords
@@ -869,14 +1168,52 @@ SKILL.md` inclus (déclenchement semi-flou, même pattern que
     contributrices | statut (intégré/différé/hors scope/reconsidéré) |
     condition de déclenchement (citée depuis « Paliers de progression »/
     « Bon timing de mise en place ») | dernière réévaluation | historique
-    bref des révisions`. Reste compact même après un très grand
-    nombre de veilles, puisqu'indexé par un nombre borné de pratiques
-    récurrentes, pas par le nombre de documents lus — réponse directe au
-    pilier « Efficacité & Scalabilité » à l'échelle citée par l'utilisateur
-    (« même après 1000 veilles »).
+    bref des révisions`.
+
+  **Borne de coût réelle, corrigée à la passe 2 de la boucle `/evaluate`
+  d'intake (2026-07-29).** La version initiale affirmait que le ledger
+  « reste compact même après un très grand nombre de veilles ». C'est vrai
+  du **registre des pratiques** (indexé par un nombre borné de pratiques
+  récurrentes), mais **faux du registre des veilles ingérées**, qui croît
+  d'une ligne par document — 1000 lignes à l'échelle citée par
+  l'utilisateur. Or l'étape 2 de la procédure exige de le lire pour
+  calculer le delta. La borne honnête est donc : coût **linéaire en lignes
+  d'index, constant en documents de veille relus** (zéro, hors delta du
+  jour) — ce qui reste la bonne réponse au pilier « Efficacité &
+  Scalabilité », mais ne doit pas être annoncé comme une compacité absolue.
+  Si le registre des veilles devient réellement gênant à la lecture, la
+  règle de dégraissage est de le tronquer aux N dernières entrées **en
+  conservant le compteur total et la date de la plus ancienne entrée
+  purgée** — jamais de purger silencieusement.
+
+  **Contrôle anti-scellement, ajouté à la passe 2 de la boucle `/evaluate`
+  d'intake (2026-07-29).** Le ledger est écrit et relu par le même skill,
+  sans validateur externe. C'est une différence de fond avec
+  `registry.jsonl`/`oos_access_log.jsonl`, cités comme modèle éthique mais
+  réellement contrôlés par
+  `Implementation/ebta_engine/validators/registry_append_only_validator.py`.
+  Le risque est **auto-scellant** et c'est exactement le pattern que
+  `adversarial-tester` chasse par ailleurs : si une pratique est consignée
+  à tort « hors scope », le pilier 4 (« ne jamais relire les veilles déjà
+  traitées ») garantit que le skill ne relira jamais la source qui
+  l'aurait détrompé — l'erreur devient permanente et invisible. Deux
+  garde-fous minimaux, sans mécanique nouvelle :
+  - à chaque invocation, **re-dériver depuis sa veille source** le palier
+    et la condition de déclenchement d'**au moins une** pratique non
+    touchée par le delta du jour (rotation), et consigner l'accord ou le
+    désaccord constaté ;
+  - toute pratique dont la « dernière réévaluation » remonte à plus de N
+    invocations est **relue à sa source**, quel que soit son statut.
+
   Le premier remplissage des deux registres reprend directement l'« Audit
-  chronologique — 13 documents de veille IA » déjà produit dans ce
-  document : le skill n'aura pas à repartir de zéro le jour de sa création.
+  chronologique — 13 documents de veille IA » : le skill n'aura pas à
+  repartir de zéro le jour de sa création. **Précision de traçabilité
+  (passe 2)** : cet audit ne restera pas à l'emplacement où il est écrit
+  aujourd'hui — `plan.ps1 start` archive ce brouillon sous
+  `0 - HUMAN START HERE/archive/` et le plan réécrit vit dans
+  `.ai/backlog/`. Le `SKILL.md` doit donc citer la source du remplissage
+  initial par son **chemin post-routage** (`source_path` du chantier dans
+  `.ai/checkpoint.json`), jamais par « ce document ».
 - **Ce que ce skill ne fait pas** : n'exécute jamais de changement de code
   ou de structure lui-même — ça reste `/start` → Agent Codeur, avec le geste
   humain entre les deux ; ne remplace ni `code-architecture-evaluator` ni
@@ -892,11 +1229,26 @@ document comme premier exemple travaillé (au lieu d'un cas fictif).
 
 ### 4-6. `.ai/workflows/` (nouveau dossier)
 
+> **Précision apportée à la passe 1 de la boucle `/evaluate` d'intake
+> (2026-07-29).** Ce dossier avait brièvement existé : le commit `6ea617c`
+> y avait déposé `WORKFLOW_VALIDATION_UX_EBTA.updated.md`, un workflow UX
+> complet (Gates A/B, contrôle de complétion, cinq rôles d'agents) qui
+> n'était référencé par aucun fichier de gouvernance (`AGENTS.md`,
+> `.ai/README.md`, `CLAUDE.md` : zéro mention), dont l'auto-référence
+> pointait vers un chemin inexistant, et dont les trois agents invoqués
+> n'existaient nulle part dans le dépôt. **Décision humaine du 2026-07-29** :
+> c'est un brouillon issu d'une autre discussion, pas un workflow actif. Il
+> a été déplacé vers
+> `0 - HUMAN START HERE/PROPOSITION_WORKFLOW_VALIDATION_UX_EBTA.md` avec une
+> bannière `INTAKE`, et `.ai/workflows/` a été supprimé. **Le dépôt est donc
+> considéré comme n'ayant aujourd'hui aucun workflow formalisé** — la
+> création de ce dossier ci-dessous part bien d'un terrain vierge.
+
 | Fichier | Contenu |
 | --- | --- |
-| `README.md` | Concept de « workflow », tableau-registre (`core-engine` actif, `interface` planned), note explicite : registre de référence aujourd'hui, **pas encore un mécanisme routé**. |
+| `README.md` | Concept de « workflow », tableau-registre (`core-engine` actif, `interface` planned), note explicite : registre de référence aujourd'hui, **pas encore un mécanisme routé**. Une règle de convention obligatoire : tout fichier déposé ici doit être inscrit au registre — un workflow non référencé est un orphelin, précédent déjà vécu avec `WORKFLOW_VALIDATION_UX_EBTA.updated.md` (voir encadré ci-dessus). |
 | `core-engine/WORKFLOW.md` | Migration **fidèle** (pas de résumé) du contenu procédural actuel d'`AGENTS.md` : `/start`/`/continue`/`/close`, boucle `/evaluate`, règle BACKTRADER, gates bug-hunter/plan-conformance-audit/epic-orchestrator. **Ajout net** : `adversarial-tester` inséré dans la séquence de clôture ; `expert-panel` mentionné comme recommandé pendant `/evaluate`. |
-| `interface/WORKFLOW.md` | Stub `PLANNED — non démarré`. Pointeur vers la proposition d'interface + rappel D1-D15. Aucune règle de gate inventée (même éthique anti-fabrication que le reste du repo). Porte la note différée sur le pattern D4/G0 (voir skill 1). |
+| `interface/WORKFLOW.md` | Stub `PLANNED — non démarré`. **Deux** pointeurs, pas un : `PROPOSITION_INTERFACE_PILOTAGE_VISUEL_RECHERCHE_EBTA.md` (D1-D15 à trancher) et `PROPOSITION_WORKFLOW_VALIDATION_UX_EBTA.md` (ex-`.ai/workflows/`, désormais `INTAKE`), avec la note que les deux se recoupent et devront être arbitrés **ensemble**. Aucune règle de gate inventée ni recopiée depuis ces brouillons (même éthique anti-fabrication que le reste du repo). Porte la note différée sur le pattern D4/G0 (voir skill 1). |
 
 ### 7. `AGENTS.md` (édition — devient un routeur mince)
 
@@ -909,6 +1261,35 @@ Responsibility Map (+ ligne `.ai/workflows/`), règles vraiment universelles
 **Retiré** (déplacé vers `core-engine/WORKFLOW.md`) : règle BACKTRADER,
 détail complet des boucles `/evaluate`, liste des gates.
 
+> **Angle mort relevé à la passe 3 de la boucle `/evaluate` d'intake
+> (2026-07-29) — à trancher avant d'écrire quoi que ce soit.** « Déplacer le
+> détail complet des boucles `/evaluate` vers `core-engine/WORKFLOW.md` »
+> **rétrécit silencieusement une règle aujourd'hui universelle**. La boucle
+> d'affinage d'intake vit actuellement dans `AGENTS.md` (« Conversational
+> Commands »), donc elle s'applique à *tout* brouillon passé en `/start` —
+> y compris un brouillon d'interface, y compris ce document lui-même, dont
+> les passes 1 à 3 découlent précisément de cette règle. Migrée telle quelle
+> vers `core-engine/`, elle ne couvrirait plus un futur `/start` sur un
+> brouillon d'un autre workflow, alors que c'est justement là qu'elle a le
+> plus de valeur : un workflow neuf est celui dont les brouillons sont les
+> moins mûrs.
+>
+> Trois découpages possibles, à arbitrer explicitement dans le plan réécrit
+> plutôt qu'à décider en cours de migration :
+> 1. la boucle `/evaluate` reste **entièrement** dans `AGENTS.md` (règle
+>    universelle d'intake), seuls les gates spécifiques au code moteur
+>    (`bug-hunter`, `adversarial-tester`, `plan-conformance-audit`) migrent ;
+> 2. seule la **boucle d'intake** (avant restructuration) reste universelle,
+>    la boucle post-`/start` migre dans chaque `WORKFLOW.md` ;
+> 3. tout migre, et `interface/WORKFLOW.md` recopie la règle — **écarté
+>    d'office** : c'est une duplication, donc une seconde source de vérité.
+>
+> Ce choix conditionne le contenu de la table d'inventaire de migration
+> (étape 2 de l'« Ordre d'exécution ») ; il ne peut pas être laissé à l'IA
+> qui exécute. Même question, en plus léger, pour la règle
+> `epic-orchestrator` : elle s'applique à tout `/start`, pas au seul code
+> moteur.
+
 ### 8. `.ai/governance/AI_MODIFICATION_CHECKLIST.md` (édition légère)
 
 Ajouter `adversarial-tester` à la liste des skills à appliquer, avec sa
@@ -917,23 +1298,122 @@ bug-hunter/plan-conformance-audit. Ajouter également `agent-architecte`
 comme skill recommandé (pas bloquant) lors de l'arrivée d'une nouvelle
 veille ou d'une revue périodique de l'architecture agentique.
 
+### 9. `.ai/README.md` (édition légère)
+
+*Ajouté à la passe 1 de la boucle `/evaluate` d'intake (2026-07-29).* La
+section « Rôles » de `.ai/README.md` énumère le contenu de `.ai/`
+(`checkpoint.json`, `backlog/`, `governance/`, `archive/`, `tools/`) et ne
+mentionne aujourd'hui pas `workflows/` — `grep -c workflows` retourne `0`
+sur `.ai/README.md`, `AGENTS.md` et `CLAUDE.md`. Créer `.ai/workflows/` sans
+l'inscrire ici reproduirait exactement l'orphelinat qui a conduit à sortir
+`WORKFLOW_VALIDATION_UX_EBTA.updated.md` du dossier. Ajouter donc une ligne
+`workflows/` à la section « Rôles », et rappeler dans la « Règle de source
+de vérité » que `.ai/workflows/` décrit le **processus** par workflow, jamais
+une autorité scientifique EBTA.
+
+**Complété à la passe 3 (2026-07-29) — ce lot crée *deux* dossiers, pas un.**
+`ARCHITECTURE_LEDGER.md` introduit également `.ai/architecture/`, soumis
+exactement au même risque d'orphelinat. Les deux lignes doivent être
+ajoutées à `.ai/README.md`, pas seulement `workflows/`.
+
+**Contrôle anti-cockpit concurrent (passe 3) — à instruire avant d'écrire
+le ledger.** `.ai/checkpoint.json::relay_contract.do_not_create` interdit
+notamment les « competing project state snapshots », et les risques `R1`,
+`R3` et `R6` du même fichier existent précisément pour empêcher qu'un
+second cockpit d'état projet apparaisse à côté de `checkpoint.json` et de
+`Implementation/Active/tracking.json`. Un `ARCHITECTURE_LEDGER.md` qui suit
+« l'état de l'architecture agentique » est assez proche de cette
+description pour qu'on ne puisse pas se contenter de supposer qu'il passe.
+L'argument de non-concurrence à écrire explicitement dans le plan réécrit —
+et non à laisser déduire : le ledger ne porte **aucun état de chantier**
+(ni `status`, ni `lifecycle`, ni `active_workstream_id`, ni step/task), il
+porte l'état d'adoption de *pratiques de veille externes*, une dimension
+qu'aucun des deux cockpits existants ne modélise. S'il devait un jour
+porter un statut de chantier, il deviendrait un cockpit concurrent et
+tomberait sous `do_not_create` — cette limite doit figurer dans son propre
+en-tête, au même titre que la mention « `.ai/governance/` n'est pas une
+autorité scientifique » figure déjà dans les fichiers de gouvernance.
+
+### Verrou de gouvernance — décision humaine à obtenir avant l'étape 4
+
+> Cette sous-section n'est **pas** un dixième fichier : les fichiers de ce
+> lot s'arrêtent à 9. C'est un prérequis de déblocage, à porter dans la
+> section « Journal des décisions humaines » du plan réécrit.
+
+*Section ajoutée à la passe 3 de la boucle `/evaluate` d'intake
+(2026-07-29).* `.ai/governance/AI_MODIFICATION_CHECKLIST.md` autorise sans
+décision normative : ajouter une règle dans `.ai/governance/`, mettre à jour
+`.ai/README.md`, et « mettre à jour `AGENTS.md` avec une règle courte ».
+**Réduire `AGENTS.md` à un routeur mince en retirant des règles n'est aucune
+de ces trois choses** — et ce n'est pas non plus dans la liste des
+interdits. C'est une zone grise structurante, sur le fichier désigné comme
+« official AI entrypoint » du dépôt.
+
+Ce lot ne doit donc pas se donner cette autorisation à lui-même : la
+décision humaine doit être demandée et tracée dans le « Journal des
+décisions humaines » (section 10 du gabarit) **avant** l'étape 4 de l'ordre
+d'exécution. Les étapes 1 à 3 (création des skills, du registre et des
+`WORKFLOW.md`) sont purement additives et ne requièrent pas cette levée :
+elles peuvent avancer pendant que la décision est en attente. C'est
+précisément le découpage « phase de déblocage avant phase
+d'implémentation » que le gabarit impose dès qu'un verrou existe.
+
 ---
+
+## Type de chantier — `SINGLE`, vérifié contre le test de détection
+
+*Section ajoutée à la passe 2 de la boucle `/evaluate` d'intake
+(2026-07-29).* `.agents/skills/epic-orchestrator/SKILL.md` exige que le test
+de détection multi-lot soit appliqué au moment du `/start` et que son
+résultat soit documenté explicitement, jamais laissé implicite. Résultat
+pour ce lot :
+
+| Condition du test | Vérifiée ? |
+| --- | --- |
+| 1. Chaque composante a son propre Exit criteria vérifiable sans dépendre des autres | **Non** — un seul Exit criteria couvre l'ensemble : aucune règle perdue à la migration **et** aucun fichier orphelin. |
+| 2. L'ordre des composantes est interchangeable sans changer leur sens | **Non** — `AGENTS.md` réduit ne peut pas précéder `core-engine/WORKFLOW.md`, ce document le dit lui-même (« jamais un instant sans règle documentée nulle part »). |
+| 3. Un blocage sur une composante n'empêche pas les autres d'avancer | **Partiellement** — les 3 skills sont bien autonomes entre eux, mais la chaîne workflows → `AGENTS.md` → `.ai/README.md` est strictement séquentielle. |
+
+Les trois conditions ne sont pas toutes vraies : ce lot est un **chantier
+unique à phases séquentielles**, pas un chantier mère multi-lot. Le gabarit
+normal (`## 6. Decoupage en phases`) suffit ; aucune section
+`## Sous-chantiers` ne doit être créée. Ne pas confondre le découpage en
+phases ci-dessous avec des lots indépendants — c'est le contre-exemple
+explicite donné par le skill lui-même.
 
 ## Ordre d'exécution proposé
 
 1. Skills `adversarial-tester` + `expert-panel` + `agent-architecte`
    (autonomes, sans dépendance entre eux). `ARCHITECTURE_LEDGER.md` est créé
    à ce moment, pré-rempli depuis l'« Audit chronologique » de ce document.
-2. `.ai/workflows/README.md` + `core-engine/WORKFLOW.md` (migration fidèle,
-   à lire intégralement en amont) + `interface/WORKFLOW.md` (stub).
-3. `AGENTS.md` réduit — seulement une fois `core-engine/WORKFLOW.md`
-   confirmé complet (jamais un instant sans règle documentée nulle part).
-4. `.ai/governance/AI_MODIFICATION_CHECKLIST.md`.
+2. **Inventaire de migration d'`AGENTS.md`** (nouvelle étape, ajoutée à la
+   passe 1 de la boucle `/evaluate` d'intake) : avant d'écrire une seule
+   ligne de `core-engine/WORKFLOW.md`, produire dans le plan une table
+   ligne-à-ligne de chaque règle actuelle d'`AGENTS.md` avec sa destination
+   (`reste dans AGENTS.md` / `migre vers core-engine` / `supprimée +
+   justification`). Voir « Vérification proposée » ci-dessous pour pourquoi
+   cette étape est un prérequis et non un confort.
+3. `.ai/workflows/README.md` + `core-engine/WORKFLOW.md` (migration fidèle,
+   pilotée par la table de l'étape 2) + `interface/WORKFLOW.md` (stub).
+4. `AGENTS.md` réduit — seulement une fois la table de l'étape 2 entièrement
+   soldée (jamais un instant sans règle documentée nulle part).
+5. `.ai/governance/AI_MODIFICATION_CHECKLIST.md` puis `.ai/README.md`.
 
 ## Vérification proposée
 
-- Relire `AGENTS.md` + `core-engine/WORKFLOW.md` côte à côte : aucune règle
-  perdue dans la migration (comparaison section par section).
+- **Table de migration soldée** : chaque ligne de l'inventaire de l'étape 2
+  a une destination cochée, aucune ligne `à décider` ne subsiste. Ce critère
+  remplace le « relire côte à côte » de la version initiale de ce document,
+  jugé non reproductible à la passe 1 de la boucle `/evaluate` d'intake :
+  `AGENTS.md` fait 136 lignes denses et aucun test ne détecterait une règle
+  perdue dans la migration.
+- **Aucun orphelin** : tout fichier créé sous `.ai/workflows/` est référencé
+  par `.ai/workflows/README.md`, et `.ai/workflows/` est référencé par
+  `.ai/README.md`.
+- **Aucune auto-référence pendante** : chaque chemin cité dans un fichier
+  créé par ce lot existe réellement (précédent
+  `WORKFLOW_VALIDATION_UX_EBTA.updated.md`, qui se citait lui-même sous un
+  nom inexistant).
 - `git diff --check` sur les fichiers touchés.
 - Aucune commande Python/pytest nécessaire : ce lot ne touche ni
   `Implementation/ebta_engine/`, ni aucun fichier JSON schema-contraint.
@@ -955,14 +1435,14 @@ veille ou d'une revue périodique de l'architecture agentique.
 
 ## Fils ouverts — discutés, intégrés à la feuille de route, pas au lot Phase 0
 
-Ces trois points ont été vérifiés ou proposés en cours de discussion, mais
-n'ont **délibérément pas** été intégrés au périmètre de fichiers de la
+Ces **quatre** points ont été vérifiés ou proposés en cours de discussion,
+mais n'ont **délibérément pas** été intégrés au périmètre de fichiers de la
 Phase 0 (« Détail des fichiers à créer » ci-dessus). Ils ne sont pour
 autant **pas** de simples notes en suspens qui risqueraient de se perdre :
 chacun a désormais une place précise et déjà spécifiée dans la « Feuille de
-route priorisée » (Fil A → Phase 1, Fils B et C → Phase 2). Le jour où l'un
-de ces fils est priorisé, la future proposition n'aura pas à repartir de
-zéro — elle reprendra directement la spécification déjà écrite ici (voir
+route priorisée » (Fil A → Phase 1, Fils B, C et D → Phase 2). Le jour où
+l'un de ces fils est priorisé, la future proposition n'aura pas à repartir
+de zéro — elle reprendra directement la spécification déjà écrite ici (voir
 chaque « Ancrage veille » ci-dessous et la table des phases).
 
 ### A. Proposition initiale de la veille — `POLICIES.md`, `lessons-learned/`, preuve de session
@@ -984,10 +1464,18 @@ route priorisée » (Phase 1) pour la priorisation proposée.
 
 ### B. `config.json` validé seulement après construction, jamais avant exécution
 
-Vérifié dans le code réel (chronologie, étape 9) :
-`Implementation/ebta_engine/package_builder/*.py::_write_config()` écrit
-`config.json` sans validation de schéma préalable ; `validate_package_dir()`
-ne le valide qu'après coup, en audit. Exposition faible aujourd'hui (source
+Vérifié dans le code réel (chronologie, étape 9 ; **chemin corrigé à la
+passe 1 de la boucle `/evaluate` d'intake du 2026-07-29** — la version
+initiale citait `Implementation/ebta_engine/package_builder/*.py`, où ce
+symbole n'existe pas) : le writer réel est
+`Implementation/examples/minimal_pilot_pipeline/build_research_package.py:269::_write_config()`,
+appelé ligne 128. Ce n'est pas un chemin d'exemple isolé : le builder de
+production l'atteint via `PILOT_SCRIPT`
+(`Implementation/ebta_engine/package_builder/nautilus_research_package.py:28`),
+donc le trou est bien sur le chemin de production. Il écrit `config.json`
+sans validation de schéma préalable ; `validate_package_dir()` ne le valide
+qu'après coup, en audit
+(`Implementation/ebta_engine/validators/package_validator.py:50-51`). Exposition faible aujourd'hui (source
 interne de confiance), mais deviendra un vrai risque le jour où le Builder
 de l'interface (workflow `interface`, encore `PLANNED`) permettra à un
 humain de construire `config.json` via un formulaire — la proposition
@@ -1020,6 +1508,32 @@ chronologique », sous-section #5, et « Feuille de route priorisée »
 (Phases 1 et 2 — le `POLICIES.md` déclaratif est priorisé en Phase 1, le
 moteur mécanisé est différé en Phase 2, conditionné au démarrage réel du
 workflow `interface`).
+
+### D. Contradiction de gouvernance — cinq rôles d'agents vs « une seule IA exécutante »
+
+*Fil ouvert par la passe 1 de la boucle `/evaluate` d'intake (2026-07-29),
+non tranché.*
+
+Tout le raisonnement de ce document (étapes 18-19, non-objectifs) repose sur
+une lecture : `CLAUDE.md` interdit les agents autonomes, donc une seule IA
+joue tous les rôles séquentiellement, et la ligne rouge est le geste humain
+entre plan et exécution.
+
+`0 - HUMAN START HERE/PROPOSITION_WORKFLOW_VALIDATION_UX_EBTA.md`
+(ex-`.ai/workflows/`, cf. section « 4-6 ») porte une lecture différente :
+cinq rôles d'agents distincts (Orchestrateur, Product & Research UX, UX
+Adversarial, Frontend, Delivery & Completion Control), avec passage
+automatique de l'un à l'autre et un humain cantonné à l'arbitrage. Ce
+document a été committé dans le dépôt (`6ea617c`) sans qu'aucune décision
+tracée n'arbitre cette lecture face à `CLAUDE.md`.
+
+Les deux documents étant désormais `INTAKE` côte à côte, la contradiction
+n'est plus active — mais elle n'est pas résolue non plus. **Ce fil ne doit
+pas être tranché par ce lot-ci** : `.ai/governance/CONFLICT_RESOLUTION_POLICY.md`
+existe précisément pour rendre une contradiction visible sans qu'une IA la
+tranche unilatéralement. Condition de reprise : le jour où le workflow
+`interface` démarre réellement (D1-D15), les deux lectures doivent être
+arbitrées **avant** d'écrire `interface/WORKFLOW.md` autrement qu'en stub.
 
 ---
 
@@ -1424,7 +1938,7 @@ indépendamment de l'avancement des phases ci-dessous.
 | --- | --- | --- | --- |
 | **Phase 0** | `adversarial-tester`, `expert-panel`, `agent-architecte` + `ARCHITECTURE_LEDGER.md`, `.ai/workflows/` (détail plus haut dans ce document) | Déjà proposée — attend le triage humain de ce document | INTAKE |
 | **Phase 1** | `POLICIES.md` minimal (veille #5) + gabarit de preuve de session structuré (veille #2) — les deux referment le Fil ouvert A | Phase 0 tranchée ; aucune dépendance technique | Non proposée — candidat pour un futur document dédié |
-| **Phase 2** | Policy Engine mécanisé (veille #5) + validation pré-vol de `config.json` (Fil ouvert B) + classification explicite des effets d'écriture (veille #12) | Le workflow `interface` démarre réellement (D1-D15 tranchés) — pas avant | Différée, conditionnelle |
+| **Phase 2** | Policy Engine mécanisé (veille #5) + validation pré-vol de `config.json` (Fil ouvert B) + classification explicite des effets d'écriture (veille #12) + arbitrage de la contradiction « cinq rôles d'agents vs une seule IA exécutante » (Fil ouvert D) | Le workflow `interface` démarre réellement (D1-D15 tranchés) — pas avant. Pour le Fil D, l'arbitrage doit précéder toute écriture non-stub d'`interface/WORKFLOW.md`. | Différée, conditionnelle |
 | **Phase 3** | Observabilité de trajectoire (#7), évaluation continue (#8), replay causal (#9), SLO (#10), canaris/dérive (#11), sagas mécanisées (#12), runtime d'agent minimal dédié (#13) | Un sous-processus EBTA exécute des missions de façon autonome et continue, sans supervision humaine pas-à-pas — changement d'architecture majeur, non prévu, non tranché | Hors scope actuel |
 
 ```mermaid

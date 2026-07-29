@@ -1,5 +1,36 @@
 # Workflow de validation UX et de complétion EBTA
 
+> [!IMPORTANT]
+> **Statut : INTAKE non audité.** Ce document vit dans
+> `0 - HUMAN START HERE/` et n'est donc pas exécutable en l'état
+> (`AGENTS.md` / `CLAUDE.md`). Il lui manque le triage obligatoire
+> (`Track`, `Lifecycle`, `Scope`, `Non-goals`, `Source`, `Exit criteria`)
+> avant tout `/start`. **Aucune règle ci-dessous n'est en vigueur** : ni les
+> Gates A/B, ni les verdicts, ni les budgets de boucle, ni les rôles d'agents.
+>
+> **Provenance.** Ce fichier a d'abord été committé (`6ea617c`) sous
+> `.ai/workflows/WORKFLOW_VALIDATION_UX_EBTA.updated.md`, où il n'était
+> référencé par aucun fichier de gouvernance (`AGENTS.md`, `.ai/README.md`,
+> `CLAUDE.md` : zéro mention). Décision humaine du 2026-07-29 : c'est un
+> brouillon issu d'une autre discussion, pas un workflow actif — il est donc
+> ramené à l'intake, et **le dépôt est considéré comme n'ayant encore aucun
+> workflow formalisé**. Le suffixe `.updated` a été retiré au passage.
+>
+> **Écarts connus, à instruire avant tout `/start`** (constatés lors de la
+> boucle `/evaluate` d'intake du 2026-07-29, non corrigés ici) :
+>
+> - la section « Invocation recommandée » s'auto-référence comme
+>   `.ai/workflows/WORKFLOW_VALIDATION_UX_EBTA.md` — chemin qui n'existe plus ;
+> - les trois agents invoqués (`$ebta-product-research-ux`,
+>   `$ebta-ux-adversarial`, `$ebta-delivery-completion-control`) n'existent
+>   nulle part dans le dépôt ;
+> - les cinq rôles d'agents distincts définis plus bas doivent être confrontés
+>   à l'interdiction des agents autonomes de `CLAUDE.md` via
+>   `.ai/governance/CONFLICT_RESOLUTION_POLICY.md` ;
+> - le périmètre de ce document recoupe
+>   `PROPOSITION_INTERFACE_PILOTAGE_VISUEL_RECHERCHE_EBTA.md` (D1-D15 non
+>   tranchés) : les deux devront être arbitrés ensemble, pas séparément.
+
 ## Objet
 
 Ce workflow impose trois contrôles distincts à toute évolution du frontend EBTA :
