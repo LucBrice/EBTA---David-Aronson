@@ -40,7 +40,7 @@ permutables ni cloturables independamment.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE — GATES PASS, /close EN ATTENTE` |
 | Date de creation | 2026-07-30 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/` gelé EBTA-DOC-1.1, notamment SOP 08 et SOP 09B ; non modifie. |
@@ -247,7 +247,8 @@ NO GO :
 ## 8. Verification a chaque etape
 
 ```powershell
-python -m unittest Implementation.ebta_engine.tests.test_nautilus_phase4_strategy_costs
+python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation `
+  -p test_nautilus_phase4_strategy_costs.py
 
 python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation
 
@@ -296,25 +297,36 @@ stub ou gate artificiellement vert n'est admissible.
 
 ## 11. Definition of Done
 
-- [ ] Trois phases terminees.
-- [ ] Tous les Exit criteria sont prouves.
-- [ ] Aucun fichier hors perimetre modifie.
-- [ ] Test cible sans skip et suite complete PASS.
-- [ ] Pyrefly zero erreur sur les fichiers touches.
-- [ ] Historique runtime mis a jour append-only.
-- [ ] Guardian conclut `CONFORME`.
-- [ ] Bug-hunter : zero bug confirme ouvert.
-- [ ] Adversarial-tester : aucun fallback silencieux restant.
-- [ ] Plan-conformance : aucun critere manquant.
-- [ ] `git diff --check` PASS.
+- [x] Trois phases terminees.
+- [x] Tous les Exit criteria sont prouves.
+- [x] Aucun fichier hors perimetre modifie.
+- [x] Test cible sans skip et suite complete de 208 tests PASS.
+- [x] Pyrefly zero erreur sur les fichiers touches.
+- [x] Historique runtime mis a jour append-only.
+- [x] Guardian conclut `CONFORME`.
+- [x] Bug-hunter : zero bug confirme ouvert.
+- [x] Adversarial-tester : aucun fallback silencieux restant.
+- [x] Plan-conformance : aucun critere manquant.
+- [x] `git diff --check` PASS.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir apres gates. |
-| Ecarts par rapport au plan initial | A remplir. |
-| Suites a prevoir | A remplir ; ne pas inventer de suite si aucune preuve ne l'exige. |
+| Resultat final | `DONE` propose : extraction fail-closed, 10 controles hostiles, snapshot atomique, gates PASS. |
+| Ecarts par rapport au plan initial | La commande unittest cible initiale ne resolvait pas `ebta_engine` depuis la racine ; corrigee vers `discover -t Implementation`. Aucun ecart fonctionnel. |
+| Suites a prevoir | Aucune pour ce correctif. Toute nouvelle forme Nautilus devra etre verifiee empiriquement avant acceptation. |
+
+### Resultat d'execution
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-07-30 |
+| Phases executees | Phases 1 a 3. |
+| Artefact produit | Bridge fail-closed, regression Phase 4 et entree append-only dans l'historique runtime. |
+| Validation | Test cible 2/2 PASS ; suite 208 tests exit 0 ; Pyrefly 0 erreur ; `git diff --check` PASS. |
+| Gates | Bug-hunter PASS ; adversarial-tester PASS (10 cas, aucune sentinelle) ; Guardian CONFORME ; plan-conformance IMPLEMENTE. |
+| Ecart | Echec initial de la commande cible documente puis commande corrigee ; aucun test affaibli ou ignore. |
 
 ## 13. Journal d'audits post-hoc
 
@@ -324,3 +336,4 @@ stub ou gate artificiellement vert n'est admissible.
 | 2026-07-30 | Intake 2 | Contrat d'erreur uniformise et commande cible ajoutee ; convergence. |
 | 2026-07-30 | Plan normalise 1 | Autorites SOP 08/09B relues integralement ; confirmation que l'imputation silencieuse de zero et une NAV non reconstructible sont interdites. Aucun changement de perimetre requis. |
 | 2026-07-30 | Plan normalise 2 | Controle du chemin de test subprocess, de l'atomicite et du contrat d'exception ; aucun nouvel angle mort majeur, convergence atteinte. |
+| 2026-07-30 | Execution | Commande cible corrigee : le nom de module direct ne resolvait pas `ebta_engine` depuis la racine ; utilisation de `unittest discover -t Implementation`. L'echec initial reste rapporte et n'est pas compte comme validation. |

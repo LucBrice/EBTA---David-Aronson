@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import math
 from decimal import Decimal
 from typing import Any
 
@@ -164,11 +165,19 @@ def _call_float(obj: Any, name: str, argument: Any) -> float:
     value = getattr(obj, name, None)
     try:
         result = value(argument) if callable(value) else value
-    except Exception:
-        return 0.0
+    except Exception as exc:
+        raise RuntimeError(f"Nautilus {name} extraction failed for {argument!r}") from exc
+    if isinstance(result, dict):
+        if len(result) != 1:
+            raise RuntimeError(
+                f"Nautilus {name} extraction expected one currency value for {argument!r}, "
+                f"got {len(result)}"
+            )
+        result = next(iter(result.values()))
     try:
-        if isinstance(result, dict) and len(result) == 1:
-            result = next(iter(result.values()))
-        return float(str(result).split()[0])
-    except Exception:
-        return 0.0
+        converted = float(str(result).split()[0])
+    except Exception as exc:
+        raise RuntimeError(f"Nautilus {name} returned a non-numeric value for {argument!r}") from exc
+    if not math.isfinite(converted):
+        raise RuntimeError(f"Nautilus {name} returned a non-finite value for {argument!r}")
+    return converted

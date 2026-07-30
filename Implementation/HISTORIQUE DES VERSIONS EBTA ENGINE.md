@@ -80,6 +80,43 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-30 - Extraction NAV Nautilus rendue fail-closed
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | ADAPTER_MAPPING |
+| Statut | ACCEPTED |
+| Source normative | SOP 08 sections 3, 21 et 24 ; SOP 09B sections 2, 26 et 33 |
+| Fichiers impactes | `Implementation/ebta_engine/adapters/nautilus_strategy_bridge.py`, `Implementation/ebta_engine/tests/test_nautilus_phase4_strategy_costs.py` |
+| Impact protocole | NONE |
+| Verification | Test cible Phase 4 PASS ; suite runtime PASS ; Pyrefly 0 erreur ; tests hostiles exception, valeur invalide/non finie, mapping ambigu et snapshot atomique |
+
+### Contexte
+
+`_call_float()` transformait toute exception de l'API Nautilus ou de conversion
+en `0.0`. Cette sentinelle était une valeur métier plausible susceptible
+d'entrer dans les snapshots d'equity et d'exposition, alors que SOP 08 interdit
+l'imputation silencieuse de zéro et exige une NAV reconstructible.
+
+### Decision
+
+Conserver les formes Nautilus valides (valeur numérique ou mapping
+monodevise), mais lever un `RuntimeError` contextualisé pour toute exception,
+forme absente ou ambiguë, conversion impossible ou valeur non finie. La cause
+originale reste chaînée quand elle existe.
+
+### Impact
+
+Le bridge échoue désormais avant l'append d'un snapshot si l'equity ou
+l'exposition ne peut pas être extraite honnêtement. Aucun seuil, gate, statut
+ou verdict EBTA n'est modifié.
+
+### Suite
+
+Aucune pour ce correctif. Toute nouvelle forme de retour Nautilus devra être
+vérifiée empiriquement et testée avant d'être acceptée.
+
 ## 2026-07-21 - Paquet de preuve pre-OOS materialise sur refus
 
 | Champ | Valeur |

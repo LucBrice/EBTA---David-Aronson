@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -892,8 +892,8 @@
       "id": "PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS",
       "title": "Refus explicite des erreurs call_float Nautilus",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "GOVERNANCE",
       "source_path": ".ai/backlog/fixes/PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260730_PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS.md",
@@ -906,7 +906,8 @@
       "blocks_mainline": false,
       "advances_mainline": false,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": true
     }
   ],
   "validation": {

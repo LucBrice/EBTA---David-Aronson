@@ -21,13 +21,18 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
             """
             import json
             from decimal import Decimal
+            from types import SimpleNamespace
 
             from nautilus_trader.model.currencies import USD
             from nautilus_trader.model.identifiers import InstrumentId
             from nautilus_trader.model.objects import Money
 
             from ebta_engine.adapters.nautilus_mapping import map_cost_model_to_venue
-            from ebta_engine.adapters.nautilus_strategy_bridge import GenericPayloadStrategy, GenericPayloadStrategyConfig
+            from ebta_engine.adapters.nautilus_strategy_bridge import (
+                GenericPayloadStrategy,
+                GenericPayloadStrategyConfig,
+                _call_float,
+            )
             from ebta_engine.strategies.contracts import CostModel
             from ebta_engine.strategies.payloads import payload_by_code
 
@@ -69,6 +74,66 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
             )
             strategy_a = GenericPayloadStrategy(config_a)
             strategy_b = GenericPayloadStrategy(config_b)
+
+            boundary_checks = 0
+            direct = _call_float(SimpleNamespace(metric=lambda _: "123.5 USD"), "metric", "SIM")
+            mapped = _call_float(SimpleNamespace(metric=lambda _: {"USD": "456.25 USD"}), "metric", "SIM")
+            if direct != 123.5:
+                raise AssertionError(f"direct conversion mismatch: {direct!r}")
+            boundary_checks += 1
+            if mapped != 456.25:
+                raise AssertionError(f"mapping conversion mismatch: {mapped!r}")
+            boundary_checks += 1
+
+            try:
+                _call_float(
+                    SimpleNamespace(metric=lambda _: (_ for _ in ()).throw(ValueError("external failure"))),
+                    "metric",
+                    "SIM",
+                )
+            except RuntimeError as exc:
+                if "metric" not in str(exc):
+                    raise AssertionError(f"missing method context: {exc}") from exc
+                if not isinstance(exc.__cause__, ValueError):
+                    raise AssertionError("original Nautilus failure was not chained") from exc
+                boundary_checks += 1
+            else:
+                raise AssertionError("Nautilus call failure was silently accepted")
+
+            for invalid in (None, "not-a-number", float("nan"), float("inf"), {}, {"USD": "1", "EUR": "2"}):
+                try:
+                    _call_float(SimpleNamespace(metric=lambda _, value=invalid: value), "metric", "SIM")
+                except RuntimeError as exc:
+                    if "metric" not in str(exc):
+                        raise AssertionError(f"missing method context: {exc}") from exc
+                    boundary_checks += 1
+                else:
+                    raise AssertionError(f"invalid Nautilus value was silently accepted: {invalid!r}")
+
+            class FailingPortfolio:
+                def equity(self, _):
+                    return "1000 USD"
+
+                def net_exposure(self, _):
+                    raise ValueError("exposure unavailable")
+
+            snapshot_target = SimpleNamespace(
+                portfolio=FailingPortfolio(),
+                _venue="SIM",
+                config=SimpleNamespace(instrument_id=InstrumentId.from_str("NASDAQ.SIM")),
+                _nav_snapshots=[],
+            )
+            try:
+                GenericPayloadStrategy._record_nav_snapshot(snapshot_target, SimpleNamespace(ts_event=1))
+            except RuntimeError as exc:
+                if "net_exposure" not in str(exc):
+                    raise AssertionError(f"missing snapshot failure context: {exc}") from exc
+            else:
+                raise AssertionError("snapshot with missing exposure was silently accepted")
+            if snapshot_target._nav_snapshots:
+                raise AssertionError(f"partial snapshot appended: {snapshot_target._nav_snapshots!r}")
+            boundary_checks += 1
+
             print(json.dumps({
                 "venue": str(engine.kwargs["venue"]),
                 "oms_type": engine.kwargs["oms_type"].name,
@@ -85,6 +150,7 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
                 "session_b": strategy_b.session,
                 "bar_types_count": len(strategy_a.config.bar_types),
                 "has_nav_snapshots": hasattr(strategy_a, "_nav_snapshots"),
+                "boundary_checks": boundary_checks,
             }, sort_keys=True))
             """
         )
@@ -111,6 +177,7 @@ class NautilusPhase4StrategyCostsTests(unittest.TestCase):
         self.assertEqual(actual["session_b"], "asia")
         self.assertEqual(actual["bar_types_count"], 2)
         self.assertTrue(actual["has_nav_snapshots"])
+        self.assertEqual(actual["boundary_checks"], 10)
 
 
 if __name__ == "__main__":
