@@ -908,6 +908,26 @@
       "closure_reason": "Fallback 0.0 supprime; 10 controles hostiles; snapshot atomique; test cible 2 PASS; suite 208 PASS; Pyrefly 0; gates conformes",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "EPIC_PHASE_1_POLICIES_ET_PREUVE_SESSION",
+      "title": "Phase 1 policies et preuve de session",
+      "track": "annexe",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/annexes/EPIC_PHASE_1_POLICIES_ET_PREUVE_SESSION.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260730_EPIC_PHASE_1_POLICIES_ET_PREUVE_SESSION.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-30",
+      "last_moved_at": "2026-07-30",
+      "routing_decision": "annexe",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
