@@ -27,6 +27,20 @@ modification fiable.
   contradictions sans les resoudre silencieusement.
 - `AI_MODIFICATION_CHECKLIST.md` fournit la checklist operationnelle avant et
   apres modification par IA.
+- `TEMPLATE_PREUVE_SESSION_IA.json` est un exemple JSON optionnel pour relier
+  une tache, ses claims, les tests executes et leurs preuves.
+
+## Template de preuve de session
+
+`TEMPLATE_PREUVE_SESSION_IA.json` doit etre copie, jamais rempli en place. Son
+marqueur `template_only: true` et ses valeurs `<...>` indiquent qu'il ne
+constitue aucune preuve reelle.
+
+Le template complete la preuve en prose du commit ; il ne la remplace pas. Son
+existence ne cree ni registre de sessions, ni source d'etat projet, ni gate
+`/close`. Aucun schema ou validateur permanent ne lui est associe : une session
+qui decide de produire une preuve reelle doit definir son emplacement et ses
+validations dans son propre plan gouverne.
 
 ## Tracabilite attendue
 
@@ -43,4 +57,3 @@ et, si le changement est significatif, a
 Si un registre attendu manque dans une future version du repo, l'IA doit le
 signaler comme amelioration a creer au lieu d'inventer une source concurrente
 dans `.ai/governance/`.
-

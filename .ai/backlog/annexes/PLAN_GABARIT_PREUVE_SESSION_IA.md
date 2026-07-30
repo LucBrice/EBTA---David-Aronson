@@ -37,7 +37,7 @@ un seul contrat de compréhension.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE — GATES PASS, /close EN ATTENTE` |
 | Date de creation | 2026-07-30 |
 | Date d'activation | - |
 | Autorite normative | Aucune ; `.ai/governance/README.md` décrit le rôle procédural. |
@@ -224,21 +224,32 @@ les deux contrôles supplémentaires sont obligatoires.
 
 ## 11. Definition of Done
 
-- [ ] JSON valide et contrat interne PASS.
-- [ ] Champs minimaux et complémentaires présents.
-- [ ] Tous les exemples restent des placeholders.
-- [ ] README documente usage et limites.
-- [ ] Aucun fichier hors scope.
-- [ ] Plan-conformance sans critère manquant.
-- [ ] `git diff --check` PASS.
+- [x] JSON valide et contrat interne PASS.
+- [x] Champs minimaux et complémentaires présents.
+- [x] Toutes les valeurs propres à une session restent des placeholders ; les
+      IDs internes `claim-1`/`evidence-1` sont des identifiants d'exemple
+      explicitement reliés.
+- [x] README documente usage et limites.
+- [x] Aucun fichier hors scope.
+- [x] Plan-conformance sans critère manquant.
+- [x] `git diff --check` PASS.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir. |
-| Ecarts | A remplir. |
+| Resultat final | `DONE` propose : template JSON valide, cohérent et non assimilable à une preuve réelle. |
+| Ecarts | Aucun. |
 | Suites a prevoir | Aucune attendue ; mécanisation reste Phase 2 conditionnelle, hors scope. |
+
+### Resultat d'execution
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-07-30 |
+| Artefacts | Template JSON et documentation dans le README de gouvernance. |
+| Validation | JSON PASS ; `template_only=True`; 0 ID manquant ; 0 statut/type invalide ; limites README présentes ; `git diff --check` PASS. |
+| Conformance | Tous critères IMPLEMENTES ; aucun non-goal violé. |
 
 ## 13. Journal d'audits post-hoc
 

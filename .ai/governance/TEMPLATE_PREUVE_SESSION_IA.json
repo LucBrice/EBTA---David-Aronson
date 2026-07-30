@@ -1,0 +1,49 @@
+{
+  "template_only": true,
+  "template_version": "1.0.0",
+  "session_id": "<session-id>",
+  "task_id": "<workstream-or-task-id>",
+  "objective": "<objective actually pursued>",
+  "files_modified": [
+    {
+      "path": "<relative/path>",
+      "reason": "<why this file changed>"
+    }
+  ],
+  "files_not_touched": [
+    {
+      "path": "<relative/path-or-area>",
+      "reason": "<why this area was deliberately preserved>"
+    }
+  ],
+  "tests_executed": [
+    {
+      "command": "<exact command>",
+      "status": "NOT_RUN",
+      "result": "<actual result or reason not run>"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-1",
+      "statement": "<precise claim made by the session>",
+      "evidence_ids": [
+        "evidence-1"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence-1",
+      "type": "COMMAND_OUTPUT",
+      "reference": "<command, relative path, diff, commit, or review reference>",
+      "verification": "<how this evidence proves or contradicts the claim>"
+    }
+  ],
+  "risks_remaining": [
+    "<known residual risk or NONE>"
+  ],
+  "decisions_required": [
+    "<precise human decision still required or NONE>"
+  ]
+}
