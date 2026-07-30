@@ -392,7 +392,7 @@ du plan.
 - [x] Tests positifs/négatifs et intégration temporaire PASS.
 - [x] Documentation synchronisée sans sur-promesse.
 - [x] Aucun fichier hors scope.
-- [ ] Plan-conformance sans critère manquant.
+- [x] Plan-conformance sans critère manquant.
 - [x] `git diff --check` PASS.
 
 ## 12. Cloture
@@ -411,3 +411,6 @@ du plan.
 | 2026-07-30 | Intake 2 | Baseline non circulaire, migration backend stricte et Mermaid dérivé ; convergence. |
 | 2026-07-30 | Plan normalise 1 | Compte Phase 1 corrigé (8), mapping historique complété, preuve Mermaid remplacée par comparaison de hashes couvrant aussi les fichiers non suivis. |
 | 2026-07-30 | Plan normalise 2 | Baseline renforcée par une référence d'audit dédiée et la présence du plan dans le commit ; transitions répétées et IDs d'evidence dupliqués ajoutés aux refus à tester ; convergence. |
+| 2026-07-30 | Bug-hunter fermeture | Aucun bug confirmé sur les quatre scripts PowerShell : parse PASS, tests hostiles et intégration PASS. Aucun fichier `Implementation/` touché. |
+| 2026-07-30 | Adversarial-tester fermeture | PASS : refus du faux SHA, du workflow PLANNED ou incompatible, des preuves dupliquées/manquantes, des transitions sautées/répétées et de `DONE` avant `READY_TO_CLOSE`; migration et génération idempotentes. |
+| 2026-07-30 | Plan-conformance fermeture | `IMPLEMENTE` 7/7 depuis `311f265`; zéro critère manquant, zéro fichier interdit, aucun résultat seulement préexistant revendiqué comme livraison. |
