@@ -1487,6 +1487,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_SHARDING_ARCHITECTURE_LEDGER",
+      "title": "Sharding du registre des veilles de l Architecture Ledger",
+      "track": "annexe",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/annexes/PLAN_SHARDING_ARCHITECTURE_LEDGER.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260730_PROPOSITION_SHARDING_ARCHITECTURE_LEDGER.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-30",
+      "last_moved_at": "2026-07-30",
+      "routing_decision": "annexe",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": "0 - HUMAN START HERE/archive/20260730_PROPOSITION_SHARDING_ARCHITECTURE_LEDGER.md#9-audit-ia-de-promotion",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     }
   ],
   "validation": {
