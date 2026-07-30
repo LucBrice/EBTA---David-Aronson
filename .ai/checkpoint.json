@@ -887,6 +887,26 @@
       "closure_reason": "13 artefacts livres; AGENTS.md reduit a 48 lignes; skills valides; conformance 7/7; suites transferees a la boucle en cascade",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS",
+      "title": "Refus explicite des erreurs call_float Nautilus",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/fixes/PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260730_PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-30",
+      "last_moved_at": "2026-07-30",
+      "routing_decision": "fix",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
