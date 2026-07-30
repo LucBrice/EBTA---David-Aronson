@@ -950,6 +950,26 @@
       "closure_reason": "POLICIES.md cree avec 14 actions sourcees; AGENTS.md 49 lignes; 0 source manquante; conformance PASS",
       "non_goals": [],
       "is_active": false
+    },
+    {
+      "id": "PLAN_GABARIT_PREUVE_SESSION_IA",
+      "title": "Template JSON de preuve de session IA",
+      "track": "annexe",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/annexes/PLAN_GABARIT_PREUVE_SESSION_IA.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260730_PLAN_GABARIT_PREUVE_SESSION_IA.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-30",
+      "last_moved_at": "2026-07-30",
+      "routing_decision": "annexe",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": []
     }
   ],
   "validation": {
