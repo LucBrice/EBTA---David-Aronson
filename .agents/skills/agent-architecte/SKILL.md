@@ -28,9 +28,26 @@ ou un declencheur de `/start`.
 # Procedure
 
 1. Lire d'abord `.ai/architecture/ARCHITECTURE_LEDGER.md`, registre compact
-   des pratiques et index des veilles deja ingerees.
-2. Calculer le delta dans le registre des veilles et lire integralement
-   uniquement les nouveaux documents.
+   des pratiques, des revisions et du compteur global.
+2. Deriver le shard du mois courant par la convention
+   `.ai/architecture/ledger_veilles/YYYY-MM.md`, puis :
+   - s'il existe, lire uniquement ce shard pour calculer le delta du mois ;
+   - s'il n'existe pas, inspecter la derniere ligne `OPEN` de
+     `.ai/architecture/ledger_veilles/MANIFEST.md`, cloturer le shard
+     precedent en passant son en-tete a `CLOSED`, calculer son SHA-256
+     canonique sur ce contenu final, cloturer sa ligne de manifeste, creer
+     le nouveau shard et ajouter sa ligne `OPEN` ;
+   - pour chaque fichier de veille fourni par l'humain, rechercher son nom
+     entoure de ses delimitateurs Markdown (forme `` `nom.md` ``) avec
+     `rg -F --` dans `.ai/architecture/ledger_veilles/*.md` ; un match
+     existant prouve qu'il est deja ingere et interdit un doublon ;
+   - lire integralement uniquement les documents sans match.
+   Le mois du shard est le mois d'ingestion, pas necessairement le mois de
+   la date portee par la veille : une veille ancienne soumise tardivement
+   entre dans le shard `OPEN` courant.
+   Le SHA-256 canonique est calcule sur le Markdown decode en UTF-8, BOM
+   retire, fins de ligne normalisees en LF et une unique fin de ligne
+   terminale.
 3. Cartographier l'etat reel du repo sur les zones concernees par le delta.
 4. Rattacher chaque nouveaute a une ou plusieurs pratiques existantes ; ne
    creer une pratique que si aucune ligne ne convient.
@@ -45,7 +62,16 @@ ou un declencheur de `/start`.
 8. Produire un plan structure : position actuelle, action maintenant,
    report et raison, prochaine etape, gain net. Le deposer comme nouveau
    brouillon dans `0 - HUMAN START HERE/`.
-9. Ajouter les nouvelles veilles et revisions de pratiques au ledger.
+9. Ajouter chaque nouvelle veille au shard `OPEN`, mettre a jour sa ligne de
+   manifeste et le compteur global du ledger, puis ajouter les revisions de
+   pratiques au ledger.
+
+Une ingestion est une transaction au niveau du diff : la ligne du shard,
+la ligne du manifeste, le compteur global et les revisions eventuelles sont
+prepares ensemble, valides, puis commites ensemble. Avant tout commit,
+rejouer le controle anti-scellement ci-dessous. En cas d'echec, bloquer la
+sortie et corriger le patch non commite ; ne jamais publier un etat partiel
+ni produire un plan `INTAKE` qui suppose l'ingestion reussie.
 
 # Controle anti-scellement
 
@@ -55,13 +81,19 @@ A chaque invocation :
   pratique non touchee par le delta, par rotation ;
 - relire a la source toute pratique non reevaluee depuis trois invocations ;
 - consigner l'accord ou le desaccord comme revision, jamais en reecrivant
-  silencieusement l'historique.
+  silencieusement l'historique ;
+- verifier que la somme des compteurs du manifeste egale le compteur global,
+  qu'une seule ligne est `OPEN` et que le SHA-256 canonique de chaque shard
+  `CLOSED` correspond a son contenu.
 
-Le registre des veilles croit lineairement en lignes d'index, mais le nombre
-de documents bruts relus reste limite au delta et aux controles de rotation.
-Si l'index devient genant, conserver les entrees recentes, le compteur total
-et la date de la plus ancienne entree purgee ; ne jamais purger
-silencieusement.
+Un doublon, un compteur divergent, zero ou plusieurs lignes `OPEN`, ou un
+hash manquant/invalide sur un shard `CLOSED` est bloquant : ne rien ajouter,
+ne pas declarer l'ingestion reussie et rendre l'incoherence visible.
+
+Ne jamais purger, tronquer, resumer ou remplacer une veille ancienne. Lire
+le manifeste complet ou un shard clos uniquement pour une recherche
+historique, une reevaluation qui l'exige ou le controle d'integrite ; ne pas
+les charger sur le chemin courant d'une invocation.
 
 # Regle de blocage
 

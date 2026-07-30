@@ -51,9 +51,9 @@ Evidence intake :
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `PRET_A_CLOTURER` — phases, adversarial et conformance `PASS` |
 | Date de creation | 2026-07-30 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-30 |
 | Autorite normative | Aucune autorite scientifique modifiee ; `.ai/architecture/ARCHITECTURE_LEDGER.md` possede la memoire des pratiques et `.agents/skills/agent-architecte/SKILL.md` possede sa procedure. |
 | Autorite executable | Aucune : artefacts Markdown et procedure de skill uniquement. |
 | Changement normatif attendu | Aucun changement EBTA. Changement organisationnel de gouvernance IA. |
@@ -158,6 +158,8 @@ ARCHITECTURE_LEDGER.md
   des veilles.
 - Chaque shard est proprietaire des lignes individuelles de son mois.
 - Le skill est proprietaire de la sequence de lecture et des controles.
+- Le mois d'un shard est le mois d'ingestion. Une veille datee d'un mois
+  ancien mais ingeree maintenant reste ajoutee au shard `OPEN` courant.
 
 ### Contrat d'interface entre les couches
 
@@ -180,6 +182,10 @@ shard | statut | date_min | date_max | nombre | sha256_cloture
 - la somme de `nombre` egale le compteur global du ledger ;
 - le manifeste ne contient ni titre, ni fichier source, ni detail d'une
   veille.
+- avant ajout, le nom exact du fichier candidat, delimite comme code
+  Markdown, est recherche avec `rg -F --` dans les shards ; un match
+  interdit le doublon sans charger tout l'historique dans le contexte ni
+  confondre deux noms dont l'un serait une sous-chaine de l'autre.
 
 Le SHA-256 canonique est calcule sur le contenu Markdown decode en UTF-8,
 avec BOM retire, fins de ligne normalisees en LF et une unique fin de ligne
@@ -334,6 +340,21 @@ promesse de cout superieure aux mesures.
 Phase 0 -> Phase 1 -> Phase 2 -> Phase 3
 ```
 
+### Resultats du `/continue` — 2026-07-30
+
+| Gate | Resultat | Preuve |
+| --- | --- | --- |
+| G0 — Baseline | `PASS` | 13 lignes ; hash canonique `35188c166a5e11b667029c7292934e616a2988b63c74a777db467507e004f5c6` ; hash Table A/B `b6d44970859d83b973e334a0e82b53ff802edad39b7184aede90d1abb4dd73b5` ; consommateurs vivants classes. |
+| G1 — Migration | `PASS` | 13 lignes dans `2026-07.md`, hash identique ; 0 ligne `Vxx` dans le ledger ; Table A/B au meme hash ; manifeste `somme=13`, `OPEN=1`. |
+| G2 — Procedure | `PASS` | `YYYY-MM`, rotation, hash canonique, conservation integrale et controle anti-doublon `rg -F` explicites ; match connu `exit 0`, nom absent `exit 1`. |
+| G3 — Charge | `PASS` | Simulation temporaire 13/1000 : ledger 180 lignes dans les deux cas, chemin courant 204 lignes dans les deux cas, `+2` octets dus au compteur ; 36 shards clos + 1 ouvert ; repertoire temporaire supprime. |
+
+Correction bornee decouverte pendant G2 : le shard est defini par le mois
+d'ingestion et chaque fichier source candidat est recherche exactement dans
+tous les shards avant ajout. Cette garde evite qu'une veille deja presente
+dans un shard clos soit ajoutee une seconde fois sans imposer la lecture de
+tout l'historique dans le contexte.
+
 ## 7. Artefacts produits
 
 | Artefact | Nature | Preuve |
@@ -457,37 +478,37 @@ une validation.
 
 ## 12. Definition of Done
 
-- [ ] Phases 0 a 3 et gates G0 a G3 `PASS`.
-- [ ] Les 13 lignes reelles sont conservees integralement et identiquement.
-- [ ] Le ledger principal ne contient plus de ligne individuelle.
-- [ ] Manifeste coherent : somme 13, unique `OPEN`, contrat de hash explicite.
-- [ ] Skill coherent a froid, sans purge ni lecture historique systematique.
-- [ ] Simulation 13/1000 documentee avec assertions honnetes.
-- [ ] Aucun artefact synthetique ne subsiste.
-- [ ] Table A/B, citations, paliers et conditions inchanges.
-- [ ] Aucun fichier hors perimetre fonctionnel modifie.
-- [ ] `git diff --check` passe.
-- [ ] `bug-hunter` n'est pas applicable faute de code runtime ; la
-      conformance du plan reste obligatoire avant `/close`.
+- [x] Phases 0 a 3 et gates G0 a G3 `PASS`.
+- [x] Les 13 lignes reelles sont conservees integralement et identiquement.
+- [x] Le ledger principal ne contient plus de ligne individuelle.
+- [x] Manifeste coherent : somme 13, unique `OPEN`, contrat de hash explicite.
+- [x] Skill coherent a froid, sans purge ni lecture historique systematique.
+- [x] Simulation 13/1000 documentee avec assertions honnetes.
+- [x] Aucun artefact synthetique ne subsiste.
+- [x] Table A/B, citations, paliers et conditions inchanges.
+- [x] Aucun fichier hors perimetre fonctionnel modifie.
+- [x] `git diff --check` passe.
+- [x] `bug-hunter` non applicable faute de code runtime ;
+      `adversarial-tester` et `plan-conformance-audit` `PASS`.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir lors de `/close`. |
-| Ecarts par rapport au plan initial | A remplir. |
-| Suites a prevoir | A remplir ; ne pas transformer le risque de shard actif volumineux en nouveau chantier sans observation ou demande humaine. |
+| Resultat final | `DONE` — G0 a G3, audit adversarial et conformance `PASS`. |
+| Ecarts par rapport au plan initial | Correction bornee : partition explicite par mois d'ingestion, garde anti-doublon exacte et blocage transactionnel des incoherences. Aucun elargissement de perimetre. |
+| Suites a prevoir | Aucune suite obligatoire. Observer seulement la taille d'un shard actif ; ne pas ouvrir de chantier sans probleme constate ou demande humaine. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | - |
-| Phases executees | - |
-| Artefact produit | - |
-| Validation | - |
-| Mesures 13/1000 | - |
-| Ecart par rapport au plan | - |
+| Date | 2026-07-30 |
+| Phases executees | 0, 1, 2 et 3 |
+| Artefact produit | Ledger principal allege ; `ledger_veilles/MANIFEST.md` ; `ledger_veilles/2026-07.md` ; skill adapte |
+| Validation | `PASS` — hash 13 lignes, hash Table A/B, manifeste, anti-doublon, checkpoint schema, `git diff --check` |
+| Mesures 13/1000 | Ledger `17071 -> 17073` octets et `180 -> 180` lignes ; chemin courant `19493 -> 19495` octets et `204 -> 204` lignes ; manifeste `1322 -> 5172` octets pour 1 -> 37 shards ; temporaire supprime |
+| Ecart par rapport au plan | Correction bornee : clarification du mois d'ingestion et garde anti-doublon exacte sur les shards clos |
 
 ## 14. Journal d'audits post-hoc
 
@@ -496,3 +517,41 @@ une validation.
 | 2026-07-30 | Promesse de cout, chemin de lecture, contrat `OPEN/CLOSED`, simulation isolee et test multi-lot. | Deux passes intake ont elimine les affirmations asymptotiques excessives et les risques de pollution du registre reel. |
 | 2026-07-30 | Audit post-`/start` passe 1 : compteur `O(log n)`, mise a jour de la ligne `OPEN`, hash canonique UTF-8/LF. | Le compteur interdit un delta octets strictement nul et un hash de bytes plateforme serait instable sous conversion CRLF/LF. |
 | 2026-07-30 | Audit post-`/start` passe 2 : classification d'`EXAMPLE_REPORT.md`, derniere ligne `OPEN` et source archivee. | Convergence sans nouvel angle mort majeur ; le consommateur historique ne depend pas du format et la rotation mensuelle ne requiert pas une lecture integrale du manifeste. |
+| 2026-07-30 | Correction en execution : partition par mois d'ingestion et garde anti-doublon `rg -F` sur le nom source. | Une lecture limitee au shard courant ne detecterait pas la soumission repetee d'une veille deja presente dans un shard clos. |
+| 2026-07-30 | Audit `adversarial-tester` : echec explicitement bloquant, mutation transactionnelle au niveau du diff et hash calcule apres passage du shard a `CLOSED`. | Le contrat demandait de verifier les invariants sans interdire explicitement un succes apres incoherence ; ce repli silencieux potentiel est ferme avant `/close`. |
+
+### Audit adversarial de fermeture
+
+| Point teste | Entree hostile | Observation finale | Classification |
+| --- | --- | --- | --- |
+| Garde anti-doublon | Fichier V13 deja present | Rejet `DUPLICATE_SOURCE`; aucun artefact reel modifie | `PASS_ADVERSARIAL` |
+| Somme des compteurs | Manifeste simule a 12, ledger a 13 | Rejet `COUNT_MISMATCH_12_13` | `PASS_ADVERSARIAL` |
+| Unicite du shard actif | Deux lignes `OPEN` | Rejet `OPEN_COUNT_2` | `PASS_ADVERSARIAL` |
+| Hash obligatoire | Shard `CLOSED` sans hash | Rejets `OPEN_COUNT_0` et `MISSING_CLOSED_HASH` | `PASS_ADVERSARIAL` |
+| Integrite d'un shard clos | Hash de 64 zeros | Rejet `CLOSED_HASH_MISMATCH` | `PASS_ADVERSARIAL` |
+
+Etat reel : accepte sans erreur. Un nouveau nom absent est accepte comme
+candidat sans modifier les artefacts. Aucun `FALSE_SUCCESS`,
+`SILENT_FALLBACK` ou `NORMATIVE_GAP` ne reste ouvert. Le correctif est le
+contrat bloquant et transactionnel ajoute au manifeste et au skill.
+
+### Audit de conformite au plan
+
+| Exit criterion | Classification | Preuve |
+| --- | --- | --- |
+| 13 lignes identiques dans le shard, absentes du ledger | `IMPLEMENTE` | 13 lignes ; hash `35188c166a5e11b667029c7292934e616a2988b63c74a777db467507e004f5c6` ; 0 ligne inline. |
+| Manifeste unique `OPEN`, somme 13, contrat de cloture | `IMPLEMENTE` | Une ligne de donnees, `OPEN=1`, `somme=13`, hash canonique et refus bloquants documentes. |
+| Chemin courant du skill sans lecture historique systematique ni purge | `IMPLEMENTE` | `YYYY-MM`, derniere ligne `OPEN`, `rg -F --`, interdiction de purge et controles bloquants dans le skill. |
+| Simulation isolee 13/1000 | `IMPLEMENTE` | Ledger 180 lignes dans les deux cas ; chemin courant 204 lignes ; `+2` octets du compteur ; 36 shards clos + 1 ouvert ; temporaire supprime. |
+| Aucun residu synthetique et hygiene du patch | `IMPLEMENTE` | Seuls `MANIFEST.md` et `2026-07.md` existent sous `ledger_veilles/`; `git diff --check` `PASS`. |
+
+Non-goals : `PASS`. Aucun changement dans `Protocole/`, `Implementation/`,
+`.claude/`, les workflows ou le schema du checkpoint ; aucun RAG,
+embedding, base vectorielle ou dependance. Les changements Table A/B
+etaient presents dans le working tree avant l'activation ; leur hash
+`b6d44970859d83b973e334a0e82b53ff802edad39b7184aede90d1abb4dd73b5`
+est reste identique pendant le chantier (`DEJA PRESENT AVANT LE PLAN`).
+
+Verdict `plan-conformance-audit` : **PASS**, aucun critere `MANQUANT`, aucun
+extra hors scope. `bug-hunter` : **NON APPLICABLE**, aucun fichier sous
+`Implementation/` n'a ete modifie.
