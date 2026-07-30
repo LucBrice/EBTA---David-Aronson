@@ -1510,11 +1510,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": "0 - HUMAN START HERE/archive/20260730_PROPOSITION_SHARDING_ARCHITECTURE_LEDGER.md#9-audit-ia-de-promotion",
+            "recorded_at": "2026-07-30"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/annexes/PLAN_SHARDING_ARCHITECTURE_LEDGER.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-07-30"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "c8cc2bc",
             "recorded_at": "2026-07-30"
           }
         ]
