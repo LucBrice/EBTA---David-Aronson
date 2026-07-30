@@ -37,7 +37,7 @@ découvrabilité partagent un seul critère de sortie.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE — GATES PASS, /close EN ATTENTE` |
 | Date de creation | 2026-07-30 |
 | Date d'activation | - |
 | Autorite normative | Les sources citées, jamais `POLICIES.md`. |
@@ -179,7 +179,7 @@ NO GO :
 
 ```powershell
 $content = Get-Content POLICIES.md -Raw
-@('Action','Autorisee ?','Conditions','Validation requise','Source proprietaire') |
+@('Action','Autorisée ?','Conditions','Validation requise','Source propriétaire') |
   Where-Object { $content -notmatch [regex]::Escape($_) }
 
 Select-String POLICIES.md -Pattern '\|\s*(OUI|CONDITIONNELLE|NON)\s*\|'
@@ -220,21 +220,30 @@ ligne par ligne reste obligatoire.
 
 ## 11. Definition of Done
 
-- [ ] Table et clause de priorité présentes.
-- [ ] Neuf catégories minimales couvertes.
-- [ ] Chaque source existe et a été vérifiée.
-- [ ] `AGENTS.md` route l'index et reste ≤60 lignes.
-- [ ] Aucun fichier hors scope.
-- [ ] Plan-conformance sans critère manquant.
-- [ ] `git diff --check` PASS.
+- [x] Table et clause de priorité présentes.
+- [x] Neuf catégories minimales couvertes (14 lignes d'action).
+- [x] Chaque source existe et a été vérifiée ligne par ligne.
+- [x] `AGENTS.md` route l'index et reste à 49 lignes.
+- [x] Aucun fichier hors scope.
+- [x] Plan-conformance sans critère manquant.
+- [x] `git diff --check` PASS.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir. |
-| Ecarts | A remplir. |
+| Resultat final | `DONE` propose : index de 14 actions sourcées, clause de priorité et routeur mince. |
+| Ecarts | Commande de vérification corrigée pour conserver les accents réels du header ; aucun écart fonctionnel. |
 | Suites a prevoir | Aucune attendue dans ce lot. |
+
+### Resultat d'execution
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-07-30 |
+| Artefacts | `POLICIES.md`; une ligne ajoutée à `AGENTS.md`. |
+| Validation | 14 lignes de statut ; 0 source manquante ; `AGENTS.md` 49 lignes ; comparaison manuelle fidèle ; `git diff --check` PASS. |
+| Conformance | Tous les critères IMPLEMENTES ; aucun non-goal violé. |
 
 ## 13. Journal d'audits post-hoc
 

@@ -37,6 +37,7 @@ Before any substantive action, read in this order:
 - Human drafts enter through `0 - HUMAN START HERE/` and are never executable by default.
 - If active hook or tracking paths change, update `.ai/checkpoint.json` first; update `.ai/README.md` only when stable cockpit rules change.
 - Follow the commit contract in `.ai/workflows/common/WORKFLOW.md`.
+- Use `POLICIES.md` only as an authorization index; its cited owner files prevail.
 - Consult `.agents/skills/` and follow each matching `SKILL.md` trigger.
 
 ## Conversational Commands
