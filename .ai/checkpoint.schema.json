@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "checkpoint.schema.json",
   "title": "EBTA multi-AI relay checkpoint",
-  "description": "v1.2.0 — macro governance only. Runtime state lives exclusively in tracking.json.",
+  "description": "v1.3.0 — macro governance and executable AI-workflow state. Runtime engine state lives exclusively in tracking.json.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -213,7 +213,8 @@
         "blocks_mainline",
         "advances_mainline",
         "closure_reason",
-        "non_goals"
+        "non_goals",
+        "workflow"
       ],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
@@ -265,7 +266,52 @@
           "type": "array",
           "items": { "type": "string" },
           "uniqueItems": true
+        },
+        "workflow": { "$ref": "#/$defs/workflow_state" }
+      }
+    },
+    "workflow_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "contract_version", "stage", "evidence"],
+      "properties": {
+        "id": { "enum": ["common", "core-engine", "interface"] },
+        "contract_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "stage": {
+          "enum": [
+            "PLANNED",
+            "INTAKE_AUDITED",
+            "TRIAGED",
+            "BASELINED",
+            "ACTIVE",
+            "READY_TO_CLOSE",
+            "BLOCKED",
+            "DONE",
+            "REJECTED",
+            "SUPERSEDED"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/workflow_evidence" }
         }
+      }
+    },
+    "workflow_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "reference", "recorded_at"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "reference": { "type": "string", "minLength": 1 },
+        "recorded_at": { "type": "string", "format": "date" }
       }
     },
     "classification": {

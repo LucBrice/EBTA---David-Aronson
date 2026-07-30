@@ -10,9 +10,8 @@
 - `backlog/` contient les chantiers tries et auditables.
 - `governance/` contient les politiques de transformation, de conflit et de
   checklist avant modification par IA.
-- `workflows/` contient le registre de reference et les procedures propres a
-  chaque workflow. `common/WORKFLOW.md` porte le cycle universel des plans ;
-  le dossier ne route pas mecaniquement l'execution.
+- `workflows/` contient les contrats JSON executables, leurs vues Mermaid
+  generees et les procedures humaines propres a chaque workflow.
 - `architecture/` conserve le ledger append-only des pratiques issues de la
   veille externe ; il ne porte aucun etat de chantier.
 - `archive/` conserve les chantiers termines, rejetes ou remplaces.
@@ -25,9 +24,10 @@
 - `Implementation/Active/` reste le cockpit micro du runtime actif.
 - `.ai/` gere seulement l'organisation IA, les chantiers macro et la gouvernance
   de modification. `.ai/governance/` n'est pas une autorite scientifique EBTA.
-- `.ai/workflows/` decrit le processus par workflow et `.ai/architecture/`
-  l'adoption de pratiques externes. Aucun des deux n'est une autorite
-  scientifique EBTA ni un cockpit d'etat projet.
+- `.ai/workflows/` gouverne les transitions procedurales des workstreams ;
+  leur etat est persiste uniquement dans `checkpoint.json`.
+  `.ai/architecture/` documente l'adoption de pratiques externes. Aucun des
+  deux n'est une autorite scientifique EBTA.
 - `0 - HUMAN START HERE/` reste le point d'entree humain, hors cockpit IA.
 - `.agents/` n'est pas une source d'etat projet.
 
@@ -49,11 +49,17 @@ Ces fichiers encadrent le processus. Ils ne remplacent ni `Protocole/` ni
 
 ## Cycle de vie des chantiers
 
-Les chantiers passent par les etats suivants :
+Les champs historiques `status/lifecycle` restent disponibles pour le routage
+macro. Le sous-etat workflow, obligatoire depuis le schema 1.3.0, suit :
 
 ```text
-INTAKE -> TRIAGED -> PLANNED -> ACTIVE -> BLOCKED/DONE/REJECTED/SUPERSEDED -> ARCHIVED
+INTAKE_AUDITED -> TRIAGED -> BASELINED -> ACTIVE
+               -> READY_TO_CLOSE -> DONE
 ```
+
+`BLOCKED`, `REJECTED` et `SUPERSEDED` sont des sorties terminales explicites.
+Les transitions et preuves requises viennent de
+`.ai/workflows/<id>/WORKFLOW.json`; le Mermaid n'est qu'une vue generee.
 
 Un fichier depose dans `0 - HUMAN START HERE/` est toujours `INTAKE` et non executable.
 L'IA doit l'auditer puis le router vers `backlog/mainline/`, `backlog/annexes/`
@@ -70,12 +76,23 @@ Depuis la racine du repo, l'IA peut appeler :
 .\.ai\tools\plan.ps1 start `
   -Path "0 - HUMAN START HERE\MON_PLAN.md" `
   -RewrittenPath ".ai\backlog\mainline\MON_PLAN.md" `
-  -Track mainline -Id MON_PLAN -Title "Mon plan" -Audited
+  -Track mainline -Id MON_PLAN -Title "Mon plan" `
+  -Workflow common -Audited -IntakeAuditPasses 2 `
+  -IntakeAuditEvidence "<reference-journal-intake>"
 
-# 2. Continuer un plan deja route dans le backlog.
+# 2. Attester le commit de baseline apres convergence du plan.
+.\.ai\tools\plan.ps1 baseline -Id MON_PLAN `
+  -PlanAuditPasses 2 -PlanAuditEvidence "<reference-journal-plan>" `
+  -BaselineCommit <sha>
+
+# 3. Continuer un plan BASELINED.
 .\.ai\tools\plan.ps1 continue -Id MON_PLAN
 
-# 3. Cloturer un plan et archiver son fichier.
+# 4. Enregistrer les preuves requises et rendre le plan cloturable.
+.\.ai\tools\plan.ps1 ready -Id MON_PLAN `
+  -Evidence "plan_conformance=<reference>"
+
+# 5. Cloturer un plan READY_TO_CLOSE et archiver son fichier.
 .\.ai\tools\plan.ps1 close -Id MON_PLAN -Outcome DONE -Reason "Plan termine"
 ```
 
@@ -84,7 +101,8 @@ semantique ni la reecriture ; l'IA ecrit d'abord le fichier restructure a
 `-RewrittenPath`, puis `plan.ps1` archive le brouillon original (`-Path`) sous
 `0 - HUMAN START HERE/archive/` et enregistre le fichier reecrit comme
 `source_path` du chantier une fois l'audit fait par l'IA. `start` exige
-`-Audited`, refuse un plan sans checklist Markdown, `Track`, `Lifecycle`,
+`-Audited`, deux a six passes et une reference d'audit, refuse un workflow
+non `ACTIVE`, et refuse un plan sans checklist Markdown, `Track`, `Lifecycle`,
 `Scope`, `Non-goals`, `Source`, `Exit criteria`, refuse si les sections
 enrichies du gabarit sont absentes du fichier reecrit, et refuse si
 `-RewrittenPath` n'est pas deja dans le dossier correspondant a `-Track`.
@@ -126,10 +144,13 @@ Contrat d'interpretation par l'IA :
   relancer `start -Audited`. Coller le gabarit vide sans le remplir ne suffit
   pas a passer ce controle si le contenu attendu (ex. un `Non-goals` reel, un
   `Exit criteria` verifiable) reste absent.
-- `/continue` signifie : retrouver l'id dans `.ai/checkpoint.json`, passer le
-  chantier en `ACTIVE`, puis reprendre le fichier de plan associe.
+- `/continue` signifie : retrouver l'id dans `.ai/checkpoint.json`, verifier
+  que son workflow est `BASELINED`, le passer en `ACTIVE`, puis reprendre le
+  fichier de plan associe.
 - `/close` signifie : retrouver l'id dans `.ai/checkpoint.json`, verifier les
-  criteres de sortie, puis appeler `.ai/tools/plan.ps1 close`.
+  criteres de sortie, enregistrer les IDs de preuve avec `plan.ps1 ready`,
+  puis appeler `plan.ps1 close`. Le backend impose leur presence et les
+  transitions ; l'IA reste responsable de la veracite des references.
 
 Si la commande est ambigue, l'IA doit d'abord inspecter `0 - HUMAN START HERE/` et
 `.ai/checkpoint.json`. Elle ne demande une precision a l'humain que si plusieurs

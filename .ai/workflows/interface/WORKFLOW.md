@@ -4,6 +4,10 @@
 
 Ce fichier est un emplacement reserve, pas une procedure executable. Il ne
 contient aucun gate, verdict, budget ou sequence de travail actif.
+`WORKFLOW.json` encode cet etat avec un unique stage terminal `PLANNED` et
+aucune transition. `.ai/tools/plan.ps1 start -Workflow interface` le refuse
+mecaniquement tant que le contrat n'est pas explicitement active par un
+chantier gouverne.
 
 Deux brouillons `INTAKE` se recoupent et devront etre audites puis arbitres
 ensemble avant toute formalisation :

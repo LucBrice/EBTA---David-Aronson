@@ -40,9 +40,9 @@ complet sans les précédents.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `ACTIVE` |
 | Date de creation | 2026-07-30 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-30 |
 | Autorite normative | Aucune scientifique ; contrats workflow propriétaires du processus IA uniquement. |
 | Autorite executable | `.ai/tools/plan.ps1` et `.ai/tools/workflow_state.ps1`. |
 | Changement normatif attendu | Aucun changement EBTA. Changement structurel de gouvernance IA. |
@@ -384,24 +384,24 @@ du plan.
 
 ## 11. Definition of Done
 
-- [ ] Quatre phases validées.
-- [ ] Sept Exit criteria prouvés.
-- [ ] Trois contrats schema PASS.
-- [ ] Trois Mermaid générés et idempotents.
-- [ ] Checkpoint 1.3.0, zéro workflow manquant.
-- [ ] Tests positifs/négatifs et intégration temporaire PASS.
-- [ ] Documentation synchronisée sans sur-promesse.
-- [ ] Aucun fichier hors scope.
+- [x] Quatre phases validées.
+- [x] Sept Exit criteria prouvés.
+- [x] Trois contrats schema PASS.
+- [x] Trois Mermaid générés et idempotents.
+- [x] Checkpoint 1.3.0, zéro workflow manquant.
+- [x] Tests positifs/négatifs et intégration temporaire PASS.
+- [x] Documentation synchronisée sans sur-promesse.
+- [x] Aucun fichier hors scope.
 - [ ] Plan-conformance sans critère manquant.
-- [ ] `git diff --check` PASS.
+- [x] `git diff --check` PASS.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir. |
-| Ecarts | A remplir. |
-| Suites a prevoir | A remplir après tests ; ne pas inventer une Phase 2 interface. |
+| Resultat final | Trois contrats JSON, trois Mermaid générés, moteur d'état, backend renforcé, checkpoint 1.3.0 migré, tests adversariaux et documentation synchronisée. |
+| Ecarts | Aucun écart fonctionnel ; les références d'evidence restent volontairement une preuve de présence et non une vérification sémantique. |
+| Suites a prevoir | Aucune suite nouvellement actionnable. Le workflow `interface` reste `PLANNED` et relève de l'escalade D4 déjà ouverte, après arbitrage humain D1-D15. |
 
 ## 13. Journal d'audits post-hoc
 

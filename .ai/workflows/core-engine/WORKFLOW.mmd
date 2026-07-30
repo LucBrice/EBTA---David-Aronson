@@ -1,0 +1,29 @@
+%% GENERATED FROM WORKFLOW.json - DO NOT EDIT
+stateDiagram-v2
+    direction LR
+    state "INTAKE_AUDITED" as INTAKE_AUDITED
+    state "TRIAGED" as TRIAGED
+    state "BASELINED" as BASELINED
+    state "ACTIVE" as ACTIVE
+    state "READY_TO_CLOSE" as READY_TO_CLOSE
+    state "DONE" as DONE
+    state "BLOCKED" as BLOCKED
+    state "REJECTED" as REJECTED
+    state "SUPERSEDED" as SUPERSEDED
+    INTAKE_AUDITED --> TRIAGED: start [intake_audit]
+    TRIAGED --> BASELINED: baseline [plan_audit, baseline_commit]
+    BASELINED --> ACTIVE: continue
+    ACTIVE --> READY_TO_CLOSE: ready [bug_hunter, adversarial_tester, plan_conformance]
+    READY_TO_CLOSE --> DONE: close_done
+    TRIAGED --> BLOCKED: close_blocked
+    BASELINED --> BLOCKED: close_blocked
+    ACTIVE --> BLOCKED: close_blocked
+    READY_TO_CLOSE --> BLOCKED: close_blocked
+    TRIAGED --> REJECTED: close_rejected
+    BASELINED --> REJECTED: close_rejected
+    ACTIVE --> REJECTED: close_rejected
+    READY_TO_CLOSE --> REJECTED: close_rejected
+    TRIAGED --> SUPERSEDED: close_superseded
+    BASELINED --> SUPERSEDED: close_superseded
+    ACTIVE --> SUPERSEDED: close_superseded
+    READY_TO_CLOSE --> SUPERSEDED: close_superseded

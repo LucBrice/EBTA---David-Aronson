@@ -25,8 +25,9 @@
 - [ ] Verifier si `.ai/checkpoint.json` doit etre mis a jour.
 - [ ] Verifier si un backlog item doit etre cree, promu, ferme ou archive.
 - [ ] Lire `.ai/workflows/README.md`,
-      `.ai/workflows/common/WORKFLOW.md`, puis le `WORKFLOW.md` specialise
-      applicable avant toute action substantielle.
+      `.ai/workflows/common/WORKFLOW.json` et `WORKFLOW.md`, puis le contrat
+      JSON et le Markdown specialises applicables avant toute action
+      substantielle. Le `.mmd` est une vue generee, pas une autorite.
 
 ## Apres modification
 
@@ -39,6 +40,10 @@
 - [ ] Verifier que `.ai/governance/` ne contient pas de verite EBTA
       concurrente.
 - [ ] Executer les validations pertinentes selon le type de changement.
+- [ ] Verifier que le stage `checkpoint.workstreams[].workflow` correspond a
+      l'action accomplie et que chaque reference d'evidence est honnete.
+- [ ] Regenerer les Mermaid si un `WORKFLOW.json` a change et verifier
+      l'idempotence.
 - [ ] Si le diff touche un verdict, une ecriture persistee/append-only, une
       frontiere externe, `config.json`/G0 ou une logique derivee de
       parametres, appliquer `.agents/skills/adversarial-tester/SKILL.md` avant
@@ -49,8 +54,8 @@
 - `bug-hunter` chasse les bugs de correction et de typage du runtime selon le
   workflow `core-engine`.
 - `adversarial-tester` est un gate procedural du workflow `core-engine` sur
-  le pattern « succes fabrique / repli silencieux ». Il ne constitue pas un
-  gate mecanique de `plan.ps1`.
+  le pattern « succes fabrique / repli silencieux ». `plan.ps1` impose son ID
+  de preuve avant `ready`, mais ne peut pas verifier le contenu du rapport.
 - `plan-conformance-audit` compare les Exit criteria a la livraison avant
   toute fermeture.
 - `agent-architecte` est recommande, non bloquant, lorsqu'une nouvelle veille

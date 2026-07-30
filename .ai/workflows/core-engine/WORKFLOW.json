@@ -1,0 +1,45 @@
+{
+  "$schema": "../WORKFLOW.schema.json",
+  "schema_version": "1.0.0",
+  "workflow_id": "core-engine",
+  "contract_version": "1.0.0",
+  "status": "ACTIVE",
+  "description": "Governed lifecycle for EBTA engine, adapters, executable gates and packages.",
+  "initial_stage": "INTAKE_AUDITED",
+  "terminal_stages": [
+    "DONE",
+    "BLOCKED",
+    "REJECTED",
+    "SUPERSEDED"
+  ],
+  "stages": [
+    { "id": "INTAKE_AUDITED", "terminal": false },
+    { "id": "TRIAGED", "terminal": false },
+    { "id": "BASELINED", "terminal": false },
+    { "id": "ACTIVE", "terminal": false },
+    { "id": "READY_TO_CLOSE", "terminal": false },
+    { "id": "DONE", "terminal": true },
+    { "id": "BLOCKED", "terminal": true },
+    { "id": "REJECTED", "terminal": true },
+    { "id": "SUPERSEDED", "terminal": true }
+  ],
+  "transitions": [
+    { "action": "start", "from": "INTAKE_AUDITED", "to": "TRIAGED", "required_evidence": ["intake_audit"] },
+    { "action": "baseline", "from": "TRIAGED", "to": "BASELINED", "required_evidence": ["plan_audit", "baseline_commit"] },
+    { "action": "continue", "from": "BASELINED", "to": "ACTIVE", "required_evidence": [] },
+    { "action": "ready", "from": "ACTIVE", "to": "READY_TO_CLOSE", "required_evidence": ["bug_hunter", "adversarial_tester", "plan_conformance"] },
+    { "action": "close_done", "from": "READY_TO_CLOSE", "to": "DONE", "required_evidence": [] },
+    { "action": "close_blocked", "from": "TRIAGED", "to": "BLOCKED", "required_evidence": [] },
+    { "action": "close_blocked", "from": "BASELINED", "to": "BLOCKED", "required_evidence": [] },
+    { "action": "close_blocked", "from": "ACTIVE", "to": "BLOCKED", "required_evidence": [] },
+    { "action": "close_blocked", "from": "READY_TO_CLOSE", "to": "BLOCKED", "required_evidence": [] },
+    { "action": "close_rejected", "from": "TRIAGED", "to": "REJECTED", "required_evidence": [] },
+    { "action": "close_rejected", "from": "BASELINED", "to": "REJECTED", "required_evidence": [] },
+    { "action": "close_rejected", "from": "ACTIVE", "to": "REJECTED", "required_evidence": [] },
+    { "action": "close_rejected", "from": "READY_TO_CLOSE", "to": "REJECTED", "required_evidence": [] },
+    { "action": "close_superseded", "from": "TRIAGED", "to": "SUPERSEDED", "required_evidence": [] },
+    { "action": "close_superseded", "from": "BASELINED", "to": "SUPERSEDED", "required_evidence": [] },
+    { "action": "close_superseded", "from": "ACTIVE", "to": "SUPERSEDED", "required_evidence": [] },
+    { "action": "close_superseded", "from": "READY_TO_CLOSE", "to": "SUPERSEDED", "required_evidence": [] }
+  ]
+}

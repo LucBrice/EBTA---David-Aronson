@@ -47,8 +47,20 @@ Avant tout appel a `.ai/tools/plan.ps1 close` sur un chantier moteur :
 4. ne pas appeler `plan.ps1 close` si un bug confirme, un faux succes, un
    repli silencieux ou un critere manquant reste ouvert.
 
-Ces refus sont proceduraux. `plan.ps1` ne verifie pas l'execution de ces
-skills ; l'IA executante porte la preuve et le blocage.
+Ces refus sont proceduraux. Avant la fermeture nominale, enregistrer les trois
+IDs exiges par le contrat :
+
+```powershell
+.\.ai\tools\plan.ps1 ready -Id <ID> `
+  -Evidence "bug_hunter=<rapport ou N/A justifie>", `
+            "adversarial_tester=<rapport ou N/A justifie>", `
+            "plan_conformance=<rapport>"
+```
+
+`plan.ps1` impose leur presence mais ne verifie pas l'execution reelle des
+skills ni le contenu des references. Un controle non applicable doit donc
+rester visible sous forme de reference `N/A` justifiee ; l'IA executante porte
+la veracite de la preuve et le blocage.
 
 Si les controles passent, reprendre la procedure universelle de fermeture
 de `common/WORKFLOW.md` : appeler le backend, valider les JSON touches, puis

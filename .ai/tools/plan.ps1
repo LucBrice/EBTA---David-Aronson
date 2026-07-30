@@ -18,13 +18,23 @@ Contrat "start" (deux fichiers distincts, jamais un seul deplace) :
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet("start", "continue", "close")]
+    [ValidateSet("start", "baseline", "continue", "ready", "close", "migrate-workflows")]
     [string]$Action,
 
     [string]$Path,
     [string]$RewrittenPath,
     [string]$Id,
     [string]$Title,
+
+    [ValidateSet("common", "core-engine", "interface")]
+    [string]$Workflow = "common",
+
+    [int]$IntakeAuditPasses = 0,
+    [string]$IntakeAuditEvidence,
+    [int]$PlanAuditPasses = 0,
+    [string]$PlanAuditEvidence,
+    [string]$BaselineCommit,
+    [string[]]$Evidence,
 
     [ValidateSet("mainline", "annexe", "fix")]
     [string]$Track = "annexe",
@@ -49,6 +59,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+. (Join-Path $PSScriptRoot "workflow_state.ps1")
 
 function Resolve-RepoRoot {
     $root = (git rev-parse --show-toplevel 2>$null)
@@ -260,6 +272,20 @@ switch ($Action) {
         if (-not $Audited) {
             throw "Action start: audit IA requis avant routage. Utilise /start via l'IA, ou relance avec -Audited apres audit explicite."
         }
+        if ($IntakeAuditPasses -lt 2 -or $IntakeAuditPasses -gt 6) {
+            throw "Action start: -IntakeAuditPasses doit etre compris entre 2 et 6."
+        }
+        if ([string]::IsNullOrWhiteSpace($IntakeAuditEvidence)) {
+            throw "Action start: -IntakeAuditEvidence doit referencer le journal de convergence du brouillon."
+        }
+        $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $Workflow -RequireActive
+        $expectedWorkflow = Get-LegacyWorkflowId -Classification $Classification
+        if ($Workflow -ne $expectedWorkflow) {
+            throw "Action start: classification '$Classification' exige le workflow '$expectedWorkflow', pas '$Workflow'."
+        }
+        $workflowState = New-WorkflowState -Contract $workflowContract
+        Add-WorkflowEvidence -State $workflowState -Id "intake_audit" -Reference $IntakeAuditEvidence
+        Move-WorkflowStage -Contract $workflowContract -State $workflowState -Action "start"
 
         $draft = Resolve-Path $Path
         $draftPath = $draft.Path
@@ -319,11 +345,53 @@ switch ($Action) {
             advances_mainline = ($Track -eq "mainline")
             closure_reason = $null
             non_goals = @()
+            workflow = $workflowState
         }
 
         $checkpoint.workstreams = @($checkpoint.workstreams) + @($workstream)
         Write-Checkpoint $checkpoint $checkpointPath
         Write-Host "Plan demarre: $Id -> $rewrittenRepoPath (brouillon original archive: $draftArchiveRepoPath)"
+    }
+
+    "baseline" {
+        if (-not $Id) {
+            throw "Action baseline: utilise -Id pour choisir le chantier."
+        }
+        if ($PlanAuditPasses -lt 2 -or $PlanAuditPasses -gt 6) {
+            throw "Action baseline: -PlanAuditPasses doit etre compris entre 2 et 6."
+        }
+        if ([string]::IsNullOrWhiteSpace($PlanAuditEvidence)) {
+            throw "Action baseline: -PlanAuditEvidence doit referencer le journal de convergence du plan."
+        }
+        if ([string]::IsNullOrWhiteSpace($BaselineCommit)) {
+            throw "Action baseline: -BaselineCommit est requis."
+        }
+        if ($BaselineCommit -notmatch "^[0-9a-fA-F]{7,64}$") {
+            throw "Action baseline: -BaselineCommit doit etre un SHA Git hexadecimal (7 a 64 caracteres)."
+        }
+        $foundWorkstreams = @(Find-Workstream $checkpoint $Id)
+        if ($foundWorkstreams.Count -ne 1) {
+            throw "Chantier introuvable ou ambigu: $Id"
+        }
+        $workstream = $foundWorkstreams[0]
+        if (-not $workstream.workflow) {
+            throw "Action baseline: etat workflow absent pour '$Id'. Execute migrate-workflows."
+        }
+        git cat-file -e "$BaselineCommit^{commit}" 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Action baseline: commit Git introuvable: '$BaselineCommit'."
+        }
+        git cat-file -e "${BaselineCommit}:$($workstream.source_path)" 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Action baseline: le commit '$BaselineCommit' ne contient pas le plan '$($workstream.source_path)'."
+        }
+        $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workstream.workflow.id -RequireActive
+        Add-WorkflowEvidence -State $workstream.workflow -Id "plan_audit" -Reference $PlanAuditEvidence
+        Add-WorkflowEvidence -State $workstream.workflow -Id "baseline_commit" -Reference $BaselineCommit
+        Move-WorkflowStage -Contract $workflowContract -State $workstream.workflow -Action "baseline"
+        $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
+        Write-Checkpoint $checkpoint $checkpointPath
+        Write-Host "Baseline attestee: $Id -> $($workstream.workflow.stage)"
     }
 
     "continue" {
@@ -336,6 +404,11 @@ switch ($Action) {
         }
         $workstream = $foundWorkstreams[0]
         Assert-SubChantiersClosed $checkpoint $workstream $repoRoot "continue"
+        if (-not $workstream.workflow) {
+            throw "Action continue: etat workflow absent pour '$Id'. Execute migrate-workflows."
+        }
+        $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workstream.workflow.id -RequireActive
+        Move-WorkflowStage -Contract $workflowContract -State $workstream.workflow -Action "continue"
         $workstream.status = "ACTIVE"
         $workstream.lifecycle = "ACTIVE"
         $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
@@ -345,6 +418,27 @@ switch ($Action) {
         Set-ActiveWorkstream $checkpoint $workstream
         Write-Checkpoint $checkpoint $checkpointPath
         Write-Host "Plan actif: $Id"
+    }
+
+    "ready" {
+        if (-not $Id) {
+            throw "Action ready: utilise -Id pour choisir le chantier."
+        }
+        $foundWorkstreams = @(Find-Workstream $checkpoint $Id)
+        if ($foundWorkstreams.Count -ne 1) {
+            throw "Chantier introuvable ou ambigu: $Id"
+        }
+        $workstream = $foundWorkstreams[0]
+        Assert-SubChantiersClosed $checkpoint $workstream $repoRoot "ready"
+        if (-not $workstream.workflow) {
+            throw "Action ready: etat workflow absent pour '$Id'. Execute migrate-workflows."
+        }
+        $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workstream.workflow.id -RequireActive
+        Add-WorkflowEvidenceArguments -State $workstream.workflow -EvidenceArguments $Evidence
+        Move-WorkflowStage -Contract $workflowContract -State $workstream.workflow -Action "ready"
+        $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
+        Write-Checkpoint $checkpoint $checkpointPath
+        Write-Host "Plan pret a cloturer: $Id -> $($workstream.workflow.stage)"
     }
 
     "close" {
@@ -357,6 +451,17 @@ switch ($Action) {
         }
         $workstream = $foundWorkstreams[0]
         Assert-SubChantiersClosed $checkpoint $workstream $repoRoot "close"
+        if (-not $workstream.workflow) {
+            throw "Action close: etat workflow absent pour '$Id'. Execute migrate-workflows."
+        }
+        $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workstream.workflow.id -RequireActive
+        $closeAction = switch ($Outcome) {
+            "DONE" { "close_done" }
+            "BLOCKED" { "close_blocked" }
+            "REJECTED" { "close_rejected" }
+            "SUPERSEDED" { "close_superseded" }
+        }
+        Move-WorkflowStage -Contract $workflowContract -State $workstream.workflow -Action $closeAction
 
         $sourcePath = Join-Path $repoRoot ($workstream.source_path -replace "/", "\")
         if (Test-Path $sourcePath) {
@@ -389,5 +494,30 @@ switch ($Action) {
 
         Write-Checkpoint $checkpoint $checkpointPath
         Write-Host "Plan cloture: $Id -> $($workstream.lifecycle)"
+    }
+
+    "migrate-workflows" {
+        $migrationReference = "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested."
+        $migratedCount = 0
+        foreach ($workstream in @($checkpoint.workstreams)) {
+            if ($workstream.workflow) {
+                continue
+            }
+            $workflowId = Get-LegacyWorkflowId -Classification $workstream.classification
+            $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workflowId -RequireActive
+            $workflowState = New-WorkflowState -Contract $workflowContract
+            $legacyStage = Get-LegacyWorkflowStage -Workstream $workstream
+            if (@($workflowContract.stages | Where-Object { $_.id -eq $legacyStage }).Count -ne 1) {
+                throw "Migration workflow: etape legacy '$legacyStage' non declaree pour '$workflowId'."
+            }
+            $workflowState.stage = $legacyStage
+            Add-WorkflowEvidence -State $workflowState -Id "legacy_import" -Reference $migrationReference
+            Assert-WorkflowState -Contract $workflowContract -State $workflowState
+            $workstream | Add-Member -NotePropertyName "workflow" -NotePropertyValue $workflowState
+            $migratedCount += 1
+        }
+        $checkpoint.schema_version = "1.3.0"
+        Write-Checkpoint $checkpoint $checkpointPath
+        Write-Host "Migration workflow terminee: $migratedCount chantier(s), schema 1.3.0."
     }
 }

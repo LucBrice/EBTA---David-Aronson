@@ -1,0 +1,16 @@
+{
+  "$schema": "../WORKFLOW.schema.json",
+  "schema_version": "1.0.0",
+  "workflow_id": "interface",
+  "contract_version": "1.0.0",
+  "status": "PLANNED",
+  "description": "Reserved contract for the interface workflow; no executable transition is authorized.",
+  "initial_stage": "PLANNED",
+  "terminal_stages": [
+    "PLANNED"
+  ],
+  "stages": [
+    { "id": "PLANNED", "terminal": true }
+  ],
+  "transitions": []
+}

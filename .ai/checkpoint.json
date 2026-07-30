@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "1.3.0",
   "checkpoint_kind": "multi_ai_relay",
   "updated_at": "2026-07-30",
   "status": "ACTIVE",
@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_FORMALISATION_EXECUTABLE_WORKFLOWS",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -160,7 +160,19 @@
         "No web application in this Phase -1 through Phase 8 execution",
         "No OOS opening before sealing"
       ],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "STEP_3_BACKTRADER_INTEGRATION",
@@ -185,7 +197,19 @@
         "No EBTA runtime contract change before mapping gaps are known",
         "No import of BACKTRADER conventions as EBTA norms"
       ],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "SUPERSEDED",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "EPIC_ARCHITECTURE_IA_RAG",
@@ -210,7 +234,19 @@
         "No Knowledge_Router skill creation in this governance reorg lot",
         "No mass metadata migration"
       ],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "REJECTED",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "EPIC_AI_GOVERNANCE_LAYER",
@@ -236,7 +272,19 @@
         "No RAG, embeddings, vector database, or autonomous agent system",
         "No new EBTA scientific authority outside Protocole/"
       ],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_IMPLEMENTATION_GOUVERNANCE_BIAIS_EBTA",
@@ -257,7 +305,19 @@
       "advances_mainline": false,
       "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NATIF_EXTENSION",
@@ -277,7 +337,19 @@
       "advances_mainline": false,
       "closure_reason": "Remplace definitivement par 0 - HUMAN START HERE/Implementation_plan_Nautilus.md (bandeau de tete section 0.1) ; implementation_plan - 1.md archive tel quel pour tracabilite.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "SUPERSEDED",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS",
@@ -298,7 +370,19 @@
       "advances_mainline": true,
       "closure_reason": "Correction Nautilus multi-fold et robustesse terminee; package PASS, runtime suite PASS, validate_package_dir PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION",
@@ -319,7 +403,19 @@
       "advances_mainline": false,
       "closure_reason": "Gate economique de production calcule reellement ses cinq booleens (au lieu de True code en dur) ; modele de frais MakerTakerFeeModel avec taux indicatifs branche ; 117 tests PASS ; preuve mecanique sur candidat perdant synthetique (REJECTED_ECONOMIC) sur le chemin de production reel.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_NAUTILUS_MULTIFOLD_ROBUSTESSE",
@@ -340,7 +436,19 @@
       "advances_mainline": false,
       "closure_reason": "Phases 0 a 4 executees et verifiees le 2026-07-10 : WalkForwardSplitter (SOP 04), risk/robustness.py (SOP 05), boucle multi-fold reelle K=2 branchee sur nautilus_research_package.py, validate_package_dir() PASS, etat machine reconcilie.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_EXPERIENCE_CONTROLEE_DISCRIMINATION_GATES",
@@ -361,7 +469,19 @@
       "advances_mainline": false,
       "closure_reason": "Phases 1 a 3 executees et verifiees le 2026-07-10 : discrimination reelle prouvee via le venv Nautilus (gagnant PASS/PASS, perdant REJECTED_ECONOMIC/FAIL), test de contraste permanent demontrant que les booleens de production codes en dur laisseraient passer le perdant.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_R1_R2_SIGNAUX_ET_EXTRACTION_NAUTILUS",
@@ -382,7 +502,19 @@
       "advances_mainline": true,
       "closure_reason": "R1/R2 implemented: resampling, vector oracle, incremental registry/state machines, Nautilus bridge delegation, R2 real extraction, golden recalibration, package PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_R4_DONNEES_INTRADAY_REELLES_PACKAGE_PRODUCTION",
@@ -403,7 +535,19 @@
       "advances_mainline": true,
       "closure_reason": "R4 complete: M1 real Nautilus package PASS, GHI bias_filter fixed, total_orders > 0, bug-hunter and conformance audit PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_GATE_STATISTIQUE_WRC_MASQUE",
@@ -424,7 +568,19 @@
       "advances_mainline": false,
       "closure_reason": "Verdict WRC reel propage vers economic.json et incubation_gate.json; test de non-regression production PASS; validators globaux hors perimetre documentes.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_VALIDATORS_STATUT_GLOBAL_PACKAGE",
@@ -445,7 +601,19 @@
       "advances_mainline": false,
       "closure_reason": "Correction validators statut global package terminee; bug-hunter PASS; conformance audit PASS; runtime suite PASS; minimal pilot package PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_GATE_ROBUSTESSE_G5_FIGE",
@@ -466,7 +634,19 @@
       "advances_mainline": false,
       "closure_reason": "Exit criteria G5 formels atteints; bug-hunter et audit de conformite PASS; FAIL WRC M1 courant documente comme verdict EBTA legitime et exogene a G5 dans PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_DOCUMENTATION_ARTEFACT_R4_ET_FAIL_WRC_NAUTILUS_M1",
@@ -487,7 +667,19 @@
       "advances_mainline": false,
       "closure_reason": "Artefact R4 PASS et FAIL WRC M1 documentes append-only dans l'historique moteur; G5 clos apres audits et validations; aucun Protocole ni calcul WRC modifie",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_GATE_STATISTIQUE_OOS_MASQUE",
@@ -508,7 +700,19 @@
       "advances_mainline": false,
       "closure_reason": "G9 OOS statistique branche sur statistical_gate reel; bug-hunter PASS; conformance audit PASS; suite runtime PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "EPIC_CLOTURE_ATTESTATIONS_RESIDUELLES_GATES",
@@ -529,7 +733,19 @@
       "advances_mainline": false,
       "closure_reason": "EPIC termine : Lots C, A2 et B DONE ; audits globaux bug-hunter et conformance PASS ; aucun Protocole, validator ou schema checkpoint modifie.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_GATES_MECANIQUES_LOT_C",
@@ -550,7 +766,19 @@
       "advances_mainline": false,
       "closure_reason": "Lot C termine : les 12 champs G1/G7/G11/G12/G13 derivent des statuts de procedure reels ; tests ciblés, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_POWER_CHECK_A2",
@@ -571,7 +799,19 @@
       "advances_mainline": false,
       "closure_reason": "Lot A2 termine : power_check calcule depuis rendements pre-OOS et seuil economique annuel ; power_report branche sur power_check.status ; suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_EXECUTION_NAV_LOT_B",
@@ -592,7 +832,19 @@
       "advances_mainline": false,
       "closure_reason": "Lot B termine : G6 execution_report cost_model capacity_grid nav_reconciliation derivent des preuves execution NAV et rapports reels ; tests cibles, suite runtime, build pilote, pyrefly, bug-hunter et conformance audit PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "EPIC_ATTESTATIONS_RESIDUELLES_R3",
@@ -613,7 +865,19 @@
       "advances_mainline": false,
       "closure_reason": "Lots D, E et F termines ; package nautilus_mvp regenere ; validate_package_dir execute et verdict gate par gate documente ; bug-hunter global, suite 174 tests et audit de conformite PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_REGISTRE_ECONOMIQUE_LOT_D",
@@ -634,7 +898,19 @@
       "advances_mainline": false,
       "closure_reason": "Lot D termine : G2/G3/G4/G5/G7-residuel/G10 derives de preuves reelles ; tests cibles, suite runtime, build pilote, pyrefly et conformance audit PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_ACCES_OOS_LOT_E",
@@ -655,7 +931,19 @@
       "advances_mainline": false,
       "closure_reason": "Lot E termine : wrc_pass derive du verdict WRC reel ; G8 derive de oos_access_decision ; tests cibles, suite runtime, build pilote, pyrefly et conformance audit PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CORRECTION_INVARIANT_EVIDENCE_LOT_F",
@@ -676,7 +964,19 @@
       "advances_mainline": false,
       "closure_reason": "Lot F termine : scellement UTC automatique, horloge fixture explicite, preuves invariant_evidence derivees, WRC locaux par fold, 174 tests et audits PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE",
@@ -697,7 +997,19 @@
       "advances_mainline": true,
       "closure_reason": "Lots R7, R5/R6, horodatage/attestations et R4-long DONE; correctif Phase 5 DONE; package pre-OOS reel DENIED/FAIL attendu mais auditable, zero erreur schema/semantique, zero OOS; benchmark COMPLETED; 208 tests et Pyrefly global PASS; conformance parent sans manque.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_REPRODUCTIBILITE_OPERATIONNELLE_R7",
@@ -718,7 +1030,19 @@
       "advances_mainline": true,
       "closure_reason": "Lot R7 termine : data root argument/env/fallback, hash SHA-256 reel de config.json, venv documente ; 179 tests, pilote, smoke, Pyrefly, bug-hunter et conformance PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_HORODATAGE_TRANSVERSAL_ET_ATTESTATIONS",
@@ -739,7 +1063,19 @@
       "advances_mainline": true,
       "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CHRONOLOGIE_ET_HORODATAGE_EVENEMENTS_RUNTIME",
@@ -760,7 +1096,19 @@
       "advances_mainline": true,
       "closure_reason": "Chronologie pre-OOS/OOS corrigee; registre avant Test; refus sans OOS; journal fold-par-fold; 182 tests PASS; Pyrefly 0; pilote PASS; conformance PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_DERIVATION_ATTESTATIONS_MECANIQUES",
@@ -781,7 +1129,19 @@
       "advances_mainline": true,
       "closure_reason": "Cinq attestations mecaniques derivees; G14 honnetement INCONCLUSIVE sans artefacts; 183 tests PASS; Pyrefly 0; conformance PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_BENCHMARK_DONNEES_LONGUES_R4_LONG",
@@ -802,7 +1162,19 @@
       "advances_mainline": true,
       "closure_reason": "R4-long livre : rapport canonique 1/3/12 mois COMPLETED, 195 tests PASS, Pyrefly 0, bug-hunter 0 bug ouvert, conformance 7/7, Guardian CONFORME, OOS zero",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_REALISME_ECONOMIQUE_R5_R6",
@@ -823,7 +1195,19 @@
       "advances_mainline": true,
       "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS",
@@ -844,7 +1228,19 @@
       "advances_mainline": true,
       "closure_reason": "Updated via .ai/tools/plan.ps1",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_PREUVE_PACKAGE_PRE_OOS_REFUSE",
@@ -865,7 +1261,19 @@
       "advances_mainline": false,
       "closure_reason": "Paquet pre-OOS refuse materialise sans acces OOS; G5/G6 auditables; validateur FAIL attendu sans erreur schema/semantique; 208 tests PASS; Pyrefly et conformance PASS.",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_FORMALISATION_WORKFLOWS_IA_ET_TROIS_SKILLS",
@@ -886,7 +1294,19 @@
       "advances_mainline": false,
       "closure_reason": "13 artefacts livres; AGENTS.md reduit a 48 lignes; skills valides; conformance 7/7; suites transferees a la boucle en cascade",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_FIX_CALL_FLOAT_FRONTIERE_NAUTILUS",
@@ -907,7 +1327,19 @@
       "advances_mainline": false,
       "closure_reason": "Fallback 0.0 supprime; 10 controles hostiles; snapshot atomique; test cible 2 PASS; suite 208 PASS; Pyrefly 0; gates conformes",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "EPIC_PHASE_1_POLICIES_ET_PREUVE_SESSION",
@@ -928,7 +1360,19 @@
       "advances_mainline": false,
       "closure_reason": "Deux enfants DONE; POLICIES et template presents et routes; aucune derive Protocole/Implementation; conformance parent PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_POLICIES_DECLARATIF_IA",
@@ -949,7 +1393,19 @@
       "advances_mainline": false,
       "closure_reason": "POLICIES.md cree avec 14 actions sourcees; AGENTS.md 49 lignes; 0 source manquante; conformance PASS",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_GABARIT_PREUVE_SESSION_IA",
@@ -970,14 +1426,26 @@
       "advances_mainline": false,
       "closure_reason": "Template JSON valide; template_only true; liens claims/evidence coherents; README explicite; aucune mecanique fictive",
       "non_goals": [],
-      "is_active": false
+      "is_active": false,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "DONE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     },
     {
       "id": "PLAN_FORMALISATION_EXECUTABLE_WORKFLOWS",
       "title": "Formalisation executable des workflows IA",
       "track": "annexe",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "GOVERNANCE",
       "source_path": ".ai/backlog/annexes/PLAN_FORMALISATION_EXECUTABLE_WORKFLOWS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260730_PLAN_FORMALISATION_EXECUTABLE_WORKFLOWS.md",
@@ -990,7 +1458,20 @@
       "blocks_mainline": false,
       "advances_mainline": false,
       "closure_reason": null,
-      "non_goals": []
+      "non_goals": [],
+      "is_active": true,
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "ACTIVE",
+        "evidence": [
+          {
+            "id": "legacy_import",
+            "reference": "Imported from checkpoint schema 1.2.0; no historical workflow gate is re-attested.",
+            "recorded_at": "2026-07-30"
+          }
+        ]
+      }
     }
   ],
   "validation": {

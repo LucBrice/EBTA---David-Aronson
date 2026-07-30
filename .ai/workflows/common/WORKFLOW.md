@@ -63,7 +63,10 @@ convergence :
      -Path "<brouillon original>" `
      -RewrittenPath "<nouveau plan backlog>" `
      -Track <mainline|annexe|fix> `
-     -Id <ID> -Title "<titre>" -Audited
+     -Id <ID> -Title "<titre>" `
+     -Workflow <common|core-engine> `
+     -Audited -IntakeAuditPasses <2..6> `
+     -IntakeAuditEvidence "<reference du journal intake>"
    ```
 
 3. Laisser `plan.ps1` archiver l'original intact sous
@@ -90,6 +93,18 @@ Avant toute implementation :
 4. Une fois le plan converge, valider les fichiers machine touches puis
    committer une baseline pre-implementation selon la forme obligatoire
    ci-dessus.
+5. Enregistrer la baseline dans l'etat machine, puis committer separement
+   cette mutation du checkpoint :
+
+   ```powershell
+   .\.ai\tools\plan.ps1 baseline -Id <ID> `
+     -PlanAuditPasses <2..6> `
+     -PlanAuditEvidence "<reference du journal plan>" `
+     -BaselineCommit <sha>
+   ```
+
+Le backend verifie que le SHA existe et contient le `source_path` du plan.
+Il verifie la presence des references d'audit, pas leur veracite semantique.
 
 L'implementation ne commence qu'apres cette baseline revue et reversible.
 
@@ -107,26 +122,53 @@ sous-chantiers separement.
 ### `/continue`
 
 1. Retrouver le workstream dans `.ai/checkpoint.json`.
-2. S'il n'est pas encore actif, appeler
-   `.ai/tools/plan.ps1 continue -Id <ID>`.
+2. S'il est `BASELINED`, appeler
+   `.ai/tools/plan.ps1 continue -Id <ID>`. Toute autre etape est refusee.
 3. Rejouer le test `epic-orchestrator` sur l'etat actuel du plan.
 4. Reprendre la phase declaree par la Carte d'execution IA et respecter le
    workflow specialise applicable.
 
-Ne pas rappeler `plan.ps1 continue` sur un workstream deja `ACTIVE`.
+Ne pas rappeler `plan.ps1 continue` sur un workstream deja `ACTIVE` : les
+transitions repetees sont refusees.
 
 ### `/close`
 
 1. Lire le workflow specialise et appliquer tous ses gates de fermeture.
 2. Ne pas appeler le backend tant qu'un gate procedural reste ouvert.
-3. Si les gates passent, appeler
+3. Enregistrer les preuves requises et franchir `READY_TO_CLOSE` :
+
+   ```powershell
+   .\.ai\tools\plan.ps1 ready -Id <ID> `
+     -Evidence "plan_conformance=<reference>"
+   ```
+
+   Les workflows specialises peuvent exiger d'autres IDs. Une conclusion
+   `DONE` est impossible avant cette transition.
+4. Appeler ensuite
    `.ai/tools/plan.ps1 close -Id <ID> -Outcome <OUTCOME> -Reason "<raison>"`.
-4. Valider tout fichier JSON d'etat touche :
+   Les outcomes `BLOCKED`, `REJECTED` et `SUPERSEDED` restent des sorties
+   explicites depuis une etape non terminale et ne simulent pas `DONE`.
+5. Valider tout fichier JSON d'etat touche :
    - `.ai/checkpoint.json` contre `.ai/checkpoint.schema.json` ;
    - `Implementation/Active/tracking.json` contre son schema s'il est touche.
-5. Si et seulement si les validations passent, creer automatiquement un
+6. Si et seulement si les validations passent, creer automatiquement un
    commit — jamais un push — limite exactement aux fichiers de fermeture.
-6. Si une validation echoue, ne pas committer et rapporter l'echec.
+7. Si une validation echoue, ne pas committer et rapporter l'echec.
+
+## Etat machine et migration
+
+Le cycle nominal persiste :
+
+```text
+INTAKE_AUDITED -> TRIAGED -> BASELINED -> ACTIVE
+               -> READY_TO_CLOSE -> DONE
+```
+
+Les transitions sont lues depuis `WORKFLOW.json`, non recodees dans cette
+documentation. `migrate-workflows` est une commande administrative one-shot
+pour les anciens checkpoints. Sa preuve `legacy_import` preserve l'etat
+historique mais declare explicitement qu'aucune ancienne gate n'est
+re-attestee.
 
 ## Clarification minimale
 
