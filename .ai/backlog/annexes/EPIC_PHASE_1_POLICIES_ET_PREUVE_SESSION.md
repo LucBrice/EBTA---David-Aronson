@@ -45,7 +45,7 @@ bloque pas l'autre.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE — ENFANTS DONE, /close EN ATTENTE` |
 | Date de creation | 2026-07-30 |
 | Date d'activation | - |
 | Autorite normative | Aucune nouvelle ; `AGENTS.md` et les fichiers pointes restent propriétaires de leurs règles. |
@@ -217,20 +217,30 @@ Chaque enfant conserve ses deux boucles d'audit, baseline, gates et clôture.
 
 ## 11. Definition of Done
 
-- [ ] Les deux sous-chantiers sont `DONE`.
-- [ ] Exit criteria du parent prouvé.
-- [ ] Aucun artefact de fond produit directement par le parent.
-- [ ] Aucun changement dans `Protocole/` ou `Implementation/`.
-- [ ] Checkpoint schema et `git diff --check` PASS.
-- [ ] Plan-conformance du parent sans critère manquant.
+- [x] Les deux sous-chantiers sont `DONE`.
+- [x] Exit criteria du parent prouvé.
+- [x] Aucun artefact de fond produit directement par le parent.
+- [x] Aucun changement dans `Protocole/` ou `Implementation/`.
+- [x] Checkpoint schema et `git diff --check` PASS.
+- [x] Plan-conformance du parent sans critère manquant.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir. |
-| Ecarts | A remplir. |
-| Suites a prevoir | A remplir après lecture des enfants. |
+| Resultat final | `DONE` propose : deux enfants fermés et deux artefacts documentaires découvrables. |
+| Ecarts | Aucun ; le découpage MULTI_LOT prévu a été respecté. |
+| Suites a prevoir | Aucune issue des enfants. Le Policy Engine mécanisé reste Phase 2, conditionné au démarrage du workflow `interface`, donc non actionnable dans cette boucle. |
+
+### Resultat d'execution
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-07-30 |
+| Enfants | `PLAN_POLICIES_DECLARATIF_IA` DONE ; `PLAN_GABARIT_PREUVE_SESSION_IA` DONE. |
+| Preuves | `POLICIES.md` existe et est routé une fois par `AGENTS.md`; le template existe et est référencé deux fois dans le README de gouvernance. |
+| Frontieres | Aucun diff `Protocole/` ou `Implementation/` depuis la baseline du parent. |
+| Gates | Bug-hunter non applicable ; plan-conformance parent PASS ; checkpoint schema et diff check PASS. |
 
 ## 13. Journal d'audits post-hoc
 
