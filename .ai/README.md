@@ -10,6 +10,11 @@
 - `backlog/` contient les chantiers tries et auditables.
 - `governance/` contient les politiques de transformation, de conflit et de
   checklist avant modification par IA.
+- `workflows/` contient le registre de reference et les procedures propres a
+  chaque workflow. `common/WORKFLOW.md` porte le cycle universel des plans ;
+  le dossier ne route pas mecaniquement l'execution.
+- `architecture/` conserve le ledger append-only des pratiques issues de la
+  veille externe ; il ne porte aucun etat de chantier.
 - `archive/` conserve les chantiers termines, rejetes ou remplaces.
 - `tools/plan.ps1` est le backend mecanique appele par l'IA apres audit.
 
@@ -20,6 +25,9 @@
 - `Implementation/Active/` reste le cockpit micro du runtime actif.
 - `.ai/` gere seulement l'organisation IA, les chantiers macro et la gouvernance
   de modification. `.ai/governance/` n'est pas une autorite scientifique EBTA.
+- `.ai/workflows/` decrit le processus par workflow et `.ai/architecture/`
+  l'adoption de pratiques externes. Aucun des deux n'est une autorite
+  scientifique EBTA ni un cockpit d'etat projet.
 - `0 - HUMAN START HERE/` reste le point d'entree humain, hors cockpit IA.
 - `.agents/` n'est pas une source d'etat projet.
 

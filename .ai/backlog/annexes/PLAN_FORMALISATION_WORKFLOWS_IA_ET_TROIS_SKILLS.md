@@ -55,10 +55,10 @@
 | Track | `annexe` |
 | Lifecycle | `TRIAGED` |
 | Type de chantier | `SINGLE` |
-| Scope | Creer trois skills (`adversarial-tester`, `expert-panel`, `agent-architecte`) avec leur memoire (`ARCHITECTURE_LEDGER.md`), creer le dossier `.ai/workflows/` avec son registre et deux `WORKFLOW.md`, puis reduire `AGENTS.md` a un routeur mince en migrant fidelement ses regles procedurales vers `core-engine/WORKFLOW.md`. |
+| Scope | Creer trois skills (`adversarial-tester`, `expert-panel`, `agent-architecte`) avec leur memoire (`ARCHITECTURE_LEDGER.md`), creer le dossier `.ai/workflows/` avec son registre, un workflow partage `common`, le workflow moteur `core-engine` et le stub `interface`, puis reduire `AGENTS.md` a un routeur mince en migrant fidelement ses regles procedurales vers le workflow qui les possede. |
 | Non-goals | Ne pas demarrer le workflow `interface` (D1-D15 non tranches). Ne pas modifier `Protocole/` ni `Implementation/ebta_engine/` — y compris le defaut `_call_float`, qui part en chantier `fix` separe. Ne pas construire la mecanique de routage `workflow` (champ de schema, parametre `-Workflow`, ligne de gabarit) : coupe assumee tant qu'un seul workflow est reel. Ne pas creer `FINDINGS_LOG.md`. Ne pas dupliquer `workflow` dans `tracking.json`. Ne pas toucher `.codex/` ni `.agents/AGENTS.md`. Ne pas introduire de RAG, d'embeddings, de base vectorielle ni d'agents autonomes. Ne pas faire d'`agent-architecte` un declencheur automatique de `/start`. Ne pas trancher le Fil ouvert D (contradiction de gouvernance) — seulement le rendre visible. |
 | Source | Brouillon humain depose le 2026-07-29 dans `0 - HUMAN START HERE/`, issu d'une discussion en 19 etapes (veille IA, pivot workflows, 4 debats de conception, conseil des 5). `/start` demande par l'humain le 2026-07-29. Boucle `/evaluate` d'intake obligatoire executee le meme jour : 5 passes, convergence, 18 corrections appliquees au brouillon. Decision humaine du 2026-07-29 : le workflow UX qui occupait `.ai/workflows/` est un brouillon d'une autre discussion, reclasse `INTAKE` — le depot est considere comme n'ayant aucun workflow formalise. Decision humaine du 2026-07-29 : les 4 decisions ouvertes sont encodees en Phase 0 de deblocage bloquante. |
-| Exit criteria | (1) Les 12 fichiers de la colonne « Autorises » (section 5) marques `[CREER]` existent, et les 3 marques `[MODIFIER]` portent la modification specifiee en section 6. (2) La table d'inventaire de migration (Phase 2) est integralement soldee : chaque regle d'`AGENTS.md` porte une destination parmi `RESTE` / `MIGRE` / `SUPPRIMEE`, aucune ligne ne porte le marqueur d'indecision. (3) `.ai/README.md` porte une ligne de role commencant par `` - `workflows/` `` et une commencant par `` - `architecture/` `` (patrons ancres, non satisfiables par le contenu actuel du fichier — voir section 9). (4) Chaque chemin de fichier cite dans un fichier cree par ce lot designe un fichier existant (verification manuelle declaree comme telle). (5) Chaque fichier cree sous `.ai/workflows/` est liste dans `.ai/workflows/README.md`. (6) `git diff --check` retourne exit 0. |
+| Exit criteria | (1) Les 13 fichiers de la colonne « Autorises » (section 5) marques `[CREER]` existent, et les 3 marques `[MODIFIER]` portent la modification specifiee en section 6. (2) La table d'inventaire de migration (Phase 2) est integralement soldee : chaque regle d'`AGENTS.md` porte une destination parmi `RESTE` / `MIGRE common` / `MIGRE core-engine` / `SUPPRIMEE`, aucune ligne ne porte le marqueur d'indecision. (3) `.ai/README.md` porte une ligne de role commencant par `` - `workflows/` `` et une commencant par `` - `architecture/` `` (patrons ancres, non satisfiables par le contenu initial du fichier — voir section 9). (4) Chaque chemin de fichier cite dans un fichier cree par ce lot designe un fichier existant (verification manuelle declaree comme telle). (5) Chaque fichier cree sous `.ai/workflows/` est liste dans `.ai/workflows/README.md`. (6) `AGENTS.md` est un routeur mince de 60 lignes maximum et ne porte plus le detail des commandes, boucles d'evaluation ou commits. (7) `git diff --check` retourne exit 0. |
 
 ### Resultat du test de detection multi-lot
 
@@ -76,6 +76,11 @@ normal, aucune section `## Sous-chantiers`. Le decoupage en phases de la
 section 6 n'est pas un decoupage en lots independants — c'est exactement le
 contre-exemple donne par le skill lui-meme.
 
+Test rejoue le 2026-07-30 apres D2bis : resultat **SINGLE** inchange.
+`common/WORKFLOW.md` doit etre cree et inscrit avant le retrait des regles
+d'`AGENTS.md`; la correction partage le meme Exit criteria et ne peut pas
+etre routee ou cloturee independamment du reste de la migration.
+
 ### Justification du track `annexe`
 
 Ce lot ne fait pas avancer la mainline runtime : il ne touche ni le moteur,
@@ -89,9 +94,9 @@ change ». Meme nature, meme track.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE — /close NON EXECUTE` |
 | Date de creation | 2026-07-29 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-30 |
 | Autorite normative | `Protocole/` (non touche par ce lot). Pour le processus IA : `AGENTS.md` puis `.ai/governance/`. |
 | Autorite executable | Aucune — ce lot ne produit aucun code. |
 | Changement normatif attendu | Aucun. |
@@ -101,7 +106,7 @@ change ». Meme nature, meme track.
 
 | Champ | Contenu operationnel |
 | --- | --- |
-| Objectif executable | Douze fichiers de gouvernance IA crees et trois modifies, `AGENTS.md` reduit a un routeur mince sans qu'aucune de ses regles actuelles ne disparaisse. |
+| Objectif executable | Treize fichiers de gouvernance IA crees et trois modifies, `AGENTS.md` reduit a un routeur mince de 60 lignes maximum sans qu'aucune de ses regles actuelles ne disparaisse. |
 | Autorite et lecture minimale | 1. `AGENTS.md` — 2. `.ai/README.md` — 3. `.ai/checkpoint.json` — 4. `.ai/governance/AI_MODIFICATION_CHECKLIST.md` — 5. le brouillon archive sous `0 - HUMAN START HERE/archive/` pour l'intention de fond — 6. les 5 `SKILL.md` existants sous `.agents/skills/` comme moule de forme. |
 | Perimetre autorise | Liste fermee en section 5. Rien hors de cette liste. |
 | Interdits absolus | `Protocole/`, `Implementation/`, `.codex/`, `.agents/AGENTS.md`, `Implementation/Active/tracking.json`, `0 - HUMAN START HERE/archive/`. `.ai/checkpoint.json` uniquement via `plan.ps1`. |
@@ -272,6 +277,7 @@ flowchart TD
 .ai/
   workflows/                # CREER
     README.md
+    common/WORKFLOW.md
     core-engine/WORKFLOW.md
     interface/WORKFLOW.md
   architecture/             # CREER
@@ -295,6 +301,7 @@ flowchart TD
 .claude/skills/agent-architecte/SKILL.md              [CREER - Phase 1]
 .ai/architecture/ARCHITECTURE_LEDGER.md               [CREER - Phase 1]
 .ai/workflows/README.md                               [CREER - Phase 3]
+.ai/workflows/common/WORKFLOW.md                      [CREER - Phase 3]
 .ai/workflows/core-engine/WORKFLOW.md                 [CREER - Phase 3]
 .ai/workflows/interface/WORKFLOW.md                   [CREER - Phase 3]
 AGENTS.md                                             [MODIFIER - Phase 4]
@@ -394,7 +401,7 @@ Constat :
 Actions :
 
 - Lire `AGENTS.md` integralement.
-- Construire dans ce plan une table `regle | destination | justification`, une ligne par regle, avec pour destination exactement une valeur parmi `RESTE dans AGENTS.md`, `MIGRE vers core-engine/WORKFLOW.md`, `SUPPRIMEE`. Une ligne encore indecise porte le marqueur `NON_TRANCHE` dans la colonne destination — token choisi pour n'apparaitre nulle part ailleurs dans ce plan, afin que le patron ancre de la section 9 ne produise ni faux positif ni faux negatif.
+- Construire dans ce plan une table `regle | destination | justification`, une ligne par regle, avec pour destination exactement une valeur parmi `RESTE dans AGENTS.md`, `MIGRE vers common/WORKFLOW.md`, `MIGRE vers core-engine/WORKFLOW.md`, `SUPPRIMEE`. Une ligne encore indecise porte le marqueur `NON_TRANCHE` dans la colonne destination — token choisi pour n'apparaitre nulle part ailleurs dans ce plan, afin que le patron ancre de la section 9 ne produise ni faux positif ni faux negatif.
 - Appliquer la decision D2 a chaque ligne concernant la boucle `/evaluate` et la regle `epic-orchestrator`, toutes deux universelles aujourd'hui.
 - Justifier toute ligne `SUPPRIMEE` — une suppression non justifiee est un echec de phase.
 
@@ -406,9 +413,51 @@ Critere de sortie :
 
 - Chaque regle d'`AGENTS.md` apparait exactement une fois dans la table, avec une destination parmi `RESTE` / `MIGRE` / `SUPPRIMEE`. Aucune ligne de table ne porte encore le marqueur d'indecision, verifie par le patron ancre de la section 9.
 
+#### Inventaire de migration d'`AGENTS.md` (baseline `bc678f2`)
+
+Les 135 lignes de la baseline sont couvertes ci-dessous par regle
+semantique. Les titres, lignes blanches et continuations typographiques
+appartiennent a la meme regle que leur paragraphe ; aucune prose n'est
+traitee comme une regle autonome. D2bis conserve le caractere universel des
+commandes et boucles, mais les loge dans `common/WORKFLOW.md` afin que
+`AGENTS.md` reste reellement un routeur. Les gates propres au code moteur et
+la frontiere BACKTRADER migrent vers `core-engine/WORKFLOW.md`.
+
+| Lignes baseline | Regle | Destination | Justification |
+| --- | --- | --- | --- |
+| 1-3 | `AGENTS.md` est le point d'entree IA officiel. | RESTE dans AGENTS.md | Bootstrap universel. |
+| 5-15 | Ordre de lecture : `AGENTS.md`, cockpit, hook/tracking, entree protocole conditionnelle, checklist de modification. | RESTE dans AGENTS.md | Applicable a tout workflow. |
+| 17-26 | Carte des responsabilites de `Protocole/`, `Implementation/`, `.ai/`, gouvernance, intake, cockpit micro, `.agents/`, `.codex/`. | RESTE dans AGENTS.md | Hierarchie d'autorite universelle ; deux roles nouveaux seront ajoutes sans retirer les existants. |
+| 30 | Ne pas creer de source de verite concurrente. | RESTE dans AGENTS.md | Invariant universel. |
+| 31 | Ne modifier `Protocole/` que si la tache l'exige explicitement. | RESTE dans AGENTS.md | Protection normative universelle. |
+| 32 | Lire `.ai/governance/` avant une modification normative, structurante ou impactant `Implementation/`. | RESTE dans AGENTS.md | Gate universel de modification. |
+| 33 | Lire la gouvernance locale et obtenir un scope explicite avant toute modification de BACKTRADER. | MIGRE vers core-engine/WORKFLOW.md | Frontiere de l'adaptateur de backtest, propre au workflow moteur ; la preuve Phase 4 exige son absence du routeur universel. |
+| 34 | Garder `AGENTS.md` mince et l'etat projet dans `.ai/`. | RESTE dans AGENTS.md | Principe du routeur universel. |
+| 35 | Les brouillons humains entrent par `0 - HUMAN START HERE/` et ne sont pas executables par defaut. | RESTE dans AGENTS.md | Intake universel. |
+| 36 | Mettre a jour `.ai/checkpoint.json` avant tout changement de hook/tracking ; `.ai/README.md` seulement pour les regles stables. | RESTE dans AGENTS.md | Contrat du cockpit universel. |
+| 37-52 | Forme detaillee obligatoire des commits : titre, pourquoi, changements, fichiers modifies, non touches, validations reelles, co-auteur ; amend si message trop mince. | MIGRE vers common/WORKFLOW.md | Convention universelle conservee, mais detail procedural deplace hors du bootstrap. |
+| 53 | Consulter les skills specialises et suivre leur declencheur. | RESTE dans AGENTS.md | Routeur cross-IA universel. |
+| 54 | Appliquer `bug-hunter` apres modification du moteur/adaptateurs/exemples et traiter tout bug confirme. | MIGRE vers core-engine/WORKFLOW.md | Gate specifique au code moteur, conformement a D2. |
+| 55 | Avant fermeture, appliquer le balayage complet `bug-hunter` et `plan-conformance-audit`, puis bloquer si bug ou critere manquant. | MIGRE vers core-engine/WORKFLOW.md | Gates specifiques au workflow moteur, conformement a D2 ; `adversarial-tester` sera ajoute dans la migration. |
+| 56 | Appliquer `epic-orchestrator` aux demandes multi-lot. | MIGRE vers common/WORKFLOW.md | Le test reste universel selon D2, mais D2bis le deplace dans le workflow commun lu pour toute action. |
+| 58-61 | Interpreter `/start`, `/continue`, `/close` comme commandes humaines de gestion de plan. | MIGRE vers common/WORKFLOW.md | Interface conversationnelle universelle, pointee depuis le bootstrap. |
+| 63-76 | Avant `/start`, boucle `/evaluate` d'intake en place, minimum deux passes, convergence, cap 5-6 et escalade. | MIGRE vers common/WORKFLOW.md | Boucle universelle conservee mot pour mot hors du bootstrap selon D2bis. |
+| 77-91 | `/start` reecrit un nouveau plan backlog, archive l'original intact et respecte les refus mecaniques de `plan.ps1`. | MIGRE vers common/WORKFLOW.md | Promotion universelle conservee dans le workflow commun. |
+| 92-107 | Apres `/start`, seconde boucle `/evaluate`, convergence et commit de baseline avant implementation. | MIGRE vers common/WORKFLOW.md | Boucle universelle conservee dans le workflow commun. |
+| 108-114 | `/continue` active le workstream et rejoue le test `epic-orchestrator` avant implementation. | MIGRE vers common/WORKFLOW.md | Commande et gate multi-lot universels conserves dans le workflow commun. |
+| 115-121 | `/close` exige les gates moteur et interdit la fermeture en presence d'un bug ou critere manquant. | MIGRE vers core-engine/WORKFLOW.md | Detail des gates `bug-hunter`/`plan-conformance-audit`, specifique au workflow moteur. |
+| 122-129 | Apres fermeture, valider les JSON touches puis committer automatiquement et ne jamais pousser ; ne pas committer si validation echoue. | MIGRE vers common/WORKFLOW.md | Semantique universelle de fermeture conservee hors du bootstrap. |
+| 131-132 | `plan.ps1` est un backend mecanique et ne remplace pas l'audit IA. | MIGRE vers common/WORKFLOW.md | Limite universelle du backend conservee dans la procedure qu'elle borne. |
+| 134-135 | Si des parametres manquent, inspecter l'intake et le checkpoint avant de questionner l'humain. | MIGRE vers common/WORKFLOW.md | Politique universelle de clarification conservee dans le workflow commun. |
+
+Aucune regle n'est `SUPPRIMEE`. Les blocs `RESTE` sont exclusivement le
+bootstrap, la carte d'autorite et les invariants universels courts ; tout
+detail procedural migre vers `common` ou `core-engine`.
+
 ### Phase 3 - Creation de .ai/workflows/
 
-Objectif : materialiser le registre des workflows et migrer les regles vers `core-engine/WORKFLOW.md`.
+Objectif : materialiser le registre des workflows et migrer les regles vers
+`common/WORKFLOW.md` ou `core-engine/WORKFLOW.md` selon leur proprietaire.
 
 Classification : GOVERNANCE
 
@@ -419,8 +468,17 @@ Constat (dependance corrigee a la passe 1 de la boucle `/evaluate` sur ce plan) 
 
 Actions :
 
-- Creer `.ai/workflows/README.md` : concept de workflow, tableau-registre (`core-engine` actif, `interface` planned), note explicite que c'est un registre de reference et non un mecanisme route, et regle de convention obligatoire — tout fichier depose ici doit etre inscrit au registre.
+- Creer `.ai/workflows/README.md` : concept de workflow, tableau-registre
+  (`common` obligatoire, `core-engine` actif, `interface` planned), note
+  explicite que c'est un registre de reference et non un mecanisme route, et
+  regle de convention obligatoire — tout fichier depose ici doit etre inscrit
+  au registre.
 - Y documenter le precedent d'orphelinat : `WORKFLOW_VALIDATION_UX_EBTA.updated.md` a vecu dans ce dossier sans etre reference nulle part, jusqu'a son reclassement en `INTAKE` le 2026-07-29.
+- Creer `.ai/workflows/common/WORKFLOW.md` et y migrer fidelement la forme
+  detaillee des commits, le cycle `/start` → `/continue` → `/close`, les
+  deux boucles `/evaluate`, le test `epic-orchestrator`, la limite du backend
+  et la politique de clarification. Ce workflow est lu pour toute action,
+  quel que soit le workflow specialise.
 - Creer `.ai/workflows/core-engine/WORKFLOW.md` en appliquant la table de la Phase 2 ligne par ligne. Migration fidele, jamais un resume.
 - Y inserer les deux ajouts nets : `adversarial-tester` dans la sequence de cloture, `expert-panel` mentionne comme recommande pendant `/evaluate`.
 - Creer `.ai/workflows/interface/WORKFLOW.md` en stub `PLANNED — non demarre`, avec **deux** pointeurs (proposition d'interface D1-D15, et proposition de workflow UX) et la note qu'ils se recoupent et devront etre arbitres ensemble.
@@ -429,11 +487,13 @@ Actions :
 
 Livrables :
 
-- Les trois fichiers de `.ai/workflows/`.
+- Les quatre fichiers de `.ai/workflows/`.
 
 Critere de sortie :
 
-- Chaque ligne de la table de la Phase 2 marquee `MIGRE` a son contenu present dans `core-engine/WORKFLOW.md`, et `interface/WORKFLOW.md` ne contient aucune regle de gate.
+- Chaque ligne de la table de la Phase 2 marquee `MIGRE` a son contenu present
+  dans le workflow proprietaire (`common` ou `core-engine`), et
+  `interface/WORKFLOW.md` ne contient aucune regle de gate.
 
 ### Phase 4 - Reduction d'AGENTS.md en routeur mince
 
@@ -450,7 +510,10 @@ Actions :
 - Conserver l'ordre de lecture, en y ajoutant l'etape « consulter `.ai/workflows/README.md` ».
 - Conserver la Responsibility Map, en y ajoutant les lignes `.ai/workflows/` et `.ai/architecture/`.
 - Conserver les regles universelles : source de verite unique, autorite de `Protocole/`, lecture de `.ai/governance/`, intake par `0 - HUMAN START HERE/`, forme de commit obligatoire.
-- Reduire la section « Conversational Commands » a un pointeur vers le `WORKFLOW.md` du workflow concerne.
+- Remplacer la forme detaillee du commit par un pointeur obligatoire vers
+  `common/WORKFLOW.md`.
+- Reduire la section « Conversational Commands » a un pointeur vers
+  `common/WORKFLOW.md`, puis vers le `WORKFLOW.md` specialise concerne.
 - Retirer uniquement ce que la table marque `MIGRE`.
 
 Livrables :
@@ -459,7 +522,9 @@ Livrables :
 
 Critere de sortie :
 
-- Chaque ligne `MIGRE` de la table est absente d'`AGENTS.md` et presente dans `core-engine/WORKFLOW.md`. Chaque ligne `RESTE` est toujours dans `AGENTS.md`.
+- Chaque ligne `MIGRE` de la table est absente d'`AGENTS.md` et presente dans
+  son workflow proprietaire. Chaque ligne `RESTE` est toujours dans
+  `AGENTS.md`. `AGENTS.md` compte au maximum 60 lignes.
 
 ### Phase 5 - Mise a jour de la gouvernance et du cockpit
 
@@ -510,7 +575,7 @@ dupliquerait la regle au lieu de la deplacer.
 | Phase 1 | 8 fichiers de skills | Markdown + frontmatter YAML | Moule des 6 skills existants |
 | Phase 1 | `.ai/architecture/ARCHITECTURE_LEDGER.md` | Markdown, deux tables append-only | Brouillon archive, etapes 18-19 |
 | Phase 2 | Table d'inventaire dans ce plan | Markdown | Passe 3 de la boucle `/evaluate` |
-| Phase 3 | 3 fichiers de `.ai/workflows/` | Markdown | `AGENTS.md` (migration fidele) |
+| Phase 3 | 4 fichiers de `.ai/workflows/` | Markdown | `AGENTS.md` (migration fidele vers `common` et `core-engine`) |
 | Phase 4 | `AGENTS.md` reduit | Markdown | Table d'inventaire de la Phase 2 |
 | Phase 5 | 2 fichiers de gouvernance mis a jour | Markdown | `.ai/README.md` existant |
 
@@ -522,8 +587,8 @@ dupliquerait la regle au lieu de la deplacer.
 
 1. **Aucune regle perdue.** Toute regle presente dans `AGENTS.md` avant la
    Phase 4 est, apres la Phase 4, soit toujours dans `AGENTS.md`, soit dans
-   `core-engine/WORKFLOW.md`, soit explicitement justifiee comme supprimee
-   dans la table de la Phase 2.
+   `common/WORKFLOW.md`, soit dans `core-engine/WORKFLOW.md`, soit
+   explicitement justifiee comme supprimee dans la table de la Phase 2.
 2. **Aucun orphelin.** Tout fichier cree sous `.ai/workflows/` est inscrit
    dans son `README.md`, et les deux nouveaux dossiers sont inscrits dans
    `.ai/README.md`.
@@ -615,15 +680,18 @@ Phase 4 — les regles migrees ont bien quitte `AGENTS.md` :
 
 ```powershell
 Select-String -Path "AGENTS.md" -Pattern "BACKTRADER"
+(Get-Content "AGENTS.md").Count -le 60
+Select-String -Path "AGENTS.md" -Pattern "plan\.ps1 start|minimum 2 passes|Co-Authored-By"
 ```
 
-Attendu : aucune sortie. **Cette commande ne couvre qu'une regle.** Le
+Attendu : aucune sortie pour les deux recherches et `True` pour le compte de
+lignes. **Ces commandes ne remplacent pas l'inventaire.** Le
 controle reel de la Phase 4 est **manuel et pilote par la table de la
 Phase 2** : pour chaque ligne marquee `MIGRE`, verifier son absence
-d'`AGENTS.md` et sa presence dans `core-engine/WORKFLOW.md` ; pour chaque
-ligne `RESTE`, verifier sa presence dans `AGENTS.md`. Aucune commande unique
-ne peut le faire, parce que la liste des regles migrees depend de la
-decision D2 — la declarer manuelle est la seule facon honnete de la porter.
+d'`AGENTS.md` et sa presence dans `common/WORKFLOW.md` ou
+`core-engine/WORKFLOW.md` ; pour chaque ligne `RESTE`, verifier sa presence
+dans `AGENTS.md`. Aucune commande unique ne peut le faire ; la declarer
+manuelle est la seule facon honnete de la porter.
 Ne pas grepper `bug-hunter` ni `plan-conformance-audit` ici : leur
 destination est precisement ce que D2 tranche, et une commande qui presume
 la reponse fabrique son propre succes.
@@ -716,6 +784,7 @@ creer le skill qui chasse ce pattern.
 | 2026-07-29 | Les quatre decisions ouvertes sont encodees comme Phase 0 de deblocage bloquante. | Autorise le routage de ce plan sans que D1 a D4 soient tranchees ; interdit a `/continue` de depasser la Phase 0 tant qu'elles ne le sont pas. |
 | 2026-07-29 | **D1 — OUI.** Le retrait de regles d'`AGENTS.md` au profit de `core-engine/WORKFLOW.md` est autorise. | Leve le verrou de la section 0. Debloque la Phase 4. La Phase 3 ecrit `core-engine/WORKFLOW.md` en migration fidele (pas en pointeur) et `AGENTS.md` sera reellement reduit. |
 | 2026-07-29 | **D2 — Option 1.** La boucle `/evaluate` (intake et post-`/start`) reste entierement une regle universelle dans `AGENTS.md`. Seuls les gates specifiques au code moteur (`bug-hunter`, `adversarial-tester`, `plan-conformance-audit`) migrent vers `core-engine/WORKFLOW.md`. Meme decoupage pour la regle `epic-orchestrator` : elle reste universelle. | Fixe le contenu de la table d'inventaire de migration (Phase 2) : toute ligne portant sur `/evaluate`, `/start`, `/continue`, `/close` ou `epic-orchestrator` recoit la destination `RESTE dans AGENTS.md` ; seules les lignes nommant explicitement `bug-hunter`, `adversarial-tester` ou `plan-conformance-audit` recoivent `MIGRE vers core-engine/WORKFLOW.md`. |
+| 2026-07-30 | **D2bis — clarification humaine : « les regles devaient migrer dans les workflows », puis `/continue`.** Le caractere universel des commandes, de `/evaluate` et d'`epic-orchestrator` est conserve, mais leur detail quitte `AGENTS.md` pour un workflow partage `common/WORKFLOW.md`. | Corrige la contradiction entre D2 et l'objectif « routeur mince ». D2bis remplace uniquement l'emplacement impose par D2, pas la portee universelle des regles. Autorise le 13e fichier `.ai/workflows/common/WORKFLOW.md`, la mise a jour de l'inventaire et la reduction effective d'`AGENTS.md` a 60 lignes maximum. |
 | 2026-07-29 | **D3 — OUI.** `_call_float` (`nautilus_strategy_bridge.py:163-174`) est route comme chantier `fix` separe. | `adversarial-tester/EXAMPLE_REPORT.md` (Phase 1) est construit sur ce defaut et pointe vers le chantier `fix` route. Le routage mecanique de ce chantier `fix` (via `plan.ps1 start`) est une suite hors perimetre de ce plan (section 13), a effectuer separement — ce plan ne le fait pas lui-meme. |
 | 2026-07-29 | **D4 — Rendre visible seulement,** via `.ai/governance/CONFLICT_RESOLUTION_POLICY.md`, sans arbitrer. Renvoye a quand le workflow `interface` demarrera reellement (`PROPOSITION_WORKFLOW_VALIDATION_UX_EBTA.md` est lui-meme `INTAKE`, non audite, avec des ecarts connus — trancher maintenant statuerait sur un document non mur). | `interface/WORKFLOW.md` (Phase 3) documente la tension « cinq roles d'agents (workflow UX) vs une seule IA executante » comme contradiction non resolue, avec un renvoi vers `CONFLICT_RESOLUTION_POLICY.md`, sans en trancher le sens. |
 
@@ -740,17 +809,18 @@ avant que l'IA agisse en consequence — jamais deduite implicitement.
 
 ## 12. Definition of Done
 
-- [ ] Toutes les phases validees individuellement (section 9).
-- [ ] Les six conditions de `Exit criteria` (section Triage) atteintes et verifiees.
-- [ ] Aucune modification hors de la colonne « Autorises » de la section 5.
-- [ ] Les six invariants de la section 8 verifies.
-- [ ] Aucun NO GO enfreint.
-- [ ] `git diff --check` retourne exit 0.
-- [ ] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee : fichiers modifies et pourquoi, fichiers volontairement non modifies, conflits non resolus, decisions humaines restantes.
-- [ ] `.agents/` et `.codex/` n'ont pas ete rendus normatifs.
-- [ ] `.ai/governance/` ne contient aucune verite EBTA concurrente.
-- [ ] Aucun stub, placeholder ou section vide ne subsiste comme substitut a une brique prevue. Une brique non terminee est signalee en section 11 ou 13, jamais presentee comme terminee.
-- [ ] `.agents/skills/bug-hunter/SKILL.md` non applicable (aucun code Python touche) — a declarer explicitement plutot qu'a passer sous silence.
+- [x] Toutes les phases validees individuellement (section 9).
+- [x] Les sept conditions de `Exit criteria` (section Triage) atteintes et verifiees.
+- [x] Aucune modification hors de la colonne « Autorises » de la section 5
+      (`.ai/checkpoint.json` modifie uniquement par `plan.ps1 continue`).
+- [x] Les six invariants de la section 8 verifies.
+- [x] Aucun NO GO enfreint.
+- [x] `git diff --check` retourne exit 0.
+- [x] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee : fichiers modifies et pourquoi, fichiers volontairement non modifies, conflits non resolus, decisions humaines restantes.
+- [x] `.agents/` et `.codex/` n'ont pas ete rendus normatifs.
+- [x] `.ai/governance/` ne contient aucune verite EBTA concurrente.
+- [x] Aucun stub, placeholder ou section vide ne subsiste comme substitut a une brique prevue. Le stub `interface` est le livrable PLANNED explicite de la Phase 3 et ne pretend porter aucune regle active.
+- [x] `.agents/skills/bug-hunter/SKILL.md` non applicable (aucun code Python touche) — declare explicitement.
 
 ---
 
@@ -784,19 +854,33 @@ A remplir au moment de `/close` :
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [DONE / REJECTED / SUPERSEDED + raison] |
-| Ecarts par rapport au plan initial | [liste, avec justification] |
-| Suites a prevoir (hors perimetre) | Chantier `fix` pour `_call_float` (D3) ; arbitrage du Fil ouvert D (D4) ; Phase 1 de la feuille de route du brouillon (`POLICIES.md` + gabarit de preuve de session) |
+| Resultat final | Implementation terminee ; workstream laisse `ACTIVE` car la commande humaine etait `/continue`, pas `/close`. |
+| Ecarts par rapport au plan initial | Correction D2bis : ajout de `common/WORKFLOW.md` apres constat humain que `AGENTS.md` restait long (133 lignes). Le scaffold `skill-creator` n'a pas ete utilise car il aurait cree `agents/openai.yaml`, absent de la liste fermee ; son validateur `quick_validate.py` a ete applique aux trois skills a la place. |
+| Suites a prevoir (hors perimetre) | Chantier `fix` pour `_call_float` (D3) ; arbitrage du Fil ouvert D (D4) ; Phase 1 de la feuille de route du brouillon (`POLICIES.md` + gabarit de preuve de session) ; ouvrir un chantier separe de **formalisation executable des workflows** avec, par workflow, un contrat machine-readable autoritatif (`WORKFLOW.json` ou format equivalent), une machine a etats et transitions validees, les preuves obligatoires de chaque gate dans le checkpoint, des tests negatifs des transitions interdites et un diagramme Mermaid genere depuis ce contrat comme vue documentaire non autoritative. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [AAAA-MM-JJ] |
-| Phases executees | [liste] |
-| Artefact produit | [chemins] |
-| Validation | [PASS/FAIL + commande utilisee] |
-| Ecart par rapport au plan | [aucun / liste] |
+| Date | 2026-07-30 |
+| Phases executees | Phases 0 a 5. Phase 0 etait deja tranchee dans la baseline `bc678f2`; Phases 1 a 5 executees sous `/continue`. |
+| Artefact produit | 13 fichiers crees : 6 fichiers cross-IA de skills/exemples, 2 stubs Claude, `ARCHITECTURE_LEDGER.md`, et 4 fichiers de workflows. Trois fichiers de gouvernance modifies, plus ce plan et le checkpoint mecanique. |
+| Validation | **PASS** — Phase 0 `0`; Phase 1 `9`; Phase 2 `0`; Phase 3 `0`; Phase 4 `AGENTS.md=48 lignes` et recherches detaillees `0`; Phase 5 `1/1/2`; trois `quick_validate.py` PASS ; checkpoint syntaxe/schema PASS ; references manuelles PASS ; `git diff --check` exit 0. |
+| Ecart par rapport au plan | D2bis ajoute un workflow `common` pour atteindre l'objectif materiel de routeur mince ; perimetre et Exit criteria mis a jour avant validation finale. |
+
+### Rapport post-modification
+
+- Fichiers modifies : `AGENTS.md` (routeur), `.ai/README.md` (roles),
+  `.ai/governance/AI_MODIFICATION_CHECKLIST.md` (declencheurs), ce plan
+  (inventaire et preuves), `.ai/checkpoint.json` (activation mecanique).
+- Fichiers crees : les 13 artefacts enumeres en section 5.
+- Fichiers volontairement non modifies : `Protocole/`, `Implementation/`,
+  `.codex/`, `.agents/AGENTS.md`, `Implementation/Active/tracking.json`,
+  les deux propositions `INTAKE` et le brouillon archive.
+- Conflit non resolu : cinq roles du brouillon UX contre une IA executante,
+  rendu visible dans `interface/WORKFLOW.md` selon D4.
+- Decision humaine restante pour ce lot : aucune. Les suites D3/D4 sont des
+  chantiers separes, non des criteres manquants du present plan.
 
 ---
 
@@ -809,3 +893,6 @@ A remplir au moment de `/close` :
 | 2026-07-29 | Passe 2 : nature de l'arret en Phase 0 qualifiee de contrat procedural dans la Carte d'execution ; repli explicite ajoute a la Phase 1 et a la portee de D3 si D3 est refusee. | La Phase 0 etait annoncee « bloquante » alors que `plan.ps1 continue` ne porte aucun gate correspondant (`Assert-SubChantiersClosed` est inactif sur un plan `SINGLE`) : le plan reproduisait, sur lui-meme, la garantie mecanique fictive qu'il prenait soin d'eviter pour `adversarial-tester`. Et D3 refusee laissait l'`EXAMPLE_REPORT.md` « sans suite », c'est-a-dire documentant un defaut vivant sans porteur — le scenario que la passe 4 de la boucle d'intake avait justement ecarte. |
 | 2026-07-29 | Passe 3 : compte de lignes d'`AGENTS.md` corrige (135) dans le Constat de la Phase 2 ; chemin de cloture `BLOCKED` ajoute en section 13. | Sans chemin de sortie, un refus de D1 rendait la Definition of Done inatteignable a perpetuite : le chantier serait reste `ACTIVE` indefiniment. `plan.ps1 close -Outcome BLOCKED` existe pour ca — une cloture bloquee honnete vaut mieux qu'un `DONE` masquant une phase absente, meme principe que le `DENIED/FAIL` assume du package pre-OOS. |
 | 2026-07-29 | Passe 4 : controle de convergence. Aucun angle mort majeur inedit ; conformite mecanique re-verifiee apres edition (checklist, 7 labels, 10 sections du gabarit, `SINGLE`, 6 phases parsables par `tasks_from_plan.ps1`). Patrons de verification de la section 9 testes avec leurs contre-epreuves : 4 / 0 / 0 / 0, chacun se comportant comme annonce. | Convergence de la boucle `/evaluate` post-`/start`, en 4 passes, dans la limite de 5-6 fixee par `AGENTS.md`. |
+| 2026-07-30 | **HISTORIQUE — remplace par D2bis ci-dessous.** Audit post-implementation initial : inventaire relu, 12 creations comptees et Exit criteria initiaux 6/6 declares implementes. | Resultat techniquement conforme a l'inventaire initial, mais insuffisant : `AGENTS.md` restait a 133 lignes et n'etait pas materiellement un routeur mince. |
+| 2026-07-30 | Correction D2bis apres retour humain : le resultat 133 lignes etait conforme a l'inventaire initial mais contredisait l'objectif materiel « routeur mince ». Ajout de `common/WORKFLOW.md`, remigration des regles universelles, mise a jour de l'inventaire et reduction d'`AGENTS.md` a 48 lignes. | Retablit la finalite du plan sans perdre de regle : portee universelle conservee dans `common`, gates moteur conserves dans `core-engine`, bootstrap limite aux autorites/invariants/pointeurs. |
+| 2026-07-30 | `plan-conformance-audit` rejoue apres D2bis : **7/7 IMPLEMENTES**. Preuves : 13 creations, 3 modifications cibles, inventaire integralement tranche, roles `workflows/` et `architecture/` presents, chemins cites existants, 0 workflow orphelin, `AGENTS.md` 48 lignes sans detail migre, `git diff --check` exit 0. | Aucun critere manquant ni non-goal viole. Workstream conserve `ACTIVE` car `/close` n'a pas ete demande. |

@@ -13,6 +13,7 @@ Before any substantive action, read in this order:
 5. the active tracking path declared in `.ai/checkpoint.json`
 6. `Protocole/0-README - Comprendre et maintenir le protocole EBTA.md` if the task touches EBTA protocol, methodology, normative rules, or scientific decisions.
 7. `.ai/governance/AI_MODIFICATION_CHECKLIST.md` before any normative, structural, or implementation-impacting modification.
+8. `.ai/workflows/README.md`, then the applicable `WORKFLOW.md`, before workflow-specific action.
 
 ## Responsibility Map
 
@@ -20,6 +21,8 @@ Before any substantive action, read in this order:
 - `Implementation/` is the executable translation of `Protocole/`.
 - `.ai/` is the single AI cockpit: macro relay, checkpoint, backlog, archive.
 - `.ai/governance/` contains AI modification governance; it is procedural, not scientific authority.
+- `.ai/workflows/` contains workflow-specific procedures; it is neither scientific authority nor project-state storage.
+- `.ai/architecture/` records adoption of external architecture practices; it is neither scientific authority nor a project-state cockpit.
 - `0 - HUMAN START HERE/` is the human intake area for raw drafts.
 - `Implementation/Active/` contains the micro runtime cockpit: active hook and tracking state.
 - `.agents/` is historical/tooling support only; it is not a project-state authority. It also hosts `.agents/skills/`, a cross-AI catalog of playbooks (SKILL.md files) usable by any AI working on this repo, not only Claude — see Operating Rules.
@@ -30,106 +33,16 @@ Before any substantive action, read in this order:
 - Do not create competing sources of truth.
 - Do not modify `Protocole/` unless the task explicitly requires protocol work.
 - Read `.ai/governance/` before any normative, structural, or implementation-impacting modification.
-- Do not modify BACKTRADER before reading its local governance and receiving explicit scope.
 - Keep `AGENTS.md` thin. Put AI project state in `.ai/`, not in parallel state folders.
 - Human drafts enter through `0 - HUMAN START HERE/` and are never executable by default.
 - If active hook or tracking paths change, update `.ai/checkpoint.json` first; update `.ai/README.md` only when stable cockpit rules change.
-- Every commit touching this repo (by any AI or human) follows the detailed
-  commit-message shape already in this repo's history — see e.g. `94338b6` or
-  `184b013` as reference examples, not a one-off style. Minimum shape: a
-  `type(scope): summary` title (French scope/summary matching this repo's
-  convention), then a body with (1) the why — which audit/plan/finding drove
-  the change, not just what changed; (2) numbered root causes/changes if more
-  than one distinct thing is fixed; (3) a "Fichiers modifies" section listing
-  each changed file with the reason it changed; (4) a "Non touches" section
-  naming what was deliberately left alone (e.g. `Protocole/`, `validators/`)
-  to prove scope was respected; (5) a "Validation" section with the actual
-  commands run and their real result (tests, schema validation, package
-  build, pre-commit hook), not generic claims; (6) a `Co-Authored-By` footer
-  naming the authoring AI. A short one-line commit message is not acceptable
-  for changes under `Implementation/`, `Protocole/`, or `.ai/` — rewrite it
-  (amend, since not yet pushed) before moving on if the first draft is too
-  thin.
-- Consult `.agents/skills/` for specialized playbooks. Each `SKILL.md` documents its own trigger; when a task's shape matches one, read and follow it, regardless of which AI or tool is operating. In particular:
-  - After implementing or modifying code under `Implementation/ebta_engine/` (or adjacent adapters/examples), and before declaring the task done, apply `.agents/skills/bug-hunter/SKILL.md` on the touched files. A confirmed real bug it finds must be fixed (or explicitly escalated to the human) before the task counts as complete.
-  - Before calling `.ai/tools/plan.ps1 close` (see `/close` below), apply both `.agents/skills/bug-hunter/SKILL.md` (full sweep of the workstream's touched files, not just the last diff) and `.agents/skills/plan-conformance-audit/SKILL.md`. Do not call `plan.ps1 close` if either reports an open confirmed bug or a missing Exit criterion.
-  - When a human draft, an intake observation, or a human request describes several distinct sub-chantiers that should not be merged into one plan (e.g. multiple independent "lots" from the same audit), apply `.agents/skills/epic-orchestrator/SKILL.md` to structure a single parent tracking workstream and execute its sub-chantiers successively, instead of letting each lot become a scattered, hard-to-track intake note.
+- Follow the commit contract in `.ai/workflows/common/WORKFLOW.md`.
+- Consult `.agents/skills/` and follow each matching `SKILL.md` trigger.
 
 ## Conversational Commands
 
-When the user sends `/start`, `/continue`, or `/close`, treat it as a request
-to manage a plan. These are the human-facing commands.
-
-- Before `/start` audits and restructures a raw draft, run an
-  architecture-refinement loop on the draft as-is, in place under
-  `0 - HUMAN START HERE/`: invoke `code-architecture-evaluator` (`/evaluate`),
-  fix what it flags directly in the draft file, re-run `/evaluate`. Same
-  convergence rule as the post-structuring loop below — minimum 2 passes, ends
-  on genuine convergence (no new major blind spot), hard-capped at 5-6 passes
-  with escalation to the human if still surfacing issues at the cap. This
-  catches a fundamentally unsound idea before time is spent structuring it.
-  Only once this intake-stage loop converges does `/start` proceed to audit
-  and restructure the (now-refined) draft. This is in addition to, not a
-  replacement for, the second evaluate loop that runs on the normalized plan
-  after `/start` writes it (see below) — a draft that looked sound at intake
-  can still surface new blind spots once it is fully structured against the
-  template.
-- `/start` never moves or rewrites the human draft in place. It audits the
-  draft, then WRITES A NEW FILE in the target backlog folder
-  (`mainline`/`annexes`/`fixes`) fully restructured per
-  `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md`, then routes it with
-  `.ai/tools/plan.ps1 start -Path <original draft> -RewrittenPath <new file
-  already written in the backlog folder> -Audited`. `plan.ps1` archives the
-  untouched original under `0 - HUMAN START HERE/archive/` and registers the
-  rewritten file as the workstream's `source_path` (original kept as
-  `original_draft_path` for traceability). Do not ask the user to
-  pre-structure the human draft unless the intent is impossible to infer.
-  `plan.ps1` mechanically rejects `start` if key template sections are absent
-  from the rewritten file's text, or if `-RewrittenPath` is not already inside
-  the folder matching `-Track` — if it throws, fix the rewritten file (never
-  paste the template verbatim) and retry, do not treat the rejection as a
-  formatting nuisance to route around.
-- After `/start` writes the plan and before `/continue` begins real
-  implementation, run an architecture-refinement loop on the plan: invoke
-  `code-architecture-evaluator` (`/evaluate`), fix what it flags, re-run
-  `/evaluate`. Minimum 2 passes — a single clean pass is not proof of
-  convergence. The loop only ends on genuine convergence (a pass surfaces
-  no new major blind spot), hard-capped at 5-6 passes total as a safety
-  valve; if issues are still surfacing at the cap, stop and escalate to the
-  human — the plan itself needs a decision, not another automated pass.
-  Once the loop converges, commit the current state (the refined plan plus
-  any `/evaluate`-driven
-  fixes) as a clean pre-implementation baseline, matching this repo's
-  existing commit style (topic-scoped `type(scope): summary` title, a body
-  itemizing what changed and why per file/section, a test-suite status
-  line, `Co-Authored-By`). This baseline exists so implementation starts
-  from a reviewed, revertible point — see e.g. commit `184b013` for the
-  expected shape. Only then does `/continue` begin implementation.
-- `/continue` resumes an existing workstream with `.ai/tools/plan.ps1 continue`.
-  Before implementing any code, re-check the workstream's plan against the
-  detection test in `.agents/skills/epic-orchestrator/SKILL.md`. If the plan
-  coordinates multiple independent sub-chantiers (even if it was not
-  originally structured that way), direct implementation is forbidden —
-  apply that skill's procedure first instead of writing code under this
-  `/continue`.
-- `/close` first applies `.agents/skills/bug-hunter/SKILL.md` on the
-  workstream's touched files and `.agents/skills/plan-conformance-audit/SKILL.md`
-  against its Exit criteria. Only if bug-hunter reports zero open confirmed
-  bugs AND the conformance audit reports no missing criterion does `/close`
-  proceed to close and archive the workstream with `.ai/tools/plan.ps1 close`.
-  Otherwise report what is open (bugs and/or missing criteria) and do not
-  call `plan.ps1 close` until the human decides how to proceed. Once
-  `plan.ps1 close` succeeds, validate any JSON project-state file it touched
-  (`.ai/checkpoint.json` against `.ai/checkpoint.schema.json`,
-  `Implementation/Active/tracking.json` against its schema if touched) and,
-  only if validation passes, create a commit automatically — never a push —
-  scoped to exactly the files the close touched (archived workstream file,
-  updated `checkpoint.json`/`tracking.json`, any backlog file moved), using
-  this repo's mandatory commit-message shape (see Operating Rules above). If
-  validation fails, do not commit; report the failure to the human instead.
-
-`.ai/tools/plan.ps1` is a mechanical backend. It can refuse unsafe promotion,
-but it does not replace the AI audit and structuring step.
-
-If required parameters are missing, inspect `0 - HUMAN START HERE/` and
-`.ai/checkpoint.json` before asking the user.
+Treat `/start`, `/continue`, and `/close` as plan-management commands.
+Follow `.ai/workflows/common/WORKFLOW.md`, then the specialized workflow
+selected by `.ai/workflows/README.md`. The common workflow owns the detailed
+evaluation loops, promotion/continuation/closure mechanics, validation,
+commit contract, multi-lot gate, and clarification policy.

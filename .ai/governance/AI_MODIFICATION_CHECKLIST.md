@@ -24,6 +24,9 @@
       `Implementation/TRACEABILITY_MATRIX.md`.
 - [ ] Verifier si `.ai/checkpoint.json` doit etre mis a jour.
 - [ ] Verifier si un backlog item doit etre cree, promu, ferme ou archive.
+- [ ] Lire `.ai/workflows/README.md`,
+      `.ai/workflows/common/WORKFLOW.md`, puis le `WORKFLOW.md` specialise
+      applicable avant toute action substantielle.
 
 ## Apres modification
 
@@ -36,11 +39,31 @@
 - [ ] Verifier que `.ai/governance/` ne contient pas de verite EBTA
       concurrente.
 - [ ] Executer les validations pertinentes selon le type de changement.
+- [ ] Si le diff touche un verdict, une ecriture persistee/append-only, une
+      frontiere externe, `config.json`/G0 ou une logique derivee de
+      parametres, appliquer `.agents/skills/adversarial-tester/SKILL.md` avant
+      `/close` et traiter tout faux succes ou repli silencieux confirme.
+
+## Skills de controle et de conseil
+
+- `bug-hunter` chasse les bugs de correction et de typage du runtime selon le
+  workflow `core-engine`.
+- `adversarial-tester` est un gate procedural du workflow `core-engine` sur
+  le pattern « succes fabrique / repli silencieux ». Il ne constitue pas un
+  gate mecanique de `plan.ps1`.
+- `plan-conformance-audit` compare les Exit criteria a la livraison avant
+  toute fermeture.
+- `agent-architecte` est recommande, non bloquant, lorsqu'une nouvelle veille
+  IA arrive ou lorsqu'une pratique differee doit etre reevaluee. Il produit
+  uniquement un brouillon `INTAKE` et ne declenche jamais `/start`.
 
 ## Modifications autorisees sans decision normative
 
 - Ajouter ou corriger une regle de gouvernance dans `.ai/governance/`.
 - Mettre a jour `.ai/README.md` pour mentionner `.ai/governance/`.
+- Mettre a jour `.ai/README.md` pour referencer les registres
+  `.ai/workflows/` et `.ai/architecture/` sans leur donner d'autorite
+  scientifique ni d'etat projet.
 - Mettre a jour `AGENTS.md` avec une regle courte de lecture de
   `.ai/governance/` avant toute modification normative ou structurante.
 - Mettre a jour `.ai/checkpoint.json` si le schema existant le permet
@@ -59,4 +82,3 @@
 - Ajouter des dependances techniques.
 - Modifier du code d'implementation sauf si strictement necessaire pour mettre
   a jour une trace documentaire.
-
