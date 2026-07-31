@@ -1,7 +1,7 @@
 {
   "schema_version": "1.3.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-07-30",
+  "updated_at": "2026-07-31",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -1535,6 +1535,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06",
+      "title": "Mise en conformite du manifeste FREEZE (SOP 06 22.1)",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "CONTRACT_ENCODING",
+      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260731_PROPOSITION_MISE_EN_CONFORMITE_MANIFESTE_FREEZE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-07-31",
+      "last_moved_at": "2026-07-31",
+      "routing_decision": "fix",
+      "routing_reason": "/start demande explicitement par l'utilisateur ; audit /evaluate 2 passes converge (verification code reelle : content_checksum deja produit, placeholder code_hash/data_hash pre-existant dans minimal_pilot_pipeline, incoherence protocol_version).",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/fixes/PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-07-31"
+          }
+        ]
+      }
     }
   ],
   "validation": {
