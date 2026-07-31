@@ -1558,11 +1558,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-07-31"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-07-31"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "a4ce82d",
             "recorded_at": "2026-07-31"
           }
         ]
