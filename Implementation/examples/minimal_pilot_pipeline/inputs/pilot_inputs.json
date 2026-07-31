@@ -21,7 +21,8 @@
   "data_snapshots": [
     {
       "data_snapshot_id": "DATA-PILOT-001",
-      "available_at": "2019-12-31T00:00:00Z"
+      "available_at": "2019-12-31T00:00:00Z",
+      "content_checksum": "c7b97c3c32dbea9b6263d22edc664ec5d4f3fcf5c4790790be05f45d697f0635"
     }
   ],
   "walk_forward_schedule": [

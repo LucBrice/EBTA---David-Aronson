@@ -7,7 +7,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "config.json",
       "produced_by": "ebta_engine",
-      "sha256": "F79A6F9E1F616C976FEBF5A7CAFCEAE87C9444D9A78F2C57826FBEFD383BEF92",
+      "sha256": "C6E98DD7B7F93E771A03D459A9599DDC046C17A3AB7E121229962291BEB91415",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md section 3.1"
     },
     {
@@ -106,7 +106,7 @@
       "package_stage": "VALIDATION_READY",
       "path": "reports/g_bias.json",
       "produced_by": "ebta_engine",
-      "sha256": "59971419120EC64623F9D34D499AB3F1792243E60336D813C4E6E05AA3C52E72",
+      "sha256": "CCE7564A7FE21EED58AF7411CBAFE0FAE6270A0A90444BD6E19B7C717182355C",
       "source_normative": "Protocole/PAQUET D'EXECUTION EBTA.md sections 2, 4, and 6"
     },
     {
@@ -289,14 +289,17 @@
     "language": "python-standard-library-first",
     "runtime": "EBTA-ENGINE-0.1.0"
   },
+  "code_hash": "C3D8B505987E5A18740622416D290BD646FEB41A33A188F090ECB594541C694D",
   "configuration": {
-    "config_hash": "F79A6F9E1F616C976FEBF5A7CAFCEAE87C9444D9A78F2C57826FBEFD383BEF92",
+    "config_hash": "C6E98DD7B7F93E771A03D459A9599DDC046C17A3AB7E121229962291BEB91415",
     "config_id": "CFG-PILOT-001",
     "config_path": "config.json"
   },
+  "data_hash": "BC522735A7B42247497626241291FFD61E39CB5F54B214327CB6FB8CBFEC4FF0",
   "data_snapshots": [
     {
       "available_at": "2019-12-31T00:00:00Z",
+      "content_checksum": "c7b97c3c32dbea9b6263d22edc664ec5d4f3fcf5c4790790be05f45d697f0635",
       "data_snapshot_id": "DATA-PILOT-001"
     }
   ],
@@ -326,10 +329,12 @@
   },
   "research_family_id": "FAM-PILOT",
   "reviewers": [],
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "test_matrices": [
     "reports/candidate_matrix.json"
   ],
+  "timestamp": "2026-07-31T10:15:52.771469Z",
+  "timestamp_source": "RUNTIME_UTC",
   "walk_forward_schedule": [
     {
       "embargo_days": 2,

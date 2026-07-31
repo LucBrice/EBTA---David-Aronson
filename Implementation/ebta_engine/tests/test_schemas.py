@@ -56,6 +56,9 @@ class SchemaTests(unittest.TestCase):
         errors = validate(manifest, schema)
         self.assertEqual(errors, [])
         self.assertIn("configuration", manifest)
+        self.assertEqual(manifest["schema_version"], "2.0.0")
+        for field in ("code_hash", "data_hash", "timestamp", "timestamp_source"):
+            self.assertIn(field, manifest)
         self.assertIn("random_seeds", manifest)
         self.assertTrue(all("source_normative" in artifact for artifact in manifest["artifacts"]))
 

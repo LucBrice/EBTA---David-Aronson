@@ -80,6 +80,51 @@ Chaque entree doit utiliser ce format :
 
 ## Entrees
 
+## 2026-07-31 - Manifeste FREEZE SOP 06 rendu deterministe et fail-closed
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | EBTA-ENGINE-0.1.x |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | SOP 06 section 22.1 ; PAQUET D'EXECUTION EBTA.md section 5 ; SOP 12 |
+| Fichiers impactes | `Implementation/ebta_engine/constants.py`, `Implementation/ebta_engine/manifests/hash_utils.py`, `Implementation/ebta_engine/manifests/manifest_builder.py`, `Implementation/ebta_engine/migrations/schema_migrations.py`, `Implementation/ebta_engine/schemas/reproducibility_manifest.schema.json`, fixtures/configurations et tests manifestes/builders, paquet minimal regenere |
+| Impact protocole | NONE |
+| Verification | 219 tests runtime PASS ; 24 tests cibles manifeste/provenance PASS ; 24 tests cibles manifeste/schema/builders PASS ; `MANIFEST_PASS` (`schema_errors=[]`, `manifest_failures=[]`, `manifest_artifact_failures=[]`) ; Pyrefly cible 0 erreur ; scenarios adversariaux PASS |
+
+### Contexte
+
+Le manifeste de reproductibilite ne materialisait que `config_hash` alors que
+le bloc `[FREEZE]` de SOP 06 section 22.1 exige aussi une empreinte du code,
+une empreinte des donnees et un horodatage. Le schema ferme ne pouvait pas
+accepter ces champs sans migration majeure explicite.
+
+### Decision
+
+- passer le schema du manifeste de `1.0.0` a `2.0.0` car les champs ajoutes
+  sont obligatoires ;
+- calculer `code_hash` sur les fichiers Python reels du moteur selon un ordre
+  POSIX deterministe, sans dependance Git/subprocess ;
+- calculer `data_hash` depuis les `content_checksum` SHA-256 des snapshots et
+  echouer si la preuve est absente ou malformee ;
+- produire `timestamp` UTC avec horloge injectable et `timestamp_source`
+  explicite ;
+- interdire toute migration historique sans preuves FREEZE externes valides.
+
+### Impact
+
+Le manifeste encode desormais les preuves exigees sans creer de gate ni de
+verdict scientifique. Le paquet minimal regenere porte un manifeste `2.0.0`
+techniquement conforme. Le run Nautilus reel reste volontairement `DENIED`
+avec WRC/robustesse `FAIL`, et les gates lifecycle du pilote restent visibles :
+aucun de ces resultats n'est transforme en succes par ce changement.
+
+### Suite
+
+Les approbations humaines pre-OOS, toute nouvelle recherche apres rejet WRC /
+robustesse et la couverture G14 restent des sujets distincts qui doivent suivre
+leurs propres cycles gouvernes s'ils sont ouverts par l'humain.
+
 ## 2026-07-30 - Extraction NAV Nautilus rendue fail-closed
 
 | Champ | Valeur |

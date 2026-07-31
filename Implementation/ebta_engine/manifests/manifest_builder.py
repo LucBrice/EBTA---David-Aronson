@@ -3,15 +3,31 @@
 from __future__ import annotations
 
 import json
+import re
+from collections.abc import Callable
+from datetime import datetime, timezone
 from pathlib import Path
 
 from ebta_engine.constants import PROTOCOL_VERSION, SCHEMA_VERSION
 from ebta_engine.governance.human_evidence import manifest_human_evidence
-from ebta_engine.manifests.hash_utils import sha256_file
+from ebta_engine.manifests.hash_utils import sha256_entries, sha256_file, sha256_tree
 
 
-def build_manifest(package_dir: Path, artifact_paths: list[str], package_stage: str) -> dict:
+_CODE_HASH_ROOT = Path(__file__).resolve().parents[1]
+_CODE_HASH_EXCLUDED_DIRS = {"tests", "fixtures", "__pycache__"}
+
+
+def build_manifest(
+    package_dir: Path,
+    artifact_paths: list[str],
+    package_stage: str,
+    *,
+    clock: Callable[[], datetime] | None = None,
+) -> dict:
     config = json.loads((package_dir / "config.json").read_text(encoding="utf-8"))
+    timestamp = (clock or _utc_now)()
+    if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+        raise ValueError("manifest clock must return a timezone-aware datetime")
     reviewers, approvals = manifest_human_evidence(config.get("pre_oos_human_evidence", {}))
     artifacts = [
         {
@@ -23,6 +39,10 @@ def build_manifest(package_dir: Path, artifact_paths: list[str], package_stage: 
     ]
     return {
         "schema_version": SCHEMA_VERSION,
+        "code_hash": _code_hash(),
+        "data_hash": _data_hash(config.get("data_snapshots", [])),
+        "timestamp": timestamp.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "timestamp_source": "INJECTED_FIXTURE_CLOCK" if clock is not None else "RUNTIME_UTC",
         "project_id": config["project_id"],
         "hypothesis_id": config["hypothesis_id"],
         "research_family_id": config["research_family_id"],
@@ -53,6 +73,36 @@ def build_manifest(package_dir: Path, artifact_paths: list[str], package_stage: 
         "reviewers": reviewers,
         "approvals": approvals,
     }
+
+
+def _code_hash() -> str:
+    relative_paths = [
+        path.relative_to(_CODE_HASH_ROOT).as_posix()
+        for path in _CODE_HASH_ROOT.rglob("*.py")
+        if not any(part in _CODE_HASH_EXCLUDED_DIRS for part in path.relative_to(_CODE_HASH_ROOT).parts)
+    ]
+    return sha256_tree(_CODE_HASH_ROOT, relative_paths=relative_paths)
+
+
+def _data_hash(data_snapshots: list[dict]) -> str:
+    entries: list[tuple[str, str]] = []
+    for index, snapshot in enumerate(data_snapshots):
+        snapshot_id = snapshot.get("data_snapshot_id")
+        content_checksum = snapshot.get("content_checksum")
+        if not isinstance(snapshot_id, str) or not snapshot_id:
+            raise ValueError(f"data_snapshots[{index}] is missing a non-empty data_snapshot_id")
+        if not isinstance(content_checksum, str) or not content_checksum:
+            raise ValueError(f"data_snapshots[{index}] is missing a non-empty content_checksum")
+        if re.fullmatch(r"[0-9A-Fa-f]{64}", content_checksum) is None:
+            raise ValueError(f"data_snapshots[{index}] content_checksum must be a SHA-256 hex digest")
+        entries.append((snapshot_id, content_checksum))
+    if not entries:
+        raise ValueError("data_snapshots must contain at least one snapshot")
+    return sha256_entries(entries)
+
+
+def _utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 def verify_manifest(package_dir: Path, manifest: dict) -> list[str]:

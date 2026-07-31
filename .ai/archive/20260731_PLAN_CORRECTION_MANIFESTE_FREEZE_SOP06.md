@@ -30,20 +30,20 @@
 | Champ | Valeur |
 | --- | --- |
 | Track | `fix` |
-| Lifecycle | `TRIAGED` |
+| Lifecycle | `DONE` |
 | Type de chantier | `SINGLE` |
 | Scope | Faire produire par `build_manifest()` les trois champs racine `code_hash`, `data_hash` et `timestamp` exiges par le bloc `[FREEZE]` de SOP 06 §22.1, en reutilisant les artefacts deja livres par R7 (empreinte canonique) et le lot horodatage (horloge injectable), sans toucher au calcul scientifique ni a l'OOS. |
 | Non-goals | Ne pas modifier `Protocole/`, les SOP, les statuts, seuils ou gates ; ne pas rouvrir le pivot Nautilus ni l'adapter Nautilus (`adapters/nautilus_mapping.py`, `strategies/`) ; ne pas rouvrir ou consommer l'OOS ; ne pas changer les calculs WRC, robustesse, OOS ou economiques (`procedures/`, `governance/`) ; ne pas transformer une preuve absente en `PASS` ; ne pas re-hasher silencieusement les paquets historiques comme s'ils avaient ete scelles avec le nouveau contrat ; ne pas corriger dans ce chantier le placeholder `code_hash`/`data_hash` deja fabrique dans `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` et `inputs/pilot_inputs.json` (portee SOP 03/registre distincte de SOP 06 §22.1 — documente en section 11, pas traite ici) ; ne pas toucher `protocol_version`/`PROTOCOL_VERSION` (incoherence `EBTA-DOC-1.0` vs `EBTA-DOC-1.1` pre-existante, hors perimetre — documentee en section 11) ; ne pas introduire de dependance `git`/subprocess dans le runtime moteur pour calculer `code_hash` (rester stdlib-only, hashage de fichiers uniquement). |
 | Source | Brouillon humain `0 - HUMAN START HERE/PROPOSITION_MISE_EN_CONFORMITE_MANIFESTE_FREEZE.md`, deplace en INTAKE le 2026-07-31 ; promu via `/start` demande explicitement par l'utilisateur le 2026-07-31. |
-| Exit criteria | Le manifeste produit par `build_manifest()` contient `code_hash`, `config_hash`, `data_hash` et un `timestamp` UTC au format controle, tous non vides sur un paquet reel regenere (`nautilus_mvp` et `minimal_pilot_pipeline`) ; les trois nouvelles valeurs sont derivees de sources explicites et deterministes (fichiers reels du moteur pour `code_hash`, `content_checksum` deja produit par `build_data_snapshot()` pour `data_hash`, horloge injectable pour `timestamp`), prouvees par des tests de non-divergence dedies ; le schema accepte le nouveau contrat avec une regle de compatibilite explicite pour les paquets historiques (migration versionnee, pas de reinterpretation silencieuse) ; une donnee ou un code different invalide l'empreinte correspondante (teste) ; aucune ouverture OOS, aucun changement de gate/verdict/calcul WRC-robustesse-economique et aucune modification de `Protocole/` n'ont eu lieu ; la suite complete de tests et les validateurs concernes (`package_validator`, schemas) passent sans masquer de verdict `FAIL`/`INCONCLUSIVE` existant ; `bug-hunter` et `plan-conformance-audit` PASS avant `/close`. |
+| Exit criteria | Le manifeste produit par `build_manifest()` contient `code_hash`, `config_hash`, `data_hash`, `timestamp` et `timestamp_source`, tous non vides et conformes au schema `2.0.0` sur le paquet reel regenere `minimal_pilot_pipeline` ; `schema_errors=[]`, `manifest_failures=[]` et `manifest_artifact_failures=[]` prouvent sa conformite propre sans exiger que les gates scientifiques/lifecycle du paquet global deviennent `PASS`. Le chemin d'integration Nautilus prouve les memes champs lorsque les prerequis sont fournis sous scope `TEST_FIXTURE` explicitement visible, tandis que le run Nautilus reel conserve son resultat `DENIED` (`WRC FAIL`, robustesse `FAIL`, preuves humaines absentes) et ne fabrique aucun manifeste post-gate. Les nouvelles valeurs sont derivees de sources explicites et deterministes (fichiers reels du moteur, `content_checksum`, horloge injectable), avec tests de determinisme, sensibilite et rejet des entrees absentes/malformees. Le schema porte une migration majeure explicite `1.0.0 -> 2.0.0` sans reinterpretation silencieuse des historiques. Aucune ouverture OOS, modification de gate/verdict/calcul WRC-robustesse-economique ou modification de `Protocole/` n'a lieu ; la suite complete, les schemas, `bug-hunter`, `adversarial-tester` et `plan-conformance-audit` passent avant `/close`, sans masquer les `FAIL`/`INCONCLUSIVE` globaux. |
 
 ## Statut
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `DONE` |
 | Date de creation | 2026-07-31 |
-| Date d'activation | - |
+| Date d'activation | 2026-07-31 |
 | Autorite normative | `Protocole/SOP 06` §22.1, `Protocole/PAQUET D'EXECUTION EBTA.md` §5, `Protocole/SOP 12` |
 | Autorite executable | `Implementation/ebta_engine/manifests/`, `Implementation/ebta_engine/schemas/`, `Implementation/ebta_engine/migrations/` |
 | Changement normatif attendu | Aucun |
@@ -53,13 +53,13 @@
 
 | Champ | Contenu operationnel |
 | --- | --- |
-| Objectif executable | `build_manifest()` produit `code_hash`, `data_hash`, `timestamp` (racine du manifeste) en plus de `config_hash` deja existant, sur un paquet reel regenere et valide `PASS`. |
+| Objectif executable | `build_manifest()` produit `code_hash`, `data_hash`, `timestamp` et `timestamp_source` a la racine, en plus de `config_hash`, avec conformite propre du manifeste prouvee sur le paquet minimal reel et par les integrations builders, independamment des verdicts scientifiques/lifecycle globaux. |
 | Autorite et lecture minimale | Section 2 ci-dessous, dans l'ordre. `Protocole/SOP 06` §22.1 prime en cas de conflit sur la definition des champs ; `Implementation/` est la traduction executable, jamais l'inverse. |
 | Perimetre autorise | Section 5 — colonne "Autorises" uniquement. |
 | Interdits absolus | `Protocole/`, `procedures/`, `governance/`, `adapters/nautilus_mapping.py`, `strategies/`, `protocol_version`/`PROTOCOL_VERSION`, tout code utilisant `git`/subprocess pour `code_hash`. |
-| Phase de reprise | Phase 0 (aucune phase terminee a la creation de ce plan). |
+| Phase de reprise | Phase 3 — validation finale apres re-scope humain autorise le 2026-07-31. |
 | Preuve attendue | Commandes de la section 9, dans l'ordre des phases. |
-| Arret et escalade | Uniquement si un content_checksum de `data_snapshots` s'avere absent sur un paquet reel sans possibilite de le regenerer (cas non couvert par le contrat existant), ou si la definition de `code_hash` choisie en Phase 0 s'avere incompatible avec un test deja existant non liste dans ce plan. |
+| Arret et escalade | Arreter si une preuve propre du manifeste echoue, si une valeur FREEZE est absente/fabriquee, ou si satisfaire le chantier exige de modifier/masquer un verdict scientifique ou lifecycle global. |
 
 ---
 
@@ -324,14 +324,15 @@ Objectif : prouver le determinisme, la sensibilite au changement, et regenerer l
 
 Actions :
 
-- Ecrire/etendre des tests prouvant : (a) meme code + memes donnees + horloge injectee => meme manifeste ; (b) une modification de code ou de donnees change l'empreinte concernee et seulement elle ; (c) une donnee absente/incoherente (snapshot sans `content_checksum`) echoue explicitement, sans valeur par defaut silencieuse.
-- Regenerer `Implementation/research_packages/nautilus_mvp` via le builder reel et re-executer `validate_package_dir()`.
-- Regenerer `Implementation/examples/minimal_pilot_pipeline/research_package` via `build_research_package.py` et verifier le manifeste produit.
+- Ecrire/etendre des tests prouvant : (a) meme code + memes donnees + horloge injectee => meme manifeste ; (b) une modification du code couvert change `code_hash` sans changer `data_hash`, et une modification de `content_checksum` change `data_hash` sans changer `code_hash` (les hash existants derives du fichier `config.json` changent legitimement si ce fichier change) ; (c) une donnee absente/incoherente (snapshot sans `content_checksum` verifiable) echoue explicitement, sans valeur par defaut silencieuse.
+- Executer le builder Nautilus reel et conserver son resultat gouverne tel quel ; un `DENIED` scientifique/pre-OOS n'est ni une regression du manifeste ni un `PASS` a fabriquer, et l'absence de manifeste post-gate reste attendue.
+- Regenerer `Implementation/examples/minimal_pilot_pipeline/research_package` via `build_research_package.py`, puis verifier separement la conformite propre de son manifeste (`schema_errors=[]`, `manifest_failures=[]`, `manifest_artifact_failures=[]`) sans convertir les gates globales `FAIL`/`INCONCLUSIVE` en succes.
+- Verifier le chemin d'integration Nautilus qui atteint le manifeste avec des prerequis `TEST_FIXTURE` explicitement autorises dans le test ; cette preuve technique ne vaut jamais approbation humaine ou qualification scientifique du paquet reel.
 - Documenter (pas implementer) la regle de compatibilite choisie en Phase 0 pour tout paquet historique deja `PRE_OOS_SEALED` : rester lisible comme historique, jamais requalifie `PASS` avec le nouveau contrat.
 
 Livrables :
 
-- Paquets regeneres + preuve `validate_package_dir()` `PASS`.
+- Paquet minimal regenere avec manifeste conforme ; run Nautilus reel regenere jusqu'a son arret `DENIED` ; preuves d'integration manifeste sur les deux builders.
 
 Critere de sortie :
 
@@ -339,9 +340,12 @@ Critere de sortie :
 python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation
 .\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package
 python Implementation\examples\minimal_pilot_pipeline\build_research_package.py
+python -c "from pathlib import Path; from ebta_engine.validators.package_validator import validate_package_dir; r=validate_package_dir(Path('examples/minimal_pilot_pipeline/research_package')); assert r['schema_errors']==[] and r['manifest_failures']==[] and r['manifest_artifact_failures']==[]; print('MANIFEST_PASS')"
 ```
 
-Toutes PASS ; `validate_package_dir()` `PASS` sur les deux paquets regeneres.
+La suite et la preuve `MANIFEST_PASS` passent. Les builders reels conservent
+leurs codes/verdicts globaux gouvernes (`DENIED`/`FAIL`) et ces verdicts sont
+consignes comme preuve de non-masquage, pas comme regression de ce chantier.
 
 ### Phase 3 - Validation finale et cloture
 
@@ -386,8 +390,8 @@ flowchart LR
 
 | Etape | Fichier/sortie | Format | Regle source |
 | --- | --- | --- | --- |
-| Phase 1/2 | `reports/manifests/reproducibility_manifest.json` (dans chaque paquet regenere) | JSON | SOP 06 §22.1 |
-| Phase 2 | `Implementation/research_packages/nautilus_mvp/**` | JSON/JSONL | SOP 12, PAQUET D'EXECUTION EBTA.md §5 |
+| Phase 1/2 | `manifests/reproducibility_manifest.json` dans le paquet minimal regenere et dans les packages temporaires d'integration | JSON | SOP 06 §22.1 |
+| Phase 2 | `Implementation/research_packages/nautilus_mvp/**` jusqu'au paquet de preuve pre-OOS `DENIED` | JSON/JSONL | SOP 12, PAQUET D'EXECUTION EBTA.md §5 |
 | Phase 2 | `Implementation/examples/minimal_pilot_pipeline/research_package/**` | JSON/JSONL | SOP 12, PAQUET D'EXECUTION EBTA.md §5 |
 
 ---
@@ -396,7 +400,7 @@ flowchart LR
 
 ### Invariants (non negociables dans le code)
 
-1. Aucune valeur existante du manifeste (`config_hash`, `artifacts[].sha256`, `sealed_at`, evenements registry) ne change suite a ce chantier, hors ajout des trois nouveaux champs.
+1. Aucun champ metier existant du manifeste ne change arbitrairement. Les changements mecaniques attendus et seuls autorises sont : `schema_version` (`1.0.0 -> 2.0.0`) ; `configuration.config_hash` et l'empreinte `artifacts[].sha256` de `config.json` apres ajout autorise de `content_checksum` ; les empreintes d'autres artefacts reellement regeneres si leur contenu horodate change ; et les nouveaux champs FREEZE. Chaque empreinte doit verifier le contenu courant qu'elle reference. `sealed_at`, les evenements registry, les gates et les verdicts ne sont jamais reecrits pour obtenir un succes.
 2. `code_hash` change si et seulement si le contenu des fichiers couverts change ; `data_hash` change si et seulement si un `content_checksum` de `data_snapshots` change.
 3. Aucun paquet historique n'est re-scelle ni requalifie `PASS` avec le nouveau contrat.
 4. Le calcul de `data_hash` echoue explicitement (pas de valeur par defaut, pas de `None` silencieux) si un `data_snapshot` ne porte pas de `content_checksum` verifiable.
@@ -423,6 +427,7 @@ python -m unittest Implementation.ebta_engine.tests.test_schemas
 python -m unittest discover -s Implementation\ebta_engine\tests -t Implementation
 .\adapters\nautilus_env\venv\Scripts\python.exe -m ebta_engine.package_builder.nautilus_research_package
 python Implementation\examples\minimal_pilot_pipeline\build_research_package.py
+python -c "from pathlib import Path; from ebta_engine.validators.package_validator import validate_package_dir; r=validate_package_dir(Path('Implementation/examples/minimal_pilot_pipeline/research_package')); assert r['schema_errors']==[] and r['manifest_failures']==[] and r['manifest_artifact_failures']==[]; print('MANIFEST_PASS')"
 
 # Phase 3
 python -m json.tool .ai\checkpoint.json
@@ -467,8 +472,10 @@ Regle directement justifiee par l'historique de ce depot (gates codes en dur a `
 | Date | Decision | Portee |
 | --- | --- | --- |
 | 2026-07-31 | L'utilisateur demande explicitement `/start` sur `0 - HUMAN START HERE/PROPOSITION_MISE_EN_CONFORMITE_MANIFESTE_FREEZE.md`. | Autorise l'audit et la promotion de ce brouillon en chantier `TRIAGED`. N'autorise aucune implementation avant la boucle `/evaluate` post-`/start` et la baseline pre-implementation requises par `.ai/workflows/common/WORKFLOW.md`. |
+| 2026-07-31 | L'utilisateur declare explicitement : `J'autorise le re-scope recommande`. | Autorise apres baseline le remplacement de l'Exit criterion global `validate_package_dir() PASS` sur deux paquets par des preuves propres au manifeste, tout en imposant de conserver sans alteration le `DENIED` Nautilus, les `FAIL` WRC/robustesse et les `INCONCLUSIVE` lifecycle. N'autorise ni `/close`, ni nouveau chantier residual, ni preuve humaine fabriquee. |
+| 2026-07-31 | L'utilisateur demande explicitement `/close`. | Autorise les gates de fermeture, la transition `READY_TO_CLOSE -> DONE`, l'archivage et le commit borne au chantier. N'autorise aucun push. |
 
-Aucune levee de gouvernance supplementaire n'est requise : aucun verrou actif ne couvre ce perimetre (section 0).
+Le re-scope post-baseline est couvert par la decision humaine ci-dessus ; aucune autre levee de gouvernance n'est accordee.
 
 ---
 
@@ -484,13 +491,13 @@ Aucune levee de gouvernance supplementaire n'est requise : aucun verrou actif ne
 
 ## 12. Definition of Done
 
-- [ ] Toutes les phases (0 a 3) validees individuellement (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre (section 5 / Non-goals du Triage).
-- [ ] Aucune regression sur la suite de tests existante.
-- [ ] `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` mis a jour si le chantier est reellement livre.
-- [ ] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee.
-- [ ] Aucune implementation partielle, stub, pseudo-code ou placeholder ne subsiste comme substitut a une brique prevue (en particulier : aucun `code_hash`/`data_hash` fabrique comme simple concatenation de chaine, cf. section 11).
+- [x] Toutes les phases (0 a 3) validees individuellement (section 9).
+- [x] Exit criteria re-scope de la section Triage atteint et verifiable.
+- [x] Aucune modification hors perimetre (section 5 / Non-goals du Triage).
+- [x] Aucune regression sur la suite de tests existante.
+- [x] `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` mis a jour.
+- [x] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md` executee.
+- [x] Aucune implementation partielle, stub, pseudo-code ou placeholder ne subsiste comme substitut a une brique prevue (en particulier : aucun `code_hash`/`data_hash` fabrique comme simple concatenation de chaine, cf. section 11).
 
 ---
 
@@ -500,19 +507,60 @@ A remplir au moment de `/close` :
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir] |
-| Ecarts par rapport au plan initial | [a remplir] |
-| Suites a prevoir (hors perimetre de ce plan) | Correction du placeholder `code_hash`/`data_hash` dans `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` (registre `registry.jsonl`, portee SOP 03) ; reconciliation de `protocol_version`/`PROTOCOL_VERSION` avec `EBTA-DOC-1.1`. |
+| Resultat final | `DONE` confirme : manifeste FREEZE schema `2.0.0` conforme, deterministe et fail-closed ; 219 tests PASS ; Pyrefly 0 ; adversarial et conformite au plan re-scope PASS ; checkpoint et tracking valides contre leurs schemas. |
+| Ecarts par rapport au plan initial | Exit criterion global re-scope apres autorisation humaine explicite : conformite propre du manifeste au lieu d'un `validate_package_dir() PASS` incompatible avec les gates scientifiques/lifecycle courants. Les `DENIED`/`FAIL`/`INCONCLUSIVE` restent inchanges. |
+| Suites a prevoir (hors perimetre de ce plan) | Correction du placeholder `code_hash`/`data_hash` dans `Implementation/examples/minimal_pilot_pipeline/build_research_package.py` (registre `registry.jsonl`, portee SOP 03) ; reconciliation de `protocol_version`/`PROTOCOL_VERSION` avec `EBTA-DOC-1.1` ; approbations humaines pre-OOS, nouvelle recherche eventuelle apres WRC/robustesse `FAIL`, et couverture G14 uniquement via chantiers distincts autorises. |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [a remplir] |
-| Phases executees | [a remplir] |
-| Artefact produit | [a remplir] |
-| Validation | [a remplir] |
-| Ecart par rapport au plan | [a remplir] |
+| Date | 2026-07-31 |
+| Phases executees | Phases 0 a 3 terminees selon l'Exit criterion re-scope autorise ; paquet minimal regenere, run Nautilus reel arrete proprement en `DENIED`, aucune cloture mecanique appelee. |
+| Artefact produit | Builder/schema manifeste `2.0.0` avec `code_hash`, `data_hash`, `timestamp`, `timestamp_source` ; migration `1.0.0 -> 2.0.0` fail-closed ; paquet minimal regenere avec manifeste techniquement valide. |
+| Validation | 219 tests `PASS` avec le venv Nautilus ; `bug-hunter` cible : Pyrefly `0 errors` ; `adversarial-tester` : `PASS_ADVERSARIAL` sur scope code vide, checksum absent/malforme, provenance fixture, horloge naive et migration sans preuve ; tests cibles manifeste/schema/integration `PASS` ; `MANIFEST_PASS` sur le paquet minimal (`schema_errors=[]`, `manifest_failures=[]`, `manifest_artifact_failures=[]`) ; paquet minimal global `FAIL` et paquet Nautilus reel `DENIED` conserves ; `plan-conformance-audit` re-scope : `PASS`. |
+| Ecart par rapport au plan | Re-scope post-baseline explicitement autorise par l'humain : remplacement du `validate_package_dir() PASS` global, incompatible avec les gates courants, par la conformite propre du manifeste. Les residuels approbations, WRC/robustesse et G14 restent hors scope et leurs verdicts restent inchanges. |
+
+### Audit de conformite au plan re-scope
+
+| Critere | Classification | Preuve |
+| --- | --- | --- |
+| Champs FREEZE reels et schema `2.0.0` | IMPLEMENTE | `manifest_builder.py`, `reproducibility_manifest.schema.json`, paquet minimal regenere ; tests manifeste/schema PASS |
+| Determinisme, sensibilite et provenance des checksums | IMPLEMENTE | `test_manifest_hashes.py`, `test_minimal_pilot_pipeline.py` ; 24 tests cibles PASS |
+| Rejet fail-closed des preuves absentes/malformees | IMPLEMENTE | Tests checksum absent/malforme, scope code vide, horloge naive et migration sans preuve PASS |
+| Compatibilite historique explicite | IMPLEMENTE | Migration majeure `migrate_reproducibility_manifest_1_0_to_2_0()` exigeant les preuves FREEZE ; aucun historique requalifie |
+| Paquet minimal reel conforme sur le manifeste | IMPLEMENTE | `MANIFEST_PASS` : `schema_errors=[]`, `manifest_failures=[]`, `manifest_artifact_failures=[]` |
+| Integration Nautilus et verite du run reel | IMPLEMENTE | Test d'integration manifeste PASS sous `TEST_FIXTURE` visible ; run reel `DENIED`, WRC/robustesse `FAIL`, aucun manifeste post-gate fabrique |
+| Non-goals et frontieres | IMPLEMENTE | Aucun diff sous `Protocole/`, `procedures/`, `governance/`, adaptateurs ou strategies ; aucun changement de gate/verdict/OOS |
+| Validation globale et controles skills | IMPLEMENTE | 219 tests PASS ; Pyrefly 0 ; adversarial PASS ; JSON et `git diff --check` PASS |
+
+### Decision humaine recue et re-scope applique
+
+Le test `epic-orchestrator` rejoue sur les residuels est positif : les trois
+composantes ci-dessous ont chacune leur propre critere de sortie, peuvent etre
+traitees dans un ordre different et peuvent rester bloquees independamment.
+Elles ne doivent donc pas etre absorbees dans ce chantier `CONTRACT_ENCODING` :
+
+1. preuves humaines externes `registry_review` / `pre_oos_approval` ;
+2. resultat scientifique Nautilus actuellement rejete (`WRC FAIL`, p-value
+   globale `0.3173365326934613` ; robustesse `FAIL` sur
+   `ROB-NAUTILUS-PLAUSIBLE`, verdict `REJECTED_ECONOMIC`) ;
+3. cycle lifecycle G14 du pilote minimal (`lifecycle_archive`, `incident_log`,
+   `retention_policy` encore `INCONCLUSIVE`).
+
+Decision autorisee : corriger l'Exit criterion de ce plan pour juger la
+conformite du manifeste sur ses preuves propres — schema `2.0.0`, champs FREEZE
+non vides et reels, `schema_errors=[]`, `manifest_failures=[]`, tests de
+determinisme/sensibilite/rejet et integrations builders — tout en conservant
+les statuts globaux `DENIED`/`FAIL` comme resultats scientifiques/lifecycle
+explicites. L'autorisation humaine explicite a ete recue le 2026-07-31 et
+journalisee en section 10.
+
+Les residuels restent hors scope : une nouvelle recherche scientifique (pas
+une correction de code) serait necessaire pour remplacer le `WRC FAIL` /
+robustesse `FAIL`, et les lots approbations humaines et G14 devraient suivre
+leurs propres cycles gouvernes. Aucun de ces lots n'est cree ou declare `PASS`
+par ce plan.
 
 ---
 
@@ -522,3 +570,5 @@ A remplir au moment de `/close` :
 | --- | --- | --- |
 | 2026-07-31 (intake, avant premiere promotion) | Correction de l'hypothese initiale du brouillon original (`§3 data_hash`, "le checksum distinct deja existant dans la configuration doit etre reutilise") : verification du code reelle a montre que ce checksum existe bien (`content_checksum` de `build_data_snapshot()`), contrairement a une premiere lecture qui l'avait cru absent. Ajout du risque pre-existant des labels `code_hash`/`data_hash` fabriques dans `minimal_pilot_pipeline` (non mentionne dans le brouillon original), et de l'incoherence `protocol_version` (non mentionnee dans le brouillon original), toutes deux decouvertes par lecture directe du code pendant l'audit `/evaluate` (2 passes) requis avant `/start`. | Le brouillon original etait factuellement correct sur le constat SOP 06/manifest_builder.py mais incomplet sur l'etat reel du code environnant (risques d'incoherence non vus faute de lecture du code des consommateurs reels du manifeste). |
 | 2026-07-31 (boucle `/evaluate` post-`/start`, avant baseline) | Pass 1 de cette boucle a identifie que le contrat d'interface initial (section 5) rendait `code_root`/`code_relative_paths` obligatoires pour l'appelant, alors que `build_manifest()` compte ~15 sites d'appel reels (verifies par `rg -n "build_manifest\("`), dont 11 dans `Implementation/ebta_engine/tests/test_package_validator.py`. Correction : le perimetre de `code_hash` devient une constante interne du module (aucun site d'appel a modifier pour ce champ). Pass 1 a egalement trouve que `Implementation/ebta_engine/fixtures/valid_minimal/config.json` et `Implementation/examples/minimal_pilot_pipeline/inputs/pilot_inputs.json` n'ont pas de `content_checksum` sur leurs `data_snapshots`, ce qui aurait fait echouer tous les tests reutilisant ces fixtures des l'ajout du nouvel invariant `data_hash`. Ajoutes explicitement au perimetre (section 5). Pass 2 (relecture complete du plan corrige) n'a trouve aucun nouvel angle mort majeur : convergence. | Une premiere version du contrat d'interface, ecrite avant d'avoir enumere les sites d'appel reels, aurait impose une reecriture mecanique evitable de ~15 fichiers ; les fixtures partagees n'avaient pas ete inspectees avant la premiere ecriture du plan. |
+| 2026-07-31 (`/continue`, audit de conformite en cours) | Le changement de champs obligatoires est classe MAJEUR selon la politique SemVer du depot : schema manifeste `1.0.0 -> 2.0.0`, sans requalification silencieuse des historiques. L'execution a aussi revele que les deux commandes de regeneration du plan ne peuvent pas produire `PASS` dans le perimetre actuel : preuves humaines absentes sur les deux, `wrc_pass`/`robustness_pass` manquants sur le run Nautilus reel, et G14 `INCONCLUSIVE` sur le pilote minimal. | La boucle post-`/start` avait audite le contrat de hash mais pas confronte les commandes de Phase 2 au comportement fail-closed actuel des preuves pre-OOS ni aux gates scientifiques/lifecycle actuels. L'ecart est persiste sans fabriquer d'approbation, ouvrir OOS ou remplacer un verdict scientifique. |
+| 2026-07-31 (re-scope humain, audit de coherence final) | Correction de l'invariant 1 et du test de sensibilite Phase 2 : le plan interdisait initialement toute variation de `schema_version`, `config_hash` et `artifacts[].sha256` tout en exigeant une migration majeure, l'ajout de `content_checksum` dans `config.json` et la regeneration des paquets. La version corrigee interdit les changements arbitraires mais exige que les hash derives suivent honnêtement les contenus modifies. | Conserver les anciennes empreintes apres modification de `config.json` ou d'un artefact regenere aurait cree une preuve fausse et contredit `verify_manifest()`. Cette correction factuelle est incluse dans le re-scope post-baseline explicitement autorise par l'humain. |

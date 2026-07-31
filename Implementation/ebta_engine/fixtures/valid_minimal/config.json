@@ -7,7 +7,11 @@
   "process_version_id": "PROC-DEMO-001",
   "protocol_version": "EBTA-DOC-1.0",
   "data_snapshots": [
-    { "data_snapshot_id": "DATA-DEMO-001", "available_at": "2026-01-01T00:00:00Z" }
+    {
+      "data_snapshot_id": "DATA-DEMO-001",
+      "available_at": "2026-01-01T00:00:00Z",
+      "content_checksum": "16456d645c685d1a3f7227e196c575fe0df49173644cb7f97712ea3bc16ff5d2"
+    }
   ],
   "walk_forward_schedule": [
     {

@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import json
 import tempfile
 import unittest
@@ -6,6 +7,7 @@ from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
 
+from ebta_engine.procedures._utils import canonical_json
 from ebta_engine.validators.invariant_validator import validate_invariants
 
 
@@ -14,6 +16,23 @@ PILOT_SCRIPT = ROOT / "examples" / "minimal_pilot_pipeline" / "build_research_pa
 
 
 class MinimalPilotPipelineTests(unittest.TestCase):
+    def test_pilot_content_checksum_matches_embedded_data_series(self):
+        pilot_inputs = json.loads(
+            (ROOT / "examples" / "minimal_pilot_pipeline" / "inputs" / "pilot_inputs.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        data_keys = (
+            "candidate_test_returns_by_rank",
+            "candidate_test_dates",
+            "oos_returns",
+            "pre_oos_development_returns",
+            "oos_primary_returns",
+        )
+        embedded_data = {key: pilot_inputs[key] for key in data_keys}
+        expected = hashlib.sha256(canonical_json(embedded_data).encode("utf-8")).hexdigest()
+        self.assertEqual(pilot_inputs["data_snapshots"][0]["content_checksum"], expected)
+
     def test_missing_human_evidence_cannot_pass_gates_or_populate_manifest(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
         assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
@@ -248,6 +267,10 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         manifest_paths = {artifact["path"] for artifact in manifest["artifacts"]}
         self.assertEqual(manifest_paths, set(package_shape["artifact_paths"]))
         self.assertTrue(all("artifact_role" in artifact for artifact in manifest["artifacts"]))
+        self.assertEqual(manifest["schema_version"], "2.0.0")
+        self.assertRegex(manifest["code_hash"], r"^[0-9A-F]{64}$")
+        self.assertRegex(manifest["data_hash"], r"^[0-9A-F]{64}$")
+        self.assertEqual(manifest["timestamp_source"], "RUNTIME_UTC")
         for name, procedure_report in procedure_reports.items():
             if name == "economic.json":
                 continue

@@ -322,6 +322,9 @@ class NautilusChronologyProductionTests(unittest.TestCase):
             access = [json.loads(line) for line in (package_dir / "oos_access_log.jsonl").read_text(encoding="utf-8").splitlines()]
             sealing = json.loads((package_dir / "reports" / "sealing.json").read_text(encoding="utf-8"))
             decision = json.loads((package_dir / "reports" / "oos_access_decision.json").read_text(encoding="utf-8"))
+            manifest = json.loads(
+                (package_dir / "manifests" / "reproducibility_manifest.json").read_text(encoding="utf-8")
+            )
 
         self.assertEqual(report["status"], "FAIL")
         self.assertEqual(report["gate_failures"], ["G14 INCONCLUSIVE: missing ['lifecycle_archive', 'incident_log', 'retention_policy']"])
@@ -329,6 +332,10 @@ class NautilusChronologyProductionTests(unittest.TestCase):
         self.assertEqual(sealing["sealed_at"], "2026-07-20T10:01:00Z")
         self.assertEqual(decision["log_entry"]["timestamp"], "2026-07-20T10:01:00Z")
         self.assertEqual([event["timestamp"] for event in access], ["2026-07-20T10:02:00Z", "2026-07-20T10:03:00Z"])
+        self.assertEqual(manifest["schema_version"], "2.0.0")
+        self.assertRegex(manifest["code_hash"], r"^[0-9A-F]{64}$")
+        self.assertRegex(manifest["data_hash"], r"^[0-9A-F]{64}$")
+        self.assertEqual(manifest["timestamp_source"], "RUNTIME_UTC")
         self.assertTrue(any(seed == 29 for seed, _files in observed_files))
 
     def test_naive_runtime_clock_is_rejected_before_test_execution(self):

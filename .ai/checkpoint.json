@@ -1540,25 +1540,25 @@
       "id": "PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06",
       "title": "Mise en conformite du manifeste FREEZE (SOP 06 22.1)",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "CONTRACT_ENCODING",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md",
+      "source_path": ".ai/archive/20260731_PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260731_PROPOSITION_MISE_EN_CONFORMITE_MANIFESTE_FREEZE.md",
       "active_runtime_path": null,
       "opened_at": "2026-07-31",
       "last_moved_at": "2026-07-31",
       "routing_decision": "fix",
-      "routing_reason": "/start demande explicitement par l'utilisateur ; audit /evaluate 2 passes converge (verification code reelle : content_checksum deja produit, placeholder code_hash/data_hash pre-existant dans minimal_pilot_pipeline, incoherence protocol_version).",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Manifeste FREEZE 2.0.0 conforme selon le re-scope humain; 219 tests PASS; bug-hunter, adversarial-tester et plan-conformance PASS; verdicts DENIED/FAIL/INCONCLUSIVE preserves.",
       "non_goals": [],
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1574,9 +1574,25 @@
             "id": "baseline_commit",
             "reference": "a4ce82d",
             "recorded_at": "2026-07-31"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": ".ai/archive/20260731_PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md#resultat-dexecution-a-dupliquer-a-chaque-session-dexecution-significative",
+            "recorded_at": "2026-07-31"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": ".ai/archive/20260731_PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md#resultat-dexecution-a-dupliquer-a-chaque-session-dexecution-significative",
+            "recorded_at": "2026-07-31"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/archive/20260731_PLAN_CORRECTION_MANIFESTE_FREEZE_SOP06.md#audit-de-conformite-au-plan-re-scope",
+            "recorded_at": "2026-07-31"
           }
         ]
-      }
+      },
+      "is_active": false
     }
   ],
   "validation": {
