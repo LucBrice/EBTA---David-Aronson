@@ -46,4 +46,5 @@ shard `OPEN` du mois d'ingestion.
 
 | shard | statut | date_min | date_max | nombre | sha256_cloture |
 | --- | --- | --- | --- | ---: | --- |
-| [`2026-07.md`](2026-07.md) | `OPEN` | 2026-07-17 | 2026-07-29 | 13 |  |
+| [`2026-07.md`](2026-07.md) | `CLOSED` | 2026-07-17 | 2026-07-29 | 13 | `ca1afd7a5e84a0fa878b80f5639c8052988da4f23cbdda5fb4b4d31e30075be7` |
+| [`2026-08.md`](2026-08.md) | `OPEN` | 2026-07-30 | 2026-08-03 | 5 |  |
