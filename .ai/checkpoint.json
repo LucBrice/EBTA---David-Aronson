@@ -1750,11 +1750,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "d18f46890a67b0efa4bf4bc1306acb0462cbd456",
             "recorded_at": "2026-08-07"
           }
         ]
