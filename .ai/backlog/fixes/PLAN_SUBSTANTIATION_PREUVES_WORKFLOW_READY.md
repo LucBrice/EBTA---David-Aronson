@@ -375,13 +375,13 @@ respectes.
 
 ## 12. Definition of Done
 
-- [ ] Phase 1 executee et verifiee (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre (section 5).
-- [ ] Aucune regression sur `test_workflow_state_machine.ps1` ni sur la
+- [x] Phase 1 executee et verifiee (section 9).
+- [x] Exit criteria de la section Triage atteint et verifiable.
+- [x] Aucune modification hors perimetre (section 5).
+- [x] Aucune regression sur `test_workflow_state_machine.ps1` ni sur la
       suite Python.
-- [ ] Checklist post-modification du projet executee.
-- [ ] Aucune implementation partielle presentee comme terminee.
+- [x] Checklist post-modification du projet executee.
+- [x] Aucune implementation partielle presentee comme terminee.
 
 ---
 
@@ -389,9 +389,68 @@ respectes.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir au `/close`] |
-| Ecarts par rapport au plan initial | [a remplir] |
+| Resultat final | DONE — `Add-WorkflowEvidence` rejette desormais toute reference `bug_hunter`/`adversarial_tester`/`plan_conformance` qui ne pointe pas vers un fichier existant du depot (ou dont l'ancre fournie n'existe pas), et continue d'accepter une reference valide. |
+| Ecarts par rapport au plan initial | Un durcissement supplementaire non prevu dans la conception initiale : une reference se terminant par un `#` sans texte d'ancre est desormais rejetee explicitement plutot que traitee silencieusement comme "sans ancre" (trouve par la passe `adversarial-tester`, section "Resultat d'execution" ci-dessous). Un refactor mineur remplace la constante `$script:SubstantiatedEvidenceIds` par une fonction `Get-SubstantiatedEvidenceIds` pour eliminer toute ambiguite de portee sous dot-sourcing repete (trouve par la passe `bug-hunter`). Les deux sont des durcissements strictement additionnels au perimetre declare, pas des extensions de perimetre. |
 | Suites a prevoir (hors perimetre de ce plan) | Le lot 4 (`PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE`) sera le premier producteur reel soumis a ce contrat durci. |
+
+### Resultat d'execution (a dupliquer a chaque session d'execution significative)
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-08-07 |
+| Phases executees | Phase 1 (unique) |
+| Artefact produit | `.ai/tools/workflow_state.ps1` (fonctions `Get-SubstantiatedEvidenceIds`, `ConvertTo-HeadingSlug`, `Test-EvidenceReferenceSubstance`, `Add-WorkflowEvidence`/`Add-WorkflowEvidenceArguments` etendues) ; `.ai/tools/plan.ps1` (4 sites d'appel threades avec `-RepoRoot`) ; `.ai/tools/tests/test_workflow_state_machine.ps1` (references reelles + 6 nouveaux cas negatifs). |
+| Validation | PASS — `.\.ai\tools\tests\test_workflow_state_machine.ps1` -> `workflow_state_machine=PASS`, exit code 0. `python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation` -> `Ran 219 tests`, `FAILED (errors=1, skipped=6)`, l'unique erreur etant la meme erreur d'environnement Nautilus preexistante documentee par le chantier mere (`long_data.py:487`, traitee par le lot 3, hors perimetre de ce lot) — aucune regression introduite. |
+| Ecart par rapport au plan | Deux durcissements additionnels trouves en revue (voir ligne "Ecarts" ci-dessus), aucune reduction de perimetre. |
+
+#### bug-hunter (balayage manuel — Pyrefly non applicable, aucun fichier Python touche)
+
+Ce lot ne touche aucun fichier sous `Implementation/ebta_engine/` : Pyrefly
+(outillage `bug-hunter` standard) ne s'applique pas a des scripts
+PowerShell. Un balayage manuel ligne-a-ligne des trois fichiers modifies a
+ete effectue a la place, en cherchant les memes classes de defaut
+(divergence de contrat, portee ambigue, cas limite non garde) :
+
+- **VRAI DEFAUT trouve et corrige** : `$script:SubstantiatedEvidenceIds`
+  defini comme variable de portee `script:` dans un fichier destine a etre
+  dot-source depuis plusieurs contextes (`plan.ps1`, le harnais de test) —
+  ambigu sous dot-sourcing repete meme si les tests ne le revelaient pas.
+  Remplace par une fonction pure `Get-SubstantiatedEvidenceIds` sans etat
+  partage. Aucun appelant externe ne referencait la variable directement
+  (grep verifie), donc aucun site d'appel supplementaire a mettre a jour.
+- Aucun autre defaut de contrat trouve : les nouveaux parametres
+  `-RepoRoot` sont tous optionnels avec garde explicite (erreur si absent
+  et requis), aucune signature de fonction existante n'a change de type de
+  retour ni de contrat pour ses appelants non concernes par les IDs cibles.
+
+#### adversarial-tester (cible : `Test-EvidenceReferenceSubstance`, nouveau gate de preuve)
+
+Ce lot modifie un mecanisme qui produit un verdict (accepter/rejeter une
+preuve de gate) — dans le perimetre d'invocation obligatoire du skill.
+
+| Point teste | Entree hostile | Observation avant correction | Classification | Correctif | Preuve |
+| --- | --- | --- | --- | --- | --- |
+| Reference vers fichier inexistant | `bug_hunter=chaine_arbitraire_sans_artefact` | Erreur levee explicitement | `PASS_ADVERSARIAL` | Aucun | Cas de test ligne ~53 du test |
+| Reference avec ancre inexistante | `plan_conformance=<fichier reel>#section-inexistante` | Erreur levee explicitement | `PASS_ADVERSARIAL` | Aucun | Cas de test |
+| `-RepoRoot` omis pour un ID cible | `plan_conformance=unit:fake` sans `-RepoRoot` | Erreur levee explicitement (fail-closed) | `PASS_ADVERSARIAL` | Aucun | Cas de test |
+| Chemin absolu / traversee `..` | `C:\Windows\win.ini`, `../../secrets.md` | Erreur levee explicitement | `PASS_ADVERSARIAL` | Aucun | Verifie par lecture de code (`IsPathRooted`/`match "\.\."`) |
+| Reference `chemin#` (ancre vide apres le `#`) | `.../fichier.md#` | **AVANT CORRECTIF** : traitee silencieusement comme "sans ancre" — la reference passait alors que l'intention de l'appelant (fournir une ancre) etait perdue sans signal | `SILENT_FALLBACK` (trouve) | Rejet explicite ajoute : un `#` sans texte d'ancre leve desormais une erreur | Cas de test ligne ~57 du test, `Assert-Throws` sur `...#` |
+| Reference valide (fichier existant, avec et sans ancre valide) | `.ai/tools/tests/test_workflow_state_machine.ps1` (sans ancre), meme fichier avec une ancre reelle | Acceptee dans les deux cas | `PASS_ADVERSARIAL` | Aucun | Cas de test ligne ~53-56 |
+
+Un seul `SILENT_FALLBACK` trouve, corrige avant cloture, couvert par un
+cas de test de regression explicite (voir ci-dessus). Suite complete
+relancee apres correctif : PASS.
+
+#### plan-conformance-audit
+
+| Exit criterion | Classification | Preuve |
+| --- | --- | --- |
+| (1) `Add-WorkflowEvidence` rejette une reference `bug_hunter`/`adversarial_tester`/`plan_conformance` qui ne pointe pas vers un fichier existant | IMPLEMENTE | `.ai/tools/workflow_state.ps1::Test-EvidenceReferenceSubstance` ; cas de test `Assert-Throws` dans `test_workflow_state_machine.ps1`. |
+| (2) Elle continue d'accepter une reference valide et n'affecte aucun autre ID d'evidence | IMPLEMENTE | Cas de test ligne ~53-56 (reference valide acceptee) et bloc final (`intake_audit` non affecte). |
+| (3) `test_workflow_state_machine.ps1` retourne PASS, y compris le cas negatif `bug_hunter=chaine_arbitraire_sans_artefact` | IMPLEMENTE | Execution reelle : `workflow_state_machine=PASS`, exit code 0. |
+| Non-goals respectes (`Assert-WorkflowState` inchange, IDs hors-perimetre non touches, `WORKFLOW.json` non modifie) | IMPLEMENTE | Diff limite a `workflow_state.ps1`, `plan.ps1`, `test_workflow_state_machine.ps1` ; aucune modification de `Assert-WorkflowState` ni des fichiers `WORKFLOW.json` (verifie par lecture du diff). |
+
+Aucun critere MANQUANT. Aucun `Non-goals` viole. Cloture autorisee.
 
 ---
 

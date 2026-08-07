@@ -44,12 +44,44 @@ Add-WorkflowEvidence -State $state -Id "baseline_commit" -Reference "0123456789a
 Move-WorkflowStage -Contract $common -State $state -Action "baseline"
 Move-WorkflowStage -Contract $common -State $state -Action "continue"
 Assert-Throws { Move-WorkflowStage -Contract $common -State $state -Action "ready" } "ready bypassed required evidence."
-Add-WorkflowEvidence -State $state -Id "plan_conformance" -Reference "unit:conformance"
+Add-WorkflowEvidence -State $state -Id "plan_conformance" -Reference ".ai/tools/tests/test_workflow_state_machine.ps1" -RepoRoot $repoRoot
 Move-WorkflowStage -Contract $common -State $state -Action "ready"
 Move-WorkflowStage -Contract $common -State $state -Action "close_done"
 Assert-Equal $state.stage "DONE" "close transition failed."
 Assert-Throws { Move-WorkflowStage -Contract $common -State $state -Action "continue" } "terminal state allowed an outbound transition."
 Assert-Throws { Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId "interface" -RequireActive } "PLANNED interface workflow was executable."
+
+# Negative proof: a substantiated evidence id (bug_hunter / adversarial_tester /
+# plan_conformance) must reject a reference that does not point to a real
+# artifact of the repository, even if the string itself is non-empty and
+# well-formed. This is Exit criteria condition (4) of
+# EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE and Exit criteria condition (3) of
+# PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY: this case must fail on the code
+# predating that lot, and pass afterward.
+$coreEngine = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId "core-engine" -RequireActive
+$substanceState = New-WorkflowState -Contract $coreEngine
+Assert-Throws {
+    Add-WorkflowEvidence -State $substanceState -Id "bug_hunter" -Reference "chaine_arbitraire_sans_artefact" -RepoRoot $repoRoot
+} "bug_hunter accepted a reference that does not point to a real artifact."
+Assert-Throws {
+    Add-WorkflowEvidence -State $substanceState -Id "adversarial_tester" -Reference "unit:fake" -RepoRoot $repoRoot
+} "adversarial_tester accepted a reference that does not point to a real artifact."
+Assert-Throws {
+    Add-WorkflowEvidence -State $substanceState -Id "plan_conformance" -Reference "unit:fake"
+} "plan_conformance was accepted without -RepoRoot (fail-closed expected)."
+Assert-Throws {
+    Add-WorkflowEvidence -State $substanceState -Id "plan_conformance" `
+        -Reference ".ai/tools/tests/test_workflow_state_machine.ps1#section-inexistante" -RepoRoot $repoRoot
+} "plan_conformance accepted a reference with a non-existent Markdown anchor."
+Assert-Throws {
+    Add-WorkflowEvidence -State $substanceState -Id "plan_conformance" `
+        -Reference ".ai/tools/tests/test_workflow_state_machine.ps1#" -RepoRoot $repoRoot
+} "plan_conformance accepted a reference with a trailing '#' and no anchor text (silent fallback to no-anchor)."
+# A substantiated id with a real, existing file reference must still be accepted.
+Add-WorkflowEvidence -State $substanceState -Id "bug_hunter" -Reference ".ai/tools/tests/test_workflow_state_machine.ps1" -RepoRoot $repoRoot
+Assert-Equal (@($substanceState.evidence | Where-Object { $_.id -eq "bug_hunter" }).Count) 1 "valid substantiated evidence was not recorded."
+# Non-substantiated ids remain unaffected by the new check (no RepoRoot required).
+Add-WorkflowEvidence -State $substanceState -Id "intake_audit" -Reference "unit:intake"
 
 $malformed = Get-Content -Raw (Join-Path $repoRoot ".ai/workflows/common/WORKFLOW.json") | ConvertFrom-Json
 $malformed.stages = @($malformed.stages) + @($malformed.stages[0])
@@ -179,7 +211,10 @@ Test fixture only.
         & $planBackend continue -Id "PLAN_TEST"
         Assert-Throws { & $planBackend close -Id "PLAN_TEST" -Outcome DONE } "backend close bypassed READY_TO_CLOSE."
         Assert-Throws { & $planBackend ready -Id "PLAN_TEST" } "backend ready bypassed conformance evidence."
-        & $planBackend ready -Id "PLAN_TEST" -Evidence "plan_conformance=test:report"
+        Assert-Throws {
+            & $planBackend ready -Id "PLAN_TEST" -Evidence "plan_conformance=test:report"
+        } "backend ready accepted a plan_conformance reference that does not point to a real artifact."
+        & $planBackend ready -Id "PLAN_TEST" -Evidence "plan_conformance=.ai/backlog/annexes/PLAN_TEST.md"
         & $planBackend close -Id "PLAN_TEST" -Outcome DONE -Reason "integration test complete"
 
         $checkpoint = Get-Content -Raw ".ai/checkpoint.json" | ConvertFrom-Json

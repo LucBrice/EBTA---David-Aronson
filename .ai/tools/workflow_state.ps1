@@ -117,12 +117,104 @@ function New-WorkflowState {
     }
 }
 
+function Get-SubstantiatedEvidenceIds {
+    # IDs d'evidence dont la reference doit pointer vers un artefact reel du
+    # depot (fichier existant, ancre Markdown verifiee si fournie), au lieu
+    # d'accepter n'importe quelle chaine non vide. Cible exactement le risque
+    # identifie par l'audit robustesse 2026-08-07 (recommandation 1) : ces
+    # trois IDs sont les preuves exigees par la transition "ready" du
+    # workflow core-engine avant /close. Ne pas etendre a intake_audit/
+    # plan_audit/baseline_commit/legacy_import, dont les formats (SHA,
+    # phrase libre) ne sont pas des chemins de fichier. Fonction plutot que
+    # variable de script : evite toute ambiguite de portee sous
+    # dot-sourcing repete (ce fichier est source par plan.ps1 et par le
+    # harnais de test).
+    return @("bug_hunter", "adversarial_tester", "plan_conformance")
+}
+
+function ConvertTo-HeadingSlug {
+    # Approxime (best-effort) l'algorithme de slug d'ancre Markdown de
+    # GitHub : minuscule, retrait de la ponctuation hors espace/tiret,
+    # espaces -> tirets, tirets multiples reduits. Ne gere pas les suffixes
+    # de doublon ("-1", "-2") ni une translitteration fine des caracteres
+    # accentues : caveat documente, pas une garantie d'exactitude totale.
+    param([Parameter(Mandatory = $true)][string]$Text)
+
+    $slug = $Text.ToLowerInvariant()
+    $slug = ($slug -replace "[^a-z0-9\s\-]", "")
+    $slug = ($slug -replace "\s+", "-")
+    $slug = ($slug -replace "-{2,}", "-")
+    return $slug.Trim("-")
+}
+
+function Test-EvidenceReferenceSubstance {
+    # Valide qu'une reference d'evidence pointe vers un artefact reel :
+    # decoupe "chemin#ancre", exige un chemin relatif au depot (pas de
+    # racine absolue, pas de "..") qui existe comme fichier, et, si une
+    # ancre est fournie, verifie (best-effort) qu'elle correspond a un titre
+    # Markdown du fichier. Leve une erreur descriptive sinon. N'evalue
+    # jamais le contenu semantique de l'artefact : preuve d'existence
+    # uniquement, pas preuve de contenu.
+    param(
+        [Parameter(Mandatory = $true)][string]$RepoRoot,
+        [Parameter(Mandatory = $true)][string]$Id,
+        [Parameter(Mandatory = $true)][string]$Reference
+    )
+
+    $hashIndex = $Reference.IndexOf("#")
+    if ($hashIndex -ge 0) {
+        $relativePath = $Reference.Substring(0, $hashIndex)
+        $anchor = $Reference.Substring($hashIndex + 1)
+    } else {
+        $relativePath = $Reference
+        $anchor = $null
+    }
+
+    if ([string]::IsNullOrWhiteSpace($relativePath)) {
+        throw "Workflow evidence '$Id' reference must include a file path before any '#' anchor: '$Reference'."
+    }
+    if ([System.IO.Path]::IsPathRooted($relativePath) -or $relativePath -match "\.\.") {
+        throw "Workflow evidence '$Id' reference must be a repo-relative path without '..' traversal: '$Reference'."
+    }
+
+    if ($hashIndex -ge 0 -and [string]::IsNullOrWhiteSpace($anchor)) {
+        # A trailing "#" with nothing after it signals an anchor was
+        # intended but left empty. Silently treating this like "no anchor"
+        # would accept a malformed reference instead of rejecting it -
+        # reject explicitly rather than fall back.
+        throw "Workflow evidence '$Id' reference has a '#' with no anchor text after it: '$Reference'."
+    }
+
+    $fullPath = Join-Path $RepoRoot ($relativePath -replace "/", "\")
+    if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
+        throw "Workflow evidence '$Id' reference does not point to an existing file: '$relativePath' (from '$Reference')."
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($anchor)) {
+        $content = Get-Content -Raw -LiteralPath $fullPath
+        $targetSlug = (ConvertTo-HeadingSlug $anchor)
+        $found = $false
+        foreach ($line in ($content -split "`r?`n")) {
+            if ($line -match "^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$") {
+                if ((ConvertTo-HeadingSlug $Matches[1]) -eq $targetSlug) {
+                    $found = $true
+                    break
+                }
+            }
+        }
+        if (-not $found) {
+            throw "Workflow evidence '$Id' reference anchor '#$anchor' was not found among Markdown headings of '$relativePath'."
+        }
+    }
+}
+
 function Add-WorkflowEvidence {
     param(
         [Parameter(Mandatory = $true)][object]$State,
         [Parameter(Mandatory = $true)][string]$Id,
         [Parameter(Mandatory = $true)][string]$Reference,
-        [string]$RecordedAt = (Get-Date -Format "yyyy-MM-dd")
+        [string]$RecordedAt = (Get-Date -Format "yyyy-MM-dd"),
+        [string]$RepoRoot
     )
 
     if ($Id -notmatch "^[a-z][a-z0-9_]*$") {
@@ -133,6 +225,12 @@ function Add-WorkflowEvidence {
     }
     if (@($State.evidence | Where-Object { $_.id -eq $Id }).Count -gt 0) {
         throw "Workflow evidence id '$Id' is already recorded."
+    }
+    if ($Id -in (Get-SubstantiatedEvidenceIds)) {
+        if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+            throw "Workflow evidence '$Id' requires -RepoRoot to validate that its reference points to a real artifact."
+        }
+        Test-EvidenceReferenceSubstance -RepoRoot $RepoRoot -Id $Id -Reference $Reference
     }
     $entry = [pscustomobject][ordered]@{
         id = $Id
@@ -145,14 +243,15 @@ function Add-WorkflowEvidence {
 function Add-WorkflowEvidenceArguments {
     param(
         [Parameter(Mandatory = $true)][object]$State,
-        [string[]]$EvidenceArguments
+        [string[]]$EvidenceArguments,
+        [string]$RepoRoot
     )
 
     foreach ($item in @($EvidenceArguments)) {
         if ($item -notmatch "^([a-z][a-z0-9_]*)=(.+)$") {
             throw "Workflow evidence must use id=reference, got '$item'."
         }
-        Add-WorkflowEvidence -State $State -Id $Matches[1] -Reference $Matches[2]
+        Add-WorkflowEvidence -State $State -Id $Matches[1] -Reference $Matches[2] -RepoRoot $RepoRoot
     }
 }
 

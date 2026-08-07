@@ -284,7 +284,7 @@ switch ($Action) {
             throw "Action start: classification '$Classification' exige le workflow '$expectedWorkflow', pas '$Workflow'."
         }
         $workflowState = New-WorkflowState -Contract $workflowContract
-        Add-WorkflowEvidence -State $workflowState -Id "intake_audit" -Reference $IntakeAuditEvidence
+        Add-WorkflowEvidence -State $workflowState -Id "intake_audit" -Reference $IntakeAuditEvidence -RepoRoot $repoRoot
         Move-WorkflowStage -Contract $workflowContract -State $workflowState -Action "start"
 
         $draft = Resolve-Path $Path
@@ -386,8 +386,8 @@ switch ($Action) {
             throw "Action baseline: le commit '$BaselineCommit' ne contient pas le plan '$($workstream.source_path)'."
         }
         $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workstream.workflow.id -RequireActive
-        Add-WorkflowEvidence -State $workstream.workflow -Id "plan_audit" -Reference $PlanAuditEvidence
-        Add-WorkflowEvidence -State $workstream.workflow -Id "baseline_commit" -Reference $BaselineCommit
+        Add-WorkflowEvidence -State $workstream.workflow -Id "plan_audit" -Reference $PlanAuditEvidence -RepoRoot $repoRoot
+        Add-WorkflowEvidence -State $workstream.workflow -Id "baseline_commit" -Reference $BaselineCommit -RepoRoot $repoRoot
         Move-WorkflowStage -Contract $workflowContract -State $workstream.workflow -Action "baseline"
         $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
         Write-Checkpoint $checkpoint $checkpointPath
@@ -434,7 +434,7 @@ switch ($Action) {
             throw "Action ready: etat workflow absent pour '$Id'. Execute migrate-workflows."
         }
         $workflowContract = Get-WorkflowContract -RepoRoot $repoRoot -WorkflowId $workstream.workflow.id -RequireActive
-        Add-WorkflowEvidenceArguments -State $workstream.workflow -EvidenceArguments $Evidence
+        Add-WorkflowEvidenceArguments -State $workstream.workflow -EvidenceArguments $Evidence -RepoRoot $repoRoot
         Move-WorkflowStage -Contract $workflowContract -State $workstream.workflow -Action "ready"
         $workstream.last_moved_at = (Get-Date -Format "yyyy-MM-dd")
         Write-Checkpoint $checkpoint $checkpointPath
@@ -511,7 +511,7 @@ switch ($Action) {
                 throw "Migration workflow: etape legacy '$legacyStage' non declaree pour '$workflowId'."
             }
             $workflowState.stage = $legacyStage
-            Add-WorkflowEvidence -State $workflowState -Id "legacy_import" -Reference $migrationReference
+            Add-WorkflowEvidence -State $workflowState -Id "legacy_import" -Reference $migrationReference -RepoRoot $repoRoot
             Assert-WorkflowState -Contract $workflowContract -State $workflowState
             $workstream | Add-Member -NotePropertyName "workflow" -NotePropertyValue $workflowState
             $migratedCount += 1
