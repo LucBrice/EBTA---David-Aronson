@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -1674,10 +1674,10 @@
       "id": "PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY",
       "title": "Lot 1 - substantifier les preuves du gate ready",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md",
+      "source_path": ".ai/archive/20260807_PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-07",
@@ -1687,12 +1687,12 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Add-WorkflowEvidence substantifie desormais bug_hunter/adversarial_tester/plan_conformance ; test_workflow_state_machine.ps1 PASS avec la preuve negative exigee par le chantier mere ; aucune regression sur la suite Python (219 tests, meme erreur d'environnement Nautilus preexistante hors perimetre).",
       "non_goals": [],
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1708,10 +1708,25 @@
             "id": "baseline_commit",
             "reference": "97512ce759e4b8ae86015c29bd2d753107e86fbb",
             "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": ".ai/backlog/fixes/PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md#bug-hunter-balayage-manuel-pyrefly-non-applicable-aucun-fichier-python-touche",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": ".ai/backlog/fixes/PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md#adversarial-tester-cible-test-evidencereferencesubstance-nouveau-gate-de-preuve",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/fixes/PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md#plan-conformance-audit",
+            "recorded_at": "2026-08-07"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
