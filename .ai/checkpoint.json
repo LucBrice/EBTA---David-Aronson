@@ -1635,6 +1635,38 @@
           }
         ]
       }
+    },
+    {
+      "id": "PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS",
+      "title": "Lot 5 - isolation tests Nautilus (cloture REJECTED)",
+      "track": "fix",
+      "status": "DONE",
+      "lifecycle": "REJECTED",
+      "classification": "TEST_FIXTURE",
+      "source_path": ".ai/archive/20260807_PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-07",
+      "last_moved_at": "2026-08-07",
+      "routing_decision": "fix",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": "Refuse le 2026-08-07 par decision humaine journalisee dans EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md section 10 : la premisse de la recommandation 5 (echec d'environnement noye dans le run) tombe des que le lot 3 livre sa garde locale dans long_data.py ; aucun des sept fichiers de test nautilus n'utilise skipUnless/skipIf/import nautilus_trader.",
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "REJECTED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": "0 - HUMAN START HERE/archive/20260807_PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS.md#boucle-evaluate-dintake-2-passes-convergee",
+            "recorded_at": "2026-08-07"
+          }
+        ]
+      }
     }
   ],
   "validation": {
