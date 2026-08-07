@@ -44,14 +44,34 @@ def append_incident(
     return normalized
 
 
+class IncidentLogNotFound(FileNotFoundError):
+    """Raised when an incident log path does not exist.
+
+    Deliberately distinct from an empty result. A log file that exists and
+    contains zero lines means "verified: no incidents were ever recorded" -
+    a legitimate, confirmed state. A log file that does not exist at all
+    means "we cannot verify the incident history" (never created, wrong
+    path, or deleted). Collapsing both into the same [] return value would
+    let a missing or mistyped path masquerade as a verified-clean incident
+    history to any G-BIAS caller - exactly the silent-fallback pattern
+    SOP 13 / .agents/skills/adversarial-tester exist to catch. Callers that
+    need "treat unknown as no incidents" must opt into that explicitly by
+    catching this exception, rather than receiving it implicitly.
+    """
+
+
 def load_incidents(
     log_path: Path | str | None = None,
     **filters: str,
 ) -> list[dict[str, Any]]:
-    """Load incidents from JSONL, optionally filtering by exact field values."""
+    """Load incidents from JSONL, optionally filtering by exact field values.
+
+    Raises IncidentLogNotFound if the log file does not exist (see that
+    exception's docstring for why this is not the same as an empty log).
+    """
     target = Path(log_path) if log_path is not None else DEFAULT_INCIDENT_LOG
     if not target.exists():
-        return []
+        raise IncidentLogNotFound(f"Incident log not found: {target}")
 
     incidents: list[dict[str, Any]] = []
     with target.open("r", encoding="utf-8") as handle:

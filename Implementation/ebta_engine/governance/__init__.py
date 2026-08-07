@@ -9,6 +9,7 @@ from .bias_gate import evaluate_bias_gate
 from .candidate_family_checker import check_candidate_family
 from .incident_logger import (
     DEFAULT_INCIDENT_LOG,
+    IncidentLogNotFound,
     append_incident,
     load_incidents,
     load_open_incidents,
@@ -22,6 +23,7 @@ from .robustness_gate_checker import check_robustness_gate
 __all__ = [
     "BIAS_RISKS",
     "DEFAULT_INCIDENT_LOG",
+    "IncidentLogNotFound",
     "append_incident",
     "check_candidate_family",
     "check_metric_lock",

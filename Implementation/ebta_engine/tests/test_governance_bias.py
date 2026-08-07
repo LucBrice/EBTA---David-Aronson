@@ -18,7 +18,7 @@ from ebta_engine.governance import (
     load_incidents,
     load_open_incidents,
 )
-from ebta_engine.governance.incident_logger import validate_incident
+from ebta_engine.governance.incident_logger import IncidentLogNotFound, validate_incident
 from ebta_engine.schema_validation import validate
 
 
@@ -87,6 +87,33 @@ class GovernanceBiasTests(unittest.TestCase):
 
         self.assertEqual(len(family_incidents), 2)
         self.assertEqual([incident["incident_id"] for incident in open_blocking], ["BIAS-2026-0001"])
+
+    def test_incident_logger_missing_log_raises_instead_of_reporting_empty(self):
+        # Adversarial regression (Lot 4, PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE):
+        # a missing/never-created/deleted incident log must never be silently
+        # indistinguishable from a verified-clean incident history. Before
+        # this fix, load_incidents(missing_path) returned [] - identical to
+        # what a genuinely clean log produces - which would let a wrong path
+        # or a deleted append-only log masquerade as "no incidents ever
+        # happened" to any future G-BIAS caller.
+        with tempfile.TemporaryDirectory() as temp_dir:
+            missing_path = Path(temp_dir) / "does_not_exist.jsonl"
+
+            with self.assertRaises(IncidentLogNotFound):
+                load_incidents(missing_path)
+            with self.assertRaises(IncidentLogNotFound):
+                load_open_incidents(missing_path)
+
+    def test_incident_logger_existing_empty_log_returns_empty_list(self):
+        # Positive control for the fix above: a log file that genuinely
+        # exists and is empty is a verified-clean state and must still
+        # return [] without raising - only a missing path is an error.
+        with tempfile.TemporaryDirectory() as temp_dir:
+            empty_path = Path(temp_dir) / "empty.jsonl"
+            empty_path.touch()
+
+            self.assertEqual(load_incidents(empty_path), [])
+            self.assertEqual(load_open_incidents(empty_path), [])
 
     def test_derogation_schema_validates_required_contract(self):
         schema = json.loads((GOVERNANCE / "derogation_schema.json").read_text(encoding="utf-8"))

@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -1790,8 +1790,8 @@
       "id": "PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE",
       "title": "Lot 4 - adversarial-tester outille sur governance",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "GOVERNANCE",
       "source_path": ".ai/backlog/fixes/PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md",
@@ -1808,7 +1808,7 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1826,7 +1826,8 @@
             "recorded_at": "2026-08-07"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {
