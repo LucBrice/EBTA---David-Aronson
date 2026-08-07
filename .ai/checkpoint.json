@@ -1843,6 +1843,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS",
+      "title": "Lot 2 - hooks git pre-commit et pre-push",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-07",
+      "last_moved_at": "2026-08-07",
+      "routing_decision": "fix",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          }
+        ]
+      }
     }
   ],
   "validation": {
