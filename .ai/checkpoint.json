@@ -1690,11 +1690,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "97512ce759e4b8ae86015c29bd2d753107e86fbb",
             "recorded_at": "2026-08-07"
           }
         ]
