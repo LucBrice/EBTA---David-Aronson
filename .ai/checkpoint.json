@@ -1785,6 +1785,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE",
+      "title": "Lot 4 - adversarial-tester outille sur governance",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/fixes/PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-07",
+      "last_moved_at": "2026-08-07",
+      "routing_decision": "fix",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/fixes/PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          }
+        ]
+      }
     }
   ],
   "validation": {
