@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -1732,8 +1732,8 @@
       "id": "PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS",
       "title": "Lot 3 - garde d'environnement long_data.py",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "IMPLEMENTATION_DETAIL",
       "source_path": ".ai/backlog/fixes/PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS.md",
@@ -1750,7 +1750,7 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1768,7 +1768,8 @@
             "recorded_at": "2026-08-07"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {

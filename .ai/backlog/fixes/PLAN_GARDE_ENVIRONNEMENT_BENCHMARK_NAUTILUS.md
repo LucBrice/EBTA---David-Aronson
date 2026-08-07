@@ -288,12 +288,12 @@ perimetre de la section 5.
 
 ## 12. Definition of Done
 
-- [ ] Phase 1 executee et verifiee (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre (section 5).
-- [ ] Aucune regression sur la suite de tests existante.
-- [ ] Checklist post-modification du projet executee.
-- [ ] Aucune implementation partielle presentee comme terminee.
+- [x] Phase 1 executee et verifiee (section 9).
+- [x] Exit criteria de la section Triage atteint et verifiable.
+- [x] Aucune modification hors perimetre (section 5).
+- [x] Aucune regression sur la suite de tests existante.
+- [x] Checklist post-modification du projet executee.
+- [x] Aucune implementation partielle presentee comme terminee.
 
 ---
 
@@ -301,9 +301,74 @@ perimetre de la section 5.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir au `/close`] |
-| Ecarts par rapport au plan initial | [a remplir] |
-| Suites a prevoir (hors perimetre de ce plan) | Ce lot debloque la partie `pre-push` du lot 2 et le lot 6 (CI), tous deux conditionnes par une suite verte. |
+| Resultat final | DONE — `_environment_report()` retourne desormais `"NOT_INSTALLED"` pour `nautilus_trader_version` hors venv Nautilus au lieu de lever `PackageNotFoundError` ; suite complete `219 tests, 0 error` (skips=6) hors venv. |
+| Ecarts par rapport au plan initial | Aucun. Implementation strictement conforme a la section 5 (nouvelle fonction `_nautilus_trader_version()` extraite, seul `_environment_report()` modifie pour l'appeler). |
+| Suites a prevoir (hors perimetre de ce plan) | Ce lot debloque la partie `pre-push` du lot 2 et le lot 6 (CI), tous deux conditionnes par une suite verte. Hors-scope trouve par le bug-hunter : 3 erreurs Pyrefly preexistantes (`ctypes.WinDLL` non declare par le stub, lignes 407/448-449, confirmees anterieures a ce lot via `git show d18f468`) — flagge separement, pas corrige ici (hors perimetre section 5 : "`_environment_report()` uniquement"). |
+
+### Resultat d'execution (a dupliquer a chaque session d'execution significative)
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-08-07 |
+| Phases executees | Phase 1 (unique) |
+| Artefact produit | `Implementation/ebta_engine/benchmarks/long_data.py` (`_nautilus_trader_version()` nouvelle fonction, `_environment_report()` l'appelle). |
+| Validation | PASS — `python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation` -> `Ran 219 tests`, `OK (skipped=6)`, zero erreur. Verification directe : `_environment_report()["nautilus_trader_version"] == "NOT_INSTALLED"` hors venv Nautilus. |
+| Ecart par rapport au plan | Aucun. |
+
+#### bug-hunter (Pyrefly, fichier touche)
+
+Environnement : `Implementation/adapters/nautilus_env/venv` (chemin standard
+documente par `CLAUDE.md`) est absent de ce worktree ; Pyrefly installe a la
+place via `pip install --user pyrefly` (outillage dev ponctuel, decision
+humaine deja actee le 2026-07-14 pour Pyrefly en general — voir
+`.agents/skills/bug-hunter/SKILL.md` — aucune dependance runtime ajoutee au
+moteur, rien commite dans le depot).
+
+```
+python -m pyrefly check Implementation/ebta_engine/benchmarks/long_data.py --output-format min-text
+```
+
+Resultat : 3 erreurs, toutes sur `ctypes.WinDLL` (lignes 407, 448, 449),
+**toutes preexistantes** — confirme par `git show d18f468:Implementation/ebta_engine/benchmarks/long_data.py`
+(SHA de baseline de ce lot, avant implementation) : les trois lignes y sont
+identiques. Triage : **FAUX POSITIF D'OUTILLAGE** — `ctypes.WinDLL` est un
+attribut Windows reel et valide a l'execution (la suite complete passe,
+219 tests OK) ; le stub typeshed utilise par Pyrefly ne le declare pas pour
+la cible de plateforme par defaut. Meme classe que les faux positifs
+numpy/pandas deja documentes par `bug-hunter/SKILL.md`. Hors perimetre de ce
+lot (section 5 : `_environment_report()` uniquement, pas
+`_process_tree_rss_bytes()`/`_visible_memory_bytes()`) — flagge separement
+(tache de suivi spawnee), pas corrige ici pour ne pas depasser le perimetre
+declare. **Zero erreur sur le code ajoute par ce lot** (`_nautilus_trader_version()`,
+lignes ajoutees) : les 3 erreurs portent exclusivement sur du code
+preexistant non touche.
+
+#### adversarial-tester (cible : `_environment_report()`, ecrit un artefact persiste `reports/*.json`-like)
+
+Le rapport de benchmark produit par `run_benchmark()` est ecrit sur disque
+(`_write_json_atomic`) — dans le perimetre d'invocation recommandee du
+skill (artefact persiste).
+
+| Point teste | Entree hostile | Observation avant correction | Observation apres correction | Classification | Preuve |
+| --- | --- | --- | --- | --- | --- |
+| Paquet `nautilus_trader` absent | Environnement hors venv Nautilus (cas reel de ce worktree) | `PackageNotFoundError` non catchee : `run_benchmark()` levait une exception Python non geree — echec bruyant, pas un faux succes, mais un crash total du benchmark plutot qu'un rapport gracieux | `nautilus_trader_version` vaut `"NOT_INSTALLED"` ; le reste du rapport (`status`, `canonical`, `pipeline_cells`) continue de refleter les statuts reels des cellules, inchange par ce champ | `PASS_ADVERSARIAL` (apres correctif) — aucun `FALSE_SUCCESS` : le champ verite (`status`/`canonical`) ne depend jamais de `nautilus_trader_version`, verifie par lecture du code (ligne 117, 120-121) | Execution directe de `_environment_report()` ci-dessus + lecture de `run_benchmark()` lignes 117-121 |
+| Exception autre que `PackageNotFoundError` (ex. metadonnees corrompues) | Non provoquee physiquement (necessiterait de corrompre l'index de paquets Python) | N/A | Continuerait de se propager sans etre masquee — catch cible exclusivement sur `PackageNotFoundError` | `PASS_ADVERSARIAL` (par lecture de code, invariant 1) | Lecture directe de `_nautilus_trader_version()` : un seul `except importlib.metadata.PackageNotFoundError` |
+
+Aucun `FALSE_SUCCESS` ni `SILENT_FALLBACK` trouve. Le correctif transforme
+un crash total (echec bruyant mais total) en un rapport complet avec un
+champ informatif explicite — pas une degradation du niveau de verite du
+rapport.
+
+#### plan-conformance-audit
+
+| Exit criterion | Classification | Preuve |
+| --- | --- | --- |
+| (1) `219 tests, 0 error` hors venv Nautilus | IMPLEMENTE | `python -m unittest discover ...` -> `Ran 219 tests`, `OK (skipped=6)`. |
+| (2) `nautilus_trader_version` vaut `"NOT_INSTALLED"` explicite quand le paquet est absent | IMPLEMENTE | Verification directe ci-dessus. |
+| (3) Aucune autre modification de `Implementation/` que ce fichier | IMPLEMENTE | `git diff --stat` limite a `Implementation/ebta_engine/benchmarks/long_data.py` (verifie avant commit). |
+| Non-goals respectes (aucune autre fonction modifiee, aucun test skippe) | IMPLEMENTE | Seule `_environment_report()`/`_nautilus_trader_version()` touchees ; `test_long_data_benchmark.py` non modifie, aucun `@skip`. |
+
+Aucun critere MANQUANT. Aucun `Non-goals` viole. Cloture autorisee.
 
 ---
 

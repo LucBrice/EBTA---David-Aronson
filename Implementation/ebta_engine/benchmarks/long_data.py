@@ -484,12 +484,27 @@ def _environment_report() -> dict[str, Any]:
     return {
         "python_version": platform.python_version(),
         "python_executable": sys.executable,
-        "nautilus_trader_version": importlib.metadata.version("nautilus_trader"),
+        "nautilus_trader_version": _nautilus_trader_version(),
         "platform": platform.platform(),
         "processor": platform.processor(),
         "logical_cpu_count": os.cpu_count(),
         "visible_memory_bytes": _visible_memory_bytes(),
     }
+
+
+def _nautilus_trader_version() -> str:
+    # nautilus_trader is an optional adapter dependency (see CLAUDE.md:
+    # the EBTA engine is stdlib-only by design; nautilus_trader lives only
+    # in Implementation/adapters/nautilus_env/venv). Outside that venv,
+    # importlib.metadata.version() raises PackageNotFoundError. The report
+    # must still be produced with an explicit sentinel value rather than
+    # letting this single field crash the whole benchmark run - only the
+    # documented, expected exception is caught; anything else still
+    # propagates.
+    try:
+        return importlib.metadata.version("nautilus_trader")
+    except importlib.metadata.PackageNotFoundError:
+        return "NOT_INSTALLED"
 
 
 def _visible_memory_bytes() -> int | None:
