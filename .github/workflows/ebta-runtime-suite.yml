@@ -1,0 +1,69 @@
+name: EBTA runtime suite
+
+# Independent verdict source (PLAN_CI_GITHUB_VERDICT_INDEPENDANT, sub-plan
+# 6/6 of EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE). Every other proof in this
+# repo (bug_hunter/adversarial_tester/plan_conformance evidence,
+# checkpoint.json, local git hooks) is authored and run by the same coding
+# agent that produced the change, and local hooks are bypassable with
+# --no-verify without leaving a trace. This workflow runs on infrastructure
+# the agent does not control and cannot silently skip.
+#
+# Deliberately scoped to what is real stdlib-only / already-authorized
+# tooling, matching this repo's design (see CLAUDE.md: the EBTA engine is
+# Python-stdlib-only by design):
+#   - the canonical unittest suite (Implementation/ebta_engine/tests)
+#   - JSON Schema validation of checkpoint.json / tracking.json via
+#     jsonschema, installed on this runner only (human decision logged in
+#     EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md section 10: "Autorise pip
+#     install jsonschema cote runner CI (outillage CI, pas dependance
+#     runtime du moteur)").
+# It deliberately does NOT simulate the NautilusTrader venv
+# (Implementation/adapters/nautilus_env/) - that environment is optional,
+# not committed to the repo, and already covered locally by the pre-push
+# git hook (Implementation/Active/pre_push_hook.py, Lot 2). Simulating it
+# here would either require committing a heavy adapter environment or
+# reintroducing a hidden dependency this repo explicitly avoids.
+
+"on":
+  push:
+  workflow_dispatch:
+
+jobs:
+  runtime-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install jsonschema (CI tooling only, not a runtime dependency)
+        run: pip install jsonschema
+
+      - name: Run the canonical EBTA runtime test suite
+        run: python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation
+
+      - name: Validate .ai/checkpoint.json against its schema
+        run: |
+          python -c "
+          import json, jsonschema
+          jsonschema.validate(
+              json.load(open('.ai/checkpoint.json', encoding='utf-8')),
+              json.load(open('.ai/checkpoint.schema.json', encoding='utf-8')),
+          )
+          print('checkpoint.json matches checkpoint.schema.json')
+          "
+
+      - name: Validate Implementation/Active/tracking.json against its schema
+        run: |
+          python -c "
+          import json, jsonschema
+          jsonschema.validate(
+              json.load(open('Implementation/Active/tracking.json', encoding='utf-8')),
+              json.load(open('Implementation/Active/tracking.schema.json', encoding='utf-8')),
+          )
+          print('tracking.json matches tracking.schema.json')
+          "
