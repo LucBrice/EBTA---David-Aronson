@@ -296,16 +296,72 @@ temporairement pour la preuve de Phase 2 (revert immediat obligatoire).
 | Le premier run CI echoue pour une raison d'environnement (ex. version Python differente) | Signal disqualifie des le depart | Verification locale prealable des commandes exactes avant push (section 9) |
 | Le commit cassant de Phase 2 n'est pas revert par erreur | `main` reste casse | Invariant 1, verifie explicitement avant cloture (section 13) |
 
+### BLOCAGE REEL CONSTATE (2026-08-07) — necessite une decision humaine, non tranchee ici
+
+Le premier run CI reel (`gh run view 31216784307`,
+`https://github.com/LucBrice/EBTA---David-Aronson/actions/runs/31216784307`)
+a echoue avec **21 erreurs**, jamais observees localement. Deux causes
+racines distinctes, toutes deux hors perimetre de ce lot (section 5 ne
+couvre que `.github/workflows/`) :
+
+1. **`pandas` non declare comme dependance, mais requis en pratique.**
+   `Implementation/ebta_engine/strategies/incremental/payload_e.py:9` fait
+   `import pandas as pd` sans garde. Ce module est importe par
+   `ebta_engine/adapters/nautilus_mapping.py` (adaptateur central), lui-meme
+   importe par `package_builder/`, `benchmarks/`, `examples/` — l'absence de
+   `pandas` fait donc echouer l'import d'environ 20 modules de test
+   totalement sans rapport avec `pandas` (ex. `test_nautilus_research_package`,
+   `test_gate_discrimination_experiment`). Ceci contredit directement
+   `CLAUDE.md` : *"a Python 3, standard-library-only runtime"*,
+   *"do not add dependencies without an explicit human decision"*. Invisible
+   localement parce que `pandas` etait deja installe sur cette machine de
+   developpement pour une raison sans rapport avec ce depot — jamais
+   documente ni declare comme dependance de ce sous-arbre.
+2. **Chemin Windows code en dur, casse sur Linux.**
+   `ebta_engine.tests.test_protocol_manifest_hashes::test_frozen_protocol_hashes_still_match`
+   echoue avec `FileNotFoundError` sur
+   `Protocole/Archives\AUDIT METHODOLOGIQUE PROTOCOLE EBTA.md` — un
+   antislash litteral dans un chemin, valide par accident sur Windows,
+   invalide sur le runner Linux de GitHub Actions.
+
+**Pourquoi ce n'est pas tranche dans ce lot** : corriger l'un ou l'autre
+exigerait de modifier des fichiers `Implementation/ebta_engine/` hors du
+perimetre routé de ce lot (section 5), et le point 1 touche directement la
+politique de dependances stdlib-only du depot — une decision normative-adjacente
+explicitement protegee par `CLAUDE.md` ("Ajouter des dependances techniques
+[interdit sans decision]"), pas une decision que l'IA executante peut
+prendre seule. Deux taches de suivi ont ete creees (`spawn_task`) pour
+chacune, avec le contexte complet (commande `gh run view`, trace
+d'importation complete, deux options presentees pour le point 1).
+
+**Consequence sur ce lot** : le workflow CI reste en place sur
+`origin/main` (il dit la verite sur un etat pre-existant reel du depot ; le
+retirer masquerait ce signal sans rien corriger). La Phase 2 (commit
+volontairement cassant + revert) n'a pas ete executee : superposer une
+cassure deliberee sur une base deja rouge pour une raison sans rapport
+aurait produit une demonstration confuse, pas une preuve propre. Ce lot
+reste `ACTIVE`, non cloture, en attente de la decision humaine sur le point
+1 ci-dessus (le point 2 est un bug pur, sans decision requise, mais bloque
+quand meme un run CI propre tant qu'il n'est pas corrige).
+
 ---
 
 ## 12. Definition of Done
 
-- [ ] Phases 1-2 executees et verifiees (section 9).
-- [ ] Exit criteria de la section Triage atteint et verifiable.
-- [ ] Aucune modification hors perimetre (section 5).
-- [ ] `main` dans un etat CI vert a la fin de ce lot.
-- [ ] Checklist post-modification du projet executee.
-- [ ] Aucune implementation partielle presentee comme terminee.
+- [x] Phase 1 executee : workflow cree, pousse, run CI reel observe
+      (echec, cause racine identifiee et documentee ci-dessus — pas un
+      succes cache en echec).
+- [ ] Phase 2 non executee (bloquee par l'etat rouge pre-existant, voir
+      blocage ci-dessus).
+- [ ] Exit criteria (2) non atteint : aucun run CI propre obtenu a ce jour.
+- [x] Aucune modification hors perimetre (section 5) — le blocage est
+      documente, pas contourne en elargissant silencieusement le perimetre.
+- [ ] `main` dans un etat CI vert — **non atteint**, `main` porte un etat
+      CI rouge reel et pre-existant, rendu visible (pas cause) par ce lot.
+- [x] Checklist post-modification du projet executee (voir rapport final
+      de la session).
+- [x] Aucune implementation partielle presentee comme terminee — ce lot
+      reste explicitement `ACTIVE`, pas `DONE`.
 
 ---
 
@@ -313,9 +369,9 @@ temporairement pour la preuve de Phase 2 (revert immediat obligatoire).
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir au `/close`] |
-| Ecarts par rapport au plan initial | [a remplir] |
-| Suites a prevoir (hors perimetre de ce plan) | Aucune identifiee — dernier lot du chantier mere ; Phase 6 (cloture generale) suit. |
+| Resultat final | **NON CLOTURE — reste `ACTIVE`.** Bloque par une decision humaine non tranchee (voir section 11, "BLOCAGE REEL CONSTATE"). Le workflow CI existe et fonctionne reellement (Phase 1 complete), mais ne peut pas encore produire de run vert pour des raisons pre-existantes et hors perimetre de ce lot. |
+| Ecarts par rapport au plan initial | Phase 2 (commit cassant + revert) non executee — la base est deja rouge pour des raisons reelles, superposer une cassure deliberee aurait produit une preuve confuse plutot que propre. |
+| Suites a prevoir (hors perimetre de ce plan) | Deux taches de suivi creees (dependance `pandas` non declaree ; chemin Windows code en dur dans `test_protocol_manifest_hashes.py`). Une fois ces deux points resolus par une session future (apres decision humaine sur le premier), reprendre ce lot : verifier un run CI propre (Exit criteria 2), puis executer la Phase 2 (preuve d'independance par commit cassant), puis cloturer. Phase 6 du chantier mere reste bloquee tant que ce lot n'est pas `DONE` (mecanisme normal de `Assert-SubChantiersClosed`). |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
