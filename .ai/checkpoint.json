@@ -1616,11 +1616,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": "0 - HUMAN START HERE/archive/20260807_AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-07.md#boucle-evaluate-dintake-2026-08-07-start-humain",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "033ef3c",
             "recorded_at": "2026-08-07"
           }
         ]
