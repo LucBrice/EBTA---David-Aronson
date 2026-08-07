@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -1848,10 +1848,10 @@
       "id": "PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS",
       "title": "Lot 2 - hooks git pre-commit et pre-push",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "IMPLEMENTATION_DETAIL",
-      "source_path": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md",
+      "source_path": ".ai/archive/20260807_PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-07",
@@ -1861,12 +1861,12 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "pre-commit valide desormais le schema de checkpoint.json/tracking.json ; pre-push (nouveau) execute la suite canonique avant tout push ; 11 scenarios hostiles PASS_ADVERSARIAL ; hooks installes et identiques octet-pour-octet a leur source ; suite complete 232 tests, 0 error.",
       "non_goals": [],
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1882,10 +1882,25 @@
             "id": "baseline_commit",
             "reference": "5ec14e324f2c0bfa1afb86ca16468884bbc99118",
             "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md#bug-hunter-pyrefly-fichiers-touches",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md#adversarial-tester-cible-les-deux-hooks-gates-produisant-un-verdict-bloquantpassant",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md#plan-conformance-audit",
+            "recorded_at": "2026-08-07"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
