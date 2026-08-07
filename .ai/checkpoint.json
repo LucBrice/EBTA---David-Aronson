@@ -1866,11 +1866,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "5ec14e324f2c0bfa1afb86ca16468884bbc99118",
             "recorded_at": "2026-08-07"
           }
         ]
