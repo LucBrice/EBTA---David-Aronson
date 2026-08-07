@@ -1924,11 +1924,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "9e5a44cba6ca4f6544f0ef272502cd054e919471",
             "recorded_at": "2026-08-07"
           }
         ]
