@@ -1808,11 +1808,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "d21d6e79107f1b5466e39ae205031ee6a4fae7ba",
             "recorded_at": "2026-08-07"
           }
         ]
