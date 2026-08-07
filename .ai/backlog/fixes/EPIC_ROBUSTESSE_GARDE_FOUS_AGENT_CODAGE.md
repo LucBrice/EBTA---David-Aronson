@@ -1,7 +1,7 @@
 # Plan — Chantier mere : robustesse des garde-fous face a l'agent de codage
 
 Chantier mere de coordination. Il **ne code rien lui-meme** : il ordonne et
-suit cinq lots independants issus de l'audit
+suit six lots independants issus de l'audit
 `0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-07.md`
 (5 passes d'audit + 3 passes `/evaluate` d'intake, convergees).
 
@@ -12,15 +12,14 @@ suit cinq lots independants issus de l'audit
 | Question | Reponse |
 | --- | --- |
 | Un chantier actif couvre-t-il deja ce perimetre (`DONE`, `ACTIVE`, ou `SUPERSEDED`) ? | **Non.** `.ai/checkpoint.json::active_workstream_id` vaut `null` et les 40+ workstreams enregistres sont tous `status: DONE`. Aucun ne porte sur l'outillage de gouvernance IA (`.ai/tools/`, hook git, segmentation de la suite de tests). |
-| Un verrou de gouvernance actif bloque-t-il ce chantier ? | **Oui, partiellement.** `.ai/governance/AI_MODIFICATION_CHECKLIST.md`, section "Modifications interdites sans decision explicite" : « Modifier du code d'implementation sauf si strictement necessaire pour mettre a jour une trace documentaire ». Ce verrou concerne les lots 3 et 5 (qui touchent `Implementation/`), pas les lots 1, 2 et 4. |
-| Ce plan a-t-il besoin d'une decision humaine explicite pour lever ce verrou avant d'etre routable via `/start` ? | **Non pour ce chantier mere** (il ne modifie aucun code). **Oui pour les lots 3 et 5** : la levee doit etre journalisee en section 10 du plan de chaque lot avant son propre `/start`. Ce chantier mere reste routable et executable sans cette decision, et les lots 1, 2, 4 avancent independamment. |
+| Un verrou de gouvernance actif bloque-t-il ce chantier ? | **Non — leve le 2026-08-07** (section 10). `.ai/governance/AI_MODIFICATION_CHECKLIST.md` interdisait de modifier du code d'implementation sans decision explicite ; l'autorisation a ete donnee pour le lot 3, et le lot 5 a ete refuse. Aucun autre lot ne touche `Implementation/`. |
+| Ce plan a-t-il besoin d'une decision humaine explicite pour lever ce verrou avant d'etre routable via `/start` ? | **Non.** Les trois decisions requises ont ete prises le 2026-08-07 (verrou lot 3 : autorise ; lot 5 : refuse ; mecanisation des tests : `pre-push` + CI GitHub). La Phase 0 est terminee ; les six lots sont ouvrables. |
 | Ce plan remplace-t-il un document ou chantier existant ? | **Non.** Aucun chantier anterieur ne couvre ce perimetre. |
 
-> Consequence operationnelle : le verrou ne bloque pas ce chantier mere, il
-> conditionne deux de ses cinq lots. Les lots 3 et 5 restent listes en
-> section "Sous-chantiers" ; s'ils sont refuses par l'humain, ils se cloturent
-> en `status: DONE` / `lifecycle: REJECTED` (precedent : `EPIC_ARCHITECTURE_IA_RAG`),
-> ce qui satisfait `plan.ps1::Assert-SubChantiersClosed` sans forcer une
+> Consequence operationnelle : le lot 5 ayant ete refuse, il reste liste en
+> section "Sous-chantiers" mais se cloturera en `status: DONE` /
+> `lifecycle: REJECTED` (precedent : `EPIC_ARCHITECTURE_IA_RAG`), ce qui
+> satisfait `plan.ps1::Assert-SubChantiersClosed` sans forcer une
 > implementation non autorisee.
 
 ---
@@ -61,11 +60,11 @@ suit cinq lots independants issus de l'audit
 | Scope | Coordonner l'execution ordonnee de cinq corrections independantes des garde-fous du depot contre l'erreur d'un agent de codage, sans en implementer aucune dans ce document. |
 | Non-goals | Ne code aucune des cinq corrections. Ne modifie ni `Protocole/`, ni `Implementation/`, ni `.ai/tools/`, ni `.git/hooks/`. Ne tranche aucune decision humaine en attente (levee du verrou `Implementation/` pour les lots 3 et 5 ; opportunite d'une CI). N'introduit aucune dependance technique. Ne cree aucun lien parent/enfant structurel dans `.ai/checkpoint.json`. |
 | Source | Audit `0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-07.md`, produit le 2026-08-07 par `.agents/skills/robustness-audit-coding-agent/SKILL.md` sur demande explicite de l'utilisateur (risque prioritaire enonce : l'erreur d'un agent de codage qui implemente dans `Implementation/`, pas l'erreur methodologique). `/start` demande par l'humain le 2026-08-07. |
-| Exit criteria | Les quatre conditions binaires suivantes sont toutes vraies : (1) les cinq ID listes en section "Sous-chantiers" existent dans `.ai/checkpoint.json` avec `status: DONE` (`lifecycle` `DONE` ou `REJECTED` selon la decision humaine) ; (2) `.\.ai\tools\tests\test_workflow_state_machine.ps1` retourne exit code 0 ; (3) l'ensemble des commandes de test declarees canoniques dans `CLAUDE.md` a cet instant retourne zero erreur — soit `219 tests, 0 error` sur la commande unique si le lot 5 est refuse, soit zero erreur sur chacune des suites segmentees s'il est execute ; (4) **preuve negative executable** : `.\.ai\tools\tests\test_workflow_state_machine.ps1` contient un cas qui appelle `Add-WorkflowEvidence` avec `bug_hunter=chaine_arbitraire_sans_artefact` et **exige** qu'il leve une erreur ; ce cas echoue sur le code actuel et passe apres le lot 1. La preuve negative est ainsi portee par la suite de tests existante, sans creer de workstream jetable qui polluerait `.ai/checkpoint.json`. |
+| Exit criteria | Les cinq conditions binaires suivantes sont toutes vraies : (1) les six ID listes en section "Sous-chantiers" existent dans `.ai/checkpoint.json` avec `status: DONE` (`lifecycle` `DONE`, ou `REJECTED` pour le lot 5 refuse le 2026-08-07) ; (2) `.\.ai\tools\tests\test_workflow_state_machine.ps1` retourne exit code 0 ; (3) `python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation` retourne `219 tests, 0 error` (le lot 5 etant refuse, la commande canonique reste unique et inchangee) ; (4) **preuve negative executable** : `.\.ai\tools\tests\test_workflow_state_machine.ps1` contient un cas qui appelle `Add-WorkflowEvidence` avec `bug_hunter=chaine_arbitraire_sans_artefact` et **exige** qu'il leve une erreur ; ce cas echoue sur le code actuel et passe apres le lot 1 — la preuve negative est ainsi portee par la suite de tests existante, sans creer de workstream jetable qui polluerait `.ai/checkpoint.json` ; (5) **preuve d'independance** : un commit volontairement cassant, pousse sur le remote, declenche un echec de CI GitHub observable — verdict produit par une machine que l'agent ne controle pas. |
 
 ## Sous-chantiers
 
-> Ces cinq ID sont **contraignants** : le `/start` reel de chaque lot devra
+> Ces six ID sont **contraignants** : le `/start` reel de chaque lot devra
 > utiliser exactement l'ID liste ici, sans quoi
 > `plan.ps1::Assert-SubChantiersClosed` ne le reconnaitra pas et refusera de
 > cloturer ce chantier mere (precedent : section 10 de
@@ -74,10 +73,11 @@ suit cinq lots independants issus de l'audit
 | # | ID prevu | Titre |
 | --- | --- | --- |
 | 1 | PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY | Substantifier les preuves du gate `ready` (`workflow_state.ps1`) |
-| 2 | PLAN_EXTENSION_HOOK_PRECOMMIT_VALIDATION_SCHEMA | Etendre le hook `pre-commit` a la validation de schema JSON |
+| 2 | PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS | Etendre `pre-commit` (schema JSON) et ajouter un hook `pre-push` (suite de tests) |
 | 3 | PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS | Garde d'environnement dans `benchmarks/long_data.py` |
 | 4 | PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE | Passage `adversarial-tester` outille sur `governance/` |
-| 5 | PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS | Isoler les tests dependants de l'environnement Nautilus |
+| 5 | PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS | Isoler les tests dependants de Nautilus — **refuse le 2026-08-07**, a cloturer `REJECTED` |
+| 6 | PLAN_CI_GITHUB_VERDICT_INDEPENDANT | CI GitHub Actions — verdict de test non redige par l'agent |
 
 ## Statut
 
@@ -95,12 +95,12 @@ suit cinq lots independants issus de l'audit
 
 | Champ | Contenu operationnel |
 | --- | --- |
-| Objectif executable | Router, executer et cloturer les cinq lots dans l'ordre fixe en section 6, en mettant a jour ce document apres chaque cloture. Ce document ne produit aucun code. |
+| Objectif executable | Router, executer et cloturer les six lots dans l'ordre fixe en section 6, en mettant a jour ce document apres chaque cloture. Ce document ne produit aucun code. |
 | Autorite et lecture minimale | 1. `AGENTS.md` ; 2. `.ai/checkpoint.json` ; 3. `.ai/workflows/common/WORKFLOW.md` ; 4. `.agents/skills/epic-orchestrator/SKILL.md` (procedure de boucle par lot) ; 5. le brouillon d'audit archive sous `0 - HUMAN START HERE/archive/`. |
 | Perimetre autorise | Ce fichier uniquement (`.ai/backlog/fixes/EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md`), plus les brouillons de lots crees dans `0 - HUMAN START HERE/`. `.ai/checkpoint.json` uniquement via `.ai/tools/plan.ps1`. |
 | Interdits absolus | Coder directement une des cinq corrections depuis ce chantier mere. Fusionner deux lots dans un seul plan, une seule boucle `/evaluate` ou un seul commit. Trancher a la place de l'humain la levee du verrou `Implementation/` (lots 3 et 5) ou l'opportunite d'une CI. Etendre `.ai/checkpoint.schema.json`. |
-| Phase de reprise | Phase 0 puis Phase 1 — **executees depuis l'etat `BASELINED` de ce chantier mere, sans appeler `plan.ps1 continue` dessus** (voir "Mecanique de reprise" ci-dessous). Prerequis immediat : aucun pour le lot 1. |
-| Preuve attendue | Les cinq ID de la section "Sous-chantiers" presents `status: DONE` dans `.ai/checkpoint.json`, plus les quatre conditions de l'Exit criteria et les commandes de la section 9. |
+| Phase de reprise | **Phase 4 (lot 3)** — la Phase 0 est terminee (decisions du 2026-08-07) et le lot 3 conditionne le `pre-push` du lot 2 et le lot 6. Les Phases 1 et 5 sont ouvrables en parallele. Toutes s'executent **depuis l'etat `BASELINED` de ce chantier mere, sans appeler `plan.ps1 continue` dessus** (voir "Mecanique de reprise" ci-dessous). |
+| Preuve attendue | Les six ID de la section "Sous-chantiers" presents `status: DONE` dans `.ai/checkpoint.json`, plus les cinq conditions de l'Exit criteria et les commandes de la section 9. |
 | Arret et escalade | Avant le lot 3 et avant le lot 5 : s'arreter et demander la levee explicite du verrou `AI_MODIFICATION_CHECKLIST.md` sur `Implementation/`. Journaliser la reponse en section 10 avant de rediger le brouillon du lot. |
 
 ### Mecanique de reprise (contrainte mecanique, pas une preference)
@@ -118,7 +118,7 @@ Consequence directe sur l'execution de ce chantier mere :
    alors lu comme carte de coordination ; `active_workstream_id` pointe vers
    le lot en cours, jamais vers ce chantier mere.
 3. Chaque lot suit son propre cycle complet et devient `DONE`.
-4. Seulement une fois les cinq lots `DONE`, ce chantier mere enchaine
+4. Seulement une fois les six lots `DONE`, ce chantier mere enchaine
    `continue` -> `ready` -> `close` (Phase 6, ci-dessous), qui ne sont plus
    bloques par la garde.
 
@@ -285,7 +285,7 @@ flowchart TD
 .ai/backlog/fixes/
   EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md   # ce document
   PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY.md      # cree par le lot 1
-  PLAN_EXTENSION_HOOK_PRECOMMIT_VALIDATION_SCHEMA.md # cree par le lot 2
+  PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS.md    # cree par le lot 2
   PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS.md     # cree par le lot 3
   PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE.md     # cree par le lot 4
   PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS.md        # cree par le lot 5
@@ -337,7 +337,7 @@ Constat (pourquoi cette phase est necessaire) :
 Actions :
 
 - Poser a l'humain la levee du verrou `Implementation/` pour les lots 3 et 5.
-- Poser a l'humain la question ouverte de la CI (hors perimetre des 5 lots).
+- Poser a l'humain la question ouverte de la CI.
 - Journaliser chaque reponse en section 10 avant d'ouvrir le lot concerne.
 
 Livrables :
@@ -349,9 +349,16 @@ Critere de sortie :
 - Les lots 3 et 5 ont soit une autorisation journalisee, soit un refus
   journalise entrainant leur cloture `REJECTED`.
 
-> Cette phase **ne bloque pas** les phases 1, 2 et 3 : les lots 1, 2 et 4
-> n'attendent aucune decision et peuvent demarrer en parallele de la
-> demande. Voir le chemin critique en fin de section 6.
+**Statut : TERMINEE le 2026-08-07.** Les trois decisions sont journalisees en
+section 10 : lot 3 autorise, lot 5 refuse, mecanisation par `pre-push`
+(integre au lot 2) plus CI GitHub (nouveau lot 6).
+
+> Consequence de sequencement decouverte en posant ces decisions : **le lot 3
+> doit preceder la partie `pre-push` du lot 2 et le lot 6**. Un hook ou une CI
+> introduits alors que la suite est rouge (`1 error` permanente) seraient
+> ignores ou contournes des le premier jour — c'est le mecanisme ordinaire par
+> lequel un garde-fou automatique meurt. Le chemin critique en fin de section 6
+> reflete cette contrainte.
 
 ### Phase 1 - Lot 1 : substantifier les preuves du gate `ready`
 
@@ -400,28 +407,47 @@ Critere de sortie :
 - `PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE` est `status: DONE`, et tout
   faux succes confirme est soit corrige, soit route comme lot supplementaire.
 
-### Phase 3 - Lot 2 : etendre le hook `pre-commit`
+### Phase 3 - Lot 2 : etendre `pre-commit` et ajouter `pre-push`
 
 Objectif : valider le schema JSON de `checkpoint.json`/`tracking.json` avant
-tout commit qui les touche.
+tout commit qui les touche, et executer la suite de tests avant tout push.
 
 Classification : IMPLEMENTATION_DETAIL
+
+Constat (perimetre elargi le 2026-08-07 par decision humaine, section 10) :
+
+- Le `pre-commit` existant ne se declenche que si un fichier du cockpit IA est
+  stage : un commit purement `Implementation/` ne l'active pas. Il ne couvre
+  donc pas le risque prioritaire « agent de codage ».
+- Les 79 s de la suite sont redhibitoires en `pre-commit` (on commit souvent)
+  mais acceptables en `pre-push` (on pousse rarement). D'ou deux hooks aux
+  roles distincts plutot qu'un seul surcharge.
+- Prerequis de sequencement : le lot 3 doit etre livre avant la partie
+  `pre-push`, sinon le hook bloque tout push des son installation a cause de
+  l'erreur d'environnement preexistante.
 
 Actions :
 
 - Rediger le brouillon, executer le cycle complet du lot.
-- Modifier `Implementation/Active/pre_commit_hook.py`, mettre a jour
-  `Implementation/Active/INSTALL_GIT_HOOK.md`, reinstaller, verifier par
-  `diff` que la copie installee correspond a la source.
+- Etendre `Implementation/Active/pre_commit_hook.py` a la validation de
+  schema.
+- Creer la source versionnee du hook `pre-push` a cote de celle du
+  `pre-commit`, sur le meme modele — jamais directement dans `.git/hooks/`,
+  qui n'est pas versionne.
+- Mettre a jour `Implementation/Active/INSTALL_GIT_HOOK.md` pour les deux
+  hooks, reinstaller, et verifier par `diff` que chaque copie installee
+  correspond a sa source.
 
 Livrables :
 
-- Hook etendu, source et copie installee identiques.
+- Deux hooks versionnes et installes, sources et copies identiques ;
+  procedure d'installation a jour.
 
 Critere de sortie :
 
-- `PLAN_EXTENSION_HOOK_PRECOMMIT_VALIDATION_SCHEMA` est `status: DONE` et un
-  `checkpoint.json` volontairement invalide est effectivement bloque au commit.
+- `PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS` est `status: DONE` ; un
+  `checkpoint.json` volontairement invalide est bloque au commit ; et un test
+  volontairement casse est bloque au push.
 
 ### Phase 4 - Lot 3 : garde d'environnement dans `long_data.py`
 
@@ -432,8 +458,11 @@ Classification : IMPLEMENTATION_DETAIL
 
 Constat :
 
-- Verrou `Implementation/` — cette phase ne demarre qu'apres autorisation
-  journalisee en section 10.
+- Verrou `Implementation/` **leve le 2026-08-07** pour ce seul fichier et
+  cette seule correction (section 10). Aucune autre modification de
+  `Implementation/` n'est couverte par cette autorisation.
+- Ce lot conditionne la partie `pre-push` du lot 2 et le lot 6 : il doit etre
+  livre en premier des trois.
 
 Actions :
 
@@ -441,49 +470,101 @@ Actions :
 
 Livrables :
 
-- `long_data.py:487` protege, valeur explicite enregistree dans le rapport.
+- `long_data.py:487` protege, valeur explicite (`null` / `"NOT_INSTALLED"`)
+  enregistree dans le rapport — jamais un champ silencieusement absent.
 
 Critere de sortie :
 
 - `PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS` est `status: DONE` et la suite
   retourne `219 tests, 0 error` hors venv Nautilus.
 
-### Phase 5 - Lot 5 : isoler les tests dependants de Nautilus
+### Phase 5 - Lot 5 : cloture du refus (isolation des tests Nautilus)
 
-Objectif : separer les tests dependants de l'environnement Nautilus de la
-suite stdlib-only.
+Objectif : acter mecaniquement le refus humain du 2026-08-07 sans implementer
+la segmentation.
 
 Classification : TEST_FIXTURE
 
-Constat :
+Constat (pourquoi ce lot n'est pas implemente) :
 
-- Verrou `Implementation/` — meme condition que la phase 4.
-- La commande de decouverte est citee dans `CLAUDE.md` et enregistree dans
-  `.ai/checkpoint.json::validation.commands` : toute segmentation impose de
-  mettre a jour ces deux references.
+- Verification du 2026-08-07 : aucun des sept fichiers de test `nautilus`
+  n'utilise `skipUnless`, `skipIf` ni `import nautilus_trader` ; ils
+  s'executent integralement hors venv avec des simulateurs factices. Le seul
+  test reellement dependant de l'environnement est
+  `test_long_data_benchmark.py`, traite par le lot 3.
+- La premisse du lot (« un echec d'environnement se noie dans le run ») tombe
+  donc des que le lot 3 est livre, alors que son cout reste reel : mise a jour
+  de la commande canonique dans `CLAUDE.md` et
+  `.ai/checkpoint.json::validation.commands`.
+- Decision humaine du 2026-08-07 : refuse tel que cadre (section 10).
+
+Actions :
+
+- Ne rediger aucun brouillon d'implementation.
+- Router puis cloturer immediatement ce lot en `REJECTED`, en citant la
+  decision de section 10 comme `closure_reason`.
+
+Livrables :
+
+- Workstream `PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS` enregistre et cloture,
+  avec le motif factuel conserve pour tracabilite.
+
+Critere de sortie :
+
+- `PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS` est `status: DONE` /
+  `lifecycle: REJECTED` dans `.ai/checkpoint.json`, et aucune modification
+  n'a ete apportee a `CLAUDE.md` ni a la commande canonique de test.
+
+### Phase 5bis - Lot 6 : CI GitHub, verdict independant
+
+Objectif : produire un verdict de test que l'agent de codage ne redige pas
+lui-meme et ne peut pas contourner.
+
+Classification : GOVERNANCE
+
+Constat (pourquoi ce lot existe alors que le lot 2 mecanise deja les tests) :
+
+- Tout le dispositif de preuve de ce depot est auto-redige par l'agent :
+  `bug_hunter`, `adversarial_tester`, `plan_conformance`, `checkpoint.json`,
+  et jusqu'aux hooks locaux, executes sur sa propre machine et contournables
+  par `--no-verify` sans laisser de trace. Le lot 1 rend la fraude plus
+  couteuse, il ne change pas qui redige la preuve.
+- Une CI est le seul mecanisme propose dont le verdict provient d'une machine
+  que l'agent ne controle pas. Elle ne previent pas (le commit est deja
+  pousse) mais elle ne peut pas etre sautee, seulement ignoree, et l'echec
+  reste visible dans l'historique.
+- Prerequis de sequencement : le lot 3 doit etre livre avant, sinon la toute
+  premiere execution de CI est rouge et le signal est disqualifie d'emblee.
+- Decision humaine du 2026-08-07 autorisant `pip install jsonschema` cote
+  runner (outillage CI, pas dependance runtime du moteur).
 
 Actions :
 
 - Rediger le brouillon, executer le cycle complet du lot.
+- Limiter la CI a ce qui est reellement executable sans le venv Nautilus :
+  suite `unittest` stdlib et validation de schema JSON. Ne pas simuler
+  l'environnement Nautilus en CI ; le `pre-push` du lot 2 couvre ce cas
+  localement.
 
 Livrables :
 
-- Suite segmentee, references de commande mises a jour de facon coherente.
+- `.github/workflows/` cree, avec un job dont l'echec est visible sur le
+  depot distant.
 
 Critere de sortie :
 
-- `PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS` est `status: DONE` et aucune
-  commande canonique documentee ne diverge de ce qui est reellement executable.
+- `PLAN_CI_GITHUB_VERDICT_INDEPENDANT` est `status: DONE`, et un commit
+  volontairement cassant declenche un echec de CI observable sur GitHub.
 
 ### Phase 6 - Cloture generale du chantier mere
 
-Objectif : cloturer ce chantier mere une fois les cinq lots termines.
+Objectif : cloturer ce chantier mere une fois les six lots termines.
 
 Classification : GOVERNANCE
 
-Constat (pourquoi cette phase existe et n'est pas un sixieme lot) :
+Constat (pourquoi cette phase existe et n'est pas un lot de plus) :
 
-- Elle depend de la completude des cinq lots et ne peut donc pas etre routee
+- Elle depend de la completude des six lots et ne peut donc pas etre routee
   independamment ; elle echoue le test de detection multi-lot. Elle est
   volontairement **exclue** de la section "Sous-chantiers" — l'y inscrire
   creerait une dependance circulaire (le chantier mere attendrait sa propre
@@ -516,17 +597,30 @@ Critere de sortie :
 
 ```mermaid
 flowchart LR
-    B["Baseline du chantier mere"] --> P1["Phase 1 - Lot 1"]
-    B --> P0["Phase 0 - Decisions humaines"]
-    P1 --> P2["Phase 2 - Lot 4"]
-    P1 --> P3["Phase 3 - Lot 2"]
-    P0 --> P4["Phase 4 - Lot 3"]
-    P0 --> P5["Phase 5 - Lot 5"]
-    P2 --> P6["Phase 6 - Cloture generale"]
-    P3 --> P6
-    P4 --> P6
-    P5 --> P6
+    B["Baseline"] --> P0["Phase 0 - Decisions humaines - TERMINEE"]
+    P0 --> P1["Phase 1 - Lot 1 - gate ready"]
+    P0 --> P4["Phase 4 - Lot 3 - garde environnement"]
+    P0 --> P5["Phase 5 - Lot 5 - cloture REJECTED"]
+    P1 --> P2["Phase 2 - Lot 4 - adversarial"]
+    P4 --> P3["Phase 3 - Lot 2 - hooks git"]
+    P1 --> P3
+    P4 --> P6b["Phase 5bis - Lot 6 - CI"]
+    P2 --> P7["Phase 6 - Cloture generale"]
+    P3 --> P7
+    P5 --> P7
+    P6b --> P7
 ```
+
+Deux contraintes d'ordre, et deux seulement :
+
+- **Lot 1 avant lot 4** — le lot 1 definit ce qu'est une preuve recevable, le
+  lot 4 en produit une.
+- **Lot 3 avant le `pre-push` du lot 2 et avant le lot 6** — un garde-fou
+  automatique introduit sur une suite rouge est disqualifie des sa premiere
+  execution.
+
+Le lot 5 ne depend de rien : sa cloture `REJECTED` peut etre faite a tout
+moment.
 
 ---
 
@@ -572,10 +666,10 @@ flowchart LR
 Apres chaque cloture de lot, verifier la completude reelle dans l'etat machine :
 
 ```powershell
-python -c "import json; att=['PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY','PLAN_EXTENSION_HOOK_PRECOMMIT_VALIDATION_SCHEMA','PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS','PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE','PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS']; ws={w['id']:w for w in json.load(open('.ai/checkpoint.json',encoding='utf-8'))['workstreams']}; [print(i, ws[i]['status'] if i in ws else 'ABSENT', ws[i]['lifecycle'] if i in ws else '-') for i in att]"
+python -c "import json; att=['PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY','PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS','PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS','PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE','PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS','PLAN_CI_GITHUB_VERDICT_INDEPENDANT']; ws={w['id']:w for w in json.load(open('.ai/checkpoint.json',encoding='utf-8'))['workstreams']}; [print(i, ws[i]['status'] if i in ws else 'ABSENT', ws[i]['lifecycle'] if i in ws else '-') for i in att]"
 ```
 
-Cette commande liste les cinq ID attendus et affiche `ABSENT` pour ceux qui
+Cette commande liste les six ID attendus et affiche `ABSENT` pour ceux qui
 ne sont pas encore routes — elle ne peut pas donner un faux vert par
 omission, contrairement a un filtre par prefixe.
 
@@ -658,8 +752,9 @@ Lorsqu'une verification echoue :
 | --- | --- | --- |
 | 2026-08-07 | `/start` demande sur `AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-07.md` | Autorise le routage de l'audit en chantier mere `fix` et l'ouverture des lots 1, 2 et 4. N'autorise aucune modification de `Implementation/`. |
 | 2026-08-07 | Risque prioritaire enonce anterieurement : « l'erreur d'un agent de codage qui implemente dans `Implementation/` », pas l'erreur methodologique | Fixe l'ordre : le lot 1 est prioritaire car il corrige exactement ce risque. |
-| [en attente] | Levee du verrou `AI_MODIFICATION_CHECKLIST.md` sur `Implementation/` pour les lots 3 et 5 | Conditionne l'ouverture des phases 4 et 5. |
-| [en attente] | Opportunite d'une CI (`.github/workflows`) — constat de l'audit sans recommandation associee | Hors perimetre des cinq lots ; ne pas ouvrir de sixieme lot sans reponse. |
+| 2026-08-07 | **Verrou `Implementation/` leve pour le lot 3.** Autorise la modification de `Implementation/ebta_engine/benchmarks/long_data.py` pour y ajouter la garde d'environnement. | Autorise ce seul fichier, pour cette seule correction. N'autorise aucune autre modification de `Implementation/`. La garde doit enregistrer une valeur explicite (`null` / `"NOT_INSTALLED"`) et ne jamais masquer l'absence du paquet. |
+| 2026-08-07 | **Lot 5 refuse tel que cadre.** L'isolation des tests dependants de Nautilus n'est pas retenue. | Motif factuel : aucun des sept fichiers de test `nautilus` n'utilise `skipUnless`/`skipIf`/`import nautilus_trader` — ils s'executent entierement hors venv avec des simulateurs factices. Le seul test reellement dependant de l'environnement est `test_long_data_benchmark.py`, traite par le lot 3. La premisse du lot 5 (« un echec d'environnement se noie dans le run ») tombe donc apres le lot 3, pour un cout non nul : modification de la commande canonique dans `CLAUDE.md` et `.ai/checkpoint.json::validation.commands`. La question residuelle (« ces tests passent-ils pour de bonnes raisons ? ») revient au lot 4. Lot 5 a cloturer `status: DONE` / `lifecycle: REJECTED`. |
+| 2026-08-07 | **Mecanisation des tests : hook `pre-push` ET CI GitHub.** Le `pre-push` rejoint le perimetre du lot 2 ; la CI devient le lot 6. | Raison retenue : les deux jouent des roles distincts et non substituables. Le `pre-push` previent (il empeche le mauvais etat de quitter la machine) mais tourne sur la machine de l'agent et reste contournable par `--no-verify`, sans laisser de trace. La CI ne previent pas mais ne peut pas etre sautee, et surtout **elle est le seul mecanisme de tout le dispositif dont le verdict n'est pas redige par l'agent lui-meme** — a la difference des preuves `bug_hunter`/`adversarial_tester`/`plan_conformance`, du `checkpoint.json` et des hooks locaux. Autorise `pip install jsonschema` cote runner CI (outillage CI, pas dependance runtime du moteur). |
 
 ---
 
@@ -677,19 +772,21 @@ Lorsqu'une verification echoue :
 
 ## 12. Definition of Done
 
-- [ ] Les phases 0 a 5 sont terminees ou explicitement refusees par une
-      decision humaine journalisee en section 10, et la Phase 6 est executee.
-- [ ] Exit criteria condition (1) : les cinq ID de la section
+- [x] Phase 0 terminee : les trois decisions humaines sont journalisees en
+      section 10 (2026-08-07).
+- [ ] Phases 1 a 5bis terminees, et Phase 6 executee.
+- [ ] Exit criteria condition (1) : les six ID de la section
       "Sous-chantiers" existent dans `.ai/checkpoint.json` avec
-      `status: DONE`.
+      `status: DONE` (lot 5 en `lifecycle: REJECTED`).
 - [ ] Exit criteria condition (2) :
       `.\.ai\tools\tests\test_workflow_state_machine.ps1` retourne exit code 0.
-- [ ] Exit criteria condition (3) : zero erreur sur l'ensemble des commandes
-      de test declarees canoniques dans `CLAUDE.md` a cet instant — commande
-      unique `219 tests, 0 error` si le lot 5 est refuse, suites segmentees
-      toutes vertes s'il est execute.
+- [ ] Exit criteria condition (3) :
+      `python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation`
+      retourne `219 tests, 0 error`.
 - [ ] Exit criteria condition (4) : la preuve negative echoue comme attendu
-      (`-Evidence "bug_hunter=chaine_arbitraire_sans_artefact"` refuse).
+      (`bug_hunter=chaine_arbitraire_sans_artefact` refuse).
+- [ ] Exit criteria condition (5) : un commit volontairement cassant declenche
+      un echec de CI GitHub observable.
 - [ ] Aucune modification hors perimetre (section 5) depuis ce chantier mere.
 - [ ] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md`
       executee.
@@ -703,7 +800,7 @@ Lorsqu'une verification echoue :
 | --- | --- |
 | Resultat final | [a remplir au `/close`] |
 | Ecarts par rapport au plan initial | [a remplir] |
-| Suites a prevoir (hors perimetre de ce plan) | Decision CI (question ouverte, section 10) ; toute correction revelee par le rapport adversarial du lot 4 et depassant son perimetre. |
+| Suites a prevoir (hors perimetre de ce plan) | Toute correction revelee par le rapport adversarial du lot 4 et depassant son perimetre. La question de l'isolation des tests Nautilus pourra etre rouverte si le lot 4 montre que ces tests degradent silencieusement vers un chemin factice — c'est la seule justification qui resterait valable apres le refus du lot 5. |
 
 ---
 
@@ -713,3 +810,4 @@ Lorsqu'une verification echoue :
 | --- | --- | --- |
 | 2026-08-07 | Boucle `/evaluate` d'intake, 3 passes convergees, sur le brouillon source | Le brouillon etait factuellement exact mais non routable : aucun Exit criteria binaire, multi-lot non declare, recommandation 1 techniquement incorrecte en l'etat (`Test-Path` sur des references a ancre Markdown et sur des SHA), verrou `Implementation/` non evalue, cause racine de l'erreur de test supposee et non prouvee. Detail complet dans la section « Boucle /evaluate d'intake » du brouillon archive. |
 | 2026-08-07 | Boucle `/evaluate` post-`/start`, 3 passes convergees, sur CE plan normalise | **Passe 1** — quatre defauts introduits par la normalisation elle-meme : (a) 🔴 la Carte d'execution annoncait « Phase de reprise : Phase 1 », mecaniquement impossible car `plan.ps1::Assert-SubChantiersClosed` bloque `continue` (`:406`), `ready` (`:432`) et `close` (`:453`) tant que les cinq lots ne sont pas `DONE` — corrige par la sous-section « Mecanique de reprise », alignee sur les precedents `EPIC_ATTESTATIONS_RESIDUELLES_R3` et `EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE` dont la reprise est la cloture generale ; (b) l'Exit criteria exigeait `219 tests, 0 error` sur la commande globale que le lot 5 segmente precisement — contradiction avec la Definition of Done, reformulee en « suites canoniques a cet instant » ; (c) un Exit criteria a jugement (« un re-audit confirme… ») remplace par une preuve negative executable ; (d) absence de phase de cloture propre du chantier mere — ajout de la Phase 6, volontairement exclue de la section « Sous-chantiers » pour ne pas creer de dependance circulaire. **Passe 2** — trois angles morts nouveaux : (e) la preuve negative supposait un workstream de test jetable qui aurait pollue `.ai/checkpoint.json` — portee desormais par un cas de `test_workflow_state_machine.ps1`, mecanisme existant a etendre plutot qu'a doubler ; (f) le SHA de baseline necessaire a la Phase 6 etait a deviner — source exacte designee dans l'etat machine ; (g) le chemin critique faisait dependre le lot 1 de la Phase 0 alors qu'il n'attend aucune decision humaine. **Passe 3** — aucun angle mort majeur nouveau ; deux points mineurs corriges (commande de verification par prefixe remplacee par une liste d'ID exacts insensible aux faux verts par omission, et consignation de ce journal). Convergence a 3 passes sur 6 autorisees. |
+| 2026-08-07 | **Amendement post-baseline** apres reponse humaine aux trois decisions de la Phase 0 (section 10). Modifications : bandeau section 0 (verrou leve) ; Phase 0 marquee TERMINEE ; lot 2 elargi au hook `pre-push` et renomme `PLAN_EXTENSION_HOOK_PRECOMMIT_VALIDATION_SCHEMA` -> `PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS` (l'ancien ID decrivait un perimetre desormais faux ; aucun lot n'etait encore route, le renommage n'invalide donc aucune reference existante) ; Phase 5 transformee en cloture `REJECTED` ; ajout du lot 6 (`PLAN_CI_GITHUB_VERDICT_INDEPENDANT`) et de la Phase 5bis ; Exit criteria porte a cinq conditions ; chemin critique redessine. **Contrainte de sequencement decouverte en instruisant ces decisions** : le lot 3 doit preceder le `pre-push` du lot 2 et le lot 6, car un garde-fou automatique introduit sur une suite rouge est contourne ou ignore des sa premiere execution. **Fait ayant motive le refus du lot 5** : verification directe montrant qu'aucun des sept fichiers de test `nautilus` n'utilise `skipUnless`/`skipIf`/`import nautilus_trader`. **Note de tracabilite** : `plan.ps1 baseline` n'accepte pas de re-attestation (`Add-WorkflowEvidence` refuse un ID de preuve deja enregistre, et la transition part de `TRIAGED`). La preuve `baseline_commit` reste donc `033ef3c`, qui atteste l'etat revu **avant** cet amendement ; le present journal et le commit dedie constituent la trace de ce qui a change depuis. Meme traitement que l'edition en place documentee section 10 de `.ai/archive/20260720_EPIC_ATTESTATIONS_RESIDUELLES_R3.md`. |
