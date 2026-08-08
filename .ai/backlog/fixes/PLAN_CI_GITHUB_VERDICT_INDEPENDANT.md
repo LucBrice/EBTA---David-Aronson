@@ -286,6 +286,45 @@ temporairement pour la preuve de Phase 2 (revert immediat obligatoire).
 | --- | --- | --- |
 | 2026-08-07 | **Mecanisation des tests : hook `pre-push` ET CI GitHub**, autorisant `pip install jsonschema` cote runner CI (journalise dans `EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md`, section 10). | Autorise ce lot et l'installation de `jsonschema` cote CI uniquement. |
 | 2026-08-07 | Autorisation explicite du push git sur `origin/main` pour ce lot specifiquement, afin d'observer un echec de CI reel sur un commit volontairement cassant, en utilisant le remote existant. | Autorise `git push origin HEAD:main` pour ce lot, sans redemander. |
+| 2026-08-07 | **Decision de deblocage post-blocage (Council of Five) — Option C, declaration scopee.** Voir texte integral ci-dessous. | Autorise (1) le scoping de la promesse stdlib-only de `CLAUDE.md` au coeur statistique/gouvernance reellement pur (`procedures/`, `governance/`, `validators/`, `schemas/`, `manifests/`, `persistence.py`, `constants.py` — 0 occurrence `pandas`/`numpy` confirmee par grep avant decision) ; (2) l'import paresseux de `pandas`/`numpy` dans `strategies/incremental/payload_e.py` (et `payload_f.py`, `payload_ghi.py`, et les quatre fichiers `strategies/signals/*.py`, tous dans la meme chaine d'import non-paresseuse depuis `nautilus_mapping.py`), sans reecriture de la logique de calcul vectorisee ; (3) la correction du chemin Windows code en dur dans `Protocole/MANIFESTE DE GEL EBTA.md` (bug de portabilite pur, aucune decision requise) ; (4) l'installation de `numpy`/`pandas` cote runner CI. **Explicitement refuse** : reecriture complete stdlib pure de `payload_e.py`, `engulfing.py`, `entry_signal.py`, `market_bias.py`, `sessions.py`, `liquidity.py` (option B) — hors perimetre, risque de regression sur une logique de signaux deja eprouvee. |
+
+**Texte integral de la decision (2026-08-07)**, journalise verbatim conformement a l'invariant 4 du chantier mere :
+
+> Après délibération (Council of Five), l'humain valide l'option suivante
+> pour la dépendance `pandas` découverte dans le cœur : (1) Scoper
+> précisément la promesse « stdlib-only » de `CLAUDE.md` au cœur
+> statistique/gouvernance réellement vérifié pur (`procedures/`,
+> `governance/`, `validators/`, `schemas/`, `manifests/`, `persistence.py`,
+> `constants.py` — confirmé 0 occurrence de `pandas` par grep direct avant
+> cette décision). Le document doit dire explicitement que `strategies/`
+> (génération de signaux candidats) et `adapters/` (déjà une frontière
+> externe reconnue, cf. NautilusTrader) peuvent dépendre de `numpy`/
+> `pandas`, au lieu de laisser une promesse blanket contredite silencieusement
+> par le code depuis le commit `e29c74c` (introduction de `strategies/`,
+> chantier R1/R2, DONE le 2026-07-13). (2) Corriger le bug réel indépendant
+> du choix de politique : `nautilus_mapping.py` applique déjà une discipline
+> d'import paresseux pour pandas/numpy (`_nautilus_data_tools()`), mais sa
+> ligne 17 importe en tête de module un fichier qui fait lui-même
+> `import pandas as pd` de façon inconditionnelle (`payload_e.py:9`),
+> cassant cette discipline. Aligner l'import de `pandas` dans `payload_e.py`
+> (et tout module `strategies/signals/*.py` qui en dépend et qui est
+> importé de façon non-paresseuse depuis un point d'entrée censé rester
+> importable sans pandas) sur le même patron de paresse déjà établi — sans
+> réécrire la logique de calcul elle-même. (3) Explicitement refusé :
+> réécriture complète en stdlib pur de `payload_e.py`, `engulfing.py`,
+> `entry_signal.py`, `market_bias.py`, `sessions.py`, `liquidity.py`
+> (option B complète) — hors périmètre, risque de régression sur une
+> logique de signaux déjà éprouvée, pour un gain que le scoping ci-dessus
+> couvre déjà. Rationale : le cœur qui décide si une stratégie passe ou
+> échoue (calculs statistiques, gouvernance, validations — vérifié 100 %
+> stdlib) n'est pas concerné par cette dépendance. Seule la couche qui
+> repère des signaux dans les prix en dépend, comme c'était déjà toléré pour
+> l'adaptateur Nautilus. On corrige la documentation pour qu'elle dise la
+> vérité, on ne touche pas au moteur de décision, on ne réécrit pas la
+> logique de calcul. Le second problème (chemin Windows codé en dur dans
+> `test_protocol_manifest_hashes`) n'est pas une question de politique de
+> dépendance — c'est un bug de portabilité ordinaire, à corriger directement
+> sans décision humaine supplémentaire.
 
 ---
 
@@ -343,6 +382,35 @@ aurait produit une demonstration confuse, pas une preuve propre. Ce lot
 reste `ACTIVE`, non cloture, en attente de la decision humaine sur le point
 1 ci-dessus (le point 2 est un bug pur, sans decision requise, mais bloque
 quand meme un run CI propre tant qu'il n'est pas corrige).
+
+#### RESOLU (2026-08-07) — decision humaine recue, correctifs appliques
+
+Decision journalisee en section 10 ("Decision de deblocage post-blocage").
+Les deux causes racines sont corrigees :
+
+1. `CLAUDE.md` scope desormais la promesse stdlib-only au coeur
+   statistique/gouvernance ; `strategies/incremental/payload_e.py`,
+   `payload_f.py`, `payload_ghi.py` et les quatre fichiers
+   `strategies/signals/*.py` (`engulfing.py`, `liquidity.py`,
+   `entry_signal.py`, `market_bias.py`, `sessions.py`) importent desormais
+   `pandas`/`numpy` de facon paresseuse (fonction locale, meme patron que
+   `nautilus_mapping.py::_nautilus_data_tools()`), avec les annotations de
+   type resolues via `TYPE_CHECKING` (jamais execute a l'execution). Verifie
+   par simulation directe (meta-path bloquant `pandas`/`numpy`) : les huit
+   modules et `nautilus_mapping.py`/`long_data.py` s'importent desormais
+   sans erreur. Aucune ligne de calcul vectorise modifiee ; suite complete
+   toujours `232 tests, 0 error` avec `pandas` present.
+2. `Protocole/MANIFESTE DE GEL EBTA.md` : les deux chemins
+   `Archives\...` corriges en `Archives/...` (portabilite pure, aucun hash
+   ni contenu normatif touche). `test_frozen_protocol_hashes_still_match`
+   verifie PASS localement.
+3. Le workflow CI installe desormais `numpy`/`pandas` cote runner (etape
+   dediee, avant l'execution de la suite).
+
+Les deux taches de suivi spawnees precedemment (`task_00669cf7`,
+`task_05181d67`) sont desormais redondantes avec ce travail — a mentionner
+comme telles dans le rapport final de session (dismiss non effectue ici,
+IDs non disponibles cote outil de cette session).
 
 ---
 

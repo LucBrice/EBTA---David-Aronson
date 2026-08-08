@@ -2,12 +2,23 @@
 
 from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING
 
 from ebta_engine.data.resample import resample_ohlcv
 from ebta_engine.strategies.incremental.payload_e import PayloadEStrategy, frame_from_bars
 from ebta_engine.strategies.registry import register_strategy
 from ebta_engine.strategies.signals.market_bias import align_mtf_filter
+
+if TYPE_CHECKING:
+    # Type-checker-only import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the
+    # rationale. Never executes at runtime (TYPE_CHECKING is always False):
+    # this module is reached by the eager `strategies.incremental.__init__`
+    # import chain (transitively from `ebta_engine.adapters.nautilus_mapping`)
+    # and must stay importable without pandas installed. This module has no
+    # `pd.*` value usage at runtime (only annotations), so no lazy-import
+    # helper is needed here.
+    import pandas as pd
 
 
 class PayloadFStrategy(PayloadEStrategy):

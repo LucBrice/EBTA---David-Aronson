@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is not a conventional application codebase. It is **EBTA** (Evidence-Based Technical Analysis, after David Aronson), a governed system with two layers:
 
 1. `Protocole/` — the frozen, normative methodology (statistical/scientific rules for validating trading strategies: WRC/SPA/Romano-Wolf multiple-testing correction, walk-forward segmentation, OOS governance, bias governance, etc.). This is documentation, not code, but it is the **highest authority in the repo**.
-2. `Implementation/ebta_engine/` — a Python 3, standard-library-only runtime that mechanically enforces the rules in `Protocole/` (schemas, validators, gates, manifests). It has no external dependencies and no database; persistence is explicit files inside a "research package".
+2. `Implementation/ebta_engine/` — a Python runtime that mechanically enforces the rules in `Protocole/` (schemas, validators, gates, manifests). Its statistical/governance core — `procedures/`, `governance/`, `validators/`, `schemas/`, `manifests/`, `persistence.py`, `constants.py` — is Python 3 standard-library-only (confirmed by direct grep: zero `pandas`/`numpy` imports, verified 2026-08-07). `strategies/` (candidate signal generation — `strategies/signals/`, `strategies/incremental/`) and `adapters/` (external engine boundaries, e.g. NautilusTrader) may depend on `numpy`/`pandas`: this was already the case for the adapter layer, and has been silently true for `strategies/` since commit `e29c74c` (R1/R2, DONE 2026-07-13) — this file previously claimed a blanket stdlib-only guarantee that the code had already stopped matching; this line scopes the claim to where it is actually true instead of contradicting the code silently. None of this changes the "no build step" fact below: there is still no `requirements.txt`/`pyproject.toml`, and no external dependency reaches the statistical/governance core. It has no database; persistence is explicit files inside a "research package".
 
 Everything else (`.ai/`, `.agents/`, `.codex/`, `0 - HUMAN START HERE/`) is AI-facing project-management scaffolding layered on top, not project code.
 
@@ -48,7 +48,7 @@ Rules that follow from this:
 - Rewriting the EBTA protocol or SOPs, or changing the protocol's scientific hierarchy.
 - Moving `.agents/`, `.codex/`, `Protocole/`, or `Implementation/`.
 - Introducing RAG, embeddings, a vector database, or autonomous agents.
-- Adding technical dependencies (the engine is stdlib-only by design).
+- Adding technical dependencies to the statistical/governance core (`procedures/`, `governance/`, `validators/`, `schemas/`, `manifests/`, `persistence.py`, `constants.py`) — stdlib-only by design. `strategies/` and `adapters/` may already depend on `numpy`/`pandas` (see "What this repo is" above); extending that dependency further, or introducing a new one anywhere in `Implementation/`, still requires an explicit human decision.
 - Modifying implementation code except when strictly required to update a documentary trace.
 
 ## Human/AI workflow commands
@@ -92,7 +92,7 @@ python -m json.tool Implementation\Active\tracking.json
 python -c "import json, jsonschema; jsonschema.validate(json.load(open('Implementation/Active/tracking.json', encoding='utf-8')), json.load(open('Implementation/Active/tracking.schema.json', encoding='utf-8')))"
 ```
 
-There is no build step, linter, or package manifest — the engine is Python 3 standard library only (no `requirements.txt`/`pyproject.toml` by design; do not add dependencies without an explicit human decision, see above).
+There is no build step, linter, or package manifest — the engine's statistical/governance core is Python 3 standard library only (no `requirements.txt`/`pyproject.toml` by design). `strategies/` and `adapters/` may require `numpy`/`pandas` at runtime (see "What this repo is" above); do not add dependencies anywhere in `Implementation/` without an explicit human decision, see above.
 
 ## `Implementation/ebta_engine/` architecture
 
@@ -101,7 +101,7 @@ There is no build step, linter, or package manifest — the engine is Python 3 s
 - `validators/` — schema and package validation ("the customs check"): `package_validator.py`, `gate_validator.py`, `invariant_validator.py`, `registry_append_only_validator.py`.
 - `schemas/` — JSON Schemas for every artifact type (config, registry events, OOS access events, walk-forward declaration, robustness plan, reproducibility manifest, etc.), validated by a small internal validator restricted to the keywords actually used (no external `jsonschema` dependency in the runtime itself, only in test/CI tooling).
 - `manifests/` — SHA-256 manifest generation/verification ("the notary") proving package integrity.
-- `adapters/` — boundary code for external engines (currently `backtrader_mapping.py`). An adapter treats external output as untrusted, maps it into EBTA artifacts, and lets the core validate the contract — it never silently "fixes" mapping errors or imports the external tool's conventions as EBTA norms.
+- `adapters/` — boundary code for external engines (`nautilus_mapping.py` is the active adapter; `backtrader_mapping.py` is historical/reference-only, BACKTRADER is not integrated). An adapter treats external output as untrusted, maps it into EBTA artifacts, and lets the core validate the contract — it never silently "fixes" mapping errors or imports the external tool's conventions as EBTA norms. `nautilus_mapping.py` keeps its own NautilusTrader/`numpy`/`pandas` imports lazy (`_nautilus_data_tools()`) so the package stays importable without those installed; it also imports `strategies/` symbols eagerly at module top level, so `strategies/` staying import-safe without `numpy`/`pandas` depends on `strategies/` itself keeping those imports lazy too (see "What this repo is" above).
 - `persistence.py` — explicit file-based read/write of research package artifacts (no DB).
 - `constants.py` — canonical status/version enums sourced from `Protocole/REGISTRE DES DECISIONS NORMATIVES EBTA.md`.
 - `tests/` + `fixtures/` — `unittest`-based suite; fixtures include intentionally invalid packages (`fixtures/invalid_invariants`, `invalid_missing_required`, `invalid_rejection_tests`) to test gate rejection paths, plus `fixtures/valid_minimal`.

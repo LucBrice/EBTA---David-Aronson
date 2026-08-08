@@ -8,10 +8,18 @@ name: EBTA runtime suite
 # --no-verify without leaving a trace. This workflow runs on infrastructure
 # the agent does not control and cannot silently skip.
 #
-# Deliberately scoped to what is real stdlib-only / already-authorized
-# tooling, matching this repo's design (see CLAUDE.md: the EBTA engine is
-# Python-stdlib-only by design):
+# Deliberately scoped to what is real / already-authorized tooling, matching
+# this repo's (scoped) design (see CLAUDE.md, "What this repo is": the
+# statistical/governance core - procedures/, governance/, validators/,
+# schemas/, manifests/, persistence.py, constants.py - is stdlib-only;
+# strategies/ and adapters/ may depend on numpy/pandas):
 #   - the canonical unittest suite (Implementation/ebta_engine/tests)
+#   - numpy/pandas, installed on this runner because Implementation/ebta_engine/strategies/
+#     (candidate signal generation) and its import chain from
+#     Implementation/ebta_engine/adapters/nautilus_mapping.py require them -
+#     human decision logged in EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md,
+#     Lot 6 amendment (2026-08-07): CLAUDE.md's stdlib-only promise is
+#     scoped to the statistical/governance core, not strategies/adapters/.
 #   - JSON Schema validation of checkpoint.json / tracking.json via
 #     jsonschema, installed on this runner only (human decision logged in
 #     EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md section 10: "Autorise pip
@@ -42,6 +50,9 @@ jobs:
 
       - name: Install jsonschema (CI tooling only, not a runtime dependency)
         run: pip install jsonschema
+
+      - name: Install numpy/pandas (required by strategies/ and adapters/, see CLAUDE.md)
+        run: pip install numpy pandas
 
       - name: Run the canonical EBTA runtime test suite
         run: python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation

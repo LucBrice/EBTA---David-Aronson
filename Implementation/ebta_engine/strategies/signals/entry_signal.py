@@ -2,16 +2,31 @@
 
 from __future__ import annotations
 
-from typing import Any
-
-import numpy as np
-import pandas as pd
+from typing import TYPE_CHECKING, Any
 
 from ebta_engine.strategies.signals.engulfing import detect_engulfing_components
 from ebta_engine.strategies.signals.liquidity import compute_liquidity_pools, latest_levels
 
+if TYPE_CHECKING:
+    # Type-checker-only import - see engulfing.py for the rationale. Never
+    # executes at runtime (TYPE_CHECKING is always False), so it never
+    # requires numpy/pandas to be installed.
+    import numpy as np
+    import pandas as pd
+
 _FloatArray = Any
 _BoolArray = Any
+
+
+def _pandas_numpy_tools() -> tuple[Any, Any]:
+    # Lazy, function-scoped import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the full
+    # rationale (Lot 6 amendment, EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md,
+    # 2026-08-07).
+    import numpy as np
+    import pandas as pd
+
+    return pd, np
 
 
 def compute_entry_signals(
@@ -75,6 +90,7 @@ def _directional_signal(
     window_fwd: int,
     window_m3: int,
 ) -> pd.Series:
+    pd, np = _pandas_numpy_tools()
     output = pd.Series(0, index=bars_m3.index, dtype="int64")
     highs = bars_m1["high"].to_numpy()
     lows = bars_m1["low"].to_numpy()
@@ -104,6 +120,7 @@ def _directional_signal(
 
 
 def _sweep_indices(highs: _FloatArray, lows: _FloatArray, levels: _FloatArray, side: int) -> list[int]:
+    _pd, np = _pandas_numpy_tools()
     indices: list[int] = []
     active = False
     previous_level = np.nan

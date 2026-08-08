@@ -2,11 +2,29 @@
 
 from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    # Type-checker-only import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the
+    # rationale. Never executes at runtime (TYPE_CHECKING is always False),
+    # so it never requires pandas to be installed.
+    import pandas as pd
+
+
+def _pandas_tools() -> Any:
+    # Lazy, function-scoped import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the full
+    # rationale (Lot 6 amendment, EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md,
+    # 2026-08-07).
+    import pandas as pd
+
+    return pd
 
 
 def compute_market_bias(df: pd.DataFrame, tf_minutes: int) -> pd.Series:
     """Return -1, 0, or 1 bias using only closed previous HTF candles."""
+    pd = _pandas_tools()
     if tf_minutes <= 0:
         raise ValueError("tf_minutes must be positive")
     missing = {"open", "high", "low", "close"} - set(df.columns)
@@ -46,6 +64,7 @@ def compute_market_bias(df: pd.DataFrame, tf_minutes: int) -> pd.Series:
 
 def align_mtf_filter(target: pd.DataFrame, h1: pd.DataFrame, h4: pd.DataFrame, d1: pd.DataFrame) -> pd.Series:
     """Align H1/H4/D1 bias to target bars and authorize agreeing HTF pairs."""
+    pd = _pandas_tools()
     b_h1 = _aligned_bias(target, h1, 60)
     b_h4 = _aligned_bias(target, h4, 240)
     b_d1 = _aligned_bias(target, d1, 1440)
@@ -57,6 +76,7 @@ def align_mtf_filter(target: pd.DataFrame, h1: pd.DataFrame, h4: pd.DataFrame, d
 
 
 def _aligned_bias(target: pd.DataFrame, source: pd.DataFrame, tf_minutes: int) -> pd.Series:
+    pd = _pandas_tools()
     if source is None or source.empty:
         return pd.Series(0, index=target.index, dtype="int64")
     return compute_market_bias(source, tf_minutes).reindex(target.index, method="ffill").fillna(0).astype("int64")

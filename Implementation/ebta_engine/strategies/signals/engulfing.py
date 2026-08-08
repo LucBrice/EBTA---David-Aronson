@@ -6,8 +6,33 @@ Type: IMPLEMENTATION_DETAIL.
 
 from __future__ import annotations
 
-import numpy as np
-import pandas as pd
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    # Only for static type checkers (Pyrefly/mypy): resolves `pd.DataFrame`/
+    # `np.nan` etc. in annotations below. TYPE_CHECKING is always False at
+    # runtime, so this import never executes and never requires
+    # numpy/pandas to be installed - the real, executed import stays lazy
+    # inside _pandas_numpy_tools() below.
+    import numpy as np
+    import pandas as pd
+
+
+def _pandas_numpy_tools() -> tuple[Any, Any]:
+    # numpy/pandas stay a lazy, function-scoped import (not a module-level
+    # one) so that importing this module - and anything that imports it,
+    # transitively including ebta_engine.adapters.nautilus_mapping - does not
+    # require numpy/pandas to be installed. Mirrors the lazy-import pattern
+    # already established for NautilusTrader itself in
+    # ebta_engine/adapters/nautilus_mapping.py::_nautilus_data_tools().
+    # Decision: EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md, Lot 6 amendment
+    # (2026-08-07) - strategies/ is documented as allowed to depend on
+    # numpy/pandas (CLAUDE.md, "What this repo is"), this only defers when
+    # the import happens so the package stays importable without them.
+    import numpy as np
+    import pandas as pd
+
+    return pd, np
 
 
 def detect_engulfing(df: pd.DataFrame) -> pd.Series:
@@ -17,6 +42,7 @@ def detect_engulfing(df: pd.DataFrame) -> pd.Series:
 
 
 def detect_engulfing_components(df: pd.DataFrame) -> dict[str, pd.Series]:
+    pd, np = _pandas_numpy_tools()
     _require_ohlc(df)
     high = df["high"]
     low = df["low"]

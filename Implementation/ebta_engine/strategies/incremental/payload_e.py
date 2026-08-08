@@ -4,14 +4,32 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any
-
-import pandas as pd
+from typing import TYPE_CHECKING, Any
 
 from ebta_engine.data.local_ohlcv import OhlcvBar
 from ebta_engine.data.resample import resample_ohlcv
 from ebta_engine.strategies.registry import register_strategy
 from ebta_engine.strategies.signals.entry_signal import compute_entry_signals
+
+if TYPE_CHECKING:
+    # Type-checker-only import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the
+    # rationale. Never executes at runtime (TYPE_CHECKING is always False),
+    # so it never requires pandas to be installed.
+    import pandas as pd
+
+
+def _pandas_tools() -> Any:
+    # Lazy, function-scoped import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the full
+    # rationale (Lot 6 amendment, EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md,
+    # 2026-08-07). This module is imported eagerly by
+    # ebta_engine.strategies.incremental.__init__ and, transitively, by
+    # ebta_engine.adapters.nautilus_mapping - it must stay importable
+    # without pandas installed.
+    import pandas as pd
+
+    return pd
 
 
 @dataclass(frozen=True)
@@ -84,6 +102,7 @@ class PayloadEStrategy:
 
 
 def frame_from_bars(bars: list[OhlcvBar]) -> pd.DataFrame:
+    pd = _pandas_tools()
     return pd.DataFrame(
         {
             "open": [bar.open for bar in bars],
@@ -156,6 +175,7 @@ def _bar_float(value: Any) -> float:
 
 
 def _to_datetime(value: Any) -> datetime:
+    pd = _pandas_tools()
     if isinstance(value, pd.Timestamp):
         return value.to_pydatetime().astimezone(timezone.utc)
     if isinstance(value, datetime):

@@ -2,9 +2,24 @@
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict
 
-import pandas as pd
+if TYPE_CHECKING:
+    # Type-checker-only import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the
+    # rationale. Never executes at runtime (TYPE_CHECKING is always False),
+    # so it never requires pandas to be installed.
+    import pandas as pd
+
+
+def _pandas_tools() -> Any:
+    # Lazy, function-scoped import - see
+    # strategies/signals/engulfing.py::_pandas_numpy_tools() for the full
+    # rationale (Lot 6 amendment, EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md,
+    # 2026-08-07).
+    import pandas as pd
+
+    return pd
 
 
 class _SessionWindow(TypedDict):
@@ -22,6 +37,7 @@ _SESSION_CONFIG: dict[str, _SessionWindow] = {
 
 def filter_session(df: pd.DataFrame, session: str, tz: str | None = None) -> pd.Series:
     """Return a boolean mask selecting bars inside a named local session."""
+    pd = _pandas_tools()
     if session == "all":
         return pd.Series(True, index=df.index)
     if session not in _SESSION_CONFIG:

@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING
 
 from ebta_engine.strategies.incremental.payload_e import PayloadEStrategy
 from ebta_engine.strategies.incremental.payload_f import apply_mtf_bias_filter
 from ebta_engine.strategies.registry import register_strategy
 from ebta_engine.strategies.signals.sessions import filter_session
+
+if TYPE_CHECKING:
+    # Type-checker-only import - see the identical note in
+    # strategies/incremental/payload_f.py (Lot 6 amendment,
+    # EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md, 2026-08-07). Never
+    # executes at runtime, no `pd.*` value usage in this module.
+    import pandas as pd
 
 
 class _SessionStrategy(PayloadEStrategy):
