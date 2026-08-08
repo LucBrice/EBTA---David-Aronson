@@ -1964,6 +1964,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA",
+      "title": "PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "IMPLEMENTATION_DETAIL",
+      "source_path": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260808_PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-08",
+      "last_moved_at": "2026-08-08",
+      "routing_decision": "fix",
+      "routing_reason": "Regularisation retroactive : extension pre-push (non-fast-forward + retard origin/main) et regle AGENTS.md pour toute IA, demandee explicitement par l utilisateur le 2026-08-08 apres execution en conversation directe.",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md#audit-ia-de-promotion",
+            "recorded_at": "2026-08-08"
+          }
+        ]
+      }
     }
   ],
   "validation": {
