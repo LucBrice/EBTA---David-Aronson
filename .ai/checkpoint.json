@@ -1598,25 +1598,25 @@
       "id": "EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE",
       "title": "Chantier mere - robustesse des garde-fous face a l'agent de codage",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/fixes/EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md",
+      "source_path": ".ai/archive/20260808_EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260807_AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-07.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-07",
-      "last_moved_at": "2026-08-07",
+      "last_moved_at": "2026-08-08",
       "routing_decision": "fix",
       "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Six lots clos (5 lots DONE, 1 lot REJECTED par decision humaine) ; cinq conditions de l'Exit criteria verifiees par execution reelle (workflow state machine PASS, suite 232 tests 0 error, preuve negative, preuve d'independance CI PASS/FAIL/PASS) ; bug-hunter global et plan-conformance-audit PASS.",
       "non_goals": [],
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1632,6 +1632,11 @@
             "id": "baseline_commit",
             "reference": "033ef3c",
             "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/fixes/EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md#13-cloture",
+            "recorded_at": "2026-08-08"
           }
         ]
       },
