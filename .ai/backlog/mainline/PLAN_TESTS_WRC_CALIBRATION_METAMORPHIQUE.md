@@ -43,9 +43,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `EN_COURS` — implementation et validations terminees, fermeture en attente |
 | Date de creation | 2026-08-08 |
-| Date d'activation | - |
+| Date d'activation | 2026-08-08 |
 | Autorite normative | SOP 02 ; registre DN-008, DN-009, DN-018. |
 | Autorite executable | `Implementation/ebta_engine/procedures/wrc.py` et `bootstrap.py`, lus mais interdits de modification. |
 | Changement normatif attendu | Aucun. |
@@ -263,13 +263,13 @@ Premier lot executable : creation du fichier de test et controle nul.
 
 ## 12. Definition of Done
 
-- [ ] Un seul nouveau fichier runtime, dans le perimetre autorise.
-- [ ] Controle nul, renommage et extension de famille implementes.
-- [ ] Deux executions cibles consecutives passent.
-- [ ] Suite complete passe avec au moins 245 tests.
-- [ ] Aucun changement de production ou de protocole.
-- [ ] `bug-hunter`, `adversarial-tester`, `plan-conformance-audit` sans finding bloquant.
-- [ ] JSON d'etat valides apres transitions.
+- [x] Un seul nouveau fichier runtime, dans le perimetre autorise.
+- [x] Controle nul, renommage et extension de famille implementes.
+- [x] Deux executions cibles consecutives passent.
+- [x] Suite complete passe avec au moins 245 tests.
+- [x] Aucun changement de production ou de protocole.
+- [x] `bug-hunter`, `adversarial-tester`, `plan-conformance-audit` sans finding bloquant.
+- [x] JSON d'etat valides apres transitions.
 
 ## 13. Cloture
 
@@ -285,3 +285,66 @@ Premier lot executable : creation du fichier de test et controle nul.
 | --- | --- | --- | --- |
 | 1 | Relecture du plan normalise contre le code, la SOP 02, le workflow `core-engine` et le nombre de tests attendu. | La preuve minimale est passee de 243 a 245 tests : le fichier doit contenir trois cas cibles, pas un seul. | Nouvel ecart mineur corrige. |
 | 2 | Prototype exact des trois fixtures execute deux fois sans ecriture : nulle `3/40`, base `0.046/PASS`, famille etendue `0.174/FAIL`, invariance au renommage vraie lors des deux runs. | Aucune. Les valeurs restent des preuves de fixture et ne sont pas transformees en constantes normatives. | Aucun nouvel angle mort majeur ; convergence. |
+
+## 15. Resultat d'execution du 2026-08-08
+
+| Champ | Valeur |
+| --- | --- |
+| Fichier runtime cree | `Implementation/ebta_engine/tests/test_wrc_calibration_metamorphic.py` |
+| Tests cibles | Deux executions consecutives : `Ran 3 tests ... OK` |
+| Suite complete | `Ran 245 tests ... OK` |
+| Hygiene | `git diff --check` PASS |
+| Ecart | Aucun. `wrc.py`, bootstrap et `Protocole/` inchanges. |
+
+## Preuve bug-hunter
+
+Commande cible :
+
+```powershell
+.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m pyrefly check Implementation\ebta_engine\tests\test_wrc_calibration_metamorphic.py --output-format min-text
+```
+
+Resultat : `INFO 0 errors`. Aucun diagnostic, faux positif ou vrai bug a
+trier. La suite complete reste `245 tests, OK`.
+
+## Preuve adversarial-tester
+
+Trois mutations hostiles ont ete injectees par `unittest.mock.patch` sans
+modifier le depot :
+
+| Scenario hostile | Attendu | Observe | Classement |
+| --- | --- | --- | --- |
+| `wrc_test` renvoie toujours `PASS` sur les 40 nulles | Le controle nul echoue. | 1 assertion failure, 0 erreur. | `PASS_ADVERSARIAL` |
+| Le resultat depend seulement du nom des candidates | L'invariance au renommage echoue. | 1 assertion failure, 0 erreur. | `PASS_ADVERSARIAL` |
+| L'extension de famille produit un `PASS` avec une p-value plus faible | Le controle d'extension echoue. | 1 assertion failure, 0 erreur. | `PASS_ADVERSARIAL` |
+
+Aucun `FALSE_SUCCESS`, `SILENT_FALLBACK` ou `NORMATIVE_GAP` detecte dans le
+diff du lot.
+
+## Preuve EBTA Protocol Guardian
+
+- La SOP 02 conserve son autorite : `alpha=0,05`, bootstrap stationnaire
+  conjoint, zero-centering et `B=5000` pour un run EBTA reel.
+- Les `499` repetitions, les seeds et `<=3/40` sont explicitement limites a
+  une fixture de regression ; ils ne produisent aucun gate ou seuil
+  methodologique nouveau.
+- Aucun fichier de `Protocole/`, aucune procedure et aucun verdict runtime ne
+  sont modifies.
+
+Verdict : `CONFORME — TEST_FIXTURE`, confiance haute sur le perimetre lu.
+
+## Preuve plan-conformance-audit
+
+Fenetre : baseline `9b4772c`, activation enregistree apres `99a0a52`, etat
+de travail courant avant cloture.
+
+| Critere | Classement | Preuve |
+| --- | --- | --- |
+| Nouveau module cible et suite canonique passent | `IMPLEMENTE` | Deux runs cibles `3 tests OK`; suite `245 tests OK`. |
+| Seul le fichier runtime autorise est touche | `IMPLEMENTE` | `git status --short -- Implementation` ne liste que `test_wrc_calibration_metamorphic.py`. |
+| Trois controles livres | `IMPLEMENTE` | Trois methodes decouvertes par `unittest`, couvrant nulle, renommage et extension. |
+| Audits de fermeture sans finding bloquant | `IMPLEMENTE` | Sections `Preuve bug-hunter`, `Preuve adversarial-tester` et present audit. |
+| Non-goals respectes | `IMPLEMENTE` | Aucun diff dans `Protocole/`, `procedures/`, schemas, exemples, notebooks ou adaptateurs. |
+
+Verdict : `PASS`, 5/5 criteres implementes, aucun extra runtime et aucun
+Non-goal viole. La cloture peut franchir `READY_TO_CLOSE`.
