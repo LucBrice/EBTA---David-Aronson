@@ -179,9 +179,13 @@ class PrePushHookTests(unittest.TestCase):
             patch.object(pre_push_hook.subprocess, "run") as mock_run,
         ):
             mock_run.return_value.returncode = 0
+            mock_run.return_value.stdout = "0"
             result = pre_push_hook.main()
         self.assertEqual(result, 0)
-        mock_run.assert_called_once_with(pre_push_hook.TEST_COMMAND)
+        # main() now also fetches and checks staleness before running the
+        # suite (Council of Five decision); the test command must still be
+        # among the calls, not necessarily the only one.
+        mock_run.assert_any_call(pre_push_hook.TEST_COMMAND)
 
     def test_failing_suite_blocks_the_push(self):
         with (
@@ -191,6 +195,82 @@ class PrePushHookTests(unittest.TestCase):
             mock_run.return_value.returncode = 1
             result = pre_push_hook.main()
         self.assertEqual(result, 1)
+
+
+class PrePushReadRefsTests(unittest.TestCase):
+    def test_well_formed_lines_are_parsed(self):
+        stdin = "refs/heads/main abc123 refs/heads/main def456\n"
+        with patch("sys.stdin", io.StringIO(stdin)):
+            refs = pre_push_hook.read_pushed_refs()
+        self.assertEqual(refs, [("refs/heads/main", "abc123", "refs/heads/main", "def456")])
+
+    def test_malformed_line_is_skipped_not_crashed_on(self):
+        stdin = "not enough fields\n"
+        with patch("sys.stdin", io.StringIO(stdin)):
+            refs = pre_push_hook.read_pushed_refs()
+        self.assertEqual(refs, [])
+
+
+class PrePushNonFastForwardTests(unittest.TestCase):
+    """Council of Five decision: block only a genuinely non-fast-forward ref
+    update (force push or unfetched divergence); a plain fast-forward push
+    or a brand-new branch must never be blocked by this check.
+    """
+
+    def _run_with_is_ancestor(self, refs, is_ancestor_result):
+        with patch.object(pre_push_hook, "_is_ancestor", return_value=is_ancestor_result) as mock_is_ancestor:
+            blocked = pre_push_hook.check_non_fastforward(refs)
+        return blocked, mock_is_ancestor
+
+    def test_fast_forward_update_is_not_blocked(self):
+        refs = [("refs/heads/main", "local_sha", "refs/heads/main", "remote_sha")]
+        blocked, mock_is_ancestor = self._run_with_is_ancestor(refs, is_ancestor_result=True)
+        self.assertFalse(blocked)
+        mock_is_ancestor.assert_called_once_with("remote_sha", "local_sha")
+
+    def test_non_fast_forward_update_is_blocked(self):
+        refs = [("refs/heads/main", "local_sha", "refs/heads/main", "remote_sha")]
+        blocked, _ = self._run_with_is_ancestor(refs, is_ancestor_result=False)
+        self.assertTrue(blocked)
+
+    def test_new_branch_push_skips_the_check_entirely(self):
+        refs = [("refs/heads/feature", "local_sha", "refs/heads/feature", pre_push_hook.ZERO_SHA)]
+        with patch.object(pre_push_hook, "_is_ancestor") as mock_is_ancestor:
+            blocked = pre_push_hook.check_non_fastforward(refs)
+        self.assertFalse(blocked)
+        mock_is_ancestor.assert_not_called()
+
+    def test_branch_deletion_skips_the_check_entirely(self):
+        refs = [("refs/heads/feature", pre_push_hook.ZERO_SHA, "refs/heads/feature", "remote_sha")]
+        with patch.object(pre_push_hook, "_is_ancestor") as mock_is_ancestor:
+            blocked = pre_push_hook.check_non_fastforward(refs)
+        self.assertFalse(blocked)
+        mock_is_ancestor.assert_not_called()
+
+
+class PrePushStalenessWarningTests(unittest.TestCase):
+    """Council of Five decision: staleness relative to origin/main is
+    informational only and must never block the push - only a genuine
+    non-fast-forward ref update (covered above) does.
+    """
+
+    def test_behind_origin_main_prints_a_warning_but_returns_nothing_blocking(self):
+        with patch.object(pre_push_hook.subprocess, "run") as mock_run:
+            mock_run.return_value.returncode = 0
+            mock_run.return_value.stdout = "3"
+            with patch("builtins.print") as mock_print:
+                pre_push_hook.warn_if_behind_origin_main()
+        printed = "\n".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        self.assertIn("AVERTISSEMENT", printed)
+        self.assertIn("3 commit(s)", printed)
+
+    def test_up_to_date_prints_nothing(self):
+        with patch.object(pre_push_hook.subprocess, "run") as mock_run:
+            mock_run.return_value.returncode = 0
+            mock_run.return_value.stdout = "0"
+            with patch("builtins.print") as mock_print:
+                pre_push_hook.warn_if_behind_origin_main()
+        mock_print.assert_not_called()
 
 
 if __name__ == "__main__":
