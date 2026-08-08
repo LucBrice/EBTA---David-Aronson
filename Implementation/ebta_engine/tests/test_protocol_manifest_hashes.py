@@ -19,7 +19,7 @@ class ProtocolManifestHashTests(unittest.TestCase):
             actual = hashlib.sha256(path.read_bytes()).hexdigest().upper()
             if actual != expected:
                 mismatches.append(relative_path)
-        self.assertEqual(mismatches, [])
+        self.assertEqual(mismatches, ["INTENTIONALLY_BROKEN_FOR_CI_INDEPENDENCE_PROOF_LOT_6"])  # TEMP: reverted in the next commit
 
 
 if __name__ == "__main__":

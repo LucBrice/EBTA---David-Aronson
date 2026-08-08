@@ -2420,3 +2420,48 @@ aucun nouveau seuil, statut ou ordre de gate.
 Pour un pipeline reel, fournir un schema MCPM preregistre et un recalcul
 signal-position-PnL complet si la MCPM est activee. Ne pas remplacer ce blocage
 par une permutation generique du PnL final.
+
+## 2026-08-07 - Contournement `--no-verify` documente (preuve d'independance CI, Lot 6)
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | N/A |
+| Type | TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `.ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md`, Exit criteria condition (3) ; `EPIC_ROBUSTESSE_GARDE_FOUS_AGENT_CODAGE.md`, Exit criteria condition (5) |
+| Fichiers impactes | `Implementation/ebta_engine/tests/test_protocol_manifest_hashes.py` (casse puis revert immediat) |
+| Impact protocole | NONE |
+| Verification | `gh run view <id>` sur `https://github.com/LucBrice/EBTA---David-Aronson/actions` montrant `conclusion: failure` puis `conclusion: success` apres revert |
+
+### Contexte
+
+Le lot 6 (`PLAN_CI_GITHUB_VERDICT_INDEPENDANT`) exige une preuve reelle,
+executee, qu'un commit volontairement cassant declenche un echec de CI
+GitHub observable, independant de l'agent qui l'a produit. Le hook local
+`pre-push` (lot 2, deja `DONE`) bloquerait ce commit avant meme qu'il
+n'atteigne le remote, puisqu'il execute la suite complete avant chaque push
+et que ce commit la fait echouer par construction — c'est exactement le
+comportement attendu de ce hook sur un cas normal.
+
+### Decision
+
+Utiliser `git push --no-verify` pour ce seul push, contenant un unique
+commit qui remplace temporairement une assertion de
+`test_protocol_manifest_hashes.py` par une valeur toujours fausse
+(`assertEqual(mismatches, ["INTENTIONALLY_BROKEN_FOR_CI_INDEPENDENCE_PROOF_LOT_6"])`),
+suivi immediatement d'un commit de revert exact, pousse normalement (hook
+actif, suite verte).
+
+### Impact
+
+Aucun changement de comportement runtime ou normatif. Demonstration en
+conditions reelles de la raison d'etre du lot 6 : un hook local, meme
+correctement concu, reste contournable sans laisser de trace mecanique
+(seule cette entree de journal en garde la trace, par discipline humaine, pas
+par contrainte outillee) — la CI GitHub, elle, ne peut pas etre sautee de la
+meme maniere et son verdict reste visible independamment de l'agent.
+
+### Suite
+
+Aucune. Le commit cassant est revert dans la meme session, immediatement
+apres observation du run CI en echec.
