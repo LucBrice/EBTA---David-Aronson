@@ -2123,6 +2123,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_CLIQUET_INVENTAIRE_TESTS",
+      "title": "Cliquet versionne de inventaire unittest",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "TEST_FIXTURE",
+      "source_path": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260808_PLAN_CLIQUET_INVENTAIRE_TESTS.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-08",
+      "last_moved_at": "2026-08-08",
+      "routing_decision": "mainline",
+      "routing_reason": "Sous-chantier 2/7 de EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA : cliquet inventaire unittest.",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-08"
+          }
+        ]
+      }
     }
   ],
   "validation": {
