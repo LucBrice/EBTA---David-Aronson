@@ -1987,11 +1987,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md#audit-ia-de-promotion",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md#5-decision-darchitecture",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "00cfe59a572026a28ac8533411cf6852267f7cf5",
             "recorded_at": "2026-08-08"
           }
         ]
