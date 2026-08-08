@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -1969,8 +1969,8 @@
       "id": "PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA",
       "title": "PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "IMPLEMENTATION_DETAIL",
       "source_path": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260808_PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md",
@@ -1978,7 +1978,7 @@
       "opened_at": "2026-08-08",
       "last_moved_at": "2026-08-08",
       "routing_decision": "fix",
-      "routing_reason": "Regularisation retroactive : extension pre-push (non-fast-forward + retard origin/main) et regle AGENTS.md pour toute IA, demandee explicitement par l utilisateur le 2026-08-08 apres execution en conversation directe.",
+      "routing_reason": "Travail deja execute (Phases 1 et 2, section 6 du plan) ; continue attestee mecaniquement pour completer le cycle retroactif.",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
@@ -1987,7 +1987,7 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2005,7 +2005,8 @@
             "recorded_at": "2026-08-08"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {
