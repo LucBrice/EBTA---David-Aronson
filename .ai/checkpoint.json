@@ -2022,6 +2022,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA",
+      "title": "Durcissement post-audit face aux erreurs silencieuses IA",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260808_AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-08.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-08",
+      "last_moved_at": "2026-08-08",
+      "routing_decision": "mainline",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-08"
+          }
+        ]
+      }
     }
   ],
   "validation": {
