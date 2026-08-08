@@ -1,7 +1,7 @@
 {
   "schema_version": "1.3.0",
   "checkpoint_kind": "multi_ai_relay",
-  "updated_at": "2026-08-07",
+  "updated_at": "2026-08-08",
   "status": "ACTIVE",
   "repo": {
     "name": "EBTA - David Aronson",
@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CI_GITHUB_VERDICT_INDEPENDANT",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -1906,25 +1906,25 @@
       "id": "PLAN_CI_GITHUB_VERDICT_INDEPENDANT",
       "title": "Lot 6 - CI GitHub verdict independant",
       "track": "fix",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md",
+      "source_path": ".ai/archive/20260808_PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260807_PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-07",
-      "last_moved_at": "2026-08-07",
+      "last_moved_at": "2026-08-08",
       "routing_decision": "fix",
       "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Workflow CI cree et fonctionnel ; decision humaine (Council of Five) a debloque le blocage initial (scoping stdlib-only + import paresseux pandas/numpy + fix chemin Windows) ; 3 runs CI reels observes (PASS/FAIL delibere/PASS apres revert) ; bug-hunter, adversarial-tester et plan-conformance-audit PASS.",
       "non_goals": [],
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -1940,10 +1940,25 @@
             "id": "baseline_commit",
             "reference": "9e5a44cba6ca4f6544f0ef272502cd054e919471",
             "recorded_at": "2026-08-07"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": ".ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md#bug-hunter-pyrefly-fichiers-python-touches-par-lamendement",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": ".ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md#adversarial-tester-cible-chaine-dimport-lazy-pandasnumpy-gate-dimportabilite-du-package",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/fixes/PLAN_CI_GITHUB_VERDICT_INDEPENDANT.md#plan-conformance-audit",
+            "recorded_at": "2026-08-08"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {

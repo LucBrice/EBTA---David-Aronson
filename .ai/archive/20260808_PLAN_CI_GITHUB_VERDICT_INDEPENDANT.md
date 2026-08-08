@@ -417,19 +417,35 @@ IDs non disponibles cote outil de cette session).
 ## 12. Definition of Done
 
 - [x] Phase 1 executee : workflow cree, pousse, run CI reel observe
-      (echec, cause racine identifiee et documentee ci-dessus — pas un
-      succes cache en echec).
-- [ ] Phase 2 non executee (bloquee par l'etat rouge pre-existant, voir
-      blocage ci-dessus).
-- [ ] Exit criteria (2) non atteint : aucun run CI propre obtenu a ce jour.
-- [x] Aucune modification hors perimetre (section 5) — le blocage est
-      documente, pas contourne en elargissant silencieusement le perimetre.
-- [ ] `main` dans un etat CI vert — **non atteint**, `main` porte un etat
-      CI rouge reel et pre-existant, rendu visible (pas cause) par ce lot.
+      (echec initial, cause racine identifiee et documentee — pas un
+      succes cache en echec) ; puis, apres la decision humaine et les
+      correctifs (section 10-11), un run CI PASS reel observe
+      (`gh run view 31246988994`, `conclusion: success`).
+- [x] Phase 2 executee : commit volontairement cassant pousse
+      (`--no-verify`, justifie et journalise dans
+      `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md`), echec CI
+      reel observe (`gh run view 31247122326`, `conclusion: failure`),
+      revert immediat, run CI PASS confirme
+      (`gh run view 31247299075`, `conclusion: success`).
+- [x] Exit criteria (1) : `.github/workflows/ebta-runtime-suite.yml`
+      existe, job dont l'echec est visible sur le depot distant (3 runs
+      reels observes).
+- [x] Exit criteria (2) : un push normal declenche un run CI qui reussit
+      (`31246988994`, puis `31247299075` apres le cycle de preuve).
+- [x] Exit criteria (3) : un commit volontairement cassant declenche un
+      echec de CI GitHub observable (`31247122326`).
+- [x] Exit criteria (4) : le commit cassant est revert, `main` retrouve un
+      etat CI vert (`31247299075`).
+- [x] Aucune modification hors perimetre non journalisee — l'extension du
+      perimetre (CLAUDE.md, 8 fichiers `strategies/`,
+      `MANIFESTE DE GEL EBTA.md`) est explicitement autorisee par la
+      decision humaine du 2026-08-07 (section 10) et documentee comme
+      amendement, pas silencieusement decidee.
+- [x] `main` dans un etat CI vert a la fin de ce lot — confirme par le
+      dernier run (`31247299075`, `conclusion: success`).
 - [x] Checklist post-modification du projet executee (voir rapport final
       de la session).
-- [x] Aucune implementation partielle presentee comme terminee — ce lot
-      reste explicitement `ACTIVE`, pas `DONE`.
+- [x] Aucune implementation partielle presentee comme terminee.
 
 ---
 
@@ -437,19 +453,70 @@ IDs non disponibles cote outil de cette session).
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | **NON CLOTURE — reste `ACTIVE`.** Bloque par une decision humaine non tranchee (voir section 11, "BLOCAGE REEL CONSTATE"). Le workflow CI existe et fonctionne reellement (Phase 1 complete), mais ne peut pas encore produire de run vert pour des raisons pre-existantes et hors perimetre de ce lot. |
-| Ecarts par rapport au plan initial | Phase 2 (commit cassant + revert) non executee — la base est deja rouge pour des raisons reelles, superposer une cassure deliberee aurait produit une preuve confuse plutot que propre. |
-| Suites a prevoir (hors perimetre de ce plan) | Deux taches de suivi creees (dependance `pandas` non declaree ; chemin Windows code en dur dans `test_protocol_manifest_hashes.py`). Une fois ces deux points resolus par une session future (apres decision humaine sur le premier), reprendre ce lot : verifier un run CI propre (Exit criteria 2), puis executer la Phase 2 (preuve d'independance par commit cassant), puis cloturer. Phase 6 du chantier mere reste bloquee tant que ce lot n'est pas `DONE` (mecanisme normal de `Assert-SubChantiersClosed`). |
+| Resultat final | **DONE.** Bloque initialement par un blocage reel (2 causes racines pre-existantes decouvertes par le premier run CI), debloque par une decision humaine explicite (Council of Five, section 10), corrige, verifie par 3 runs CI reels (PASS -> FAIL delibere -> PASS apres revert). |
+| Ecarts par rapport au plan initial | Perimetre etendu au-dela de `.github/workflows/` (section 5 initiale) pour couvrir le correctif autorise par la decision humaine : `CLAUDE.md`, 8 fichiers `Implementation/ebta_engine/strategies/`, `Protocole/MANIFESTE DE GEL EBTA.md`. Extension journalisee comme amendement (section 10), pas silencieuse. |
+| Suites a prevoir (hors perimetre de ce plan) | Aucune — les deux taches de suivi spawnees avant la decision humaine (`task_00669cf7` dependance pandas, `task_05181d67` chemin Windows) sont desormais redondantes avec le travail de ce lot ; a signaler comme telles au rapport final de session (dismiss non effectue faute d'IDs disponibles cote outil de cette session — a faire manuellement ou lors d'une prochaine session). |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
 | Champ | Valeur |
 | --- | --- |
-| Date | 2026-08-07 |
-| Phases executees | [a completer apres execution reelle] |
-| Artefact produit | `.github/workflows/ebta-runtime-suite.yml`. |
-| Validation | [a completer avec les IDs de run `gh` reels] |
-| Ecart par rapport au plan | [a completer] |
+| Date | 2026-08-07 / 2026-08-08 |
+| Phases executees | Phase 1, Phase 2 |
+| Artefact produit | `.github/workflows/ebta-runtime-suite.yml` ; `CLAUDE.md` (scope stdlib-only corrige) ; 8 fichiers `Implementation/ebta_engine/strategies/` (import paresseux) ; `Protocole/MANIFESTE DE GEL EBTA.md` (chemin corrige) ; `Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md` (entree `--no-verify`). |
+| Validation | `gh run view 31246988994` -> `success` ; `gh run view 31247122326` -> `failure` (delibere) ; `gh run view 31247299075` -> `success` (apres revert). Local : `python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation` -> `Ran 232 tests`, `OK (skipped=6)`. |
+| Ecart par rapport au plan | Perimetre etendu par decision humaine explicite (voir ci-dessus), pas d'ecart non autorise. |
+
+### Rapport de cloture (bug-hunter, adversarial-tester, plan-conformance-audit)
+
+#### bug-hunter (Pyrefly, fichiers Python touches par l'amendement)
+
+```
+python -m pyrefly check <8 fichiers strategies/> --output-format min-text
+```
+
+Resultat initial (mon propre refactor lazy-import) : plusieurs erreurs
+`Could not find name pd/np [unknown-name]` — **VRAI DEFAUT confirme et
+corrige** : en deplacant `import pandas`/`import numpy` a l'interieur des
+fonctions, les annotations de signature au niveau module (`def f(df:
+pd.DataFrame)`) referencaient un nom non resolu pour un verificateur de
+type statique (bien que sures a l'execution grace a `from __future__ import
+annotations`, PEP 563). Corrige en ajoutant un bloc `if TYPE_CHECKING:
+import pandas as pd` (jamais execute a l'execution, `TYPE_CHECKING` est
+toujours `False`) dans chacun des 8 fichiers — pattern standard Python pour
+ce cas exact. Resultat final : uniquement des erreurs `Cannot find module
+jsonschema/pandas/numpy` — meme cause racine environnementale que les
+erreurs `ctypes.WinDLL` du lot 3 (le worktree n'a pas le venv Nautilus
+configure dans `pyproject.toml`) ; ces modules sont reellement installes et
+fonctionnels (prouve par l'execution reelle de la suite complete et par la
+simulation directe d'un environnement sans `pandas`/`numpy`). Zero vrai bug
+ouvert.
+
+#### adversarial-tester (cible : chaine d'import lazy pandas/numpy, gate d'importabilite du package)
+
+| Point teste | Entree hostile | Observation | Classification |
+| --- | --- | --- | --- |
+| Import de `nautilus_mapping`, `strategies.incremental`, `benchmarks.long_data` et des 5 modules `strategies/signals/` sans `pandas`/`numpy` installes | Meta-path bloquant `pandas`/`numpy` (`ImportError` simule) | Tous les modules s'importent sans erreur | `PASS_ADVERSARIAL` |
+| Regression de calcul apres le refactor lazy-import | Suite complete avec `pandas` reellement present | `Ran 232 tests`, `OK (skipped=6)` — aucune ligne de calcul vectorise modifiee | `PASS_ADVERSARIAL` |
+| Le chemin corrige (`Archives/...`) resout bien le meme fichier reel qu'avant (pas un fichier different par accident) | `test_frozen_protocol_hashes_still_match` compare le hash SHA-256 reel du fichier au hash fige dans le manifeste | PASS — meme fichier, meme hash, seul le separateur de chemin a change | `PASS_ADVERSARIAL` |
+| CI reellement independante (verdict qui ne provient pas de l'agent) | Commit volontairement cassant pousse via `--no-verify` (contournant le hook local) | `gh run view` montre `conclusion: failure` — la CI n'a pas ete contournee, contrairement au hook local | `PASS_ADVERSARIAL` — preuve directe que la CI est le seul verdict de ce depot que l'agent ne peut pas rendre silencieusement positif |
+
+Aucun `FALSE_SUCCESS`/`SILENT_FALLBACK` trouve. Le seul defaut reel trouve
+(annotations `pd`/`np` non resolues, ci-dessus) est un defaut de mon propre
+refactor de ce lot, corrige avant cloture — pas un defaut preexistant du
+depot.
+
+#### plan-conformance-audit
+
+| Exit criterion (Triage de ce plan) | Classification | Preuve |
+| --- | --- | --- |
+| (1) `.github/workflows/` existe, echec visible sur le depot distant | IMPLEMENTE | `.github/workflows/ebta-runtime-suite.yml`, 3 runs reels observes via `gh run view`. |
+| (2) Un push normal declenche un run CI qui reussit | IMPLEMENTE | `31246988994` et `31247299075`, `conclusion: success`. |
+| (3) Un commit volontairement cassant declenche un echec CI observable | IMPLEMENTE | `31247122326`, `conclusion: failure`. |
+| (4) Le commit cassant est revert, `main` retrouve un etat CI vert | IMPLEMENTE | Commit `038f315`, `31247299075` `conclusion: success`. |
+| Non-goals respectes (pas de simulation Nautilus en CI, pas de dependance runtime ajoutee au moteur core, pas de remplacement des preuves bug_hunter/adversarial_tester/plan_conformance) | IMPLEMENTE | `.github/workflows/` n'installe que `jsonschema`/`numpy`/`pandas`, jamais `nautilus_trader` ; `procedures/`/`governance/`/`validators/`/`schemas/`/`manifests/`/`persistence.py`/`constants.py` restent a 0 occurrence `pandas`/`numpy` (non touches par ce lot). |
+
+Aucun critere MANQUANT. Aucun `Non-goals` viole. Cloture autorisee.
 
 ---
 
