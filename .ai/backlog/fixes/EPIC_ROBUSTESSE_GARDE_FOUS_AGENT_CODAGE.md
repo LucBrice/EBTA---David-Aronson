@@ -774,23 +774,40 @@ Lorsqu'une verification echoue :
 
 - [x] Phase 0 terminee : les trois decisions humaines sont journalisees en
       section 10 (2026-08-07).
-- [ ] Phases 1 a 5bis terminees, et Phase 6 executee.
-- [ ] Exit criteria condition (1) : les six ID de la section
+- [x] Phases 1 a 5bis terminees, et Phase 6 executee.
+- [x] Exit criteria condition (1) : les six ID de la section
       "Sous-chantiers" existent dans `.ai/checkpoint.json` avec
       `status: DONE` (lot 5 en `lifecycle: REJECTED`).
-- [ ] Exit criteria condition (2) :
-      `.\.ai\tools\tests\test_workflow_state_machine.ps1` retourne exit code 0.
-- [ ] Exit criteria condition (3) :
+- [x] Exit criteria condition (2) :
+      `.\.ai\tools\tests\test_workflow_state_machine.ps1` retourne exit code 0
+      (verifie 2026-08-08, `workflow_state_machine=PASS`).
+- [x] Exit criteria condition (3), **avec un ecart de redaction assume** :
       `python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation`
-      retourne `219 tests, 0 error`.
-- [ ] Exit criteria condition (4) : la preuve negative echoue comme attendu
-      (`bug_hunter=chaine_arbitraire_sans_artefact` refuse).
-- [ ] Exit criteria condition (5) : un commit volontairement cassant declenche
-      un echec de CI GitHub observable.
-- [ ] Aucune modification hors perimetre (section 5) depuis ce chantier mere.
-- [ ] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md`
-      executee.
-- [ ] Aucune implementation partielle presentee comme terminee.
+      retourne `232 tests, 0 error` (et non `219` comme ecrit a la baseline).
+      Les lots 1, 2, 4 et 6 ont chacun ajoute des tests de regression
+      reels exigeant explicitement l'echec au point d'entree (doctrine
+      `adversarial-tester`) — augmentation legitime du compte, pas une
+      derive silencieuse. L'esprit de la condition (`0 error` sur la
+      commande canonique) est respecte ; le nombre litteral `219` figé au
+      moment de la redaction ne l'est plus, comme pour plusieurs chantiers
+      anterieurs de ce depot dont le compte de tests a evolue au fil des
+      lots (ex. 110 -> 174 -> 208 -> 219 dans l'historique de
+      `checkpoint.json`).
+- [x] Exit criteria condition (4) : la preuve negative echoue comme attendu
+      avant le lot 1 et passe apres (`bug_hunter=chaine_arbitraire_sans_artefact`
+      refuse, cas de test ligne 64 de `test_workflow_state_machine.ps1`).
+- [x] Exit criteria condition (5) : un commit volontairement cassant a
+      declenche un echec de CI GitHub observable
+      (`gh run view 31247122326` -> `conclusion: failure`), suivi d'un
+      revert confirme (`gh run view 31247299075` -> `conclusion: success`).
+- [x] Aucune modification hors perimetre (section 5) depuis ce chantier mere
+      — ce document ne code jamais rien lui-meme ; toute extension de
+      perimetre necessaire (amendement du lot 6) a ete tranchee par decision
+      humaine explicite et journalisee dans le plan du lot concerne, jamais
+      decidee par ce document.
+- [x] Checklist post-modification de `.ai/governance/AI_MODIFICATION_CHECKLIST.md`
+      executee (voir rapport final de session).
+- [x] Aucune implementation partielle presentee comme terminee.
 
 ---
 
@@ -798,9 +815,9 @@ Lorsqu'une verification echoue :
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir au `/close`] |
-| Ecarts par rapport au plan initial | [a remplir] |
-| Suites a prevoir (hors perimetre de ce plan) | Toute correction revelee par le rapport adversarial du lot 4 et depassant son perimetre. La question de l'isolation des tests Nautilus pourra etre rouverte si le lot 4 montre que ces tests degradent silencieusement vers un chemin factice — c'est la seule justification qui resterait valable apres le refus du lot 5. |
+| Resultat final | **DONE.** Les six lots sont clos (`PLAN_SUBSTANTIATION_PREUVES_WORKFLOW_READY`, `PLAN_GARDE_ENVIRONNEMENT_BENCHMARK_NAUTILUS`, `PLAN_ADVERSARIAL_TESTER_GOUVERNANCE_OUTILLE`, `PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS`, `PLAN_CI_GITHUB_VERDICT_INDEPENDANT` en `DONE` ; `PLAN_ISOLATION_TESTS_DEPENDANTS_NAUTILUS` en `REJECTED`). Les cinq conditions de l'Exit criteria sont verifiees par des commandes reellement executees (section 12). |
+| Ecarts par rapport au plan initial | (a) Compte de tests litteral (219 -> 232), voir section 12 condition (3) ; (b) le lot 6 a rencontre un blocage reel non anticipe (2 causes racines pre-existantes decouvertes par le premier run CI : dependance `pandas` non declaree dans `strategies/`, chemin Windows code en dur dans `Protocole/MANIFESTE DE GEL EBTA.md`), resolu par une decision humaine explicite (Council of Five, journalisee dans le plan du lot 6) qui a etendu son perimetre de fichiers au-dela de `.github/workflows/` — extension autorisee et journalisee, pas une derive silencieuse. |
+| Suites a prevoir (hors perimetre de ce plan) | Le rapport adversarial du lot 4 n'a revele qu'un seul defaut (`incident_logger.py`), deja corrige dans ce meme lot — aucune suite residuelle de ce cote. Deux taches de suivi spawnees avant la decision humaine du lot 6 (`task_00669cf7` dependance pandas, `task_05181d67` chemin Windows) sont desormais redondantes avec le travail effectivement livre par le lot 6 — a dismiss ou a laisser expirer sans action, aucune ne represente plus un travail restant. |
 
 ---
 
@@ -811,3 +828,4 @@ Lorsqu'une verification echoue :
 | 2026-08-07 | Boucle `/evaluate` d'intake, 3 passes convergees, sur le brouillon source | Le brouillon etait factuellement exact mais non routable : aucun Exit criteria binaire, multi-lot non declare, recommandation 1 techniquement incorrecte en l'etat (`Test-Path` sur des references a ancre Markdown et sur des SHA), verrou `Implementation/` non evalue, cause racine de l'erreur de test supposee et non prouvee. Detail complet dans la section « Boucle /evaluate d'intake » du brouillon archive. |
 | 2026-08-07 | Boucle `/evaluate` post-`/start`, 3 passes convergees, sur CE plan normalise | **Passe 1** — quatre defauts introduits par la normalisation elle-meme : (a) 🔴 la Carte d'execution annoncait « Phase de reprise : Phase 1 », mecaniquement impossible car `plan.ps1::Assert-SubChantiersClosed` bloque `continue` (`:406`), `ready` (`:432`) et `close` (`:453`) tant que les cinq lots ne sont pas `DONE` — corrige par la sous-section « Mecanique de reprise », alignee sur les precedents `EPIC_ATTESTATIONS_RESIDUELLES_R3` et `EPIC_MATURITE_MOTEUR_CAMPAGNE_RECHERCHE` dont la reprise est la cloture generale ; (b) l'Exit criteria exigeait `219 tests, 0 error` sur la commande globale que le lot 5 segmente precisement — contradiction avec la Definition of Done, reformulee en « suites canoniques a cet instant » ; (c) un Exit criteria a jugement (« un re-audit confirme… ») remplace par une preuve negative executable ; (d) absence de phase de cloture propre du chantier mere — ajout de la Phase 6, volontairement exclue de la section « Sous-chantiers » pour ne pas creer de dependance circulaire. **Passe 2** — trois angles morts nouveaux : (e) la preuve negative supposait un workstream de test jetable qui aurait pollue `.ai/checkpoint.json` — portee desormais par un cas de `test_workflow_state_machine.ps1`, mecanisme existant a etendre plutot qu'a doubler ; (f) le SHA de baseline necessaire a la Phase 6 etait a deviner — source exacte designee dans l'etat machine ; (g) le chemin critique faisait dependre le lot 1 de la Phase 0 alors qu'il n'attend aucune decision humaine. **Passe 3** — aucun angle mort majeur nouveau ; deux points mineurs corriges (commande de verification par prefixe remplacee par une liste d'ID exacts insensible aux faux verts par omission, et consignation de ce journal). Convergence a 3 passes sur 6 autorisees. |
 | 2026-08-07 | **Amendement post-baseline** apres reponse humaine aux trois decisions de la Phase 0 (section 10). Modifications : bandeau section 0 (verrou leve) ; Phase 0 marquee TERMINEE ; lot 2 elargi au hook `pre-push` et renomme `PLAN_EXTENSION_HOOK_PRECOMMIT_VALIDATION_SCHEMA` -> `PLAN_EXTENSION_HOOKS_GIT_VALIDATION_ET_TESTS` (l'ancien ID decrivait un perimetre desormais faux ; aucun lot n'etait encore route, le renommage n'invalide donc aucune reference existante) ; Phase 5 transformee en cloture `REJECTED` ; ajout du lot 6 (`PLAN_CI_GITHUB_VERDICT_INDEPENDANT`) et de la Phase 5bis ; Exit criteria porte a cinq conditions ; chemin critique redessine. **Contrainte de sequencement decouverte en instruisant ces decisions** : le lot 3 doit preceder le `pre-push` du lot 2 et le lot 6, car un garde-fou automatique introduit sur une suite rouge est contourne ou ignore des sa premiere execution. **Fait ayant motive le refus du lot 5** : verification directe montrant qu'aucun des sept fichiers de test `nautilus` n'utilise `skipUnless`/`skipIf`/`import nautilus_trader`. **Note de tracabilite** : `plan.ps1 baseline` n'accepte pas de re-attestation (`Add-WorkflowEvidence` refuse un ID de preuve deja enregistre, et la transition part de `TRIAGED`). La preuve `baseline_commit` reste donc `033ef3c`, qui atteste l'etat revu **avant** cet amendement ; le present journal et le commit dedie constituent la trace de ce qui a change depuis. Meme traitement que l'edition en place documentee section 10 de `.ai/archive/20260720_EPIC_ATTESTATIONS_RESIDUELLES_R3.md`. |
+| 2026-08-08 | **Phase 6 — cloture generale.** Six lots executes dans l'ordre 5 (REJECTED immediat) -> 1 -> 3 -> 4 -> 2 -> 6, chacun via son propre cycle `epic-orchestrator` complet et son propre commit. Le lot 6 a rencontre un blocage reel non anticipe au premier run CI (2 causes racines pre-existantes : dependance `pandas` non declaree dans `strategies/`, chemin Windows code en dur dans `Protocole/MANIFESTE DE GEL EBTA.md`), documente sans etre devine, puis resolu par une decision humaine explicite (Council of Five) journalisee integralement dans le plan du lot 6. Balayage `bug-hunter` global execute sur l'union des fichiers touches par les six lots (`git diff --stat 033ef3c..HEAD`, 37 fichiers) : uniquement des faux positifs d'outillage deja documentes (environnement Pyrefly sans le venv Nautilus configure), zero vrai bug ouvert. `plan-conformance-audit` execute contre les cinq conditions de l'Exit criteria de ce document (section 12) : toutes IMPLEMENTE, un seul ecart de redaction assume (compte de tests litteral 219 -> 232, legitime). Preuve negative (condition 4) et preuve d'independance CI (condition 5) verifiees par execution reelle, pas par supposition. |
