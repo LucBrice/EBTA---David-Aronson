@@ -1987,7 +1987,7 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "READY_TO_CLOSE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2002,6 +2002,21 @@
           {
             "id": "baseline_commit",
             "reference": "00cfe59a572026a28ac8533411cf6852267f7cf5",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md#preuve-bug-hunter-2026-08-08",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md#preuve-adversarial-tester-2026-08-08",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/fixes/PLAN_EXTENSION_PRE_PUSH_SYNC_GIT_TOUTES_IA.md#preuve-plan-conformance-2026-08-08",
             "recorded_at": "2026-08-08"
           }
         ]
