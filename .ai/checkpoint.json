@@ -2045,11 +2045,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md#13-journal-daudits-post-route",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "f773d8c",
             "recorded_at": "2026-08-08"
           }
         ]
