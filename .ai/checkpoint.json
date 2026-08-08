@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_CLIQUET_INVENTAIRE_TESTS",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2128,8 +2128,8 @@
       "id": "PLAN_CLIQUET_INVENTAIRE_TESTS",
       "title": "Cliquet versionne de inventaire unittest",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "TEST_FIXTURE",
       "source_path": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260808_PLAN_CLIQUET_INVENTAIRE_TESTS.md",
@@ -2137,7 +2137,7 @@
       "opened_at": "2026-08-08",
       "last_moved_at": "2026-08-08",
       "routing_decision": "mainline",
-      "routing_reason": "Sous-chantier 2/7 de EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA : cliquet inventaire unittest.",
+      "routing_reason": "Sous-chantier 2/7 actif : inventaire unittest borne a deux fixtures.",
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
@@ -2146,7 +2146,7 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2164,7 +2164,8 @@
             "recorded_at": "2026-08-08"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {

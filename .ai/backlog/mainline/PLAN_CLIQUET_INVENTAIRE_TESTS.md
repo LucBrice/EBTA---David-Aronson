@@ -42,9 +42,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `EN_COURS` — implementation et audits termines, fermeture en attente |
 | Date de creation | 2026-08-08 |
-| Date d'activation | - |
+| Date d'activation | 2026-08-08 |
 | Autorite normative | Aucune regle scientifique nouvelle ; `Protocole/` reste inchange. |
 | Autorite executable | Chargeur stdlib `unittest` et commande canonique du workflow CI. |
 | Changement normatif attendu | Aucun. |
@@ -251,13 +251,13 @@ Premier lot executable : garde de decouverte, puis snapshot calcule apres que so
 
 ## 12. Definition of Done
 
-- [ ] Deux fichiers nouveaux seulement.
-- [ ] Inventaire exact, trie, unique, auto-inclusif.
-- [ ] Garde affiche missing/unexpected.
-- [ ] Test cible et suite >=246 passent.
-- [ ] Deux scenarios adversariaux rejetes.
-- [ ] Audits core-engine sans finding bloquant.
-- [ ] Etat JSON valide.
+- [x] Deux fichiers nouveaux seulement.
+- [x] Inventaire exact, trie, unique, auto-inclusif.
+- [x] Garde affiche missing/unexpected.
+- [x] Test cible et suite >=246 passent.
+- [x] Deux scenarios adversariaux rejetes.
+- [x] Audits core-engine sans finding bloquant.
+- [x] Etat JSON valide.
 
 ## 13. Cloture
 
@@ -273,3 +273,61 @@ Premier lot executable : garde de decouverte, puis snapshot calcule apres que so
 | --- | --- | --- | --- |
 | 1 | Relecture du plan normalise contre le comportement de `unittest.TestLoader.discover`. | Le garde ne filtrera pas les objets `_FailedTest` : une erreur d'import doit produire un ID inattendu et des IDs attendus manquants, donc echouer en fermeture prudente. | Precision fail-closed ajoutee, aucun changement de scope. |
 | 2 | Recalcul de cardinalite et verification des chemins : 245 IDs vivants, `test_inventory.txt` non decouvert, un seul futur `TestCase` ajoute. | Total attendu confirme a 246 ; resolution `tests_dir = Path(__file__).resolve().parent` et `top_level = tests_dir.parents[1]`. | Aucun nouvel angle mort majeur ; convergence. |
+
+## 15. Resultat d'execution du 2026-08-08
+
+| Champ | Valeur |
+| --- | --- |
+| Fichiers crees | `test_test_inventory.py`, `test_inventory.txt` |
+| Snapshot | 246 lignes, 246 uniques, trie, ID du garde present |
+| Test cible | `Ran 1 test ... OK` |
+| Suite complete | `Ran 246 tests ... OK` |
+| Ecart | Aucun ; aucun test existant ni fichier CI modifie. |
+
+## Preuve bug-hunter
+
+```powershell
+.\Implementation\adapters\nautilus_env\venv\Scripts\python.exe -m pyrefly check Implementation\ebta_engine\tests\test_test_inventory.py --output-format min-text
+```
+
+Resultat : `INFO 0 errors`. Aucun signal de typage a trier.
+
+## Preuve adversarial-tester
+
+Le helper `_load_expected_ids` a ete remplace temporairement en memoire, sans
+ecriture de fichier, pour trois entrees hostiles :
+
+| Entree hostile | Observation | Classement |
+| --- | --- | --- |
+| Snapshot prive d'un ID reel | 1 assertion failure, 0 erreur | `PASS_ADVERSARIAL` |
+| Snapshot contenant un ID inexistant | 1 assertion failure, 0 erreur | `PASS_ADVERSARIAL` |
+| Snapshot contenant un doublon | 1 assertion failure, 0 erreur | `PASS_ADVERSARIAL` |
+
+Le garde echoue explicitement ; aucun repli vers une liste vide ou un succes
+plausible. Aucun `FALSE_SUCCESS` ou `SILENT_FALLBACK` detecte. La suppression
+simultanee du garde et du snapshot reste le residu explicite du plan, pas une
+garantie simulee.
+
+## Preuve EBTA Protocol Guardian
+
+Ce lot est procedural et derive uniquement la liste des tests decouverts. Il
+ne modifie aucun calcul, seuil, verdict, gate ou document sous `Protocole/`.
+L'inventaire ne devient pas une autorite scientifique et ne remplace pas la
+suite elle-meme. Verdict : `CONFORME — TEST_FIXTURE`.
+
+## Preuve plan-conformance-audit
+
+Fenetre : baseline `dbb4095`, activation apres `f148835`, etat courant avant
+cloture.
+
+| Critere | Classement | Preuve |
+| --- | --- | --- |
+| Deux fichiers nouveaux seulement | `IMPLEMENTE` | `git status --short -- Implementation` liste uniquement les deux chemins autorises. |
+| Inventaire exact, trie, unique et auto-inclusif | `IMPLEMENTE` | 246 lignes, 246 uniques, ordre vrai, ID du garde present ; test cible `OK`. |
+| Ajout/retrait rendus visibles | `IMPLEMENTE` | Scenarios hostile manquant, inattendu et doublon echouent par assertion. |
+| Suite complete verte | `IMPLEMENTE` | `Ran 246 tests ... OK`. |
+| Non-goals respectes | `IMPLEMENTE` | Aucun diff CI, production, protocole ou test existant. |
+| Audits sans finding bloquant | `IMPLEMENTE` | Pyrefly 0 ; adversarial 3/3 ; present audit. |
+
+Verdict : `PASS`, 6/6 criteres implementes, aucun extra et aucun Non-goal
+viole. La cloture peut franchir `READY_TO_CLOSE`.
