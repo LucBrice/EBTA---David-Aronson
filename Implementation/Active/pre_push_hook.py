@@ -105,15 +105,38 @@ def check_non_fastforward(refs):
 def warn_if_behind_origin_main():
     """Non-blocking: warn if HEAD is behind origin/main. Informational only
     - see the module docstring for why this does not block the push.
+
+    Never silently treats a failed fetch or rev-list as "up to date": a
+    verification that could not run must say so, not masquerade as a clean
+    result (adversarial-tester finding, retroactive registration of this
+    change - see the fix workstream). Three distinct outcomes are printed
+    for exactly that reason: up-to-date is silent, behind is a count, and
+    "could not verify" is its own explicit message.
     """
-    subprocess.run(["git", "fetch", "origin", "--quiet"], capture_output=True)
+    fetch_result = subprocess.run(["git", "fetch", "origin", "--quiet"], capture_output=True)
+    if fetch_result.returncode != 0:
+        print()
+        print("[EBTA pre-push] AVERTISSEMENT: 'git fetch origin' a echoue -")
+        print("  impossible de verifier la fraicheur par rapport a origin/main.")
+        print("  Push non bloque, mais cette verification n'a pas pu s'executer.")
+        print()
+        return
+
     result = subprocess.run(
         ["git", "rev-list", "--count", "HEAD..origin/main"],
         capture_output=True,
         text=True,
     )
+    if result.returncode != 0:
+        print()
+        print("[EBTA pre-push] AVERTISSEMENT: impossible de comparer HEAD a")
+        print("  origin/main (ref absente ou erreur git). Push non bloque, mais")
+        print("  cette verification n'a pas pu s'executer.")
+        print()
+        return
+
     behind = result.stdout.strip()
-    if result.returncode == 0 and behind not in ("", "0"):
+    if behind not in ("", "0"):
         print()
         print(f"[EBTA pre-push] AVERTISSEMENT: HEAD a {behind} commit(s) de retard")
         print("  sur origin/main. Push non bloque, mais verifie que ce n'est pas")

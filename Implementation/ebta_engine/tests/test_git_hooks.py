@@ -14,7 +14,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 ACTIVE_DIR = Path(__file__).resolve().parents[2] / "Active"
 
@@ -252,12 +252,28 @@ class PrePushStalenessWarningTests(unittest.TestCase):
     """Council of Five decision: staleness relative to origin/main is
     informational only and must never block the push - only a genuine
     non-fast-forward ref update (covered above) does.
+
+    Adversarial-tester finding (retroactive fix workstream, 2026-08-08): a
+    failed 'git fetch' or 'git rev-list' must never be silently treated as
+    "up to date" - that would turn a verification failure into false
+    reassurance (SILENT_FALLBACK). Each of the three possible outcomes
+    (up-to-date / behind / could-not-verify) is tested separately below so
+    they cannot be confused with one another.
     """
+
+    @staticmethod
+    def _completed(returncode, stdout=""):
+        result = MagicMock()
+        result.returncode = returncode
+        result.stdout = stdout
+        return result
 
     def test_behind_origin_main_prints_a_warning_but_returns_nothing_blocking(self):
         with patch.object(pre_push_hook.subprocess, "run") as mock_run:
-            mock_run.return_value.returncode = 0
-            mock_run.return_value.stdout = "3"
+            mock_run.side_effect = [
+                self._completed(0),  # git fetch: succeeds
+                self._completed(0, "3"),  # git rev-list: 3 commits behind
+            ]
             with patch("builtins.print") as mock_print:
                 pre_push_hook.warn_if_behind_origin_main()
         printed = "\n".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
@@ -266,11 +282,36 @@ class PrePushStalenessWarningTests(unittest.TestCase):
 
     def test_up_to_date_prints_nothing(self):
         with patch.object(pre_push_hook.subprocess, "run") as mock_run:
-            mock_run.return_value.returncode = 0
-            mock_run.return_value.stdout = "0"
+            mock_run.side_effect = [
+                self._completed(0),  # git fetch: succeeds
+                self._completed(0, "0"),  # git rev-list: up to date
+            ]
             with patch("builtins.print") as mock_print:
                 pre_push_hook.warn_if_behind_origin_main()
         mock_print.assert_not_called()
+
+    def test_failed_fetch_is_reported_explicitly_not_treated_as_up_to_date(self):
+        with patch.object(pre_push_hook.subprocess, "run") as mock_run:
+            mock_run.side_effect = [self._completed(1)]  # git fetch: fails
+            with patch("builtins.print") as mock_print:
+                pre_push_hook.warn_if_behind_origin_main()
+        printed = "\n".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        self.assertIn("AVERTISSEMENT", printed)
+        self.assertIn("fetch origin", printed)
+        # Only the fetch was attempted - rev-list must not run on a failed fetch.
+        self.assertEqual(mock_run.call_count, 1)
+
+    def test_failed_rev_list_is_reported_explicitly_not_treated_as_up_to_date(self):
+        with patch.object(pre_push_hook.subprocess, "run") as mock_run:
+            mock_run.side_effect = [
+                self._completed(0),  # git fetch: succeeds
+                self._completed(1),  # git rev-list: fails (e.g. unknown ref)
+            ]
+            with patch("builtins.print") as mock_print:
+                pre_push_hook.warn_if_behind_origin_main()
+        printed = "\n".join(str(call.args[0]) for call in mock_print.call_args_list if call.args)
+        self.assertIn("AVERTISSEMENT", printed)
+        self.assertIn("impossible de comparer", printed)
 
 
 if __name__ == "__main__":
