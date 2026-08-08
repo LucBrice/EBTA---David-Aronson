@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_CLIQUET_INVENTAIRE_TESTS",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2128,10 +2128,10 @@
       "id": "PLAN_CLIQUET_INVENTAIRE_TESTS",
       "title": "Cliquet versionne de inventaire unittest",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "TEST_FIXTURE",
-      "source_path": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md",
+      "source_path": ".ai/archive/20260808_PLAN_CLIQUET_INVENTAIRE_TESTS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260808_PLAN_CLIQUET_INVENTAIRE_TESTS.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-08",
@@ -2141,12 +2141,12 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Inventaire 246 IDs et garde unittest livres ; suite OK ; Pyrefly 0 ; adversarial 3/3 ; conformite 6/6.",
       "non_goals": [],
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2162,10 +2162,25 @@
             "id": "baseline_commit",
             "reference": "dbb4095",
             "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md#preuve-bug-hunter",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md#preuve-adversarial-tester",
+            "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/mainline/PLAN_CLIQUET_INVENTAIRE_TESTS.md#preuve-plan-conformance-audit",
+            "recorded_at": "2026-08-08"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {

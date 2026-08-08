@@ -363,9 +363,9 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfant clos | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` — `DONE` le 2026-08-08 ; implementation `eb4fbb4` ; 245 tests `OK`. |
-| Prochain enfant | `PLAN_CLIQUET_INVENTAIRE_TESTS` |
-| Action | Revalider le besoin d'inventaire contre le chargeur `unittest`, puis rediger un intake atomique et appliquer ses deux boucles d'evaluation. |
+| Enfants clos | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` et `PLAN_CLIQUET_INVENTAIRE_TESTS` — `DONE` ; suite portee a 246 tests `OK`. |
+| Prochain enfant | `PLAN_GARDE_LITTERAUX_VERDICT` |
+| Action | Revalider les litteraux dangereux contre l'AST et distinguer les constantes de contrat legitimes des verdicts fabriques avant de rediger le lot 3. |
 | Blocage | Toute assertion transformant les seeds de regression en seuil methodologique universel exige une decision normative humaine et bloque l'enfant. |
 
 ### Suivi des sous-chantiers
@@ -373,8 +373,8 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | # | ID | Etat | Preuve / suite |
 | --- | --- | --- | --- |
 | 1 | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` | `DONE` | Trois regressions, 245 tests `OK`, Pyrefly 0, adversarial 3/3. |
-| 2 | `PLAN_CLIQUET_INVENTAIRE_TESTS` | `A_ROUTER` | Prochain lot. |
-| 3 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER` | Apres lot 2. |
+| 2 | `PLAN_CLIQUET_INVENTAIRE_TESTS` | `DONE` | 246 IDs tries/uniques, garde auto-inclusif, adversarial 3/3. |
+| 3 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER` | Prochain lot. |
 | 4 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
 | 5 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
 | 6 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
