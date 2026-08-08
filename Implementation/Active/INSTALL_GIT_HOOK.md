@@ -41,9 +41,27 @@ Deux hooks versionnes protegent ce depot :
 
 ## Ce que `pre-push` verifie
 
-Execute `python -m unittest discover -s Implementation/ebta_engine/tests -t
-Implementation` (la commande canonique de ce depot) avant tout push. Un
-echec bloque le push.
+1. **Historique non fast-forward** (nouveau, decision Conseil des 5) : si le
+   ref pousse ne serait pas une mise a jour fast-forward de l'etat distant
+   actuel, le push est **bloque**. Ceci n'arrive que via un push force
+   (`--force`/`--force-with-lease`) ou une divergence non fetchee - git
+   refuse deja nativement un push normal non fast-forward, donc ce controle
+   n'ajoute une protection reelle que dans ce cas precis, qu'aucune
+   protection native ne couvre.
+2. **Retard sur `origin/main`** (nouveau, non bloquant) : si `HEAD` a des
+   commits de retard sur `origin/main`, un avertissement s'affiche. Le push
+   continue quand meme - un blocage systematique sur un simple retard
+   stopperait sans raison un agent autonome en cours de tache (ex. une
+   branche de worktree construite sur un ancetre de `main` que `main` a
+   depuis depasse sur un chemin non conflictuel).
+3. **Suite de tests canonique** (comportement historique, inchange) :
+   execute `python -m unittest discover -s Implementation/ebta_engine/tests
+   -t Implementation` avant tout push. Un echec bloque le push.
+
+Ces trois controles s'appliquent a tout outil qui lance `git push` dans ce
+depot - Claude Code, Codex, un autre agent, ou l'humain directement -
+contrairement a un hook propre a un seul outil (voir aussi la regle
+correspondante dans `AGENTS.md`, section Operating Rules).
 
 ## Installation (une seule fois par clone)
 

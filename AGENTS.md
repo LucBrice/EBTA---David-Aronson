@@ -30,6 +30,7 @@ Before any substantive action, read in this order:
 
 ## Operating Rules
 
+- Before starting substantive work, verify this checkout is not behind `origin/main` (`git fetch` then compare `HEAD` to `origin/main`). This applies to every AI working in this repo, not only Claude Code: a checkout is a per-clone/per-worktree state that no tool's own hooks can sync on your behalf when a push happened elsewhere. `Implementation/Active/pre_push_hook.py` mechanically blocks the destructive case (pushing a rewritten/diverged history) and warns on plain staleness at push time; this rule covers the earlier moment of starting work from a stale base, which no git hook can catch on its own.
 - Do not create competing sources of truth.
 - Do not modify `Protocole/` unless the task explicitly requires protocol work.
 - Read `.ai/governance/` before any normative, structural, or implementation-impacting modification.
