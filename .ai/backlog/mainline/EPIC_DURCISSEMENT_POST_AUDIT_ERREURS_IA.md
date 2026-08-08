@@ -364,8 +364,8 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
 | Enfants clos | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` et `PLAN_CLIQUET_INVENTAIRE_TESTS` — `DONE` ; suite portee a 246 tests `OK`. |
-| Prochain enfant | `PLAN_GARDE_LITTERAUX_VERDICT` |
-| Action | Revalider les litteraux dangereux contre l'AST et distinguer les constantes de contrat legitimes des verdicts fabriques avant de rediger le lot 3. |
+| Prochain enfant | `PLAN_GARDE_LITTERAUX_VERDICT` — `BLOQUE_DECISION_HUMAINE` avant redaction |
+| Action | Arbitrer le depassement du seuil d'escalade : 24 litteraux sensibles directs, 27 en incluant les trois `PASS` imbriques sous `gate_reports`, contre le seuil `> ~20` fixe par l'audit source. |
 | Blocage | Toute assertion transformant les seeds de regression en seuil methodologique universel exige une decision normative humaine et bloque l'enfant. |
 
 ### Suivi des sous-chantiers
@@ -374,8 +374,37 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | --- | --- | --- | --- |
 | 1 | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` | `DONE` | Trois regressions, 245 tests `OK`, Pyrefly 0, adversarial 3/3. |
 | 2 | `PLAN_CLIQUET_INVENTAIRE_TESTS` | `DONE` | 246 IDs tries/uniques, garde auto-inclusif, adversarial 3/3. |
-| 3 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER` | Prochain lot. |
+| 3 | `PLAN_GARDE_LITTERAUX_VERDICT` | `BLOQUE_DECISION_HUMAINE` | Premier scan AST : 24 directs / 27 avec contexte `gate_reports`, donc seuil d'escalade depasse. |
 | 4 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
 | 5 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
 | 6 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
 | 7 | `PLAN_RUFF_CI_BUGS_CIBLES` | `A_ROUTER` | En attente. |
+
+### Decision humaine requise avant le lot 3
+
+Le seuil de la Partie F de l'audit source est atteint : si l'inventaire des
+litteraux remonte plus d'environ 20 occurrences au premier passage, le sujet
+n'est plus seulement la surveillance ; l'architecture d'assemblage doit etre
+reconsideree avant d'ajouter le test.
+
+Verification directe du 2026-08-08 :
+
+- 24 affectations directes `True`/`"PASS"` vers des noms ou cles sensibles
+  (`gate`, `verdict`, `status`, `pass`, `approval`, `attestation`,
+  `evidence`, `invariant`) hors tests/venv/fixtures ;
+- 3 `"PASS"` supplementaires sous le dictionnaire sensible `gate_reports`
+  de `Implementation/examples/minimal_pilot_pipeline/build_research_package.py:657-660` ;
+- total de premier passage : 27 candidats a trier, avant meme la conception
+  d'une allowlist ;
+- deux `live_approval: True` actifs sont confirmes dans le meme exemple
+  (lignes 614 et 1092 dans l'etat courant).
+
+Arbitrage necessaire :
+
+1. `AUDIT_ARCHITECTURE_D_ABORD` — remplacer la suite immediate par un audit
+   cible de l'assemblage des verdicts, puis redimensionner le lot 3 ;
+2. `GARDE_AST_MAINTENANT` — accepter explicitement le lot scanner + allowlist
+   malgre le seuil depasse, avec tri individuel des 27 candidats ;
+3. `DIFFERER_LOT_3` — conserver ce blocage et autoriser le passage au lot 4.
+
+Aucune de ces decisions n'est deduite automatiquement.
