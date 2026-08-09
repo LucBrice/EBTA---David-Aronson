@@ -370,10 +370,10 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfants clos | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE`, `PLAN_CLIQUET_INVENTAIRE_TESTS` et `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` — `DONE` ; suite portee a 253 tests `OK`. |
-| Prochain enfant | `PLAN_APPROBATION_LIVE_DERIVEE` — `A_ROUTER` |
-| Action | Rediger puis auditer le workstream live distinct issu du finding A2 de l'audit cible `0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`. |
-| Blocage | Toute preuve signee, autorite d'approbation ou semantique live absente des contrats existants exige une decision humaine et bloque l'enfant ; aucun `True` ne peut etre invente. |
+| Enfants clos | Sous-chantiers 1 a 4 — `DONE` ; suite portee a 259 tests `OK`. |
+| Prochain enfant | `PLAN_COHERENCE_VERDICTS_PERSISTES` — `A_ROUTER` |
+| Action | Rediger puis auditer le workstream de coherence inter-rapports issu du finding A3 de l'audit cible du 2026-08-09. |
+| Blocage | Toute nouvelle precedence normative entre rapports ou modification d'INV-010 non deduite des proprietaires existants exige une decision humaine. |
 
 ### Suivi des sous-chantiers
 
@@ -382,7 +382,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | 1 | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` | `DONE` | Trois regressions, 245 tests `OK`, Pyrefly 0, adversarial 3/3. |
 | 2 | `PLAN_CLIQUET_INVENTAIRE_TESTS` | `DONE` | 246 IDs tries/uniques, garde auto-inclusif, adversarial 3/3. |
 | 3 | `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` | `DONE` | Contrat `identifier` / `verdict_pass` / `boolean_true`, fixture normalisee, 253 tests `OK`, Pyrefly 0, adversarial 7/7. |
-| 4 | `PLAN_APPROBATION_LIVE_DERIVEE` | `A_ROUTER` | Valider le verdict live et remplacer les deux `live_approval=True` par une preuve signee derivee. |
+| 4 | `PLAN_APPROBATION_LIVE_DERIVEE` | `DONE` | Verdict live exact, preuve liee au `live_version_id`, literals supprimes, 259 tests `OK`, Pyrefly 0, adversarial 10/10. |
 | 5 | `PLAN_COHERENCE_VERDICTS_PERSISTES` | `A_ROUTER` | Deriver `gate_reports` et detecter toute divergence entre rapports persistants. |
 | 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER_APRES_3A_3C` | Installer le garde AST sur une classification stabilisee, apres correction des producteurs. |
 | 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
@@ -438,4 +438,4 @@ trois defauts de contrat plus larges rendent un simple garde AST insuffisant :
 Conclusion d'architecture : l'ancien lot 3 est remplace par quatre
 workstreams atomiques 3A a 3D. Aucun correctif runtime n'est autorise ni
 applique par cette decision ; le prochain cycle gouverne commence par
-`PLAN_APPROBATION_LIVE_DERIVEE`.
+`PLAN_COHERENCE_VERDICTS_PERSISTES`.
