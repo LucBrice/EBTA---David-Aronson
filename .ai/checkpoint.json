@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2418,8 +2418,8 @@
       "id": "PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN",
       "title": "Durcissement CI et hygiene Git",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "GOVERNANCE",
       "source_path": ".ai/backlog/mainline/PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_EPIC_DURCISSEMENT_CI_SUPPLY_CHAIN.md",
@@ -2427,7 +2427,7 @@
       "opened_at": "2026-08-09",
       "last_moved_at": "2026-08-09",
       "routing_decision": "mainline",
-      "routing_reason": "Sous-chantier 7/10 de EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA, decompose en workflow CI et hygiene Git independants.",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
@@ -2436,7 +2436,7 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2455,7 +2455,7 @@
           }
         ]
       },
-      "is_active": false
+      "is_active": true
     },
     {
       "id": "PLAN_DURCISSEMENT_WORKFLOW_CI",
