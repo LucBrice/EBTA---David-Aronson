@@ -63,7 +63,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | PLAN_EVALUATE_RECHERCHE_CONSOMMATEURS_CONTRACTUELS | Recherche des consommateurs contractuels pendant `/evaluate` | Amelioration d'un skill existant | `.agents/skills/code-architecture-evaluator/SKILL.md` et validateur canonique `skill-creator/scripts/quick_validate.py` | Tout plan visant un workflow, une configuration, un schema ou un manifeste impose la recherche explicite des tests et consommateurs qui figent ses valeurs; la validation choisie par le lot existe et s'execute avec succes. | `DONE` — `cb02758` |
 | 2 | PLAN_AUTORISATION_PUBLICATION_DEUX_PUSHES | Autorisation explicite des deux pushes potentiels | Clarification du contrat conversationnel | `.ai/workflows/common/WORKFLOW.md` | Lorsqu'un gate distant exige un push avant `/close`, la demande distingue le push d'implementation et l'eventuel push du commit de fermeture; aucune autorisation implicite ni modification de `WORKFLOW.json`. | `DONE` — `1ba3074` |
-| 3 | PLAN_DIAGNOSTIC_ANCRES_PREUVES_WORKFLOW | Diagnostic actionnable des ancres de preuve | Correctif mecanique avec tests | `.ai/tools/workflow_state.ps1` et `.ai/tools/tests/test_workflow_state_machine.ps1` | Une ancre absente reste rejetee; l'erreur expose le slug recherche et les slugs de titres valides; tests positif et negatif `PASS` sans relacher `Test-EvidenceReferenceSubstance`. | `NON_DEMARRE` |
+| 3 | PLAN_DIAGNOSTIC_ANCRES_PREUVES_WORKFLOW | Diagnostic actionnable des ancres de preuve | Correctif mecanique avec tests | `.ai/tools/workflow_state.ps1` et `.ai/tools/tests/test_workflow_state_machine.ps1` | Une ancre absente reste rejetee; l'erreur expose le slug recherche et les slugs de titres valides; tests positif et negatif `PASS` sans relacher `Test-EvidenceReferenceSubstance`. | `DONE` — `7a6de9b` |
 
 Le `routing_reason` de chaque futur enfant commencera par
 `Sous-chantier <n>/3 de EPIC_AMELIORATIONS_POST_RETROSPECTIVE_CI_NODE20`.
@@ -311,6 +311,11 @@ Critere de sortie :
 - Les cas d'ancre valide et invalide passent; l'invalide reste rejete et son
   message expose les seuls slugs de titres utiles.
 
+Statut : `DONE` le 2026-08-09. Baseline `ff13683`, attestation `1ce398d`,
+cloture et correctif `7a6de9b`. Harnais workflow, adversarial-tester et
+plan-conformance-audit `PASS`; bug-hunter `NON_APPLICABLE` car aucun fichier
+`Implementation/` n'a ete touche.
+
 ### Chemin critique (ordre des phases)
 
 ```mermaid
@@ -406,6 +411,7 @@ affaibli pour clore un lot.
 | 2026-08-09 | `Je valide tes propositions`. | Autorise la persistance du chantier mere et confirme les trois orientations. N'autorise ni commit, ni push, ni publication externe. |
 | 2026-08-09 | Lot 1 clos `DONE` par `cb02758`. | Gate contractuelle ajoutee au skill; autorise la reprise de la coordination sur le Lot 2 sans fusionner les lots. |
 | 2026-08-09 | Lot 2 clos `DONE` par `1ba3074`. | Contrat A/B ajoute au workflow conversationnel sans changement executable; autorise l'ouverture du Lot 3. |
+| 2026-08-09 | Lot 3 clos `DONE` par `7a6de9b`. | Diagnostic fail-closed et regressions livres; autorise l'audit global puis la cloture du parent. |
 
 ## 11. Risques et blocages connus
 
@@ -442,10 +448,10 @@ affaibli pour clore un lot.
 | Champ | Valeur |
 | --- | --- |
 | Date | 2026-08-09 |
-| Phases executees | Promotion/baseline du parent puis Lots 1 et 2 complets |
-| Artefact produit | Gate 2 bis dans le skill `/evaluate`; contrat de publication A/B dans `WORKFLOW.md` |
-| Validation | Lots 1 et 2 `DONE`; validations propres, adversarial et conformite PASS; checkpoint valide |
-| Ecart par rapport au plan | Lot 2 a cree une sous-section generale apres detection que le contrat existant etait local a `/learn-session`; aucune transition executable modifiee |
+| Phases executees | Promotion/baseline du parent puis Lots 1, 2 et 3 complets |
+| Artefact produit | Gate 2 bis du skill `/evaluate`; contrat A/B; diagnostic d'ancres et regressions |
+| Validation | Trois lots `DONE`; validations propres, adversarial et conformite PASS; checkpoint valide |
+| Ecart par rapport au plan | Lot 2 a corrige le proprietaire documentaire; Lot 3 a remplace une fixture sans-titre invalide apres un premier `FAIL_TEST`; aucun relachement fonctionnel |
 
 ## 14. Journal d'audits post-hoc
 
