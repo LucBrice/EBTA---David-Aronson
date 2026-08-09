@@ -5,13 +5,14 @@
 | Champ | Valeur |
 | --- | --- |
 | ID | `PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE` |
-| Statut | `TRIAGED` - route le 2026-08-09 |
-| Lifecycle | `INTAKE_AUDITED` -> `TRIAGED` via `plan.ps1 start -Audited` |
+| Statut | `ACTIVE` - implementation terminee, validations finales en cours le 2026-08-09 |
+| Lifecycle | `INTAKE_AUDITED` -> `TRIAGED` -> `BASELINED` -> `ACTIVE` via `plan.ps1` |
 | Track | `annexe` |
 | Classification | `GOVERNANCE` |
+| Portee | `meta` |
 | Workflow | `common` |
 | Type de chantier | `SINGLE` |
-| Verrou actif | Aucun workstream actif (`.ai/checkpoint.json::active_workstream_id` = `null`, verifie le 2026-08-09) |
+| Verrou actif | Aucun conflit ; ce workstream est l'unique chantier actif (`.ai/checkpoint.json::active_workstream_id` = `PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE`, verifie le 2026-08-09) |
 | Source | `0 - HUMAN START HERE/PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md` |
 | Brouillon archive attendu | `0 - HUMAN START HERE/archive/20260809_PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md` |
 
@@ -81,9 +82,9 @@ plan cherche a reduire.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `EN_COURS` - phases 0, 1, 2, 3, 5, 6, 7 et 4 executees ; attente de `/close` |
 | Date de creation | 2026-08-09 |
-| Date d'activation | - |
+| Date d'activation | 2026-08-09 |
 | Autorite normative | `Protocole/` (hors scope, non modifie) ; `AGENTS.md` et `.ai/workflows/common/` pour la procedure du depot |
 | Autorite executable | `.agents/skills/capture-coding-session-learnings/SKILL.md` pour la procedure de retrospective ; `.ai/workflows/common/WORKFLOW.md` pour le contrat `/close` |
 | Changement normatif attendu | Aucun |
@@ -873,15 +874,15 @@ tant que l'objectif (Triage), le perimetre (section 5) et les invariants
 
 ## 12. Definition of Done
 
-- [ ] Toutes les phases (0, 1, 2, 3, 5, 6, 7, 4 — voir chemin critique) validees individuellement (section 9).
-- [ ] Exit criteria de la section Triage atteints et verifiables.
-- [ ] Aucune modification hors perimetre (section 5 / Non-goals du Triage).
-- [ ] `WORKFLOW.json`, `plan.ps1`, `Protocole/`, `Implementation/` restent
+- [x] Toutes les phases (0, 1, 2, 3, 5, 6, 7, 4 — voir chemin critique) validees individuellement (section 9).
+- [x] Exit criteria de la section Triage atteints et verifiables.
+- [x] Aucune modification hors perimetre (section 5 / Non-goals du Triage).
+- [x] `WORKFLOW.json`, `plan.ps1`, `Protocole/`, `Implementation/` restent
       inchangés (`git diff --exit-code`).
-- [ ] Documentation/traces mises a jour (`WORKFLOW.md`, `SKILL.md`
+- [x] Documentation/traces mises a jour (`WORKFLOW.md`, `SKILL.md`
       frontmatter, `AGENTS.md` si necessaire).
-- [ ] Checklist post-modification d'`AI_MODIFICATION_CHECKLIST.md` executee.
-- [ ] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne
+- [x] Checklist post-modification d'`AI_MODIFICATION_CHECKLIST.md` executee.
+- [x] Aucune implementation partielle, stub, pseudo-code, ou placeholder ne
       subsiste comme substitut a une brique prevue par ce plan.
 
 ## 13. Cloture
@@ -890,15 +891,73 @@ A remplir au moment de `/close` :
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | - (reserve, chantier `TRIAGED`, non implemente) |
-| Ecarts par rapport au plan initial | - |
-| Suites a prevoir | - |
+| Resultat final | `DONE` - implementation documentaire livree, gates pre-close satisfaits. |
+| Ecarts par rapport au plan initial | Aucun ecart de perimetre. Precision de securite : sans autorisation d'ecriture preexistante, un correctif reste dans `Suites a prevoir`; le declenchement automatique ne cree jamais cette autorisation. |
+| Suites a prevoir | Aucune suite fonctionnelle ouverte par ce chantier. Les avertissements de cache/modeles du CLI Codex observes pendant les forward-tests sont `NON_PROMU` : hors sujet, non bloquants et sans impact sur les preuves read-only. |
 
 ### Resultats d'execution (a dupliquer a chaque session d'execution significative)
 
 | Date | Phases executees | Artefact produit | Validation | Ecart par rapport au plan |
 | --- | --- | --- | --- | --- |
-| - | - | - | - | - |
+| 2026-08-09 | 0, 1, 2, 3, 5, 6, 7, 4 | Skill canonique et stub Claude alignes ; workflow `/close` et `/learn-session` etendu ; bootstrap `AGENTS.md` aligne en trois lignes ; gabarit enrichi du tag `Portee` et de la file non-cascadante. | `quick_validate.py`: `Skill is valid!` ; JSON et schemas checkpoint/tracking `PASS` ; fichiers interdits inchanges ; `git diff --check` `PASS` ; forward-test Codex frais read-only `PASS` sur 9 scenarios, empreinte Git avant/apres identique (`250402ac3b4e990e92ff592d995de32ef43bef81`). | Aucun ecart de perimetre. Precision de securite : sans autorisation d'ecriture preexistante, un correctif reste dans `Suites a prevoir` ; le declenchement automatique ne cree jamais cette autorisation. |
+
+### Preuve comportementale du forward-test cross-IA
+
+Une session `codex exec --ephemeral --sandbox read-only --ignore-user-config`
+fraiche (Codex 0.142.0, modele gpt-5.5) a lu uniquement `AGENTS.md`,
+`WORKFLOW.md`, le skill canonique et le stub Claude. Elle a resolu sans
+contexte conversationnel les cas suivants :
+
+- `DONE` : retrospective apres l'etape 6, sans ecriture par le trigger ;
+- `BLOCKED` avec validation echouee : retrospective apres l'etape 7, statut
+  terminal preserve ;
+- `/continue` : `SKIP` ; `/learn-session` manuel : toujours disponible ;
+- timeout de retrospective : rapporte sans transformer la cloture ;
+- correctif `Portee: meta` en perimetre et meme sujet : edition, puis second
+  commit seulement si autorise ; sinon edition non committee si l'ecriture
+  seule est autorisee ;
+- correction hors sujet ou hors perimetre : aucune ecriture, routage vers
+  `Suites a prevoir`.
+
+Le statut Git a ete empreinte avant et apres cette session read-only ; les deux
+empreintes sont identiques. Les avertissements non bloquants du CLI portaient
+sur son cache de modeles et l'absence de shell snapshot PowerShell, pas sur la
+lecture des fichiers ni sur le verdict du forward-test.
+
+### Audit adversarial pre-close 2026-08-09
+
+| Point teste | Entree hostile / condition | Observation | Classification |
+| --- | --- | --- | --- |
+| Statut terminal deja persiste | Timeout ou absence de sortie de la retrospective | Le statut reste litteral et inchangé ; l'echec est rapporte. | `PASS_ADVERSARIAL` |
+| Autorisation de mutation | Signal `meta` sans autorisation d'ecriture | Aucune ecriture ni commit ; routage vers `Suites a prevoir`. | `PASS_ADVERSARIAL` |
+| Double limite de la Phase 6 | Fichier en perimetre mais sujet fonctionnel different, puis fichier hors perimetre | Aucune ecriture dans les deux cas ; aucun succes fabrique par coincidence de chemin. | `PASS_ADVERSARIAL` |
+| Absence de correctif eligible | Aucun signal `A_REUTILISER`/`ERREUR_OU_FRICTION` `meta` en perimetre et meme sujet | Rapport explicite "aucun correctif eligible", aucun second commit, cloture inchangee ; empreinte Git read-only identique avant/apres (`47df46121901d7d135030e964ddda61561adff3d`). | `EXPECTED_DEFAULT` |
+
+Aucun `FALSE_SUCCESS`, `SILENT_FALLBACK` ou `NORMATIVE_GAP` n'est ouvert. Le
+diff ne touche aucun producteur de verdict runtime, artefact G0, adaptateur,
+manifest append-only ou logique conditionnelle de strategie.
+
+### Audit de conformite pre-close 2026-08-09
+
+Baseline bornee : commit `518a0ff`. Borne haute : etat de travail immediatement
+avant `/close`. Les suppressions et fichiers non suivis sans rapport sous
+`0 - HUMAN START HERE/` sont exclus du chantier et du futur commit cible.
+
+| Exit criterion | Classification | Preuve |
+| --- | --- | --- |
+| `/close` terminal `DONE` et non-`DONE` declenche la retrospective au bon point | `IMPLEMENTE` | `WORKFLOW.md` lignes 187-194 ; forward-test Codex frais, cas `DONE` apres etape 6 et `BLOCKED` apres etape 7. |
+| Le trigger seul n'ecrit, ne commit, ne push ni ne publie | `IMPLEMENTE` | `WORKFLOW.md` lignes 190-194 ; empreinte Git du forward-test principal identique avant/apres (`250402ac3b4e990e92ff592d995de32ef43bef81`). |
+| Un timeout/echec de retrospective ne transforme pas la cloture | `IMPLEMENTE` | `WORKFLOW.md` lignes 193-194 ; scenario hostile classe `PASS_ADVERSARIAL`. |
+| `/learn-session` manuel reste disponible | `IMPLEMENTE` | `AGENTS.md` et `WORKFLOW.md` section `/learn-session` ; forward-test scenario manuel. |
+| Chaque signal porte `Portee: meta` ou `Portee: objet` | `IMPLEMENTE` | Skill canonique lignes 49-62 et 125-126 ; gabarit ligne 57 et DoD lignes 596-597. |
+| Correctif `meta` eligible applique sous double autorisation, sinon aucune mutation | `IMPLEMENTE` | `WORKFLOW.md` lignes 196-209 ; forward-tests positif, sans commit, hors sujet, hors perimetre et aucun correctif eligible. |
+| `Suites a prevoir` ne declenche aucune cascade | `IMPLEMENTE` | `WORKFLOW.md` lignes 211-214 et gabarit lignes 618-621. |
+| `WORKFLOW.json`, `plan.ps1`, `Protocole/` et `Implementation/` restent inchanges | `IMPLEMENTE` | `git diff --exit-code 518a0ff -- <chemins interdits>` : `PASS`. |
+| Reproductibilite par une IA fraiche | `IMPLEMENTE` | Deux sessions `codex exec --ephemeral --sandbox read-only --ignore-user-config`, depot inchange avant/apres. |
+
+Verdict de conformite : **PASS**. Aucun Exit criterion `MANQUANT`, aucun
+Non-goal viole et aucun extra dans le perimetre de livraison. La fermeture
+`DONE` est autorisee.
 
 ## 14. Journal d'audits post-hoc
 

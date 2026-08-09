@@ -54,6 +54,7 @@ tracking actifs), pas sur une hypothese.
 
 | Question | Reponse |
 | --- | --- |
+| Portee du chantier | `meta` (gouvernance, skills, workflows, outillage) \| `objet` (Protocole, Implementation, moteur, adapters, capacite EBTA) — en cas de doute, choisir `objet` si `Protocole/` ou `Implementation/` est touche, meme indirectement. |
 | Un chantier actif couvre-t-il deja ce perimetre (`DONE`, `ACTIVE`, ou `SUPERSEDED`) ? | [oui/non + id du chantier] |
 | Un verrou de gouvernance actif bloque-t-il ce chantier (ex. "ne pas etendre au-dela du MVP tant que X") ? | [oui/non + citation exacte du verrou et de sa source] |
 | Ce plan a-t-il besoin d'une decision humaine explicite pour lever ce verrou avant d'etre routable via `/start` ? | [oui/non] |
@@ -592,6 +593,8 @@ jamais deduire une autorisation implicite.
 
 ## 12. Definition of Done
 
+- [ ] La `Portee` du chantier (`meta` ou `objet`) est declaree dans le bandeau
+      de statut et coherente avec les fichiers et le sujet reellement touches.
 - [ ] Toutes les phases validees individuellement (section 9).
 - [ ] Exit criteria de la section Triage atteint et verifiable.
 - [ ] Aucune modification hors perimetre (section Triage / Non-goals).
@@ -611,6 +614,11 @@ jamais deduire une autorisation implicite.
 ## 13. Cloture
 
 A remplir au moment de `/close` (ou equivalent) :
+
+`Suites a prevoir` est une file textuelle non-cascadante : son contenu
+n'autorise ni n'impose aucun `/start` automatique ou immediat. Les suites sont
+revues par lot, au rythme choisi par l'humain, sans creer de registre ou d'etat
+de workflow supplementaire.
 
 | Champ | Valeur |
 | --- | --- |

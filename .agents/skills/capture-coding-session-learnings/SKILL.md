@@ -1,6 +1,6 @@
 ---
 name: capture-coding-session-learnings
-description: Extraire d'une session de travail EBTA les reussites verifiees, pratiques reutilisables, erreurs et frictions, puis proposer leur promotion vers les proprietaires existants. TRIGGER sur `/learn-session`, ou sur demande humaine explicite de retrospective, de capitalisation, de bonnes et mauvaises pratiques ou d'amelioration durable des agents. SKIP pour un simple statut, `/continue` ou `/close` sans demande de retrospective, et pour toute tentative de memoriser automatiquement une conversation.
+description: Extraire d'une session de travail EBTA les reussites verifiees, pratiques reutilisables, erreurs et frictions, puis proposer leur promotion vers les proprietaires existants. TRIGGER automatiquement apres tout `/close` aboutissant a une sortie terminale (`DONE`, `BLOCKED`, `REJECTED` ou `SUPERSEDED`), sur `/learn-session`, ou sur demande humaine explicite de retrospective, de capitalisation, de bonnes et mauvaises pratiques ou d'amelioration durable des agents. SKIP pour un simple statut, `/continue`, ou toute tentative de memoriser automatiquement une conversation hors du cycle terminal `/close`.
 ---
 
 # Capitaliser une session EBTA
@@ -45,6 +45,20 @@ succes, dupliquer une source de verite ni memoriser du bruit.
    - `ERREUR_OU_FRICTION` : signal observable, cause et prevention concrete.
    - `NON_PROMU` : detail ponctuel, deja couvert, instable, non prouve ou hors
      autorisation.
+   - Ajouter un tag de portee a chaque signal classe :
+     - `Portee: meta` — le signal porte sur le fonctionnement du systeme lui-
+       meme : skills (`.agents/skills/`), workflow (`.ai/workflows/`), gates
+       CI, gouvernance de cloture, outillage de backlog. Un stock fini de
+       defauts : chaque correction reduit la probabilite d'en retrouver un du
+       meme genre.
+     - `Portee: objet` — le signal porte sur ce que le systeme EBTA fait :
+       `Protocole/`, `Implementation/` (moteur, procedures, adapters), capacite
+       statistique ou de backtest. Un perimetre etendu deliberement : chaque
+       extension produit normalement de nouveaux apprentissages, sans
+       obligation de convergence.
+     - En cas de doute (ex. un skill qui encode une regle Protocole), classer
+       `objet` si le signal touche `Protocole/`/`Implementation/` meme
+       indirectement, `meta` sinon.
 
 4. Appliquer le test de promotion.
    Promouvoir seulement si toutes les conditions sont satisfaites :
@@ -107,3 +121,6 @@ Produire un rapport concis :
 3. `Erreurs a ne pas refaire`, avec signal, cause et prevention ;
 4. `Actifs crees ou modifies`, avec validations reelles ;
 5. `NON_PROMU et limites`, y compris les actions non autorisees.
+
+Chaque signal du rapport porte explicitement `Portee: meta` ou
+`Portee: objet`.

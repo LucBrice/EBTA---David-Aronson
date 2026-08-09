@@ -41,6 +41,11 @@ gates portes par l'IA.
 change aucun stage de workstream et ne passe jamais par `plan.ps1` :
 `WORKFLOW.json` reste donc inchangé.
 
+Cette meme procedure est invoquee automatiquement apres toute sortie terminale
+de `/close`, au point exact defini dans la section `/close` ci-dessous. Le
+declenchement automatique ne change ni la procedure ni son contrat
+d'autorisation.
+
 Contrat d'autorisation :
 
 1. La commande seule autorise l'analyse des preuves bornees de la session et la
@@ -179,6 +184,34 @@ transitions repetees sont refusees.
 6. Si et seulement si les validations passent, creer automatiquement un
    commit — jamais un push — limite exactement aux fichiers de fermeture.
 7. Si une validation echoue, ne pas committer et rapporter l'echec.
+8. Apres la resolution effective de l'etape 6 (commit de fermeture reussi) ou
+   de l'etape 7 (validation echouee et echec rapporte), invoquer
+   automatiquement `capture-coding-session-learnings` dans la meme
+   conversation. Ne jamais l'invoquer entre les etapes 4 et 6. Cette
+   invocation autorise uniquement l'analyse, la classification et le rapport :
+   elle n'autorise par elle-meme aucune ecriture de fichier, aucun commit,
+   aucun push ni aucune publication externe. Un echec, timeout ou absence de
+   sortie de la retrospective est rapporte, mais n'annule ni ne transforme le
+   statut terminal deja persiste.
+9. Pour chaque signal `A_REUTILISER` ou `ERREUR_OU_FRICTION` portant
+   `Portee: meta`, appliquer le correctif immediatement seulement si deux
+   conditions sont reunies : tous les fichiers cibles appartiennent au
+   perimetre d'ecriture deja autorise de la mission close, et le correctif
+   reste directement rattache au sujet fonctionnel deja approuve. Cette
+   application releve de l'autorisation preexistante de la mission, jamais du
+   declenchement automatique de la retrospective. Si une autorisation de
+   commit couvre deja ce meme perimetre et ce meme sujet, creer un second
+   commit distinct du commit de fermeture, conforme a la forme obligatoire et
+   referencant l'ID du workstream clos ainsi que le rapport de capitalisation.
+   Si l'ecriture est autorisee mais pas le commit, laisser le correctif edite
+   et signaler `correctif applique, commit en attente d'autorisation separee`.
+   Sans autorisation d'ecriture, ou si le correctif est hors perimetre ou hors
+   sujet, ne rien modifier et l'inscrire dans `Suites a prevoir`.
+
+`Suites a prevoir` documente des travaux possibles sans declencher de cascade :
+aucun `/start` automatique ou immediat n'en decoule. Les lignes s'accumulent
+dans les plans clos et sont revues par lot, au rythme choisi par l'humain,
+sans nouveau registre ni nouvel etat de workflow.
 
 ## Etat machine et migration
 

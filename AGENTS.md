@@ -53,3 +53,6 @@ Treat `/learn-session` as a retrospective command. Invoke
 `.agents/skills/capture-coding-session-learnings/SKILL.md`; analysis and
 proposal are allowed by the command, while persistence, commit, push, and
 external publication each require their own explicit authorization.
+After every terminal `/close`, invoke the same retrospective automatically at
+the point defined by `.ai/workflows/common/WORKFLOW.md`; this trigger grants no
+additional write, commit, push, or publication authority.

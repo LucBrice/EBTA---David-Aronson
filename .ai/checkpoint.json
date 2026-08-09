@@ -2976,10 +2976,10 @@
       "id": "PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE",
       "title": "Integration automatique de /learn-session en fin de /close",
       "track": "annexe",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/annexes/PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md",
+      "source_path": ".ai/archive/20260809_PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-09",
@@ -2989,12 +2989,12 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Integration post-close livree; validations, audit adversarial, conformite et forward-tests PASS",
       "non_goals": [],
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -3010,9 +3010,15 @@
             "id": "baseline_commit",
             "reference": "518a0ff",
             "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/annexes/PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md#audit-de-conformite-pre-close-2026-08-09",
+            "recorded_at": "2026-08-09"
           }
         ]
-      }
+      },
+      "is_active": false
     }
   ],
   "validation": {
