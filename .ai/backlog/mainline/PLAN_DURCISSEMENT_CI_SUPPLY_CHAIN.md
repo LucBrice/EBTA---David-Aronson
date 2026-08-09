@@ -4,7 +4,7 @@
 
 | Question | Reponse |
 | --- | --- |
-| Workstream actif concurrent ? | Non ; enfant 6 `DONE`, checkpoint sans actif. |
+| Workstream actif concurrent ? | Non ; enfant 7A `DONE`, checkpoint sans actif. |
 | Decision externe necessaire ? | Non pour les fichiers locaux ; rulesets/secrets/protections GitHub restent interdits. |
 | Test multi-lot | `MULTI_LOT` : workflow CI et `.gitignore` ont sorties, fichiers et blocages independants. |
 | Implementation directe ? | Interdite ; ce document coordonne deux plans enfants. |
@@ -201,7 +201,7 @@ resolue par ce coordinateur.
 
 ## 12. Definition of Done
 
-- [ ] 7A `DONE` avec workflow et ratchet verts.
+- [x] 7A `DONE` avec workflow et ratchet verts (279 tests `OK`, commit de cloture `67509b8`).
 - [ ] 7B `DONE` avec politique d'ignore prouvee.
 - [ ] Suite canonique `OK` apres les deux.
 - [ ] Aucun reglage GitHub externe ou fichier hors scopes enfants touche.
@@ -211,7 +211,7 @@ resolue par ce coordinateur.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
+| Resultat | 7A `DONE` ; 7B reste a executer avant toute cloture du coordinateur. |
 | Ecart | Decomposition du lot composite en deux enfants atomiques. |
 | Suite | Enfant top-level 8/10 `PLAN_INTEGRITE_REFERENCES_ETAT`. |
 
