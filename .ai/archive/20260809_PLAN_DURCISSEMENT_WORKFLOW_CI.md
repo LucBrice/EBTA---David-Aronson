@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `IMPLEMENTE_AUDITE` |
+| Statut | `DONE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune. |
 | Autorite executable | `.github/workflows/ebta-runtime-suite.yml`. |
