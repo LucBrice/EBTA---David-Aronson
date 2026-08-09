@@ -13,6 +13,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PackageValidatorTests(unittest.TestCase):
+    def _valid_package(self, temp_dir: str) -> Path:
+        package_dir = Path(temp_dir) / "package"
+        copytree(ROOT / "fixtures" / "valid_minimal", package_dir)
+        return package_dir
+
+    def _refresh_manifest(self, package_dir: Path) -> None:
+        manifest = build_manifest(
+            package_dir,
+            sorted(path for path in REQUIRED_PACKAGE_PATHS if path != "manifests/reproducibility_manifest.json"),
+            "VALIDATION_READY",
+        )
+        atomic_write_json(package_dir / "manifests" / "reproducibility_manifest.json", manifest)
+
     def test_valid_minimal_package_validates_end_to_end(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             package_dir = Path(temp_dir) / "package"
@@ -147,6 +160,60 @@ class PackageValidatorTests(unittest.TestCase):
             report = validate_package_dir(package_dir)
             self.assertEqual(report["status"], "FAIL")
             self.assertIn("economic global_status is REJECTED_ECONOMIC", report["semantic_errors"])
+
+    def test_persisted_gate_verdict_divergences_are_named_and_blocking(self):
+        mutations = {
+            "statistical": "FAIL",
+            "economic": "REJECTED_ECONOMIC",
+            "final": "INCONCLUSIVE",
+        }
+        for field, divergent_value in mutations.items():
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as temp_dir:
+                package_dir = self._valid_package(temp_dir)
+                economic_path = package_dir / "reports" / "economic.json"
+                economic = json.loads(economic_path.read_text(encoding="utf-8"))
+                economic.update(
+                    {
+                        "statistical_status": "PASS",
+                        "economic_status": "PASS",
+                        "global_status": "PASS",
+                    }
+                )
+                atomic_write_json(economic_path, economic)
+                evidence_path = package_dir / "reports" / "invariant_evidence.json"
+                evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                evidence["gate_reports"][field] = divergent_value
+                atomic_write_json(evidence_path, evidence)
+                self._refresh_manifest(package_dir)
+
+                report = validate_package_dir(package_dir)
+
+                self.assertEqual(report["status"], "FAIL")
+                self.assertTrue(
+                    any(
+                        f"invariant_evidence.gate_reports.{field}" in error
+                        for error in report["semantic_errors"]
+                    )
+                )
+
+    def test_wrc_and_economic_statistical_divergence_is_named_and_blocking(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = self._valid_package(temp_dir)
+            economic_path = package_dir / "reports" / "economic.json"
+            economic = json.loads(economic_path.read_text(encoding="utf-8"))
+            economic["statistical_status"] = "FAIL"
+            atomic_write_json(economic_path, economic)
+            self._refresh_manifest(package_dir)
+
+            report = validate_package_dir(package_dir)
+
+            self.assertEqual(report["status"], "FAIL")
+            self.assertTrue(
+                any(
+                    "wrc.verdict='PASS' economic.statistical_status='FAIL'" in error
+                    for error in report["semantic_errors"]
+                )
+            )
 
     def test_present_g_bias_report_must_pass_when_available(self):
         with tempfile.TemporaryDirectory() as temp_dir:

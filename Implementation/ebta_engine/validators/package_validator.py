@@ -178,6 +178,7 @@ def _semantic_consistency_errors(package_dir: Path) -> list[str]:
     wrc = _load_json(reports_dir / "wrc.json", default={})
     oos = _load_json(reports_dir / "oos.json", default={})
     economic = _load_json(reports_dir / "economic.json", default={})
+    invariant_evidence = _load_json(reports_dir / "invariant_evidence.json", default={})
     incubation_gate = _load_json(reports_dir / "incubation_gate.json", default={})
     fold_schedule = _load_json(reports_dir / "fold_schedule.json", default={})
 
@@ -219,5 +220,30 @@ def _semantic_consistency_errors(package_dir: Path) -> list[str]:
         for key in ["thresholds", "observed_values", "capacity_grid"]:
             if key not in economic:
                 errors.append(f"economic report missing {key}")
+
+    gate_reports = invariant_evidence.get("gate_reports", {})
+    if (
+        wrc.get("verdict") is not None
+        and economic.get("statistical_status") is not None
+        and wrc["verdict"] != economic["statistical_status"]
+    ):
+        errors.append(
+            "statistical verdict mismatch: "
+            f"wrc.verdict={wrc['verdict']!r} "
+            f"economic.statistical_status={economic['statistical_status']!r}"
+        )
+    owner_values = {
+        "statistical": economic.get("statistical_status", wrc.get("verdict")),
+        "economic": economic.get("economic_status", economic.get("economic_verdict")),
+        "final": economic.get("global_status"),
+    }
+    for field, owner_value in owner_values.items():
+        persisted_value = gate_reports.get(field)
+        if owner_value is not None and persisted_value != owner_value:
+            errors.append(
+                "persisted gate verdict mismatch: "
+                f"invariant_evidence.gate_reports.{field}={persisted_value!r} "
+                f"owner={owner_value!r}"
+            )
 
     return errors

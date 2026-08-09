@@ -150,12 +150,19 @@ def _inv_010(package: dict) -> InvariantResult:
     reports = package.get("gate_reports")
     if not reports:
         return _missing("INV-010", "gate_reports")
-    required = {"statistical", "economic"}
+    required = {"statistical", "economic", "final", "final_components"}
     if not required.issubset(reports):
-        return InvariantResult("INV-010", "FAIL", "statistical and economic gates are not both published")
-    if reports.get("final") == reports.get("economic") and "statistical" not in reports.get("final_components", []):
-        return InvariantResult("INV-010", "FAIL", "economic gate replaces the statistical gate")
-    return InvariantResult("INV-010", "PASS", "statistical and economic gates remain separate")
+        return InvariantResult("INV-010", "FAIL", "statistical, economic, final, and components must be published")
+    statuses = [reports.get(field) for field in ("statistical", "economic", "final")]
+    if any(not isinstance(status, str) or not status for status in statuses):
+        return InvariantResult("INV-010", "FAIL", "gate report statuses must be non-empty strings")
+    components = reports.get("final_components")
+    if not isinstance(components, list) or components != ["statistical", "economic"]:
+        return InvariantResult("INV-010", "FAIL", "final_components must preserve statistical then economic")
+    components_pass = reports["statistical"] == "PASS" and reports["economic"] == "PASS"
+    if (reports["final"] == "PASS") != components_pass:
+        return InvariantResult("INV-010", "FAIL", "final PASS is inconsistent with statistical and economic components")
+    return InvariantResult("INV-010", "PASS", "statistical, economic, and final gate reports are internally coherent")
 
 
 def _inv_011(package: dict) -> InvariantResult:

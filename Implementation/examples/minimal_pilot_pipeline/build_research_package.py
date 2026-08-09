@@ -344,6 +344,25 @@ def _gate_verdict(value: object) -> str:
     return "INCONCLUSIVE"
 
 
+def _persisted_gate_reports(
+    *,
+    statistical_status: object,
+    economic_status: object = None,
+    final_status: object = None,
+) -> dict[str, object]:
+    """Copy owner-published verdicts without creating a positive fallback."""
+
+    def persisted_status(value: object) -> str:
+        return value if isinstance(value, str) and value else "INCONCLUSIVE"
+
+    return {
+        "statistical": persisted_status(statistical_status),
+        "economic": persisted_status(economic_status),
+        "final": persisted_status(final_status),
+        "final_components": ["statistical", "economic"],
+    }
+
+
 def _g8_oos_access_gate(oos_access_decision: dict) -> str:
     if oos_access_decision.get("status") == "AUTHORIZED":
         return "PASS"
@@ -676,12 +695,11 @@ def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -
             for row in pilot_inputs["oos_primary_returns"]
         ],
         "bootstrap_sources": {"oos": "OOS_STATIONARY_BLOCK", "wrc_test": "WRC_JOINT_ZERO_CENTERED"},
-        "gate_reports": {
-            "statistical": "PASS",
-            "economic": "PASS",
-            "final": "PASS",
-            "final_components": ["statistical", "economic"],
-        },
+        "gate_reports": _persisted_gate_reports(
+            statistical_status=procedure_reports["economic"].get("statistical_status"),
+            economic_status=procedure_reports["economic"].get("economic_status"),
+            final_status=procedure_reports["economic"].get("global_status"),
+        ),
         "robustness_checks": [{"name": "stress_pre_oos", "uses_observed_oos": False}],
         "same_oos_reruns": [{"rerun_id": "RERUN-TECH-001", "post_mortem_id": "PM-001"}],
         "influential_modifications": [
@@ -941,12 +959,9 @@ def _denied_pre_oos_invariant_evidence(
             }
             for event in pilot_inputs["data_availability_checks"]
         ],
-        "gate_reports": {
-            "statistical": _gate_verdict(wrc.get("verdict")),
-            "economic": "INCONCLUSIVE",
-            "final": "INCONCLUSIVE",
-            "final_components": ["statistical", "economic"],
-        },
+        "gate_reports": _persisted_gate_reports(
+            statistical_status=wrc.get("verdict"),
+        ),
         "robustness_checks": [
             {
                 "name": scenario.get("stress_id", scenario.get("classification", "pre_oos_stress")),

@@ -124,6 +124,35 @@ class MinimalPilotPipelineTests(unittest.TestCase):
             with self.subTest(verdict=verdict):
                 self.assertEqual(module._g9_gate_value(verdict), "INCONCLUSIVE")
 
+    def test_persisted_gate_reports_preserve_owner_values_and_fail_closed_on_absence(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertEqual(
+            module._persisted_gate_reports(
+                statistical_status="FAIL",
+                economic_status="REJECTED_ECONOMIC",
+                final_status="FAIL",
+            ),
+            {
+                "statistical": "FAIL",
+                "economic": "REJECTED_ECONOMIC",
+                "final": "FAIL",
+                "final_components": ["statistical", "economic"],
+            },
+        )
+        self.assertEqual(
+            module._persisted_gate_reports(statistical_status=None),
+            {
+                "statistical": "INCONCLUSIVE",
+                "economic": "INCONCLUSIVE",
+                "final": "INCONCLUSIVE",
+                "final_components": ["statistical", "economic"],
+            },
+        )
+
     def test_minimal_pilot_pipeline_builds_valid_package(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
         assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
@@ -323,6 +352,50 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                 }
                 for event in pilot_inputs["data_availability_checks"]
             ],
+        )
+
+    def test_rejected_economic_verdict_is_copied_without_fabricated_pass(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        pilot_inputs = module.load_pilot_inputs()
+        pilot_inputs["pre_oos_human_evidence"] = _test_human_evidence(pilot_inputs)
+        pilot_inputs["live_approval_evidence"] = _test_live_approval(pilot_inputs)
+        pilot_inputs["economic_gate"]["capacity_pass"] = False
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            package_dir = Path(temp_dir) / "research_package"
+            report = module.build_package(
+                package_dir,
+                pilot_inputs=pilot_inputs,
+                allow_test_fixture_human_evidence=True,
+            )
+            reports_dir = package_dir / "reports"
+            economic = json.loads((reports_dir / "economic.json").read_text(encoding="utf-8"))
+            invariant_evidence = json.loads(
+                (reports_dir / "invariant_evidence.json").read_text(encoding="utf-8")
+            )
+
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(economic["economic_status"], "REJECTED_ECONOMIC")
+        self.assertEqual(economic["global_status"], "REJECTED_ECONOMIC")
+        self.assertEqual(
+            invariant_evidence["gate_reports"],
+            {
+                "statistical": economic["statistical_status"],
+                "economic": economic["economic_status"],
+                "final": economic["global_status"],
+                "final_components": ["statistical", "economic"],
+            },
+        )
+        inv_010 = {
+            item.invariant_id: item for item in validate_invariants(invariant_evidence)
+        }["INV-010"]
+        self.assertEqual(inv_010.status, "PASS")
+        self.assertIn("economic global_status is REJECTED_ECONOMIC", report["semantic_errors"])
+        self.assertFalse(
+            any("persisted gate verdict mismatch" in error for error in report["semantic_errors"])
         )
 
     def test_live_failure_or_missing_approval_cannot_pass_g13(self):

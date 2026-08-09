@@ -2543,3 +2543,37 @@ meme input optionnel sans changer aucun appel a NautilusTrader.
 
 La coherence des verdicts recopies dans `invariant_evidence.json` reste le
 sous-chantier 5/10 distinct.
+
+## 2026-08-09 - Coherence des verdicts persistes
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING |
+| Statut | ACCEPTED |
+| Source normative | SOP 08 ; SOP 10 ; INV-010 ; audit de robustesse du 2026-08-09 finding A3 |
+| Fichiers impactes | Builder pilote, validateurs invariant/package et tests associes |
+| Impact protocole | NONE |
+| Verification | 266 tests `OK` ; inventaire canonique `OK` ; Pyrefly cible 0 erreur ; matrice adversariale sans faux succes |
+
+### Contexte
+
+Le builder pilote persistait trois verdicts `PASS` litteraux dans
+`invariant_evidence.gate_reports`, sans lien mecanique avec les rapports WRC
+et economique qui possedent ces decisions.
+
+### Decision
+
+Copier les statuts publies par le rapport economique via un helper unique,
+verifier leur coherence interne dans INV-010, puis recouper sans mutation les
+artefacts WRC, economique et invariant au niveau du package validator.
+
+### Impact
+
+Un rejet economique reste un rejet dans la copie. Toute divergence persistee
+devient une erreur semantique nommee et bloque le package ; aucune valeur
+n'est reparee ou promue vers `PASS`.
+
+### Suite
+
+Le garde mecanique des literals de verdict reste le sous-chantier 6/10.

@@ -38,8 +38,9 @@ interdependantes et partagent un seul Exit criteria.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
+| Date d'activation | 2026-08-09 |
 | Autorite normative | SOP 08/SOP 10 et INV-010 du paquet d'execution. |
 | Autorite executable | `economic_gate_report` pour les statuts economiques/globaux ; WRC pour le statut statistique. |
 | Impact protocole | Aucun ; Guardian `CONTRACT_ENCODING`. |
@@ -232,20 +233,20 @@ le proprietaire du verdict final.
 
 ## 12. Definition of Done
 
-- [ ] Trois valeurs derivees sans literal.
-- [ ] INV-010 refuse contradiction interne.
-- [ ] Package validator refuse chaque divergence externe.
-- [ ] Contraste economique rejete conserve dans la copie.
-- [ ] Fixture valide et suite/inventaire verts.
-- [ ] Pyrefly, adversarial et conformite sans finding bloquant.
-- [ ] Aucun fichier interdit touche.
+- [x] Trois valeurs derivees sans literal.
+- [x] INV-010 refuse contradiction interne.
+- [x] Package validator refuse chaque divergence externe.
+- [x] Contraste economique rejete conserve dans la copie.
+- [x] Fixture valide et suite/inventaire verts.
+- [x] Pyrefly, adversarial et conformite sans finding bloquant.
+- [x] Aucun fichier interdit touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | Helper unique sur les deux chemins, INV-010 coherent, recoupements WRC/economic/invariant bloquants, 266 tests `OK`, Pyrefly 0 erreur et audits `PASS`. |
+| Ecart | Aucun ecart fonctionnel. Le build pilote hostile reste legitimement `FAIL` lorsque l'economie est rejetee. |
 | Suite | 6/10 `PLAN_GARDE_LITTERAUX_VERDICT`. |
 
 ## 14. Journal d'audits post-route

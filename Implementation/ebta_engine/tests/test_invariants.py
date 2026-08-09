@@ -44,6 +44,47 @@ class InvariantTests(unittest.TestCase):
         )
         self.assertEqual({r.invariant_id: r.status for r in results}["INV-017"], "FAIL")
 
+    def test_inv_010_rejects_positive_final_with_rejected_component(self):
+        results = validate_invariants(
+            {
+                "gate_reports": {
+                    "statistical": "PASS",
+                    "economic": "REJECTED_ECONOMIC",
+                    "final": "PASS",
+                    "final_components": ["statistical", "economic"],
+                }
+            }
+        )
+        result = {item.invariant_id: item for item in results}["INV-010"]
+        self.assertEqual(result.status, "FAIL")
+        self.assertIn("inconsistent", result.message)
+
+    def test_inv_010_rejects_non_pass_final_when_both_components_pass(self):
+        results = validate_invariants(
+            {
+                "gate_reports": {
+                    "statistical": "PASS",
+                    "economic": "PASS",
+                    "final": "INCONCLUSIVE",
+                    "final_components": ["statistical", "economic"],
+                }
+            }
+        )
+        self.assertEqual({item.invariant_id: item.status for item in results}["INV-010"], "FAIL")
+
+    def test_inv_010_requires_ordered_final_components(self):
+        results = validate_invariants(
+            {
+                "gate_reports": {
+                    "statistical": "PASS",
+                    "economic": "PASS",
+                    "final": "PASS",
+                    "final_components": ["economic", "statistical"],
+                }
+            }
+        )
+        self.assertEqual({item.invariant_id: item.status for item in results}["INV-010"], "FAIL")
+
     def test_each_invalid_invariant_fixture_fails_its_target(self):
         cases = json.loads(
             (ROOT / "fixtures" / "invalid_invariants" / "all_invalid_cases.json").read_text(encoding="utf-8")
