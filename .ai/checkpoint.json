@@ -2262,11 +2262,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/mainline/PLAN_APPROBATION_LIVE_DERIVEE.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/mainline/PLAN_APPROBATION_LIVE_DERIVEE.md#9-journal-daudits-post-route",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "9bcf8c2",
             "recorded_at": "2026-08-09"
           }
         ]
