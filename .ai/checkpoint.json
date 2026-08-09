@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2819,10 +2819,10 @@
       "id": "PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS",
       "title": "Partage cross-IA de la capitalisation des sessions",
       "track": "annexe",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/annexes/PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md",
+      "source_path": ".ai/archive/20260809_PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-09",
@@ -2832,12 +2832,12 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Skill canonique cross-IA valide; resolution Claude et Codex prouvee; commande /learn-session gouvernee; cas de promotion et invariants verifies; audits adversarial et conformite PASS.",
       "non_goals": [],
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2846,17 +2846,22 @@
           },
           {
             "id": "plan_audit",
-            "reference": ".ai/backlog/annexes/PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md#14-journal-daudits-post-hoc",
+            "reference": ".ai/archive/20260809_PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md#14-journal-daudits-post-hoc",
             "recorded_at": "2026-08-09"
           },
           {
             "id": "baseline_commit",
             "reference": "63645b9",
             "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/archive/20260809_PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md#16-audit-de-conformite-au-plan",
+            "recorded_at": "2026-08-09"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {

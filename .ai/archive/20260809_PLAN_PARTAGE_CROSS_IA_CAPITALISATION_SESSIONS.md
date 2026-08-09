@@ -5,8 +5,8 @@
 | Champ | Valeur |
 | --- | --- |
 | ID | `PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS` |
-| Statut | `ACTIVE` - implementation terminee, validations et audits `PASS`, en attente d'un `/close` explicite |
-| Lifecycle | `ACTIVE` via `/continue` du 2026-08-09 |
+| Statut | `DONE` - cloture gouvernee le 2026-08-09 |
+| Lifecycle | `DONE` via les transitions mecaniques `ready`, puis `close` |
 | Track | `annexe` |
 | Classification | `GOVERNANCE` |
 | Workflow | `common` |
@@ -485,9 +485,9 @@ affaibli, ignore ou remplace par une affirmation narrative.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir lors de `/close`. |
-| Ecarts par rapport au plan initial | A remplir lors de `/close`. |
-| Suites a prevoir | Eventuel chantier local de precedence Codex, uniquement si le test Phase 2 echoue et apres autorisation humaine explicite. |
+| Resultat final | `DONE` : la procedure de capitalisation est canonique sous `.agents/skills/`, resolue par Claude et par une session Codex fraiche, et routee par `/learn-session` sans nouvelle transition machine. |
+| Ecarts par rapport au plan initial | Aucun ecart fonctionnel. Le premier essai Codex avec `gpt-5.6-sol` a expose une incompatibilite du CLI local 0.142.0 ; la preuve de resolution a ete obtenue avec `gpt-5.4`, sans repli silencieux ni changement de configuration. |
+| Suites a prevoir | Aucune suite requise pour ce chantier. Une mise a niveau du CLI Codex reste une maintenance locale optionnelle et hors scope ; aucun chantier de precedence n'est necessaire puisque la session fraiche a charge le skill canonique du depot. |
 
 ## 13. Resultats d'execution
 
