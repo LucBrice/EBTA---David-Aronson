@@ -38,7 +38,7 @@ interdependantes et partagent un seul Exit criteria.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `IMPLEMENTE_AUDITE` |
+| Statut | `DONE` |
 | Date | 2026-08-09 |
 | Date d'activation | 2026-08-09 |
 | Autorite normative | SOP 08/SOP 10 et INV-010 du paquet d'execution. |
