@@ -2761,10 +2761,10 @@
       "id": "PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX",
       "title": "Correction Pyrefly CI : ctypes.WinDLL absent sous Linux",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "CONTRACT_ENCODING",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX.md",
+      "source_path": ".ai/archive/20260809_PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_OBSERVATION_CI_PYREFLY_WINDLL_LINUX_RUNNER.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-09",
@@ -2774,12 +2774,12 @@
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Pipeline ebta-runtime-suite.yml vert (run 31307062332) apres correction ciblee du faux positif Pyrefly ctypes.WinDLL sur runner Linux ; bug-hunter, adversarial-tester et plan-conformance-audit PASS.",
       "non_goals": [],
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2795,9 +2795,25 @@
             "id": "baseline_commit",
             "reference": "0ecd19f",
             "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": "0 - HUMAN START HERE/archive/AUDIT_BUG_HUNTER_PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX_2026-08-09.md",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": "0 - HUMAN START HERE/archive/AUDIT_ADVERSARIAL_PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX_2026-08-09.md",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": "0 - HUMAN START HERE/archive/AUDIT_CONFORMITE_PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX_2026-08-09.md",
+            "recorded_at": "2026-08-09"
           }
         ]
-      }
+      },
+      "is_active": false
     }
   ],
   "validation": {
