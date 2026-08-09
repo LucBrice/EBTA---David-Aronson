@@ -26,7 +26,7 @@ def detrend_returns(
     cash_drift = sum(cash_returns) / len(cash_returns)
     detrended = [
         float(strat) - float(cash) - float(exposure) * (market_drift - cash_drift)
-        for strat, cash, exposure in zip(strat_net_returns, cash_returns, exposures)
+        for strat, cash, exposure in zip(strat_net_returns, cash_returns, exposures, strict=True)
     ]
     return {
         "artifact_type": "detrending_report",
@@ -53,4 +53,3 @@ def fit_train_only_transformation(name: str, values: list[float], *, fit_segment
 
 def assert_signal_flow_unchanged(before: list[Any], after: list[Any]) -> bool:
     return before == after
-

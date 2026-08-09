@@ -152,8 +152,8 @@ def _is_m1_bar(bar: Bar) -> bool:
 
 
 def _to_order_side(side: Any) -> OrderSide:
-    buy = getattr(OrderSide, "BUY")
-    sell = getattr(OrderSide, "SELL")
+    buy = OrderSide.BUY
+    sell = OrderSide.SELL
     if side == buy or str(side).upper() == "BUY":
         return buy
     if side == sell or str(side).upper() == "SELL":

@@ -317,7 +317,10 @@ def extract_simulation_result(
             cost_model,
         )
         nav = net_nav
-        daily_exposure = [(item[2] / net_value) if net_value else 0.0 for item, net_value in zip(nav_series, nav)]
+        daily_exposure = [
+            (item[2] / net_value) if net_value else 0.0
+            for item, net_value in zip(nav_series, nav, strict=True)
+        ]
     else:
         timestamps = [_timestamp_to_z(bar.timestamp) for bar in source_bars]
         nav = [starting_nav for _ in source_bars]
@@ -469,7 +472,7 @@ def _net_nav_after_execution_costs(
         )
     cumulative = 0.0
     net_nav: list[float] = []
-    for value, debit in zip(raw_nav, debits):
+    for value, debit in zip(raw_nav, debits, strict=True):
         cumulative += debit
         net_nav.append(float(value) - cumulative)
     overlay_total = spread_total + slippage_total + commission_overlay_total

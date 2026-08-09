@@ -141,7 +141,9 @@ class NautilusPhase5RunSegmentTests(unittest.TestCase):
         self.assertEqual(actual["timestamps"], expected["timestamps"])
         for field_name in ["nav", "daily_returns", "daily_exposure"]:
             self.assertEqual(len(actual[field_name]), len(expected[field_name]))
-            for actual_value, expected_value in zip(actual[field_name], expected[field_name]):
+            for actual_value, expected_value in zip(
+                actual[field_name], expected[field_name], strict=True
+            ):
                 self.assertAlmostEqual(actual_value, expected_value, places=9)
         self.assertEqual(actual["total_costs"], 0.0)
         self.assertEqual(actual["positions"], [])

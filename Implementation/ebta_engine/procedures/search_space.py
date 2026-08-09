@@ -19,7 +19,7 @@ def expand_parameter_grid(parameters: dict[str, list[Any]]) -> list[dict[str, An
     for key in keys:
         if not parameters[key]:
             raise ValueError(f"parameter grid level is empty: {key}")
-    return [dict(zip(keys, values)) for values in product(*(parameters[key] for key in keys))]
+    return [dict(zip(keys, values, strict=True)) for values in product(*(parameters[key] for key in keys))]
 
 
 def canonical_candidate_id(specification: dict[str, Any]) -> str:

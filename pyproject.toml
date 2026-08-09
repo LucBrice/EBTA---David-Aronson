@@ -1,3 +1,9 @@
 [tool.pyrefly]
 python-interpreter-path = 'Implementation\adapters\nautilus_env\venv\Scripts\python.exe'
 search-path = ['Implementation']
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["F", "E9", "B", "PLE", "RUF"]

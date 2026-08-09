@@ -8,7 +8,6 @@ Type: CONTRACT_ENCODING.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from itertools import product
 from typing import Any
 
 from ebta_engine.procedures._utils import canonical_json, stable_id

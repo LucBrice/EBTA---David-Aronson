@@ -2747,3 +2747,39 @@ la CI/ratchet. Aucun venv Nautilus lourd ni dependance runtime n'est ajoute.
 ### Suite
 
 Poursuivre avec l'enfant 10/10 Ruff cible apres cloture gouvernee.
+
+## 2026-08-09 - Ruff CI cible bugs
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | IMPLEMENTATION_DETAIL / CI_TOOLING |
+| Statut | ACCEPTED |
+| Source normative | Aucune ; audit de robustesse du 2026-08-08, lot Ruff |
+| Fichiers impactes | Config/outillage CI et 17 fichiers moteur/tests issus du scan cible |
+| Impact protocole | NONE |
+| Verification | Ruff 0.16.2 0 finding ; Pyrefly 0 erreur ; 8 tests CI + inventaire OK ; YAML_PASS ; suite canonique 292 tests OK (1 skipped) |
+
+### Contexte
+
+Le scan vivant du moteur avec le ruleset `F,E9,B,PLE,RUF` produisait 25
+findings (l'audit historique en comptait 26 sur un etat anterieur).
+
+### Decision
+
+Configurer exactement ce ruleset, pinner Ruff 0.16.2 et corriger chaque
+finding manuellement. Les `zip` dont les longueurs sont contractuellement
+egales utilisent `strict=True`. Six imports morts sont retires ;
+`DEFAULT_DATA_ROOT`, consomme comme API publique par le runner Nautilus, est
+conserve comme re-export explicite.
+
+### Impact
+
+La CI bloque les erreurs Ruff ciblees sans formatter, `--select ALL`, auto-fix,
+`noqa` ou ignore nouveau. Une premiere suite a detecte la suppression erronee
+du re-export ; le correctif empirique est inclus et les 292 tests repassent.
+
+### Suite
+
+Executer l'audit global puis clore l'epic post-audit si tous les criteres sont
+confirmes.

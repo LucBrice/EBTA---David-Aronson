@@ -268,7 +268,7 @@ def _nearest_protected_sink(
 
 
 def _dict_key_for_descendant(node: ast.Dict, descendant: ast.AST) -> str | None:
-    for key, value in zip(node.keys, node.values):
+    for key, value in zip(node.keys, node.values, strict=True):
         if value is descendant or any(child is descendant for child in ast.walk(value)):
             if isinstance(key, ast.Constant) and isinstance(key.value, str):
                 return key.value

@@ -106,7 +106,7 @@ def scan_nasdaq_tick_file(path: Path, *, data_root: Path) -> TickSpreadScan:
             if ask < bid:
                 crossed_market_rows += 1
                 continue
-            spread_units = int(round((ask - bid) * SPREAD_SCALE))
+            spread_units = round((ask - bid) * SPREAD_SCALE)
             frequencies[spread_units] += 1
             valid_rows += 1
     return TickSpreadScan(
@@ -213,7 +213,7 @@ def build_execution_calibration(
                 "spread_provenance": "UNVERIFIED_LOCAL_EXPORT",
                 "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
                 "prob_slippage": slippage_probability["quantiles"][scenario_name],
-                "latency_nanos": int(round(latency["quantiles"][scenario_name] * 1_000_000)),
+                "latency_nanos": round(latency["quantiles"][scenario_name] * 1_000_000),
                 "commission_rate": commission["quantiles"][scenario_name],
             },
             "XAUUSD": {
@@ -221,7 +221,7 @@ def build_execution_calibration(
                 "spread_provenance": "BROKER_PROXY",
                 "spread_conversion": "HALF_SPREAD_POINTS_TO_BPS_AT_FILL_PRICE",
                 "prob_slippage": slippage_probability["quantiles"][scenario_name],
-                "latency_nanos": int(round(latency["quantiles"][scenario_name] * 1_000_000)),
+                "latency_nanos": round(latency["quantiles"][scenario_name] * 1_000_000),
                 "commission_rate": commission["quantiles"][scenario_name],
             },
         }

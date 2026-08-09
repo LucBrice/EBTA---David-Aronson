@@ -14,7 +14,13 @@ from pathlib import Path
 from typing import Any, Callable, Literal, TypedDict
 
 from ebta_engine.adapters.nautilus_mapping import run_multifold_segments
-from ebta_engine.data.local_ohlcv import DEFAULT_DATA_ROOT, OhlcvBar, build_data_snapshot, load_ohlcv_bars, resolve_data_root
+from ebta_engine.data.local_ohlcv import (
+    DEFAULT_DATA_ROOT as DEFAULT_DATA_ROOT,
+    OhlcvBar,
+    build_data_snapshot,
+    load_ohlcv_bars,
+    resolve_data_root,
+)
 from ebta_engine.data.walk_forward import WalkForwardSplitter
 from ebta_engine.package_builder.economic_calibration import compute_economic_pass_flags, economic_observed_values
 from ebta_engine.package_builder.execution_calibration import load_execution_calibration
@@ -281,7 +287,10 @@ def build_nautilus_inputs(
     train_scores: list[float] = []
     for series in candidate_series:
         train_scores.append(_mean(series))
-    selected_candidate_id = max(zip(search_space["candidates"], train_scores), key=lambda item: item[1])[0]["candidate_id"]
+    selected_candidate_id = max(
+        zip(search_space["candidates"], train_scores, strict=True),
+        key=lambda item: item[1],
+    )[0]["candidate_id"]
     selected_row = candidate_rows_by_id[selected_candidate_id]
     oos_inputs: list[OosRunSpec] = []
     for fold in reference_folds:
@@ -396,7 +405,7 @@ def build_nautilus_inputs(
 
     access_template = inputs["oos_access_template"]
     oos_outputs = []
-    for index, (fold, oos_spec) in enumerate(zip(reference_folds, oos_inputs), start=1):
+    for index, (fold, oos_spec) in enumerate(zip(reference_folds, oos_inputs, strict=True), start=1):
         access_event = {
             **access_template,
             "access_event_id": f"OOS-ACCESS-NAUTILUS-{index:03d}",
@@ -426,7 +435,11 @@ def build_nautilus_inputs(
             "fold_id": output["fold_id"],
         }
         for output in oos_outputs
-        for timestamp, value in zip(output["simulation_result"].timestamps, output["simulation_result"].daily_returns)
+        for timestamp, value in zip(
+            output["simulation_result"].timestamps,
+            output["simulation_result"].daily_returns,
+            strict=True,
+        )
     ]
     inputs["train_scores_by_rank"] = train_scores
     inputs["representative_test_scores_by_rank"] = [max(train_scores)]

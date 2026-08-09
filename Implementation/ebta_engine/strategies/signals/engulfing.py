@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     # runtime, so this import never executes and never requires
     # numpy/pandas to be installed - the real, executed import stays lazy
     # inside _pandas_numpy_tools() below.
-    import numpy as np
     import pandas as pd
 
 

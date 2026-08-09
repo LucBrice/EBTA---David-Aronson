@@ -1,5 +1,6 @@
 import json
 import re
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ebta-runtime-suite.yml"
 NOTEBOOK_PATH = ROOT / "Implementation" / "notebooks" / "03_candidate_matrix_build.ipynb"
+PYPROJECT_PATH = ROOT / "pyproject.toml"
 
 EXPECTED_USES = {
     "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2",
@@ -16,12 +18,14 @@ EXPECTED_INSTALLS = {
     "python -m pip install jsonschema==4.23.0",
     "python -m pip install numpy==2.2.6 pandas==2.3.3",
     "python -m pip install pyrefly==1.1.1",
+    "python -m pip install ruff==0.16.2",
 }
 PYREFLY_COMMAND = (
     'python -m pyrefly check --python-interpreter-path python '
     '--replace-imports-with-any "nautilus_trader.*" '
     'Implementation/ebta_engine Implementation/notebooks'
 )
+RUFF_COMMAND = "python -m ruff check Implementation/ebta_engine"
 
 
 def workflow_contract_errors(workflow):
@@ -48,6 +52,8 @@ def workflow_contract_errors(workflow):
         errors.append("canonical unittest command is missing")
     if PYREFLY_COMMAND not in workflow:
         errors.append("portable Pyrefly command is missing")
+    if RUFF_COMMAND not in workflow:
+        errors.append("targeted Ruff command is missing")
     return errors
 
 
@@ -82,6 +88,7 @@ class CiSupplyChainTests(unittest.TestCase):
                 "python -m unittest",
             ),
             "missing_pyrefly_gate": self.workflow.replace(PYREFLY_COMMAND, "python -m pyrefly check"),
+            "missing_ruff_gate": self.workflow.replace(RUFF_COMMAND, "python -m ruff check"),
         }
         for scenario, mutated_workflow in mutations.items():
             with self.subTest(scenario=scenario):
@@ -106,6 +113,14 @@ class CiSupplyChainTests(unittest.TestCase):
         self.assertEqual(self.workflow.count(PYREFLY_COMMAND), 1)
         self.assertNotIn("pip install nautilus_trader", self.workflow)
 
+    def test_ruff_gate_is_targeted_and_exact(self):
+        config = tomllib.loads(PYPROJECT_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(config["tool"]["ruff"]["target-version"], "py313")
+        self.assertEqual(config["tool"]["ruff"]["lint"]["select"], ["F", "E9", "B", "PLE", "RUF"])
+        self.assertEqual(self.workflow.count(RUFF_COMMAND), 1)
+        self.assertNotIn("--select ALL", self.workflow)
+        self.assertNotIn("--fix", self.workflow)
+
     def test_notebook_supplies_temporary_package_dir(self):
         notebook = json.loads(NOTEBOOK_PATH.read_text(encoding="utf-8"))
         source = "".join(line for cell in notebook["cells"] for line in cell.get("source", []))
@@ -120,6 +135,7 @@ class CiSupplyChainTests(unittest.TestCase):
             'python-version: "3.13"',
             "python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation",
             PYREFLY_COMMAND,
+            RUFF_COMMAND,
             "json.load(open('.ai/checkpoint.json', encoding='utf-8'))",
             "json.load(open('Implementation/Active/tracking.json', encoding='utf-8'))",
         ):

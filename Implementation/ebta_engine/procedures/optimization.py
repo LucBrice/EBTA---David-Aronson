@@ -39,7 +39,7 @@ def optimize_on_train(
             grouped.setdefault(candidate.get("complexity", 0), []).append(entry)
 
     representatives = []
-    for complexity, entries in sorted(grouped.items(), key=lambda item: item[0]):
+    for _complexity, entries in sorted(grouped.items(), key=lambda item: item[0]):
         ordered = sorted(entries, key=lambda item: (item["train_score"], item["candidate_id"]), reverse=reverse)
         representatives.append({**ordered[0], "representative_rule": "best_train_score_per_complexity"})
 
@@ -52,4 +52,3 @@ def optimize_on_train(
         "evaluations": sorted(log, key=lambda item: item["candidate_id"]),
         "representatives": representatives,
     }
-

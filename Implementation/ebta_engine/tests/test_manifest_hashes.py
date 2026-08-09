@@ -8,7 +8,6 @@ from shutil import copytree
 from ebta_engine.manifests.hash_utils import sha256_file, sha256_tree
 from ebta_engine.manifests.manifest_builder import build_manifest, verify_manifest
 from ebta_engine.migrations.schema_migrations import migrate_reproducibility_manifest_1_0_to_2_0
-from ebta_engine.validators.artifact_validators import validate
 
 
 ROOT = Path(__file__).resolve().parents[1]

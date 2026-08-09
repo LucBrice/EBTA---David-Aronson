@@ -77,7 +77,7 @@ class LongDataBenchmarkTests(unittest.TestCase):
             data_root: Path
             start = "2020-01-01T00:00:00Z"
             end = "2020-01-01T00:01:00Z"
-            assets = ["NASDAQ"]
+            assets = ("NASDAQ",)
             worker_kind = "data"
 
         with tempfile.TemporaryDirectory() as temp_dir:

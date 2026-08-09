@@ -11,7 +11,6 @@ if TYPE_CHECKING:
     # Type-checker-only import - see engulfing.py for the rationale. Never
     # executes at runtime (TYPE_CHECKING is always False), so it never
     # requires numpy/pandas to be installed.
-    import numpy as np
     import pandas as pd
 
 _FloatArray = Any

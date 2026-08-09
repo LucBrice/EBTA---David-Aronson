@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune. |
 | Autorite executable | `pyproject.toml`, workflow et code moteur cible. |
@@ -68,7 +68,7 @@ les invariants EBTA existants.
 | Code | Nombre | Decision |
 | --- | ---: | --- |
 | B905 | 10 | `strict=True` apres verification des invariants de longueurs egales. |
-| F401 | 7 | Retirer imports reellement morts ; conserver imports lazy executes. |
+| F401 | 7 | Retirer 6 imports reellement morts ; declarer `DEFAULT_DATA_ROOT` comme re-export public explicite. |
 | RUF046 | 3 | Retirer `int()` autour de `round()` sans `ndigits`. |
 | B009 | 2 | Acces directs `OrderSide.BUY/SELL`. |
 | B007 | 1 | Renommer variable de boucle `_complexity`. |
@@ -170,20 +170,20 @@ git diff --check
 
 ## 12. Definition of Done
 
-- [ ] Config et pin Ruff exacts.
-- [ ] 25 findings resolus, aucun ignore ajoute.
-- [ ] Commande CI et ratchet exacts.
-- [ ] Ruff et Pyrefly zero erreur.
-- [ ] Inventaire et suite complete verts.
-- [ ] Audits sans finding bloquant.
-- [ ] Aucun fichier interdit touche.
+- [x] Config et pin Ruff exacts.
+- [x] 25 findings resolus, aucun ignore ajoute.
+- [x] Commande CI et ratchet exacts.
+- [x] Ruff et Pyrefly zero erreur.
+- [x] Inventaire et suite complete verts.
+- [x] Audits sans finding bloquant.
+- [x] Aucun fichier interdit touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | Ruff 0.16.2 : 25 -> 0 finding ; Pyrefly 0 erreur ; 8 tests CI + inventaire verts ; YAML_PASS ; suite canonique 292 tests `OK` (1 skipped). |
+| Ecart | Classification F401 raffinee empiriquement : `DEFAULT_DATA_ROOT` est un re-export public requis par le runner Nautilus, conserve via alias explicite sans `noqa`. |
 | Suite | Audit global et cloture de l'epic parent. |
 
 ## 14. Journal d'audits post-route
