@@ -23,7 +23,7 @@ local, technique, de monitoring ou inconnu lorsqu'un champ exige un verdict
 ## Source et preuve du defaut
 
 - Audit cible :
-  `0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`, finding A1.
+  `0 - HUMAN START HERE/archive/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`, finding A1.
 - Code : `gate_validator.py::_requirement_satisfied()` accepte aujourd'hui
   toute chaine non vide hors `PASS`/`FAIL`/`INCONCLUSIVE`.
 - Test : `test_gates.py::test_gate_report_would_accept_raw_not_validated_oos_gate`

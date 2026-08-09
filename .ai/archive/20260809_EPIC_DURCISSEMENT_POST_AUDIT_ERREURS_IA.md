@@ -422,7 +422,7 @@ Aucune de ces decisions n'est deduite automatiquement.
 Decision recue le 2026-08-09 : `AUDIT_ARCHITECTURE_D_ABORD`.
 
 L'audit cible en quatre passes est consigne dans
-`0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`.
+`0 - HUMAN START HERE/archive/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`.
 Il classe 22 des 27 occurrences comme calculs derives, attentes de contrat,
 fixtures, attestations techniques, constantes humaines documentees ou
 evenements structurels. Cinq literals restent des faux succes actifs, mais
