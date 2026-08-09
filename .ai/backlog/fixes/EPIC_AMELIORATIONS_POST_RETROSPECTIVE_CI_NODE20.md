@@ -59,11 +59,11 @@
 
 ## Sous-chantiers
 
-| n | ID | Titre | Nature revalidee | Proprietaire cible | Exit criteria autonome |
-| --- | --- | --- | --- | --- | --- |
-| 1 | PLAN_EVALUATE_RECHERCHE_CONSOMMATEURS_CONTRACTUELS | Recherche des consommateurs contractuels pendant `/evaluate` | Amelioration d'un skill existant | `.agents/skills/code-architecture-evaluator/SKILL.md` et validation reellement disponible a identifier dans le plan enfant | Tout plan visant un workflow, une configuration, un schema ou un manifeste impose la recherche explicite des tests et consommateurs qui figent ses valeurs; la validation choisie par le lot existe et s'execute avec succes. |
-| 2 | PLAN_AUTORISATION_PUBLICATION_DEUX_PUSHES | Autorisation explicite des deux pushes potentiels | Clarification du contrat conversationnel | `.ai/workflows/common/WORKFLOW.md` | Lorsqu'un gate distant exige un push avant `/close`, la demande distingue le push d'implementation et l'eventuel push du commit de fermeture; aucune autorisation implicite ni modification de `WORKFLOW.json`. |
-| 3 | PLAN_DIAGNOSTIC_ANCRES_PREUVES_WORKFLOW | Diagnostic actionnable des ancres de preuve | Correctif mecanique avec tests | `.ai/tools/workflow_state.ps1` et `.ai/tools/tests/test_workflow_state_machine.ps1` | Une ancre absente reste rejetee; l'erreur expose le slug recherche et les slugs de titres valides; tests positif et negatif `PASS` sans relacher `Test-EvidenceReferenceSubstance`. |
+| n | ID | Titre | Nature revalidee | Proprietaire cible | Exit criteria autonome | Statut |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | PLAN_EVALUATE_RECHERCHE_CONSOMMATEURS_CONTRACTUELS | Recherche des consommateurs contractuels pendant `/evaluate` | Amelioration d'un skill existant | `.agents/skills/code-architecture-evaluator/SKILL.md` et validateur canonique `skill-creator/scripts/quick_validate.py` | Tout plan visant un workflow, une configuration, un schema ou un manifeste impose la recherche explicite des tests et consommateurs qui figent ses valeurs; la validation choisie par le lot existe et s'execute avec succes. | `DONE` — `cb02758` |
+| 2 | PLAN_AUTORISATION_PUBLICATION_DEUX_PUSHES | Autorisation explicite des deux pushes potentiels | Clarification du contrat conversationnel | `.ai/workflows/common/WORKFLOW.md` | Lorsqu'un gate distant exige un push avant `/close`, la demande distingue le push d'implementation et l'eventuel push du commit de fermeture; aucune autorisation implicite ni modification de `WORKFLOW.json`. | `NON_DEMARRE` |
+| 3 | PLAN_DIAGNOSTIC_ANCRES_PREUVES_WORKFLOW | Diagnostic actionnable des ancres de preuve | Correctif mecanique avec tests | `.ai/tools/workflow_state.ps1` et `.ai/tools/tests/test_workflow_state_machine.ps1` | Une ancre absente reste rejetee; l'erreur expose le slug recherche et les slugs de titres valides; tests positif et negatif `PASS` sans relacher `Test-EvidenceReferenceSubstance`. | `NON_DEMARRE` |
 
 Le `routing_reason` de chaque futur enfant commencera par
 `Sous-chantier <n>/3 de EPIC_AMELIORATIONS_POST_RETROSPECTIVE_CI_NODE20`.
@@ -87,8 +87,8 @@ Ce workstream est un coordinateur MULTI_LOT.
 INTERDICTION : ne jamais executer directement les modifications des Lots 1-3
 depuis ce plan.
 
-Suite immediate apres baseline du parent :
-1. Revalider le Lot 1 contre le code courant.
+Suite immediate apres cloture du Lot 1 :
+1. Revalider le Lot 2 contre le `WORKFLOW.md` courant.
 2. Creer uniquement son brouillon humain propre.
 3. Executer son cycle complet et le clore.
 4. Mettre a jour ce parent, puis recommencer pour le lot suivant.
@@ -238,7 +238,8 @@ Classification : GOVERNANCE
 Actions :
 
 - Identifier la validation reelle du skill avant d'ecrire l'Exit criteria de
-  l'enfant; ne pas reutiliser le `quick_validate.py` absent.
+  l'enfant; le lot a trouve et execute le validateur canonique du skill
+  systeme `skill-creator/scripts/quick_validate.py`.
 - Appliquer le cycle complet prescrit par `epic-orchestrator`.
 - Reporter ici l'id, le statut terminal et la preuve de cloture.
 
@@ -251,6 +252,11 @@ Critere de sortie :
 
 - L'Exit criteria autonome du Lot 1 est prouve et aucun audit requis ne garde
   de finding ouvert.
+
+Statut : `DONE` le 2026-08-09. Baseline `2a18343`, attestation `6234cae`,
+cloture et implementation `cb02758`. `quick_validate`, forward-test,
+adversarial-tester et plan-conformance-audit `PASS`; bug-hunter
+`NON_APPLICABLE` car aucun fichier `Implementation/` n'a ete touche.
 
 ### Phase 2 - Sous-chantier 2 : autorisation de deux pushes potentiels
 
@@ -393,12 +399,13 @@ affaibli pour clore un lot.
 | Date | Decision | Portee |
 | --- | --- | --- |
 | 2026-08-09 | `Je valide tes propositions`. | Autorise la persistance du chantier mere et confirme les trois orientations. N'autorise ni commit, ni push, ni publication externe. |
+| 2026-08-09 | Lot 1 clos `DONE` par `cb02758`. | Gate contractuelle ajoutee au skill; autorise la reprise de la coordination sur le Lot 2 sans fusionner les lots. |
 
 ## 11. Risques et blocages connus
 
 | Risque | Impact | Mitigation / condition de deblocage |
 | --- | --- | --- |
-| Le Lot 1 cible une validation inexistante | Faux Exit criteria impossible a prouver | Identifier une validation reelle dans le plan enfant; creer un test seulement si son propre scope l'autorise |
+| Le Lot 1 cible une validation inexistante | Risque clos : validateur canonique du skill systeme trouve et execute | `quick_validate.py` PASS et forward-test comportemental PASS dans `cb02758` |
 | Le Lot 2 entre en collision avec un changement ulterieur de `WORKFLOW.md` | Clarification redigee sur une base obsolete | Relecture et rebaseline live juste avant le plan enfant |
 | Le diagnostic du Lot 3 devient verbeux ou divulgue une preuve | Bruit ou exposition de contenu | Limiter la sortie aux slugs de titres, avec tests exacts |
 | Le parent est traite comme un plan d'implementation directe | Fusion des autorisations et clotures | Carte d'execution et invariant MULTI_LOT bloquants |
@@ -429,10 +436,10 @@ affaibli pour clore un lot.
 | Champ | Valeur |
 | --- | --- |
 | Date | 2026-08-09 |
-| Phases executees | Promotion `/start` du parent uniquement |
-| Artefact produit | `.ai/backlog/fixes/EPIC_AMELIORATIONS_POST_RETROSPECTIVE_CI_NODE20.md` |
-| Validation | `PASS` — checkpoint et tracking valides en syntaxe et contre leurs schemas; `git diff --check` sans erreur; workstream `PENDING/TRIAGED`, `active_workstream_id: null` |
-| Ecart par rapport au plan | Aucun lot implemente |
+| Phases executees | Promotion/baseline du parent puis Lot 1 complet |
+| Artefact produit | Gate 2 bis dans `.agents/skills/code-architecture-evaluator/SKILL.md` |
+| Validation | Lot 1 `DONE`; quick_validate, forward-test, adversarial et conformite PASS; checkpoint valide |
+| Ecart par rapport au plan | Premier forward-test sans sortie non compte, puis relance bornee probante; aucun ecart fonctionnel |
 
 ## 14. Journal d'audits post-hoc
 
