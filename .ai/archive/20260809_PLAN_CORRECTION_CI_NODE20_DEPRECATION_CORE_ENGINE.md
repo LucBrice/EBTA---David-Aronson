@@ -328,6 +328,7 @@ Elle ne peut elargir le perimetre ni affaiblir le contrat.
 | --- | --- | --- |
 | 2026-08-09 | `/continue` sur le plan initial. | Autorisait l'implementation dans son ancien perimetre. |
 | 2026-08-09 | `Oui` a la supersession et au remplacement `CONTRACT_ENCODING/core-engine` couvrant YAML et test. | Autorise replanification, baseline et implementation locale des deux fichiers; aucun push. |
+| 2026-08-09 | `J'autorise le push`. | Autorise explicitement la publication fast-forward des six commits locaux sur `origin/main` et l'observation du run CI resultant. |
 
 ## 11. Risques et blocages connus
 
@@ -341,32 +342,32 @@ Elle ne peut elargir le perimetre ni affaiblir le contrat.
 
 ## 12. Definition of Done
 
-- [ ] G1-G7 `PASS` avec preuves consultables.
+- [x] G1-G7 `PASS` avec preuves consultables.
 - [x] Diff executable limite aux cinq substitutions.
 - [x] 8/8 tests supply-chain et suite canonique complete `PASS`.
 - [x] Pyrefly, Ruff et schemas `PASS`.
-- [ ] Bug-hunter, adversarial-tester et plan-conformance sans finding ouvert.
+- [x] Bug-hunter, adversarial-tester et plan-conformance sans finding ouvert.
 - [x] Aucune modification hors scope ou normative.
-- [ ] Commit et push, s'ils existent, autorises et traces.
+- [x] Commit et push autorises et traces.
 - [x] Aucun `FAIL`, `DENIED`, `INCONCLUSIVE` ou timeout aplati en `PASS`.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a `/close`] |
-| Ecarts | [a remplir] |
-| Suites | [a remplir] |
+| Resultat final | `PASS` — G1-G7 satisfaites; fermeture nominale `DONE` autorisee. |
+| Ecarts | Aucun ecart de perimetre, aucun finding ouvert. |
+| Suites | Aucune suite corrective; conserver le run GitHub Actions comme preuve distante. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | [a remplir] |
-| Phases | Phases 1 a 3 terminees; Phase 4 arretee avant push conformement a la frontiere d'autorisation. |
+| Date | 2026-08-09 |
+| Phases | Phases 1 a 4 terminees; push explicitement autorise puis execute en fast-forward. |
 | Artefacts | Deux pins SHA/commentaires synchronises avec les trois chaines du contrat executable. |
-| Validation | G1-G6 `PASS`; preuve distante G7 non executee. |
-| Ecart | Aucun ecart de perimetre; G7 reste `INCONCLUSIVE` tant que le push n'est pas autorise. |
+| Validation | G1-G7 `PASS`; run `31318437757` `completed/success` sur `54e00f4e9020b99fff85e76157725d23a8a626a8`, aucun warning Node.js 20. |
+| Ecart | Aucun. |
 
 ## 14. Journal d'audits post-hoc
 
@@ -381,3 +382,5 @@ Elle ne peut elargir le perimetre ni affaiblir le contrat.
 | Bug-hunter | Balayage cible du seul fichier modifie sous `Implementation/ebta_engine/`: 0 erreur Pyrefly dans le venv Nautilus; aucune branche conditionnee par la plateforme. | Aucun diagnostic a trier, aucun vrai bug ouvert. |
 | Adversarial-tester | Etat courant sans erreur; sept mutations hostiles rejetees explicitement, dont tag `actions/checkout@v7`, action additionnelle, dependance flottante, permissions/credentials, et retraits des trois gates. | `PASS_ADVERSARIAL`; aucun `FALSE_SUCCESS` ni `SILENT_FALLBACK`. |
 | Plan-conformance (intermediaire) | G1-G6 `IMPLEMENTE`; G7 `MANQUANT` faute de push autorise; aucun extra dans les deux chemins de scope et aucun non-goal viole. | Cloture interdite tant que le run distant n'est pas `completed/success` sans warning Node.js 20. |
+| Execution G7 | Push fast-forward `704af88..54e00f4` autorise; run GitHub Actions `31318437757` `completed/success`, `headSha` exact, zero occurrence de deprecation Node.js 20 dans les logs. | [Preuve distante consultable](https://github.com/LucBrice/EBTA---David-Aronson/actions/runs/31318437757). |
+| Plan-conformance (final) | Tous les Exit criteria `IMPLEMENTE`: G1-G7, cinq substitutions exactes, 8/8 cible, Pyrefly, Ruff, 292/292, schemas et CI distante; aucun non-goal viole. | Diff executable borne aux deux fichiers autorises; les mutations `.ai/` relevent uniquement du cycle gouverne du plan. Aucun `MANQUANT` ni `HORS-SCOPE / EXTRA` ouvert. |
