@@ -370,10 +370,10 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfants clos | Sous-chantiers 1 a 7 — `DONE` ; suite portee a 284 tests `OK`. Le lot 7 a ete decompose en 7A workflow CI et 7B hygiene Git, tous deux `DONE`. |
-| Prochain enfant | `PLAN_INTEGRITE_REFERENCES_ETAT` — `A_ROUTER` |
-| Action | Auditer les references de chemins du checkpoint et du tracking contre leurs schemas, proprietaires et usages vivants, puis definir un ratchet sans creer une source d'etat concurrente. |
-| Blocage | Toute modification de chemin actif doit respecter l'autorite checkpoint-first et les proprietaires declares ; aucun chemin ne sera corrige par supposition. |
+| Enfants clos | Sous-chantiers 1 a 8 — `DONE` ; suite portee a 289 tests `OK`. Le lot 8 corrige deux pointeurs et garde une absence RAG historique exacte. |
+| Prochain enfant | `PLAN_PYREFLY_CI_NOTEBOOK` — `A_ROUTER` |
+| Action | Auditer le mode Pyrefly portable, le notebook detecte et son integration CI sans simuler le venv Nautilus. |
+| Blocage | La configuration doit distinguer les imports externes neutralises des erreurs internes ; aucune installation du venv Nautilus lourd en CI. |
 
 ### Suivi des sous-chantiers
 
@@ -386,7 +386,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | 5 | `PLAN_COHERENCE_VERDICTS_PERSISTES` | `DONE` | Helper unique, INV-010 et recoupement WRC/economic/invariant ; 266 tests `OK`, Pyrefly 0, adversarial sans faux succes. |
 | 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `DONE` | Garde exact-key 32/32, allowlist annotee, nouveau/stale/parse bloquants ; 274 tests `OK`, Pyrefly 0. |
 | 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `DONE` | Coordinateur clos apres 7A/7B ; actions sur SHA, permissions read-only, pins directs, gitignore racine minimal ; 284 tests `OK`. |
-| 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
+| 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `DONE` | Deux pointeurs archives corriges, garde fail-closed a chaque commit, exception RAG exacte ; 289 tests `OK`. |
 | 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
 | 10 | `PLAN_RUFF_CI_BUGS_CIBLES` | `A_ROUTER` | En attente. |
 
