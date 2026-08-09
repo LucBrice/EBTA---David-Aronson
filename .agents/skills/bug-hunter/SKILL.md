@@ -40,6 +40,24 @@ Implementation/adapters/nautilus_env/venv/Scripts/python.exe -m pyrefly check <c
 `<chemin>` = le ou les fichiers/dossiers touches par la tache, ou
 `Implementation/ebta_engine` pour un balayage complet.
 
+**Code conditionne par plateforme (`os.name`, `sys.platform`)** : le venv
+Nautilus local tourne sous Windows. Un balayage sans option de plateforme ne
+reproduit donc pas les diagnostics specifiques au runner CI
+(`ubuntu-latest`, voir `.github/workflows/ebta-runtime-suite.yml`) sur du
+code garde par `os.name == "nt"` ou equivalent — un attribut absent des
+stubs typeshed non-`win32` (ex. `ctypes.WinDLL`) peut passer inapercu en
+`0 errors` localement et n'apparaitre qu'en CI. Des qu'un fichier touche
+contient une branche conditionnee par la plateforme, relancer aussi :
+
+```
+Implementation/adapters/nautilus_env/venv/Scripts/python.exe -m pyrefly check <chemin> --python-platform linux --output-format min-text
+```
+
+Incident source : `Implementation/ebta_engine/benchmarks/long_data.py`,
+2026-08-09 (`PLAN_CORRECTION_PYREFLY_CI_WINDLL_LINUX`) — 3 erreurs
+`ctypes.WinDLL` invisibles en balayage local Windows, visibles uniquement
+avec `--python-platform linux` ou sur le runner CI reel.
+
 # Procedure
 
 1. **Lancer Pyrefly** sur le perimetre concerne. Chaque ligne `ERROR ...
