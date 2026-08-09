@@ -102,6 +102,7 @@ class PreCommitSchemaTests(unittest.TestCase):
                 result = pre_commit_hook.check_schemas({checkpoint_data_path})
         self.assertEqual(result, 1)
 
+
     def test_valid_checkpoint_json_content_passes(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             mapping = self._schema_checked_paths(temp_dir)
@@ -170,6 +171,92 @@ class PreCommitSchemaTests(unittest.TestCase):
             ):
                 result = pre_commit_hook.check_schemas({data_path})
         self.assertEqual(result, 1)
+
+
+class PreCommitStateReferenceTests(unittest.TestCase):
+    def _write(self, root: Path, relative_path: str):
+        target = root / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("fixture", encoding="utf-8")
+
+    def _valid_state(self, root: Path):
+        self._write(root, "hook.md")
+        self._write(root, "archive/plan.md")
+        checkpoint = {
+            "active_paths": {"active_hook_path": "hook.md"},
+            "workstreams": [
+                {
+                    "id": "PLAN_OK",
+                    "source_path": "archive/plan.md",
+                    "active_runtime_path": None,
+                    "lifecycle": "DONE",
+                    "closure_reason": "complete",
+                }
+            ],
+        }
+        tracking = {"hook_file": "hook.md", "active_scope": ["archive/", "descriptive scope"]}
+        return checkpoint, tracking
+
+    def test_valid_paths_and_descriptive_scope_pass(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            checkpoint, tracking = self._valid_state(root)
+            errors, documented = pre_commit_hook.validate_state_references(
+                checkpoint, tracking, root, documented_missing=()
+            )
+        self.assertEqual(errors, [])
+        self.assertEqual(documented, 0)
+
+    def test_missing_and_unsafe_paths_fail_closed(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            checkpoint, tracking = self._valid_state(root)
+            checkpoint["active_paths"]["missing_path"] = "missing/file.md"
+            checkpoint["active_paths"]["unsafe_path"] = "../outside.md"
+            tracking["active_scope"].append("missing/directory/")
+            errors, _ = pre_commit_hook.validate_state_references(
+                checkpoint, tracking, root, documented_missing=()
+            )
+        joined = "\n".join(errors)
+        self.assertIn("referenced path does not exist", joined)
+        self.assertIn("unsafe repo path", joined)
+        self.assertIn("tracking.active_scope/2", joined)
+
+    def test_exact_rejected_historical_absence_is_documented(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            self._write(root, "hook.md")
+            checkpoint = {
+                "workstreams": [
+                    {
+                        "id": "EPIC_ARCHITECTURE_IA_RAG",
+                        "source_path": ".ai/backlog/annexes/EPIC_Proposition_Architecture_IA_RAG.md",
+                        "lifecycle": "REJECTED",
+                        "closure_reason": "Fichier source supprime manuellement par l'humain le 2026-07-01; plan rejete.",
+                    }
+                ]
+            }
+            tracking = {"hook_file": "hook.md", "active_scope": []}
+            errors, documented = pre_commit_hook.validate_state_references(checkpoint, tracking, root)
+        self.assertEqual(errors, [])
+        self.assertEqual(documented, 1)
+
+    def test_historical_exception_mismatch_or_staleness_fails(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            checkpoint, tracking = self._valid_state(root)
+            errors, documented = pre_commit_hook.validate_state_references(checkpoint, tracking, root)
+        self.assertTrue(any("exception is stale" in error for error in errors))
+        self.assertEqual(documented, 0)
+
+    def test_main_blocks_when_reference_check_fails(self):
+        with (
+            patch.object(pre_commit_hook, "get_staged_files", return_value={"file.md"}),
+            patch.object(pre_commit_hook, "check_staleness", return_value=0),
+            patch.object(pre_commit_hook, "check_schemas", return_value=0),
+            patch.object(pre_commit_hook, "check_state_references", return_value=1),
+        ):
+            self.assertEqual(pre_commit_hook.main(), 1)
 
 
 class PrePushHookTests(unittest.TestCase):

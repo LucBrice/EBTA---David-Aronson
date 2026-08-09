@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1.0",
   "created_at": "2026-06-26",
-  "updated_at": "2026-07-10",
+  "updated_at": "2026-08-09",
   "status": "DONE",
   "runtime_version": "EBTA-ENGINE-0.1.x",
   "normative_authority": "Protocole/ frozen as EBTA-DOC-1.1",
@@ -11,7 +11,7 @@
   "next_task_id": null,
   "active_scope": [
     ".ai/",
-    ".ai/backlog/mainline/PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
+    ".ai/archive/20260710_PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS.md",
     "Implementation/",
     "Implementation/Active/",
     "Implementation/adapters/nautilus_env/",

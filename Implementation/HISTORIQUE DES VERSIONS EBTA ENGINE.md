@@ -2679,3 +2679,38 @@ le Protocole. Les regles propres aux packages de recherche restent dans
 ### Suite
 
 Clore le coordinateur 7, puis reprendre l'enfant top-level 8/10.
+
+## 2026-08-09 - Integrite des references checkpoint/tracking
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING / GOVERNANCE_GUARD |
+| Statut | ACCEPTED |
+| Source normative | Aucune ; audit de robustesse du 2026-08-08, lot references d'etat |
+| Fichiers impactes | Checkpoint, tracking, pre-commit versionne, documentation et tests |
+| Impact protocole | NONE |
+| Verification | 26 tests hook + inventaire OK ; suite canonique 289 tests OK (1 skipped) ; Pyrefly portable 0 erreur ; schemas checkpoint/tracking PASS ; scan reel 0 erreur et 1 absence documentee |
+
+### Contexte
+
+Deux pointeurs d'etat visaient encore des chemins backlog apres archivage. Un
+troisieme chemin absent correspond a un plan RAG rejete et supprime
+manuellement, fait deja explicite dans son motif de cloture.
+
+### Decision
+
+Corriger les deux pointeurs vers leurs archives reelles. Scanner a chaque
+commit les chemins du checkpoint/tracking et bloquer toute absence ou chemin
+dangereux. Conserver l'absence RAG via une exception exacte et stale-checkee,
+sans fabriquer d'artefact.
+
+### Impact
+
+Un fichier reference ne peut plus etre supprime/deplace silencieusement par
+un commit. Une nouvelle absence est bloquante ; l'unique exception historique
+ne s'etend pas aux autres workstreams rejetes.
+
+### Suite
+
+Poursuivre avec l'enfant 9/10 Pyrefly CI/notebook apres cloture gouvernee.

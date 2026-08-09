@@ -4,12 +4,15 @@ Deux hooks versionnes protegent ce depot :
 
 | Hook | Source versionnee | Declencheur | Duree typique |
 | --- | --- | --- | --- |
-| `pre-commit` | `Implementation/Active/pre_commit_hook.py` | Un commit qui touche le cockpit IA (`.ai/README.md`, `.ai/checkpoint.json`, `.ai/checkpoint.schema.json`, `.ai/backlog/`, `.ai/tools/`) ou `.ai/checkpoint.json`/`Implementation/Active/tracking.json` specifiquement | < 1 s |
+| `pre-commit` | `Implementation/Active/pre_commit_hook.py` | Tout commit non vide pour les references d'etat ; controles de fraicheur/schema conditionnes comme ci-dessous | < 1 s |
 | `pre-push` | `Implementation/Active/pre_push_hook.py` | Tout push, sans condition | ~45-50 s (suite complete) |
 
 ## Pourquoi deux hooks distincts, pas un seul
 
-- `pre-commit` s'active uniquement si un fichier du cockpit IA est stage :
+- Le controle de references du `pre-commit` s'active sur tout commit non vide,
+  afin qu'un deplacement/suppression du fichier cible soit detecte meme si le
+  JSON d'etat n'est pas modifie. Les controles historiques de fraicheur et de
+  schema restent conditionnes :
   un commit purement `Implementation/` (le risque prioritaire de ce depot,
   l'erreur d'un agent de codage) ne le declenche pas. La suite de tests
   complete est trop lente (~45-50 s) pour tourner a chaque commit (frequent).
@@ -23,6 +26,14 @@ Deux hooks versionnes protegent ce depot :
   ces hooks.
 
 ## Ce que `pre-commit` verifie
+
+Avant d'autoriser le commit, le hook verifie aussi que tous les champs
+`*_path` de `.ai/checkpoint.json`, le `hook_file` et les entrees path-like de
+`Implementation/Active/tracking.json::active_scope` sont relatifs, sans
+traversee `..` et resolvent dans le depot. Une seule absence historique exacte
+est documentee dans le code : le plan RAG rejete et supprime manuellement le
+2026-07-01. L'exception echoue si ses attributs changent ou si elle devient
+stale ; un nouveau chemin mort reste bloquant.
 
 1. **Fraicheur de `checkpoint.json`** (comportement historique, inchange) :
    si `checkpoint.updated_at` est anterieur au dernier commit alors qu'un

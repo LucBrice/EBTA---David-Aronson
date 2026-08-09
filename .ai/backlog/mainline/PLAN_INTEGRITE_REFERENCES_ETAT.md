@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune. |
 | Autorite de donnees | `.ai/checkpoint.json` pour macro ; `Implementation/Active/tracking.json` pour micro. |
@@ -179,20 +179,20 @@ git diff --check
 
 ## 12. Definition of Done
 
-- [ ] Deux pointeurs corriges vers archives existantes.
-- [ ] Exception RAG exacte, expliquee et stale-checkee.
-- [ ] Chemins absents/dangereux bloquants dans le hook.
-- [ ] Documentation d'installation coherente.
-- [ ] Ratchet, inventaire, schemas et suite complete verts.
-- [ ] Audits sans finding bloquant.
-- [ ] Aucun fichier interdit touche.
+- [x] Deux pointeurs corriges vers archives existantes.
+- [x] Exception RAG exacte, expliquee et stale-checkee.
+- [x] Chemins absents/dangereux bloquants dans le hook.
+- [x] Documentation d'installation coherente.
+- [x] Ratchet, inventaire, schemas et suite complete verts.
+- [x] Audits sans finding bloquant.
+- [x] Aucun fichier interdit touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | Scan reel : 0 erreur, 1 absence historique documentee ; 26 tests hook + inventaire verts ; suite canonique 289 tests `OK` (1 skipped) ; deux schemas PASS ; Pyrefly portable 0 erreur. |
+| Ecart | Aucun. Le scan Pyrefly brut du venv allégé conserve 2 `missing-import` jsonschema preexistants ; l'option portable autorisee les neutralise sans masquer les diagnostics internes. |
 | Suite | Enfant 9/10 `PLAN_PYREFLY_CI_NOTEBOOK`. |
 
 ## 14. Journal d'audits post-route

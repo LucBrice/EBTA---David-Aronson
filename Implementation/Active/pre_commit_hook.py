@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 CHECKPOINT = Path(".ai/checkpoint.json")
+TRACKING = Path("Implementation/Active/tracking.json")
 RELAY_FILES = [
     ".ai/README.md",
     ".ai/checkpoint.json",
@@ -28,6 +29,20 @@ SCHEMA_CHECKED_FILES = {
     ".ai/checkpoint.json": ".ai/checkpoint.schema.json",
     "Implementation/Active/tracking.json": "Implementation/Active/tracking.schema.json",
 }
+
+# One historical source was deliberately deleted by the human before the
+# workstream was rejected. Keeping the original path plus this exact,
+# stale-checked exception preserves that history without manufacturing a
+# replacement artifact or opening a generic "REJECTED may be missing" hole.
+DOCUMENTED_MISSING_REFERENCES = (
+    (
+        "EPIC_ARCHITECTURE_IA_RAG",
+        "source_path",
+        ".ai/backlog/annexes/EPIC_Proposition_Architecture_IA_RAG.md",
+        "REJECTED",
+        "Fichier source supprime manuellement par l'humain le 2026-07-01",
+    ),
+)
 
 
 def get_staged_files():
@@ -206,11 +221,127 @@ def check_schemas(staged):
     return 1 if blocked else 0
 
 
+def _iter_path_fields(value, location=()):
+    """Yield every non-null `*_path` value with its JSON location."""
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_location = (*location, str(key))
+            if str(key).endswith("_path") and child is not None:
+                yield child_location, child
+            yield from _iter_path_fields(child, child_location)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from _iter_path_fields(child, (*location, str(index)))
+
+
+def _unsafe_repo_path(value):
+    candidate = Path(value)
+    normalized = Path(value.replace("\\", "/"))
+    return bool(candidate.drive or candidate.is_absolute() or ".." in normalized.parts)
+
+
+def _workstream_for_location(checkpoint, location):
+    if len(location) >= 3 and location[0] == "workstreams" and location[1].isdigit():
+        index = int(location[1])
+        workstreams = checkpoint.get("workstreams", [])
+        if index < len(workstreams) and isinstance(workstreams[index], dict):
+            return workstreams[index]
+    return None
+
+
+def validate_state_references(
+    checkpoint,
+    tracking,
+    repo_root,
+    documented_missing=DOCUMENTED_MISSING_REFERENCES,
+):
+    """Return (errors, documented_count) for checkpoint/tracking references."""
+    errors = []
+    consumed_exceptions = set()
+
+    references = []
+    for location, value in _iter_path_fields(checkpoint):
+        references.append(("checkpoint", location, value, _workstream_for_location(checkpoint, location)))
+
+    references.append(("tracking", ("hook_file",), tracking.get("hook_file"), None))
+    for index, value in enumerate(tracking.get("active_scope", [])):
+        if isinstance(value, str) and ("/" in value or "\\" in value):
+            references.append(("tracking", ("active_scope", str(index)), value, None))
+
+    for owner, location, value, workstream in references:
+        label = f"{owner}.{'/'.join(location)}"
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"{label}: expected a non-empty path string")
+            continue
+        if _unsafe_repo_path(value):
+            errors.append(f"{label}: unsafe repo path '{value}'")
+            continue
+        if (Path(repo_root) / value).exists():
+            continue
+
+        matched_exception = None
+        if workstream is not None:
+            for exception in documented_missing:
+                workstream_id, field, path, lifecycle, reason_fragment = exception
+                if (
+                    workstream.get("id") == workstream_id
+                    and location[-1] == field
+                    and value == path
+                    and workstream.get("lifecycle") == lifecycle
+                    and reason_fragment in str(workstream.get("closure_reason", ""))
+                ):
+                    matched_exception = exception
+                    break
+        if matched_exception is not None:
+            consumed_exceptions.add(matched_exception)
+        else:
+            errors.append(f"{label}: referenced path does not exist: '{value}'")
+
+    for exception in documented_missing:
+        if exception not in consumed_exceptions:
+            errors.append(
+                "documented missing-reference exception is stale or no longer exact: "
+                f"{exception[0]}.{exception[1]} -> '{exception[2]}'"
+            )
+
+    return errors, len(consumed_exceptions)
+
+
+def check_state_references(staged):
+    """Block any non-empty commit while project-state paths are inconsistent."""
+    if not staged:
+        return 0
+    try:
+        checkpoint = json.loads(CHECKPOINT.read_text(encoding="utf-8-sig"))
+        tracking = json.loads(TRACKING.read_text(encoding="utf-8-sig"))
+    except (FileNotFoundError, json.JSONDecodeError) as error:
+        print(f"[EBTA pre-commit] ERROR: cannot inspect project-state references: {error}")
+        return 1
+
+    errors, documented_count = validate_state_references(checkpoint, tracking, Path("."))
+    if errors:
+        print()
+        print("=" * 72)
+        print("[EBTA pre-commit] BLOCKED: project-state references are inconsistent.")
+        for message in errors:
+            print(f"  - {message}")
+        print("=" * 72)
+        print()
+        return 1
+
+    print(
+        "[EBTA pre-commit] Project-state references resolve; "
+        f"{documented_count} exact historical absence(s) documented. OK."
+    )
+    return 0
+
+
 def main():
     staged = get_staged_files()
     staleness_result = check_staleness(staged)
     schema_result = check_schemas(staged)
-    return 1 if (staleness_result or schema_result) else 0
+    reference_result = check_state_references(staged)
+    return 1 if (staleness_result or schema_result or reference_result) else 0
 
 
 if __name__ == "__main__":
