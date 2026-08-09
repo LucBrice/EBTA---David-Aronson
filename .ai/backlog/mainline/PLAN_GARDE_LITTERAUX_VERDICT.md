@@ -35,8 +35,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
+| Date d'activation | 2026-08-09 |
 | Autorite normative | Aucune nouvelle ; le garde protege des contrats executables existants. |
 | Autorite executable | `GATE_REQUIREMENTS`, rapports persistants et hurdles economiques existants. |
 | Impact protocole | Aucun ; Guardian `CONTRACT_ENCODING`. |
@@ -123,7 +124,7 @@ Chaque entree porte obligatoirement :
 - `justification` non vide ;
 - `decision_source` non vide pointant audit, SOP/DN ou plan clos.
 
-L'audit vivant trouve 31 candidats legitimes apres correction des cinq faux
+L'audit vivant stabilise trouve 32 candidats legitimes apres correction des cinq faux
 succes. Une occurrence nouvelle echoue comme `unapproved`; une entree sans
 occurrence echoue comme `stale`; doublon/categorie/annotation invalide echoue
 comme erreur d'allowlist.
@@ -198,8 +199,8 @@ D:/TRADING/.../BACKTRADER/
 
 ### Phase 2 — Baseline et regressions
 
-- inscrire les 31 occurrences courantes avec annotations individuelles ;
-- affirmer mecaniquement le total 31 en plus de l'egalite des empreintes ;
+- inscrire les 32 occurrences courantes avec annotations individuelles ;
+- affirmer mecaniquement le total 32 en plus de l'egalite des empreintes ;
 - fixture positive d'un `economic_report: "PASS"` persiste ;
 - fixtures negatives : calcul derive allowliste, attente de contrat
   allowliste, attestation technique hors cible ;
@@ -253,20 +254,20 @@ git diff --check
 
 ## 12. Definition of Done
 
-- [ ] Scanner stdlib deterministe et fail-closed.
-- [ ] 31 exceptions exactes, uniques et documentees.
-- [ ] Fixture positive et trois classes negatives prouvees.
-- [ ] Nouveau/stale/annotation invalide bloquants.
-- [ ] Inventaire et suite complete verts.
-- [ ] Pyrefly et audits sans finding bloquant.
-- [ ] Aucun fichier interdit touche.
+- [x] Scanner stdlib deterministe et fail-closed.
+- [x] 32 exceptions exactes, uniques et documentees.
+- [x] Fixture positive et trois classes negatives prouvees.
+- [x] Nouveau/stale/annotation invalide bloquants.
+- [x] Inventaire et suite complete verts.
+- [x] Pyrefly et audits sans finding bloquant.
+- [x] Aucun fichier interdit touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | Garde 32/32 `PASS`, 8 tests cibles sans `SKIP`, 274 tests complets `OK`, Pyrefly 0 erreur et audits conformes. |
+| Ecart | Compte exploratoire corrige de 31 a 32 apres suppression d'un faux positif de contexte et inclusion exacte des trois sinks de hurdles economiques. |
 | Suite | 7/10 `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN`. |
 
 ## 14. Journal d'audits post-route
@@ -275,6 +276,7 @@ git diff --check
 | --- | --- | --- |
 | 1 | Plan route confronte aux besoins de diagnostic, a la stabilite des empreintes et aux 31 candidats vivants. | Separation ajoutee entre ligne informative et empreinte stable ; total 31 rendu explicitement testable. Aucun fichier de scope ajoute. |
 | 2 | Relecture des sources/exclusions, du registre exact de cles, des categories et des scenarios nouveau/stale. | Le garde couvre les sinks exacts sans pretendre analyser tout retour de fonction ; parse/allowlist echouent fermes et la CI existante execute le test canonique. Aucun nouvel angle mort majeur : convergence. |
+| 3 | Verification d'implementation du premier inventaire par le visitor final. | Un faux positif de remontee a travers `require_oos=True` a ete supprime en donnant la propriete au premier contexte d'ecriture. L'inventaire stabilise contient 32 occurrences legitimes, dont trois sinks de hurdles economiques ; correction du compte exploratoire 31 sans masquer d'entree. |
 
 ## Journal de convergence de l'intake
 

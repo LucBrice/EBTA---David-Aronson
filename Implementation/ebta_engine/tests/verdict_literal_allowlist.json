@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.0.0",
+  "expected_count": 32,
+  "entries": [
+    {
+      "fingerprint": "Implementation/ebta_engine/governance/bias_gate.py::evaluate_bias_gate::assign:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "PASS is reached only after the explicit blocking bias states are eliminated.",
+      "decision_source": "SOP 13 and AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09 section 2"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/governance/human_evidence.py::_normalize_entry::assign:decision_status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "The positive decision is derived after identity, scope, subject, signature, and independence checks.",
+      "decision_source": "PLAN_APPROBATION_LIVE_DERIVEE DONE"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/package_builder/economic_calibration.py::compute_economic_pass_flags::dict:capacity_pass::true::1",
+      "category": "human_constant",
+      "justification": "Capacity remains an explicitly documented MVP calibration assumption, not an observed verdict.",
+      "decision_source": "PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION 2026-07-10"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/package_builder/economic_calibration.py::compute_economic_pass_flags::dict:execution_pass::true::1",
+      "category": "human_constant",
+      "justification": "Execution remains an explicitly documented MVP calibration assumption pending a richer model.",
+      "decision_source": "PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION 2026-07-10"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/package_builder/nautilus_research_package.py::_execution_nav_evidence::assign:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Execution status is positive only after NAV and order evidence checks complete.",
+      "decision_source": "PLAN_IMPLEMENTATION_MOTEUR_BACKTEST_EBTA_NAUTILUS DONE"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/complexity_selection.py::select_complexity::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Selection PASS is emitted only after an admissible representative is selected.",
+      "decision_source": "SOP 06 complexity selection contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/data_availability.py::validate_availability::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Availability PASS is conditional on an empty violations list.",
+      "decision_source": "SOP 09A data availability contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/economic_gate.py::economic_gate_report::assign:economic_status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Economic PASS is conditional on all registered hurdles and required evidence.",
+      "decision_source": "SOP 08 and PLAN_CORRECTION_GATE_ECONOMIQUE_CALIBRATION"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/economic_gate.py::economic_gate_report::assign:global_status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Global PASS requires both the statistical and economic statuses to be PASS.",
+      "decision_source": "SOP 08 and PLAN_COHERENCE_VERDICTS_PERSISTES DONE"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/lifecycle.py::deployment_gate::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Deployment PASS is emitted only when the explicit deployment requirements have no failures.",
+      "decision_source": "SOP 11 and PLAN_APPROBATION_LIVE_DERIVEE DONE"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/lifecycle.py::incubation_gate::dict:economic_status::PASS::1",
+      "category": "expected_contract",
+      "justification": "This literal is the required economic input value, not an output fabricated by the gate.",
+      "decision_source": "SOP 11 incubation gate contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/lifecycle.py::incubation_gate::dict:statistical_status::PASS::1",
+      "category": "expected_contract",
+      "justification": "This literal is the required statistical input value, not an output fabricated by the gate.",
+      "decision_source": "SOP 11 incubation gate contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/lifecycle.py::incubation_gate::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Incubation PASS is emitted only when the explicit lifecycle requirements have no failures.",
+      "decision_source": "SOP 11 incubation gate contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/oos_confidence_interval.py::validate_information_stop_point::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "The stop-point report passes only when its registered violations list is empty.",
+      "decision_source": "SOP 08 information stop-point contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/oos_confidence_interval.py::validate_power_target::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Power status is derived from preregistered development evidence and the target calculation.",
+      "decision_source": "SOP 08 and DN-022"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/registry_lineage.py::review_registry_lineage::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Registry review passes only when missing and unresolved lineage collections are empty.",
+      "decision_source": "SOP 03 registry lineage contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/sealing.py::validate_pre_oos_seal::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Seal status is conditional on the absence of validation violations.",
+      "decision_source": "SOP 10 pre-OOS sealing contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/walk_forward.py::validate_walk_forward_schedule::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Walk-forward PASS is conditional on the complete chronology and overlap validation.",
+      "decision_source": "SOP 04 walk-forward contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/procedures/wrc.py::wrc_test::assign:verdict::PASS::1",
+      "category": "derived_calculation",
+      "justification": "WRC verdict is derived from the computed p-value and preregistered alpha.",
+      "decision_source": "SOP 02 and PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE DONE"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/validators/gate_validator.py::validate_gates::assign:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Gate PASS is derived only when every typed requirement is satisfied.",
+      "decision_source": "PLAN_CONTRAT_EXIGENCES_GATES_TYPEES DONE"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/validators/package_validator.py::validate_package_dir::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Package PASS is conditional on all failure collections being empty.",
+      "decision_source": "SOP 12 package validation contract"
+    },
+    {
+      "fingerprint": "Implementation/ebta_engine/validators/registry_append_only_validator.py::validate_append_only_registry::dict:status::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Append-only validation passes only when no chain or mutation violation exists.",
+      "decision_source": "SOP 03 append-only registry contract"
+    },
+    {
+      "fingerprint": "Implementation/examples/controlled_experiments/gate_discrimination_experiment.py::<module>::dict:status::PASS::1",
+      "category": "controlled_fixture",
+      "justification": "Synthetic capacity evidence is confined to the explicitly controlled discrimination experiment.",
+      "decision_source": "AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09 section 4"
+    },
+    {
+      "fingerprint": "Implementation/examples/controlled_experiments/gate_discrimination_experiment.py::_economic_report::keyword:statistical_status::PASS::1",
+      "category": "controlled_fixture",
+      "justification": "The experiment fixes the statistical precondition to isolate economic discrimination.",
+      "decision_source": "AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09 section 4"
+    },
+    {
+      "fingerprint": "Implementation/examples/controlled_experiments/gate_discrimination_experiment.py::run_controlled_gate_experiment::assign:status::PASS::1",
+      "category": "controlled_fixture",
+      "justification": "The experiment summary PASS is derived from its winner and loser contrasts.",
+      "decision_source": "AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09 section 4"
+    },
+    {
+      "fingerprint": "Implementation/examples/controlled_experiments/gate_discrimination_experiment.py::run_controlled_gate_experiment::assign:status::PASS::2",
+      "category": "expected_contract",
+      "justification": "The controlled winner economic status is compared with the required PASS value.",
+      "decision_source": "Controlled gate discrimination experiment contract"
+    },
+    {
+      "fingerprint": "Implementation/examples/controlled_experiments/gate_discrimination_experiment.py::run_controlled_gate_experiment::assign:status::PASS::3",
+      "category": "expected_contract",
+      "justification": "The controlled winner robustness status is compared with the required PASS value.",
+      "decision_source": "Controlled gate discrimination experiment contract"
+    },
+    {
+      "fingerprint": "Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_denied_pre_oos_gate_evidence::dict:test_reports::PASS::1",
+      "category": "derived_calculation",
+      "justification": "Pre-OOS test report presence is converted to PASS only when all required reports exist.",
+      "decision_source": "PLAN_CONTRAT_EXIGENCES_GATES_TYPEES DONE"
+    },
+    {
+      "fingerprint": "Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_oos_access_request::dict:execution_pass::PASS::1",
+      "category": "derived_calculation",
+      "justification": "The OOS access boolean is derived from the validated execution report status.",
+      "decision_source": "SOP 10 OOS access contract"
+    },
+    {
+      "fingerprint": "Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_registry_events::dict:decision_status::PASS::1",
+      "category": "structural_event",
+      "justification": "Generated registry events record completion of an already validated structural registration action.",
+      "decision_source": "AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09 section 4"
+    },
+    {
+      "fingerprint": "Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_write_registry::dict:decision_status::PASS::1",
+      "category": "structural_event",
+      "justification": "Initial registry events record completion of the structural candidate registration action.",
+      "decision_source": "AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09 section 4"
+    },
+    {
+      "fingerprint": "Implementation/examples/minimal_pilot_pipeline/build_research_package.py::_write_reports::dict:live_approval::PASS::1",
+      "category": "derived_calculation",
+      "justification": "The public boolean is derived by comparing the validated signed approval status with PASS.",
+      "decision_source": "PLAN_APPROBATION_LIVE_DERIVEE DONE"
+    }
+  ]
+}

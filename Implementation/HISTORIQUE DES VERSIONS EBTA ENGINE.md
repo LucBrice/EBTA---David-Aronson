@@ -2577,3 +2577,37 @@ n'est reparee ou promue vers `PASS`.
 ### Suite
 
 Le garde mecanique des literals de verdict reste le sous-chantier 6/10.
+
+## 2026-08-09 - Garde AST des literals de verdict
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | Contrats G0-G14 existants ; audit de robustesse du 2026-08-09 workstream 3D |
+| Fichiers impactes | `verdict_literal_guard.py`, allowlist annotee et tests de garde |
+| Impact protocole | NONE |
+| Verification | Garde 32/32 `PASS` ; 8 tests cibles et 274 tests complets `OK` ; Pyrefly cible 0 erreur ; adversarial sans faux succes |
+
+### Contexte
+
+Les producteurs de faux succes 3A a 3C sont corriges, mais aucune protection
+ne rendait visible leur reintroduction future par une IA de codage.
+
+### Decision
+
+Inventorier par AST les literals positifs alimentant un registre de cles
+exactes derive du contrat, sans heuristique de fragments de noms. Comparer
+les empreintes stables a une allowlist dont chaque entree porte categorie,
+justification et source de decision.
+
+### Impact
+
+Toute occurrence nouvelle, exception stale, annotation invalide ou erreur de
+parse fait echouer le test canonique. Les numeros de ligne restent seulement
+informatifs et ne fragilisent pas les empreintes.
+
+### Suite
+
+Le durcissement CI et supply chain reste le sous-chantier 7/10 distinct.
