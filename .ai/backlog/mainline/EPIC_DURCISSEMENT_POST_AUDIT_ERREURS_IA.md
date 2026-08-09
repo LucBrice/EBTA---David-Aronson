@@ -370,10 +370,10 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfants clos | Sous-chantiers 1 a 4 — `DONE` ; suite portee a 259 tests `OK`. |
-| Prochain enfant | `PLAN_COHERENCE_VERDICTS_PERSISTES` — `A_ROUTER` |
-| Action | Rediger puis auditer le workstream de coherence inter-rapports issu du finding A3 de l'audit cible du 2026-08-09. |
-| Blocage | Toute nouvelle precedence normative entre rapports ou modification d'INV-010 non deduite des proprietaires existants exige une decision humaine. |
+| Enfants clos | Sous-chantiers 1 a 5 — `DONE` ; suite portee a 266 tests `OK`. |
+| Prochain enfant | `PLAN_GARDE_LITTERAUX_VERDICT` — `A_ROUTER` |
+| Action | Revalider l'inventaire vivant des literals sensibles, definir la classification et l'allowlist minimales, puis auditer le garde AST avant routage. |
+| Blocage | Toute interdiction generale non deduite des producteurs corriges, ou tout besoin de nouvelle taxonomie normative de verdict, exige une decision humaine. |
 
 ### Suivi des sous-chantiers
 
@@ -383,8 +383,8 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | 2 | `PLAN_CLIQUET_INVENTAIRE_TESTS` | `DONE` | 246 IDs tries/uniques, garde auto-inclusif, adversarial 3/3. |
 | 3 | `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` | `DONE` | Contrat `identifier` / `verdict_pass` / `boolean_true`, fixture normalisee, 253 tests `OK`, Pyrefly 0, adversarial 7/7. |
 | 4 | `PLAN_APPROBATION_LIVE_DERIVEE` | `DONE` | Verdict live exact, preuve liee au `live_version_id`, literals supprimes, 259 tests `OK`, Pyrefly 0, adversarial 10/10. |
-| 5 | `PLAN_COHERENCE_VERDICTS_PERSISTES` | `A_ROUTER` | Deriver `gate_reports` et detecter toute divergence entre rapports persistants. |
-| 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER_APRES_3A_3C` | Installer le garde AST sur une classification stabilisee, apres correction des producteurs. |
+| 5 | `PLAN_COHERENCE_VERDICTS_PERSISTES` | `DONE` | Helper unique, INV-010 et recoupement WRC/economic/invariant ; 266 tests `OK`, Pyrefly 0, adversarial sans faux succes. |
+| 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER` | Installer le garde AST sur les producteurs maintenant corriges et une classification stabilisee. |
 | 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
 | 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
 | 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
@@ -436,6 +436,6 @@ trois defauts de contrat plus larges rendent un simple garde AST insuffisant :
    `REJECTED_ECONOMIC`.
 
 Conclusion d'architecture : l'ancien lot 3 est remplace par quatre
-workstreams atomiques 3A a 3D. Aucun correctif runtime n'est autorise ni
-applique par cette decision ; le prochain cycle gouverne commence par
-`PLAN_COHERENCE_VERDICTS_PERSISTES`.
+workstreams atomiques 3A a 3D. Les trois corrections de producteurs et de
+contrats sont maintenant closes ; le prochain cycle gouverne porte le garde
+AST `PLAN_GARDE_LITTERAUX_VERDICT`.
