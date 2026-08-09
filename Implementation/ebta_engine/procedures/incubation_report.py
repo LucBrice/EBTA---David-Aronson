@@ -208,10 +208,27 @@ def validate_live_deployment_report(report: dict[str, Any]) -> dict[str, Any]:
             "description": "kill_switch_tested is False. Kill switch must be verified before live deployment.",
         })
 
+    verdict = report.get("verdict")
+    if verdict not in _VALID_LIFECYCLE_VERDICTS:
+        violations.append({
+            "rule": "DN-036_VALID_VERDICT",
+            "authority": "SOP 11 / DN-036",
+            "found": verdict,
+            "expected_one_of": sorted(_VALID_LIFECYCLE_VERDICTS),
+            "description": "Live deployment verdict is unknown.",
+        })
+    elif verdict != "PASS":
+        violations.append({
+            "rule": "DN-036_PASS_VERDICT_REQUIRED",
+            "authority": "SOP 11 / DN-036",
+            "found": verdict,
+            "description": "Live deployment requires an exact PASS verdict.",
+        })
+
     return _incubation_result(
         "PASS" if not violations else "FAIL",
         violations=violations,
-        verdict=str(report.get("verdict", "")),
+        verdict=str(verdict or ""),
     )
 
 

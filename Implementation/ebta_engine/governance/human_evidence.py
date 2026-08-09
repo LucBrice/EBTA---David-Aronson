@@ -1,4 +1,4 @@
-"""Validation of optional human evidence used before OOS authorization.
+"""Validation of optional human approval evidence.
 
 Source: PLAN_CONTRAT_APPROBATIONS_HUMAINES_POST_OOS, decision 3A.
 Type: IMPLEMENTATION_DETAIL.
@@ -38,8 +38,27 @@ def normalize_pre_oos_human_evidence(
 
 def evidence_gate(normalized: Mapping[str, Any], key: str) -> str:
     entry = normalized.get("entries", {}).get(key, {})
-    status = entry.get("decision_status")
+    return approval_evidence_gate(entry)
+
+
+def approval_evidence_gate(normalized_entry: Mapping[str, Any]) -> str:
+    status = normalized_entry.get("decision_status")
     return status if status in {"PASS", "FAIL", "INCONCLUSIVE"} else "INCONCLUSIVE"
+
+
+def normalize_human_approval_evidence(
+    payload: Mapping[str, Any] | None,
+    *,
+    expected_subject: str,
+    allow_test_fixture: bool = False,
+) -> dict[str, Any]:
+    """Normalize one approval without creating an identity or positive default."""
+
+    return _normalize_entry(
+        payload,
+        expected_subject=expected_subject,
+        allow_test_fixture=allow_test_fixture,
+    )
 
 
 def manifest_human_evidence(normalized: Mapping[str, Any]) -> tuple[list[str], list[str]]:

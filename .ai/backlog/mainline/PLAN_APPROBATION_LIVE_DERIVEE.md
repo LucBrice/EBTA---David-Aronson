@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `ACTIVE` — implementation et gates de fermeture termines |
 | Date | 2026-08-09 |
 | Autorite normative | SOP 11 ; G13 du paquet d'execution ; DN-036 et DN-040. |
 | Autorite executable | `incubation_report.py`, `human_evidence.py`, `lifecycle.py`, builder pilote. |
@@ -107,11 +107,13 @@ Autorises :
 Implementation/ebta_engine/governance/human_evidence.py
 Implementation/ebta_engine/procedures/incubation_report.py
 Implementation/ebta_engine/procedures/lifecycle.py
+Implementation/ebta_engine/package_builder/nautilus_research_package.py
 Implementation/examples/minimal_pilot_pipeline/build_research_package.py
 Implementation/ebta_engine/tests/test_human_approval_evidence.py
 Implementation/ebta_engine/tests/test_incubation_report.py
 Implementation/ebta_engine/tests/test_procedure_governance.py
 Implementation/ebta_engine/tests/test_minimal_pilot_pipeline.py
+Implementation/ebta_engine/tests/test_nautilus_research_package.py
 Implementation/ebta_engine/tests/test_inventory.txt
 Implementation/HISTORIQUE DES VERSIONS EBTA ENGINE.md
 .ai/backlog/mainline/PLAN_APPROBATION_LIVE_DERIVEE.md
@@ -130,7 +132,6 @@ Protocole/
 Implementation/ebta_engine/schemas/
 Implementation/ebta_engine/validators/
 Implementation/ebta_engine/manifests/
-Implementation/ebta_engine/package_builder/
 Implementation/examples/minimal_pilot_pipeline/inputs/
 Implementation/examples/minimal_pilot_pipeline/research_package/
 Implementation/Active/
@@ -150,6 +151,9 @@ D:/TRADING/.../BACKTRADER/
 ### Phase 2 — Propagation bout en bout
 
 - ajouter les statuts live/approbation a `deployment_gate` ;
+- ajouter au package builder Nautilus un input optionnel
+  `live_approval_evidence`, distinct de `pre_oos_human_evidence`, et le
+  propager sans valeur par defaut positive ;
 - supprimer les deux `live_approval=True` du builder ;
 - persister la preuve normalisee dans `live_deployment.json` produit en temporaire ;
 - deriver G13 depuis la preuve et le rapport valides ;
@@ -202,20 +206,20 @@ git diff --check
 
 ## 7. Definition of Done
 
-- [ ] Matrice negative et controle positif passent.
-- [ ] G13 ne consomme aucun literal d'approbation.
-- [ ] Fixture refusee par defaut et visible si autorisee.
-- [ ] Rapport live persiste preuve normalisee et failures.
-- [ ] Suite complete/inventaire verts ; Pyrefly zero.
-- [ ] Trois audits de fermeture sans finding bloquant.
-- [ ] Protocole, schemas, package builder, artefacts persistants et BACKTRADER intacts.
+- [x] Matrice negative et controle positif passent.
+- [x] G13 ne consomme aucun literal d'approbation.
+- [x] Fixture refusee par defaut et visible si autorisee.
+- [x] Rapport live persiste preuve normalisee et failures.
+- [x] Suite complete/inventaire verts ; Pyrefly zero.
+- [x] Trois audits de fermeture sans finding bloquant.
+- [x] Protocole, schemas, artefacts persistants et BACKTRADER intacts ; package builder Nautilus rescope uniquement pour l'input optionnel EBTA.
 
 ## 8. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | Pret pour `READY_TO_CLOSE` : verdict live exact, preuve humaine liee, deployment/G13 derives, 259 tests `OK`. |
+| Ecart | Rescope documente : ajout de la plomberie optionnelle et des tests du package builder Nautilus, necessaire pour conserver son controle positif G13. Aucun appel NautilusTrader touche. |
 | Suite | 5/10 `PLAN_COHERENCE_VERDICTS_PERSISTES`. |
 
 ## 9. Journal d'audits post-route
@@ -224,6 +228,8 @@ git diff --check
 | --- | --- | --- |
 | 1 | Plan route confronte aux appels reels de `deployment_gate`, au builder, aux tests pre-OOS et au contrat `human_evidence`. | Correction d'un risque de faux temoin : chaque contraste live doit partir d'un pre-OOS valide ; ajout d'un controle positif `EXTERNAL` et de la recherche zero literal Python. Aucun nouveau fichier runtime requis. |
 | 2 | Relecture apres correction contre SOP 11/G13, A2, kinds G13 issus de 3A, consommateurs et perimetre ferme. | Aucun nouvel angle mort majeur : le record humain existant suffit, le sujet est la version live exacte, le booleen G13 reste derive, et schemas/inputs/package persistant restent hors scope. Convergence. |
+| 3 | Audit des consommateurs apres activation, notamment le builder et les tests Nautilus qui attendent G13 PASS. | Rescope necessaire : ajout explicite de `nautilus_research_package.py` et `test_nautilus_research_package.py`. L'input live reste distinct du pre-OOS ; absence honnete = G13 non-PASS. La conclusion « aucun nouveau fichier runtime » de la passe 1 est supersedee. |
+| 4 | Relecture du rescope contre les frontieres Nautilus, les signatures d'appel et les non-goals. | Aucun appel ni contrat NautilusTrader ne change ; seule la plomberie EBTA optionnelle de preuve humaine est etendue. Aucun schema, input persistant ou artefact genere requis. Convergence retablie. |
 
 ## Journal de convergence de l'intake
 

@@ -2505,3 +2505,41 @@ le contrat l'exige.
 Les corrections distinctes de l'approbation live derivee, de la coherence des
 verdicts persistes et de la garde AST restent portees par les enfants suivants
 de `EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA`.
+
+## 2026-08-09 - Verdict live et approbation de deploiement derives
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING |
+| Statut | ACCEPTED |
+| Source normative | SOP 11 ; G13 ; DN-036 et DN-040 ; audit de robustesse du 2026-08-09 finding A2 |
+| Fichiers impactes | Gouvernance des preuves humaines, validation live, lifecycle, builders pilote/Nautilus et tests associes |
+| Impact protocole | NONE |
+| Verification | 259 tests `OK`, Pyrefly 0 erreur, matrice adversariale live/approbation |
+
+### Contexte
+
+Un rapport live portant un verdict `FAIL`, `INCONCLUSIVE`, `WATCH`,
+`SUSPENDED` ou inconnu pouvait rester valide structurellement. Le builder
+injectait ensuite deux approbations booleennes positives, permettant a G13 de
+passer sans preuve humaine liee a la version live.
+
+### Decision
+
+Exiger le verdict live exact `PASS`, reutiliser le contrat humain existant
+pour une preuve d'approbation dont le sujet est le `live_version_id`, puis
+faire consommer a `deployment_gate` les statuts valides du rapport et de la
+preuve. Une fixture reste refusee sans option de test explicite.
+
+### Impact
+
+Les deux literals d'approbation disparaissent. La preuve normalisee et ses
+failures sont persistees dans le rapport live ; G13 conserve son booleen public
+mais celui-ci est derive du `decision_status`. Le builder Nautilus accepte le
+meme input optionnel sans changer aucun appel a NautilusTrader.
+
+### Suite
+
+La coherence des verdicts recopies dans `invariant_evidence.json` reste le
+sous-chantier 5/10 distinct.

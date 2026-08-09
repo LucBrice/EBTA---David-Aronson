@@ -32,7 +32,8 @@ def deployment_gate(evidence: dict[str, Any]) -> dict[str, Any]:
         "paper_trading_status": "PASS",
         "package_stage": "DEPLOYMENT_CERTIFIED",
         "kill_switch_tested": True,
-        "live_approval": True,
+        "live_deployment_status": "PASS",
+        "live_approval_status": "PASS",
     }
     failures = [key for key, expected in required.items() if evidence.get(key) != expected]
     return {
@@ -40,4 +41,3 @@ def deployment_gate(evidence: dict[str, Any]) -> dict[str, Any]:
         "status": "PASS" if not failures else "FAIL",
         "failures": failures,
     }
-

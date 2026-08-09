@@ -133,6 +133,7 @@ class MinimalPilotPipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             pilot_inputs = module.load_pilot_inputs()
             pilot_inputs["pre_oos_human_evidence"] = _test_human_evidence(pilot_inputs)
+            pilot_inputs["live_approval_evidence"] = _test_live_approval(pilot_inputs)
             package_shape = module.load_package_shape()
             package_dir = Path(temp_dir) / "research_package"
             report = module.build_package(
@@ -293,6 +294,9 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                 self.assertEqual(gates[field], "INCONCLUSIVE")
         self.assertEqual(gates["live_version_id"], pilot_inputs["live_deployment_report"]["live_version_id"])
         self.assertEqual(gates["kill_switch"], "PASS")
+        self.assertIs(gates["live_approval"], True)
+        self.assertEqual(procedure_reports["live_deployment.json"]["deployment_approval"]["decision_status"], "PASS")
+        self.assertEqual(procedure_reports["deployment_gate.json"]["status"], "PASS")
         sealing = procedure_reports["sealing.json"]
         self.assertEqual(sealing["sealed_at"], pilot_inputs["pre_oos_seal"]["fixture_sealed_at"])
         self.assertEqual(sealing["sealed_at_source"], "INJECTED_FIXTURE_CLOCK")
@@ -320,6 +324,44 @@ class MinimalPilotPipelineTests(unittest.TestCase):
                 for event in pilot_inputs["data_availability_checks"]
             ],
         )
+
+    def test_live_failure_or_missing_approval_cannot_pass_g13(self):
+        spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
+        assert spec is not None and spec.loader is not None, f"cannot load spec for {PILOT_SCRIPT}"
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        scenarios = (("FAIL", _test_live_approval), ("PASS", None))
+        for verdict, approval_factory in scenarios:
+            with self.subTest(verdict=verdict, approval=approval_factory is not None):
+                pilot_inputs = module.load_pilot_inputs()
+                pilot_inputs["pre_oos_human_evidence"] = _test_human_evidence(pilot_inputs)
+                pilot_inputs["live_deployment_report"]["verdict"] = verdict
+                if approval_factory is not None:
+                    pilot_inputs["live_approval_evidence"] = approval_factory(pilot_inputs)
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    package_dir = Path(temp_dir) / "research_package"
+                    report = module.build_package(
+                        package_dir,
+                        pilot_inputs=pilot_inputs,
+                        allow_test_fixture_human_evidence=True,
+                    )
+                    live = json.loads((package_dir / "reports" / "live_deployment.json").read_text(encoding="utf-8"))
+                    deployment = json.loads(
+                        (package_dir / "reports" / "deployment_gate.json").read_text(encoding="utf-8")
+                    )
+                    gates = json.loads((package_dir / "reports" / "gates.json").read_text(encoding="utf-8"))
+
+                if verdict != "PASS":
+                    self.assertEqual(live["status"], "FAIL")
+                else:
+                    self.assertEqual(live["deployment_approval"]["decision_status"], "INCONCLUSIVE")
+                self.assertEqual(deployment["status"], "FAIL")
+                self.assertIs(gates["live_approval"], approval_factory is not None)
+                self.assertNotEqual(
+                    next(gate for gate in report["gate_report"]["gates"] if gate["gate_id"] == "G13")["status"],
+                    "PASS",
+                )
 
     def test_lot_d_registry_review_detects_registry_missing_matrix_candidate(self):
         spec = importlib.util.spec_from_file_location("minimal_pilot_pipeline", PILOT_SCRIPT)
@@ -498,6 +540,19 @@ def _test_human_evidence(pilot_inputs):
             "evidence_id": "PRE-OOS-APPROVAL-TEST-001",
             "subject_id": pilot_inputs["pre_oos_seal"]["manifest_hash"],
         },
+    }
+
+
+def _test_live_approval(pilot_inputs, *, scope="EXTERNAL"):
+    return {
+        "evidence_id": "LIVE-APPROVAL-TEST-001",
+        "reviewer_id": "REVIEWER-LIVE-TEST-001",
+        "status": "APPROVED",
+        "evidence_scope": scope,
+        "approved_at": "2026-01-01T00:00:00Z",
+        "source_reference": "external://live-approval/001",
+        "subject_id": pilot_inputs["live_deployment_report"]["live_version_id"],
+        "independence_attested": True,
     }
 
 

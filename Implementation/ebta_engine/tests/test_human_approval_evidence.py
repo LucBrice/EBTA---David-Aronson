@@ -1,8 +1,10 @@
 import unittest
 
 from ebta_engine.governance.human_evidence import (
+    approval_evidence_gate,
     evidence_gate,
     manifest_human_evidence,
+    normalize_human_approval_evidence,
     normalize_pre_oos_human_evidence,
 )
 
@@ -64,6 +66,34 @@ class HumanApprovalEvidenceTests(unittest.TestCase):
         failures = normalized["entries"]["pre_oos_approval"]["failures"]
         self.assertIn("approved_at_not_utc", failures)
         self.assertIn("independence_not_attested", failures)
+
+    def test_live_approval_is_bound_to_exact_live_version(self):
+        accepted = normalize_human_approval_evidence(
+            _entry("LIVE-APP-001", "LIVE-001"),
+            expected_subject="LIVE-001",
+        )
+        mismatched = normalize_human_approval_evidence(
+            _entry("LIVE-APP-001", "OTHER-LIVE"),
+            expected_subject="LIVE-001",
+        )
+
+        self.assertEqual(approval_evidence_gate(accepted), "PASS")
+        self.assertEqual(approval_evidence_gate(mismatched), "INCONCLUSIVE")
+        self.assertIn("subject_id_mismatch", mismatched["failures"])
+
+    def test_live_fixture_requires_explicit_authorization(self):
+        evidence = _entry("LIVE-FIXTURE", "LIVE-001", scope="TEST_FIXTURE")
+
+        rejected = normalize_human_approval_evidence(evidence, expected_subject="LIVE-001")
+        accepted = normalize_human_approval_evidence(
+            evidence,
+            expected_subject="LIVE-001",
+            allow_test_fixture=True,
+        )
+
+        self.assertEqual(approval_evidence_gate(rejected), "INCONCLUSIVE")
+        self.assertIn("test_fixture_not_authorized", rejected["failures"])
+        self.assertEqual(approval_evidence_gate(accepted), "PASS")
 
 
 def _entry(evidence_id, subject_id, *, scope="EXTERNAL"):

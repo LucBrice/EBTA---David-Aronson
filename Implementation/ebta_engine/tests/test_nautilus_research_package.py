@@ -471,12 +471,14 @@ def _losing_segment_runner(**kwargs) -> SimulationResult:
 
 def build_nautilus_inputs(*args, **kwargs):
     kwargs.setdefault("pre_oos_human_evidence", _nautilus_test_human_evidence())
+    kwargs.setdefault("live_approval_evidence", _nautilus_test_live_approval())
     kwargs.setdefault("allow_test_fixture_human_evidence", True)
     return _build_nautilus_inputs(*args, **kwargs)
 
 
 def build_nautilus_research_package(*args, **kwargs):
     kwargs.setdefault("pre_oos_human_evidence", _nautilus_test_human_evidence())
+    kwargs.setdefault("live_approval_evidence", _nautilus_test_live_approval())
     kwargs.setdefault("allow_test_fixture_human_evidence", True)
     return _build_nautilus_research_package(*args, **kwargs)
 
@@ -501,6 +503,19 @@ def _nautilus_test_human_evidence():
             "evidence_id": "PRE-OOS-APPROVAL-NAUTILUS-TEST",
             "subject_id": "PREOOS-HASH-PILOT",
         },
+    }
+
+
+def _nautilus_test_live_approval():
+    return {
+        "evidence_id": "LIVE-APPROVAL-NAUTILUS-TEST",
+        "reviewer_id": "REVIEWER-NAUTILUS-TEST",
+        "status": "APPROVED",
+        "evidence_scope": "TEST_FIXTURE",
+        "approved_at": "2026-07-21T12:00:00Z",
+        "source_reference": "test-fixture://nautilus-live-approval",
+        "subject_id": "LIVE-PILOT-001",
+        "independence_attested": True,
     }
 
 

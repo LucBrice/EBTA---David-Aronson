@@ -25,7 +25,12 @@ if str(IMPLEMENTATION_ROOT) not in sys.path:
     sys.path.insert(0, str(IMPLEMENTATION_ROOT))
 
 from ebta_engine.governance import evaluate_bias_gate
-from ebta_engine.governance.human_evidence import evidence_gate, normalize_pre_oos_human_evidence
+from ebta_engine.governance.human_evidence import (
+    approval_evidence_gate,
+    evidence_gate,
+    normalize_human_approval_evidence,
+    normalize_pre_oos_human_evidence,
+)
 from ebta_engine.manifests.manifest_builder import build_manifest
 from ebta_engine.persistence import append_jsonl, atomic_write_json
 from ebta_engine.procedures.candidate_matrix import build_candidate_matrix
@@ -75,6 +80,10 @@ def build_package(
     package_shape = package_shape or load_package_shape()
     _validate_pilot_contract(pilot_inputs, package_shape)
     prepare_human_evidence(
+        pilot_inputs,
+        allow_test_fixture=allow_test_fixture_human_evidence,
+    )
+    prepare_live_approval_evidence(
         pilot_inputs,
         allow_test_fixture=allow_test_fixture_human_evidence,
     )
@@ -139,6 +148,16 @@ def prepare_human_evidence(pilot_inputs: dict, *, allow_test_fixture: bool = Fal
         allow_test_fixture=allow_test_fixture,
     )
     pilot_inputs["_normalized_pre_oos_human_evidence"] = normalized
+    return normalized
+
+
+def prepare_live_approval_evidence(pilot_inputs: dict, *, allow_test_fixture: bool = False) -> dict:
+    normalized = normalize_human_approval_evidence(
+        pilot_inputs.get("live_approval_evidence"),
+        expected_subject=str(pilot_inputs["live_deployment_report"].get("live_version_id") or ""),
+        allow_test_fixture=allow_test_fixture,
+    )
+    pilot_inputs["_normalized_live_approval_evidence"] = normalized
     return normalized
 
 
@@ -545,6 +564,9 @@ def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -
     monitoring_consultation_status = procedure_reports["monitoring_consultation_log"]["status"]
     incubation_report_status = procedure_reports["incubation_report"]["status"]
     deployment_gate_status = procedure_reports["deployment_gate"]["status"]
+    live_approval_status = approval_evidence_gate(
+        procedure_reports["live_deployment"]["deployment_approval"]
+    )
     execution_status = _gate_verdict(procedure_reports["execution"].get("status"))
     nav_reconciliation_status = _gate_verdict(procedure_reports["execution"].get("nav_reconciliation"))
     cost_model_status = _g6_cost_model_gate(pilot_inputs, procedure_reports["execution"])
@@ -611,7 +633,7 @@ def _write_reports(package_dir: Path, pilot_inputs: dict, package_shape: dict) -
         "deployment_certified_manifest": deployment_gate_status,
         "live_version_id": _identifier_evidence_gate(pilot_inputs["live_deployment_report"].get("live_version_id")),
         "kill_switch": _boolean_evidence_gate(pilot_inputs["live_deployment_report"].get("kill_switch_tested")),
-        "live_approval": True,
+        "live_approval": live_approval_status == "PASS",
         "lifecycle_archive": _artifact_evidence_gate(package_dir, package_shape, "lifecycle_archive"),
         "incident_log": _artifact_evidence_gate(package_dir, package_shape, "incident_log"),
         "retention_policy": _artifact_evidence_gate(package_dir, package_shape, "retention_policy"),
@@ -1070,6 +1092,8 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
     )
     incubation_report = validate_incubation_report(pilot_inputs["incubation_report"])
     live_deployment = validate_live_deployment_report(pilot_inputs["live_deployment_report"])
+    live_approval = _live_approval_evidence(pilot_inputs)
+    live_deployment["deployment_approval"] = live_approval
     reproduction_validation = validate_reproduction_report(
         pilot_inputs["reproduction_report"],
         original_manifest={"artefact_hashes": pilot_inputs["reproduction_report"]["reproduced_artefact_hashes"]},
@@ -1089,7 +1113,8 @@ def _procedure_reports(pilot_inputs: dict, *, package_dir: Path | None = None) -
             "paper_trading_status": incubation_report["status"],
             "package_stage": pilot_inputs["live_deployment_report"]["package_stage"],
             "kill_switch_tested": pilot_inputs["live_deployment_report"]["kill_switch_tested"],
-            "live_approval": True,
+            "live_deployment_status": live_deployment["status"],
+            "live_approval_status": approval_evidence_gate(live_approval),
         }
     )
     return {
@@ -1182,6 +1207,13 @@ def _human_evidence(pilot_inputs: dict) -> dict:
     normalized = pilot_inputs.get("_normalized_pre_oos_human_evidence")
     if not isinstance(normalized, dict):
         normalized = prepare_human_evidence(pilot_inputs)
+    return normalized
+
+
+def _live_approval_evidence(pilot_inputs: dict) -> dict:
+    normalized = pilot_inputs.get("_normalized_live_approval_evidence")
+    if not isinstance(normalized, dict):
+        normalized = prepare_live_approval_evidence(pilot_inputs)
     return normalized
 
 

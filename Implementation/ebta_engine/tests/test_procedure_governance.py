@@ -134,10 +134,26 @@ class GovernanceProcedureTests(unittest.TestCase):
                 "paper_trading_status": "PASS",
                 "package_stage": "DEPLOYMENT_CERTIFIED",
                 "kill_switch_tested": True,
-                "live_approval": True,
+                "live_deployment_status": "PASS",
+                "live_approval_status": "PASS",
             }
         )
         self.assertEqual(deployment["status"], "PASS")
+
+        for field in ("live_deployment_status", "live_approval_status"):
+            with self.subTest(field=field):
+                rejected = deployment_gate(
+                    {
+                        "paper_trading_status": "PASS",
+                        "package_stage": "DEPLOYMENT_CERTIFIED",
+                        "kill_switch_tested": True,
+                        "live_deployment_status": "PASS",
+                        "live_approval_status": "PASS",
+                        field: "INCONCLUSIVE",
+                    }
+                )
+                self.assertEqual(rejected["status"], "FAIL")
+                self.assertIn(field, rejected["failures"])
 
 
 if __name__ == "__main__":

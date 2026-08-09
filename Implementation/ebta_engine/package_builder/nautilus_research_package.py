@@ -82,6 +82,7 @@ def build_nautilus_inputs(
     execution_scope: ExecutionScope = "FULL_RESEARCH_PACKAGE",
     execution_calibration: dict[str, Any] | None = None,
     pre_oos_human_evidence: dict[str, Any] | None = None,
+    live_approval_evidence: dict[str, Any] | None = None,
     allow_test_fixture_human_evidence: bool = False,
 ) -> dict:
     if execution_scope not in {"FULL_RESEARCH_PACKAGE", "PRE_OOS_BENCHMARK"}:
@@ -261,6 +262,8 @@ def build_nautilus_inputs(
     fold_schedules_aligned = all(schedule == reference_schedule for schedule in fold_schedules_by_asset.values())
     if pre_oos_human_evidence is not None:
         inputs["pre_oos_human_evidence"] = copy.deepcopy(pre_oos_human_evidence)
+    if live_approval_evidence is not None:
+        inputs["live_approval_evidence"] = copy.deepcopy(live_approval_evidence)
     pilot.prepare_human_evidence(
         inputs,
         allow_test_fixture=allow_test_fixture_human_evidence,
@@ -481,6 +484,7 @@ def build_nautilus_research_package(
     segment_runner: SegmentRunner | None = None,
     clock: RuntimeClock | None = None,
     pre_oos_human_evidence: dict[str, Any] | None = None,
+    live_approval_evidence: dict[str, Any] | None = None,
     allow_test_fixture_human_evidence: bool = False,
 ) -> dict:
     pilot = _load_pilot_module()
@@ -493,6 +497,7 @@ def build_nautilus_research_package(
         package_dir=package_dir,
         clock=clock,
         pre_oos_human_evidence=pre_oos_human_evidence,
+        live_approval_evidence=live_approval_evidence,
         allow_test_fixture_human_evidence=allow_test_fixture_human_evidence,
     )
     denied = inputs.get("_build_outcome")
