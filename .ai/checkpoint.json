@@ -2909,6 +2909,42 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE",
+      "title": "Correction Node.js 20 et contrat supply-chain",
+      "track": "fix",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "CONTRACT_ENCODING",
+      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-09",
+      "last_moved_at": "2026-08-09",
+      "routing_decision": "fix",
+      "routing_reason": "Remplace le workstream GOVERNANCE/common supersede; couvre atomiquement les pins CI et leur contrat executable supply-chain.",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [
+        "No workflow trigger, permission, runner, step, command, Python pin, or gate change",
+        "No test weakening, dynamic EXPECTED_USES derivation, or modification outside test_ci_supply_chain.py",
+        "No Protocole/ change, new dependency, or push implied by local execution"
+      ],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md#journal-audits-intake",
+            "recorded_at": "2026-08-09"
+          }
+        ]
+      }
     }
   ],
   "validation": {
