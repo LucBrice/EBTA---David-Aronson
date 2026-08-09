@@ -40,7 +40,7 @@
 | Scope | Coordonner les protections retenues par l'audit du 2026-08-08 contre les faux succes, la suppression silencieuse de tests, les references mortes et les defauts de CI/outillage. |
 | Non-goals | Aucune modification de `Protocole/`; aucune implementation dans ce chantier mere ; aucun outil ecarte par la Partie F ; aucun push ; aucune mutation GitHub externe sans autorisation distincte ; aucune modification de BACKTRADER. |
 | Source | `0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-08.md`, Parties D a G, et commande humaine `/start` du 2026-08-08. |
-| Exit criteria | Les sept sous-chantiers listes ci-dessous sont `DONE` dans `.ai/checkpoint.json`, l'action GitHub externe est soit prouvee realisee soit explicitement differee par decision humaine, la suite complete reste `OK`, et l'epic ne contient aucune implementation directe. |
+| Exit criteria | Les dix sous-chantiers listes ci-dessous sont `DONE` dans `.ai/checkpoint.json`, l'action GitHub externe est soit prouvee realisee soit explicitement differee par decision humaine, la suite complete reste `OK`, et l'epic ne contient aucune implementation directe. |
 
 ## Sous-chantiers
 
@@ -48,11 +48,14 @@
 | --- | --- | --- |
 | 1 | PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE | Calibration deterministe et proprietes metamorphiques du WRC |
 | 2 | PLAN_CLIQUET_INVENTAIRE_TESTS | Cliquet mecanique d'inventaire des tests |
-| 3 | PLAN_GARDE_LITTERAUX_VERDICT | Detection AST des verdicts fabriques et correction des cas actifs |
-| 4 | PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN | Durcissement minimal de la supply chain CI et hygiene du depot |
-| 5 | PLAN_INTEGRITE_REFERENCES_ETAT | Integrite mecanique des chemins du checkpoint et du tracking |
-| 6 | PLAN_PYREFLY_CI_NOTEBOOK | Pyrefly en CI et correction du notebook detecte |
-| 7 | PLAN_RUFF_CI_BUGS_CIBLES | Ruff en CI avec ruleset bugs cible et correction des findings admis |
+| 3 | PLAN_CONTRAT_EXIGENCES_GATES_TYPEES | Contrat type et fail-closed des exigences G0-G14 |
+| 4 | PLAN_APPROBATION_LIVE_DERIVEE | Validation du verdict live et approbation signee derivee |
+| 5 | PLAN_COHERENCE_VERDICTS_PERSISTES | Derivation et coherence transversale des verdicts persistes |
+| 6 | PLAN_GARDE_LITTERAUX_VERDICT | Detection AST de recurrence apres correction des producteurs |
+| 7 | PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN | Durcissement minimal de la supply chain CI et hygiene du depot |
+| 8 | PLAN_INTEGRITE_REFERENCES_ETAT | Integrite mecanique des chemins du checkpoint et du tracking |
+| 9 | PLAN_PYREFLY_CI_NOTEBOOK | Pyrefly en CI et correction du notebook detecte |
+| 10 | PLAN_RUFF_CI_BUGS_CIBLES | Ruff en CI avec ruleset bugs cible et correction des findings admis |
 
 ## Statut
 
@@ -135,7 +138,10 @@ Hierarchie applicable :
 | --- | --- |
 | Regression statistique WRC reproductible et honnete sur sa portee | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` |
 | Disparition de tests rendue visible | `PLAN_CLIQUET_INVENTAIRE_TESTS` |
-| Nouveau verdict litteral dangereux bloque mecaniquement | `PLAN_GARDE_LITTERAUX_VERDICT` |
+| Truthiness generique des preuves G0-G14 remplacee par un contrat type et fail-closed | `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` |
+| Verdict live et approbation signee derives d'une preuve validee | `PLAN_APPROBATION_LIVE_DERIVEE` |
+| Verdicts recopies dans les artefacts persistants derives et recoupes | `PLAN_COHERENCE_VERDICTS_PERSISTES` |
+| Nouveau verdict litteral dangereux bloque mecaniquement apres correction des producteurs | `PLAN_GARDE_LITTERAUX_VERDICT` |
 | CI et supply chain minimales durcies | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` |
 | References d'etat mortes detectees | `PLAN_INTEGRITE_REFERENCES_ETAT` |
 | Pyrefly portable et execute en CI | `PLAN_PYREFLY_CI_NOTEBOOK` |
@@ -221,7 +227,7 @@ Critere de sortie :
 
 ### Phase 1 - Boucle des sous-chantiers
 
-Objectif : traiter les sept workstreams sans les fusionner.
+Objectif : traiter les dix workstreams sans les fusionner.
 
 Classification : GOVERNANCE
 
@@ -233,7 +239,7 @@ Actions :
 
 Livrables :
 
-- sept workstreams `DONE`, chacun avec son propre plan et ses preuves.
+- dix workstreams `DONE`, chacun avec son propre plan et ses preuves.
 
 Critere de sortie :
 
@@ -319,6 +325,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | --- | --- | --- |
 | 2026-08-08 | `/start` sur l'audit consolide. | Autorise audit, restructuration, archivage de l'intake et routage de l'epic ; n'autorise ni implementation ni mutation GitHub externe. |
 | 2026-08-08 | Arbitrage conserve depuis la Partie F. | Rejette les familles d'outils et surcouches enumerees dans les Non-goals ; priorise la detection du faux succes. |
+| 2026-08-09 | `AUDIT_ARCHITECTURE_D_ABORD`. | Autorise un audit cible en lecture seule de l'assemblage des verdicts et le redimensionnement narratif du lot 3 ; n'autorise aucune correction de `Implementation/`. |
 | A trancher | Reglages GitHub externes. | Activer et prouver, ou differer explicitement ; aucune action implicite. |
 
 ## 10. Risques et blocages connus
@@ -334,7 +341,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 ## 11. Definition of Done
 
 - [ ] Decision GitHub externe tracee comme realisee avec preuve ou explicitement differee.
-- [ ] Les sept sous-chantiers existent et sont `DONE`.
+- [ ] Les dix sous-chantiers existent et sont `DONE`.
 - [ ] Chaque sous-chantier a suivi ses deux boucles d'evaluation, sa baseline et son workflow complet.
 - [ ] Les audits `bug-hunter`, `adversarial-tester` et `plan-conformance-audit` requis sont reels et sans finding bloquant.
 - [ ] La suite unittest complete est `OK` apres le dernier lot.
@@ -348,7 +355,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Resultat final | A renseigner apres fermeture de tous les enfants. |
-| Ecarts par rapport au plan initial | La promotion a deja remplace deux lots techniques composites par sept sous-chantiers atomiques, conformement au gate multi-lot obligatoire. |
+| Ecarts par rapport au plan initial | La promotion a remplace deux lots techniques composites par sept sous-chantiers atomiques ; l'audit d'architecture du 2026-08-09 a ensuite remplace l'ancien lot 3 composite par quatre workstreams, portant le total a dix. |
 | Suites a prevoir | Aucune tant que les sous-chantiers ne sont pas routes individuellement. |
 
 ## 13. Journal d'audits post-route
@@ -364,8 +371,8 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
 | Enfants clos | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` et `PLAN_CLIQUET_INVENTAIRE_TESTS` — `DONE` ; suite portee a 246 tests `OK`. |
-| Prochain enfant | `PLAN_GARDE_LITTERAUX_VERDICT` — `BLOQUE_DECISION_HUMAINE` avant redaction |
-| Action | Arbitrer le depassement du seuil d'escalade : 24 litteraux sensibles directs, 27 en incluant les trois `PASS` imbriques sous `gate_reports`, contre le seuil `> ~20` fixe par l'audit source. |
+| Prochain enfant | `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` — `A_ROUTER` |
+| Action | Rediger puis auditer le premier des quatre workstreams issus de l'audit cible `0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`. |
 | Blocage | Toute assertion transformant les seeds de regression en seuil methodologique universel exige une decision normative humaine et bloque l'enfant. |
 
 ### Suivi des sous-chantiers
@@ -374,13 +381,16 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | --- | --- | --- | --- |
 | 1 | `PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE` | `DONE` | Trois regressions, 245 tests `OK`, Pyrefly 0, adversarial 3/3. |
 | 2 | `PLAN_CLIQUET_INVENTAIRE_TESTS` | `DONE` | 246 IDs tries/uniques, garde auto-inclusif, adversarial 3/3. |
-| 3 | `PLAN_GARDE_LITTERAUX_VERDICT` | `BLOQUE_DECISION_HUMAINE` | Premier scan AST : 24 directs / 27 avec contexte `gate_reports`, donc seuil d'escalade depasse. |
-| 4 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
-| 5 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
-| 6 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
-| 7 | `PLAN_RUFF_CI_BUGS_CIBLES` | `A_ROUTER` | En attente. |
+| 3 | `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` | `A_ROUTER` | Priorite audit : remplacer la truthiness generique par des exigences typees et fail-closed. |
+| 4 | `PLAN_APPROBATION_LIVE_DERIVEE` | `A_ROUTER` | Valider le verdict live et remplacer les deux `live_approval=True` par une preuve signee derivee. |
+| 5 | `PLAN_COHERENCE_VERDICTS_PERSISTES` | `A_ROUTER` | Deriver `gate_reports` et detecter toute divergence entre rapports persistants. |
+| 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER_APRES_3A_3C` | Installer le garde AST sur une classification stabilisee, apres correction des producteurs. |
+| 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
+| 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
+| 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
+| 10 | `PLAN_RUFF_CI_BUGS_CIBLES` | `A_ROUTER` | En attente. |
 
-### Decision humaine requise avant le lot 3
+### Decision humaine du 2026-08-09 et resultat de l'audit du lot 3
 
 Le seuil de la Partie F de l'audit source est atteint : si l'inventaire des
 litteraux remonte plus d'environ 20 occurrences au premier passage, le sujet
@@ -408,3 +418,24 @@ Arbitrage necessaire :
 3. `DIFFERER_LOT_3` — conserver ce blocage et autoriser le passage au lot 4.
 
 Aucune de ces decisions n'est deduite automatiquement.
+
+Decision recue le 2026-08-09 : `AUDIT_ARCHITECTURE_D_ABORD`.
+
+L'audit cible en quatre passes est consigne dans
+`0 - HUMAN START HERE/AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-09.md`.
+Il classe 22 des 27 occurrences comme calculs derives, attentes de contrat,
+fixtures, attestations techniques, constantes humaines documentees ou
+evenements structurels. Cinq literals restent des faux succes actifs, mais
+trois defauts de contrat plus larges rendent un simple garde AST insuffisant :
+
+1. `gate_validator.py` accepte `REJECTED_ECONOMIC`, `NOT_VALIDATED`, `DENIED`
+   et toute chaine inconnue non vide comme preuve satisfaite ;
+2. un verdict live soumis `FAIL` produit encore `deployment_gate PASS` et
+   `G13 PASS` parce que le verdict est ignore et `live_approval=True` injecte ;
+3. INV-010 accepte trois `PASS` litteraux meme quand le rapport economique est
+   `REJECTED_ECONOMIC`.
+
+Conclusion d'architecture : l'ancien lot 3 est remplace par quatre
+workstreams atomiques 3A a 3D. Aucun correctif runtime n'est autorise ni
+applique par cette decision ; le prochain cycle gouverne commence par
+`PLAN_CONTRAT_EXIGENCES_GATES_TYPEES`.
