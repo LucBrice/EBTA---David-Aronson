@@ -37,9 +37,9 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `ACTIVE` |
 | Date de creation | 2026-08-09 |
-| Date d'activation | - |
+| Date d'activation | 2026-08-09 |
 | Autorite normative | `Protocole/` non concerne et non modifie. |
 | Autorite executable | Workflow CI et contrat `test_ci_supply_chain.py`. |
 | Changement normatif attendu | Aucun. |
@@ -342,13 +342,13 @@ Elle ne peut elargir le perimetre ni affaiblir le contrat.
 ## 12. Definition of Done
 
 - [ ] G1-G7 `PASS` avec preuves consultables.
-- [ ] Diff executable limite aux cinq substitutions.
-- [ ] 8/8 tests supply-chain et suite canonique complete `PASS`.
-- [ ] Pyrefly, Ruff et schemas `PASS`.
+- [x] Diff executable limite aux cinq substitutions.
+- [x] 8/8 tests supply-chain et suite canonique complete `PASS`.
+- [x] Pyrefly, Ruff et schemas `PASS`.
 - [ ] Bug-hunter, adversarial-tester et plan-conformance sans finding ouvert.
-- [ ] Aucune modification hors scope ou normative.
+- [x] Aucune modification hors scope ou normative.
 - [ ] Commit et push, s'ils existent, autorises et traces.
-- [ ] Aucun `FAIL`, `DENIED`, `INCONCLUSIVE` ou timeout aplati en `PASS`.
+- [x] Aucun `FAIL`, `DENIED`, `INCONCLUSIVE` ou timeout aplati en `PASS`.
 
 ## 13. Cloture
 
@@ -363,10 +363,10 @@ Elle ne peut elargir le perimetre ni affaiblir le contrat.
 | Champ | Valeur |
 | --- | --- |
 | Date | [a remplir] |
-| Phases | [a remplir] |
-| Artefacts | [a remplir] |
-| Validation | [a remplir] |
-| Ecart | [a remplir] |
+| Phases | Phases 1 a 3 terminees; Phase 4 arretee avant push conformement a la frontiere d'autorisation. |
+| Artefacts | Deux pins SHA/commentaires synchronises avec les trois chaines du contrat executable. |
+| Validation | G1-G6 `PASS`; preuve distante G7 non executee. |
+| Ecart | Aucun ecart de perimetre; G7 reste `INCONCLUSIVE` tant que le push n'est pas autorise. |
 
 ## 14. Journal d'audits post-hoc
 
@@ -376,3 +376,8 @@ Elle ne peut elargir le perimetre ni affaiblir le contrat.
 | Intake 2 | Gates hostiles, simulation 8/8, test multi-lot `SINGLE`, frontiere de push. | Convergence sans affaiblissement du contrat. |
 | Plan 1 | Le nombre `292` est conserve comme evidence historique du diagnostic, mais la gate exige la suite canonique complete quelle que soit sa taille au moment de l'execution. | Eviter qu'un ajout legitime de test rende le plan artificiellement non conforme ou qu'une suite tronquee de 292 tests paraisse suffisante. |
 | Plan 2 (convergence) | Relecture complete des sections, execution de la preuve externe structuree et verification de la presence des trois gates core-engine. Aucun nouvel angle mort majeur. | Les deux releases prouvent encore objet `commit`, SHA-40, `node24` et input requis; le plan est executable sans decision locale supplementaire avant la frontiere de push. |
+| Execution G1-G3 | `actions/checkout` v7.0.1 -> `3d3c42e5aac5ba805825da76410c181273ba90b1`; `actions/setup-python` v7.0.0 -> `5fda3b95a4ea91299a34e894583c3862153e4b97`; refs de type `commit`, runtime `node24`, inputs requis presents. | API et contenus officiels GitHub revalides le 2026-08-09; le retrait de `pip-install` dans setup-python v7 est sans effet car le workflow ne consomme pas cet input. |
+| Execution G4-G6 | Diff executable exact; tests supply-chain 8/8; Pyrefly global 0 erreur (1 suppression), Ruff `PASS`, suite canonique 292/292, schemas checkpoint/tracking `PASS`. | Toutes les commandes declarees par le plan ont retourne un code 0. |
+| Bug-hunter | Balayage cible du seul fichier modifie sous `Implementation/ebta_engine/`: 0 erreur Pyrefly dans le venv Nautilus; aucune branche conditionnee par la plateforme. | Aucun diagnostic a trier, aucun vrai bug ouvert. |
+| Adversarial-tester | Etat courant sans erreur; sept mutations hostiles rejetees explicitement, dont tag `actions/checkout@v7`, action additionnelle, dependance flottante, permissions/credentials, et retraits des trois gates. | `PASS_ADVERSARIAL`; aucun `FALSE_SUCCESS` ni `SILENT_FALLBACK`. |
+| Plan-conformance (intermediaire) | G1-G6 `IMPLEMENTE`; G7 `MANQUANT` faute de push autorise; aucun extra dans les deux chemins de scope et aucun non-goal viole. | Cloture interdite tant que le run distant n'est pas `completed/success` sans warning Node.js 20. |

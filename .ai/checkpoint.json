@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2914,8 +2914,8 @@
       "id": "PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE",
       "title": "Correction Node.js 20 et contrat supply-chain",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "CONTRACT_ENCODING",
       "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md",
@@ -2923,7 +2923,7 @@
       "opened_at": "2026-08-09",
       "last_moved_at": "2026-08-09",
       "routing_decision": "fix",
-      "routing_reason": "Remplace le workstream GOVERNANCE/common supersede; couvre atomiquement les pins CI et leur contrat executable supply-chain.",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
@@ -2936,7 +2936,7 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2954,7 +2954,8 @@
             "recorded_at": "2026-08-09"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {

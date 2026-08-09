@@ -11,8 +11,8 @@ NOTEBOOK_PATH = ROOT / "Implementation" / "notebooks" / "03_candidate_matrix_bui
 PYPROJECT_PATH = ROOT / "pyproject.toml"
 
 EXPECTED_USES = {
-    "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2",
-    "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0",
+    "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1",
+    "actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0",
 }
 EXPECTED_INSTALLS = {
     "python -m pip install jsonschema==4.23.0",
@@ -72,8 +72,8 @@ class CiSupplyChainTests(unittest.TestCase):
     def test_hostile_workflow_mutations_are_rejected(self):
         mutations = {
             "mutable_tag": self.workflow.replace(
-                "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2",
-                "actions/checkout@v4",
+                "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1",
+                "actions/checkout@v7",
             ),
             "extra_action": self.workflow.replace(
                 "      - name: Set up Python",
