@@ -62,7 +62,7 @@
 | n | ID | Titre | Nature revalidee | Proprietaire cible | Exit criteria autonome | Statut |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | PLAN_EVALUATE_RECHERCHE_CONSOMMATEURS_CONTRACTUELS | Recherche des consommateurs contractuels pendant `/evaluate` | Amelioration d'un skill existant | `.agents/skills/code-architecture-evaluator/SKILL.md` et validateur canonique `skill-creator/scripts/quick_validate.py` | Tout plan visant un workflow, une configuration, un schema ou un manifeste impose la recherche explicite des tests et consommateurs qui figent ses valeurs; la validation choisie par le lot existe et s'execute avec succes. | `DONE` — `cb02758` |
-| 2 | PLAN_AUTORISATION_PUBLICATION_DEUX_PUSHES | Autorisation explicite des deux pushes potentiels | Clarification du contrat conversationnel | `.ai/workflows/common/WORKFLOW.md` | Lorsqu'un gate distant exige un push avant `/close`, la demande distingue le push d'implementation et l'eventuel push du commit de fermeture; aucune autorisation implicite ni modification de `WORKFLOW.json`. | `NON_DEMARRE` |
+| 2 | PLAN_AUTORISATION_PUBLICATION_DEUX_PUSHES | Autorisation explicite des deux pushes potentiels | Clarification du contrat conversationnel | `.ai/workflows/common/WORKFLOW.md` | Lorsqu'un gate distant exige un push avant `/close`, la demande distingue le push d'implementation et l'eventuel push du commit de fermeture; aucune autorisation implicite ni modification de `WORKFLOW.json`. | `DONE` — `1ba3074` |
 | 3 | PLAN_DIAGNOSTIC_ANCRES_PREUVES_WORKFLOW | Diagnostic actionnable des ancres de preuve | Correctif mecanique avec tests | `.ai/tools/workflow_state.ps1` et `.ai/tools/tests/test_workflow_state_machine.ps1` | Une ancre absente reste rejetee; l'erreur expose le slug recherche et les slugs de titres valides; tests positif et negatif `PASS` sans relacher `Test-EvidenceReferenceSubstance`. | `NON_DEMARRE` |
 
 Le `routing_reason` de chaque futur enfant commencera par
@@ -87,11 +87,11 @@ Ce workstream est un coordinateur MULTI_LOT.
 INTERDICTION : ne jamais executer directement les modifications des Lots 1-3
 depuis ce plan.
 
-Suite immediate apres cloture du Lot 1 :
-1. Revalider le Lot 2 contre le `WORKFLOW.md` courant.
+Suite immediate apres cloture du Lot 2 :
+1. Revalider le Lot 3 contre `workflow_state.ps1` et ses tests courants.
 2. Creer uniquement son brouillon humain propre.
 3. Executer son cycle complet et le clore.
-4. Mettre a jour ce parent, puis recommencer pour le lot suivant.
+4. Mettre a jour ce parent, puis auditer et clore le chantier mere.
 ```
 
 ## 1. Role de ce document et non-objectifs
@@ -282,6 +282,11 @@ Critere de sortie :
 - La portee d'autorisation des deux pushes potentiels est non ambigue et le
   lot n'a modifie ni `WORKFLOW.json`, ni les transitions executables.
 
+Statut : `DONE` le 2026-08-09. Baseline `4c74d6a`, attestation `660411d`,
+cloture et clarification `1ba3074`. Workflow state machine, assertions
+contractuelles, adversarial-tester et plan-conformance-audit `PASS`;
+bug-hunter `NON_APPLICABLE` car aucun fichier `Implementation/` n'a ete touche.
+
 ### Phase 3 - Sous-chantier 3 : diagnostic des ancres de preuve
 
 Objectif : revalider puis ameliorer le diagnostic fail-closed dans un
@@ -400,6 +405,7 @@ affaibli pour clore un lot.
 | --- | --- | --- |
 | 2026-08-09 | `Je valide tes propositions`. | Autorise la persistance du chantier mere et confirme les trois orientations. N'autorise ni commit, ni push, ni publication externe. |
 | 2026-08-09 | Lot 1 clos `DONE` par `cb02758`. | Gate contractuelle ajoutee au skill; autorise la reprise de la coordination sur le Lot 2 sans fusionner les lots. |
+| 2026-08-09 | Lot 2 clos `DONE` par `1ba3074`. | Contrat A/B ajoute au workflow conversationnel sans changement executable; autorise l'ouverture du Lot 3. |
 
 ## 11. Risques et blocages connus
 
@@ -436,10 +442,10 @@ affaibli pour clore un lot.
 | Champ | Valeur |
 | --- | --- |
 | Date | 2026-08-09 |
-| Phases executees | Promotion/baseline du parent puis Lot 1 complet |
-| Artefact produit | Gate 2 bis dans `.agents/skills/code-architecture-evaluator/SKILL.md` |
-| Validation | Lot 1 `DONE`; quick_validate, forward-test, adversarial et conformite PASS; checkpoint valide |
-| Ecart par rapport au plan | Premier forward-test sans sortie non compte, puis relance bornee probante; aucun ecart fonctionnel |
+| Phases executees | Promotion/baseline du parent puis Lots 1 et 2 complets |
+| Artefact produit | Gate 2 bis dans le skill `/evaluate`; contrat de publication A/B dans `WORKFLOW.md` |
+| Validation | Lots 1 et 2 `DONE`; validations propres, adversarial et conformite PASS; checkpoint valide |
+| Ecart par rapport au plan | Lot 2 a cree une sous-section generale apres detection que le contrat existant etait local a `/learn-session`; aucune transition executable modifiee |
 
 ## 14. Journal d'audits post-hoc
 
