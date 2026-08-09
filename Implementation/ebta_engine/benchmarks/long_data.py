@@ -404,7 +404,7 @@ def _windows_process_parent_map() -> dict[int, int]:
             ("szExeFile", wintypes.WCHAR * 260),
         ]
 
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)  # pyrefly: ignore  # Windows-only, guarded by os.name == "nt" at call site
     kernel32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
     kernel32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
     kernel32.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(ProcessEntry32W)]
@@ -445,8 +445,8 @@ def _windows_working_set_bytes(pid: int) -> int:
             ("PeakPagefileUsage", ctypes.c_size_t),
         ]
 
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    psapi = ctypes.WinDLL("psapi", use_last_error=True)
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)  # pyrefly: ignore  # Windows-only, guarded by os.name == "nt" at call site
+    psapi = ctypes.WinDLL("psapi", use_last_error=True)  # pyrefly: ignore  # Windows-only, guarded by os.name == "nt" at call site
     kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
     kernel32.OpenProcess.restype = wintypes.HANDLE
     kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
