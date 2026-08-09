@@ -48,3 +48,8 @@ Follow `.ai/workflows/common/WORKFLOW.md`, then the specialized workflow
 selected by `.ai/workflows/README.md`. The common workflow owns the detailed
 evaluation loops, promotion/continuation/closure mechanics, validation,
 commit contract, multi-lot gate, and clarification policy.
+
+Treat `/learn-session` as a retrospective command. Invoke
+`.agents/skills/capture-coding-session-learnings/SKILL.md`; analysis and
+proposal are allowed by the command, while persistence, commit, push, and
+external publication each require their own explicit authorization.

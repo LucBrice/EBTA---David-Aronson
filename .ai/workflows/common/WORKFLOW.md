@@ -34,6 +34,31 @@ plans. `.ai/tools/plan.ps1` est leur backend mecanique : il peut refuser une
 promotion dangereuse, mais ne remplace jamais l'audit, la structuration ou les
 gates portes par l'IA.
 
+### `/learn-session` - retrospective sans transition d'etat
+
+`/learn-session` invoque la procedure canonique
+`.agents/skills/capture-coding-session-learnings/SKILL.md`. La commande ne
+change aucun stage de workstream et ne passe jamais par `plan.ps1` :
+`WORKFLOW.json` reste donc inchangé.
+
+Contrat d'autorisation :
+
+1. La commande seule autorise l'analyse des preuves bornees de la session et la
+   proposition d'apprentissages classes.
+2. Une ecriture n'est permise que si la demande humaine autorise explicitement
+   la persistance et si chaque apprentissage passe le test de promotion du
+   skill vers un proprietaire existant.
+3. Une autorisation de persistance n'autorise pas un commit. Une autorisation de
+   commit n'autorise pas un push ou une publication externe.
+4. Les signaux insuffisants restent `NON_PROMU`; aucun ledger ou journal de
+   sessions n'est cree par defaut.
+5. Les verdicts `FAIL`, `DENIED`, `INCONCLUSIVE`, timeouts et absences de sortie
+   restent inchanges dans la retrospective.
+
+Le skill porte la procedure detaillee, les categories, les destinations et le
+format de sortie. Ce workflow ne les duplique pas et ne devient pas une memoire
+de sessions.
+
 ### `/start` — boucle d'intake
 
 Avant d'auditer et restructurer un brouillon :

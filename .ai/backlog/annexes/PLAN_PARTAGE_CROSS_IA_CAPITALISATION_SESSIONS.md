@@ -5,8 +5,8 @@
 | Champ | Valeur |
 | --- | --- |
 | ID | `PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS` |
-| Statut | `PENDING` apres `/start`, puis `BASELINED` apres convergence post-route |
-| Lifecycle | `TRIAGED`, puis `BASELINED` avant toute implementation |
+| Statut | `ACTIVE` - implementation terminee, validations et audits `PASS`, en attente d'un `/close` explicite |
+| Lifecycle | `ACTIVE` via `/continue` du 2026-08-09 |
 | Track | `annexe` |
 | Classification | `GOVERNANCE` |
 | Workflow | `common` |
@@ -450,6 +450,7 @@ affaibli, ignore ou remplace par une affirmation narrative.
 | 2026-08-09 | Consigner les bonnes et mauvaises pratiques et transformer la commande de capitalisation en skill. | Autorise la conception du skill. |
 | 2026-08-09 | Rendre ce skill utilisable par toutes les IA travaillant sur EBTA. | Fixe la cible cross-IA et la source versionnee dans le depot. |
 | 2026-08-09 | Executer `/start` sur le brouillon nomme. | Autorise audit, restructuration, routage et baseline ; n'autorise ni `/continue`, ni implementation, ni mutation hors depot. |
+| 2026-08-09 | Executer `/continue PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS`. | Autorise l'implementation des quatre phases dans le perimetre ferme du plan ; n'autorise ni `/close`, ni push, ni mutation du skill personnel. |
 
 ## 10. Risques et blocages connus
 
@@ -463,20 +464,22 @@ affaibli, ignore ou remplace par une affirmation narrative.
 
 ## 11. Definition of Done
 
-- [ ] Toutes les phases sont executees et validees individuellement.
-- [ ] Le skill canonique existe sous `.agents/skills/` et passe son validateur.
-- [ ] Claude et une nouvelle session Codex resolvent le meme corps canonique.
-- [ ] Aucun adaptateur ne duplique la procedure.
-- [ ] `/learn-session` est documente dans `AGENTS.md` et le workflow humain,
+- [x] Toutes les phases sont executees et validees individuellement.
+- [x] Le skill canonique existe sous `.agents/skills/` et passe son validateur.
+- [x] Claude et une nouvelle session Codex resolvent le meme corps canonique.
+- [x] Aucun adaptateur ne duplique la procedure.
+- [x] `/learn-session` est documente dans `AGENTS.md` et le workflow humain,
       sans modification de `WORKFLOW.json`.
-- [ ] Analyse, persistance, commit et push restent des autorisations distinctes.
-- [ ] Un cas positif est promu et un cas insuffisant reste `NON_PROMU`.
-- [ ] `FAIL`, `DENIED` et `INCONCLUSIVE` sont preserves.
-- [ ] La copie personnelle Codex conserve le hash enregistre en Phase 0.
-- [ ] Aucun ledger, schema, RAG, agent autonome ou dependance n'est introduit.
-- [ ] `Protocole/`, `Implementation/` et BACKTRADER restent inchanges.
-- [ ] Les validations JSON et `git diff --check` passent.
-- [ ] Aucun placeholder, stub fonctionnel ou faux succes ne subsiste.
+- [x] Analyse, persistance, commit et push restent des autorisations distinctes.
+- [x] Un cas positif est promu et un cas insuffisant reste `NON_PROMU`.
+- [x] `FAIL`, `DENIED` et `INCONCLUSIVE` sont preserves.
+- [x] La copie personnelle Codex conserve le hash enregistre en Phase 0.
+- [x] Aucun ledger, schema, RAG, agent autonome ou dependance n'est introduit.
+- [x] `Protocole/`, `Implementation/` et BACKTRADER restent inchanges.
+- [x] Les validations JSON et `git diff --check` passent.
+- [x] Aucun placeholder, stub fonctionnel ou faux succes ne subsiste dans les
+      artefacts livres ; les champs de cloture restent volontairement reserves
+      a une future commande `/close`.
 
 ## 12. Cloture
 
@@ -490,7 +493,12 @@ affaibli, ignore ou remplace par une affirmation narrative.
 
 | Date | Phases executees | Artefact produit | Validation | Ecart |
 | --- | --- | --- | --- | --- |
-| A remplir | A remplir | A remplir | A remplir | A remplir |
+| 2026-08-09 | Phase 0 - baseline | Etat initial consigne | Skill repo absent, stub absent ; skill personnel charge au demarrage depuis `C:/Users/liant/.codex/skills/...` ; SHA-256 `D55E1EF66507B2EECE7D2595BACEDA18DAC4ACCF2F40238AD8C82F43F85F5A12`. | Aucun. |
+| 2026-08-09 | Phase 1 - skill canonique | `.agents/skills/capture-coding-session-learnings/SKILL.md` | `quick_validate.py` : `Skill is valid!` ; un seul fichier final dans le dossier ; categories et verdicts presents ; aucun placeholder. | `skill-creator` a genere temporairement `agents/openai.yaml`, retire avant livraison car hors perimetre et inutile au catalogue EBTA. |
+| 2026-08-09 | Phase 2 - decouverte | `.claude/skills/capture-coding-session-learnings/SKILL.md` | Stub Claude = 18 lignes et pointeur pur. Session Codex fraiche read-only : `PATH=D:\Livre\Trading\Trading algorithmic\EBTA - David Aronson\.agents\skills\capture-coding-session-learnings\SKILL.md`, `H1=Capitaliser une session EBTA`. | Premier essai avec `gpt-5.6-sol` refuse par le CLI local 0.142.0 ; relance probante avec `gpt-5.4`, sans changement de configuration. |
+| 2026-08-09 | Phase 3 - commande | `AGENTS.md`, `.ai/workflows/common/WORKFLOW.md` | `rg` retrouve `/learn-session` et la source canonique ; `git diff --exit-code -- .ai/workflows/common/WORKFLOW.json` PASS. | Aucun. |
+| 2026-08-09 | Phase 4 - comportement | Forward-test Codex ephemere read-only | `CASE_A=A_REUTILISER\|PROPOSER_MISE_A_JOUR_SANS_ECRITURE\|workflow PowerShell proprietaire`; `CASE_B=NON_PROMU\|AUCUNE_PERSISTANCE`; `CASE_C=DENIED`. | Cas synthetiques bornes, aucune persistance reelle. |
+| 2026-08-09 | Validation transversale | Scope complet | Checkpoint et tracking valides contre schemas ; `workflow_state_machine=PASS` ; `git diff --check` PASS ; `Protocole/`, `Implementation/`, `WORKFLOW.json`, schema checkpoint inchanges ; hash personnel identique ; recherche de secrets PASS ; audits `PASS_ADVERSARIAL` et `PASS_CONFORMANCE`. | Aucun ; le backend reste `ACTIVE` jusqu'a une commande `/close` explicite. |
 
 ## 14. Journal d'audits post-hoc
 
@@ -498,3 +506,45 @@ affaibli, ignore ou remplace par une affirmation narrative.
 | --- | --- | --- | --- | --- |
 | 2026-08-09 | 1 post-route | `A_CORRIGER`, risque modere | Le test de precedence Codex est rendu observable en nouvelle session ; la copie personnelle est sortie du scope executable ; les commandes et chemins autorises sont fermes. | Eviter une suppression hors depot et un faux succes de decouverte fonde sur la seule presence du fichier. |
 | 2026-08-09 | 2 post-route | `CONVERGE`, risque minimal | Le type `SINGLE`, l'arret sur precedence, les preuves par phase et la non-modification de `WORKFLOW.json` sont confirmes apres relecture du plan route. | Aucun nouvel angle mort majeur apres confrontation au checkpoint route, au repo, au workflow common, aux stubs Claude et au skill source. |
+
+## 15. Audit adversarial de livraison
+
+Fenetre : baseline `03b5dc4` jusqu'au worktree actif du 2026-08-09.
+
+| Point teste | Entree hostile ou condition non satisfaite | Echec attendu | Observation | Classification |
+| --- | --- | --- | --- | --- |
+| Test de promotion | Faute de frappe unique, sans recurrence ni procedure reutilisable | Refus de promotion et aucune persistance | `CASE_B=NON_PROMU\|AUCUNE_PERSISTANCE` | `PASS_ADVERSARIAL` |
+| Autorisation d'ecriture | Signal recurrent prouve, mais humain autorisant seulement une proposition | Proposition sans ecriture | `CASE_A=A_REUTILISER\|PROPOSER_MISE_A_JOUR_SANS_ECRITURE\|workflow PowerShell proprietaire` ; session read-only, aucun fichier modifie | `PASS_ADVERSARIAL` |
+| Preservation du verdict | Tests d'ingenierie verts avec preuve independante absente | Maintenir `DENIED` | `CASE_C=DENIED` | `PASS_ADVERSARIAL` |
+| Frontiere Codex | Modele configure refuse par le CLI local avant reponse | Echec visible, aucune preuve de precedence fabriquee | Premier essai `gpt-5.6-sol` en erreur explicite ; seconde session `gpt-5.4` declare le chemin canonique repo et son H1 | `PASS_ADVERSARIAL` |
+
+Verdict : `PASS_ADVERSARIAL`. Aucun `FALSE_SUCCESS`, `SILENT_FALLBACK` ou
+`NORMATIVE_GAP` confirme. Le changement explicite de modele du second essai est
+consigne comme condition de test, pas masque comme comportement par defaut.
+
+## 16. Audit de conformite au plan
+
+Fenetre : baseline pre-activation `03b5dc4` jusqu'au worktree actif du
+2026-08-09. Les changements humains deja presents hors scope sont exclus de
+l'attribution au chantier.
+
+| Exit criterion | Classification | Preuve |
+| --- | --- | --- |
+| Skill canonique versionne et valide | `IMPLEMENTE` | `.agents/skills/capture-coding-session-learnings/SKILL.md` ; `quick_validate.py` retourne `Skill is valid!` ; un seul fichier final dans le dossier. |
+| Claude et Codex resolvent le meme corps | `IMPLEMENTE` | Stub Claude de 18 lignes pointant vers `.agents/skills/.../SKILL.md` ; session Codex fraiche : chemin repo exact et H1 `Capitaliser une session EBTA`. |
+| Aucun adaptateur ne duplique la procedure | `IMPLEMENTE` | Le stub ne contient que frontmatter et pointeur ; la procedure vit uniquement dans le skill canonique. |
+| `/learn-session` documente sans transition machine | `IMPLEMENTE` | `AGENTS.md` et `.ai/workflows/common/WORKFLOW.md` modifies ; `git diff --exit-code -- .ai/workflows/common/WORKFLOW.json` PASS. |
+| Autorisations analyse, persistance, commit et push separees | `IMPLEMENTE` | Section 6 du skill et contrat `/learn-session` du workflow common. |
+| Cas positif promu et cas insuffisant `NON_PROMU` | `IMPLEMENTE` | Forward-test : `CASE_A=A_REUTILISER...SANS_ECRITURE`, `CASE_B=NON_PROMU`. |
+| Verdicts rouges preserves | `IMPLEMENTE` | Regle explicite du skill ; forward-test `CASE_C=DENIED` malgre tests d'ingenierie verts. |
+| Copie personnelle intacte | `IMPLEMENTE` | SHA-256 initial et final identiques : `D55E1EF66507B2EECE7D2595BACEDA18DAC4ACCF2F40238AD8C82F43F85F5A12`. |
+| Aucun ledger, schema, RAG, agent ou dependance ajoute | `IMPLEMENTE` | Inventaire du diff et dossier canonique a un seul fichier ; aucun artefact de ces categories. |
+| Zones interdites intactes | `IMPLEMENTE` | Aucun diff sous `Protocole/`, `Implementation/`, BACKTRADER, `.ai/workflows/common/WORKFLOW.json` ou `.ai/checkpoint.schema.json`. |
+| JSON, hygiene et secrets | `IMPLEMENTE` | Checkpoint et tracking valides contre schemas ; `git diff --check` PASS ; recherche de motifs de secrets sans resultat. |
+
+Extra justifie : `.ai/checkpoint.json` est modifie uniquement par
+`plan.ps1 continue` pour passer le workstream `BASELINED` a `ACTIVE`, comme
+l'exige le workflow common. Aucun `Non-goals` n'est viole.
+
+Verdict : `PASS_CONFORMANCE`. Tous les criteres sont `IMPLEMENTE`; aucun
+critere `MANQUANT` et aucune derive hors scope attribuable au chantier.

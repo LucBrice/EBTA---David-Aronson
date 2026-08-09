@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2819,8 +2819,8 @@
       "id": "PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS",
       "title": "Partage cross-IA de la capitalisation des sessions",
       "track": "annexe",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "GOVERNANCE",
       "source_path": ".ai/backlog/annexes/PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_PARTAGE_CROSS_IA_CAPITALISATION_SESSIONS.md",
@@ -2828,7 +2828,7 @@
       "opened_at": "2026-08-09",
       "last_moved_at": "2026-08-09",
       "routing_decision": "annexe",
-      "routing_reason": "Commande /start explicite : skill cross-IA et commande /learn-session, sans implementation ni mutation hors depot.",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
@@ -2837,7 +2837,7 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2855,7 +2855,8 @@
             "recorded_at": "2026-08-09"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {
