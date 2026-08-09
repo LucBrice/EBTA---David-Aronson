@@ -2297,6 +2297,38 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_COHERENCE_VERDICTS_PERSISTES",
+      "title": "Coherence des verdicts persistes",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "CONTRACT_ENCODING",
+      "source_path": ".ai/backlog/mainline/PLAN_COHERENCE_VERDICTS_PERSISTES.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_COHERENCE_VERDICTS_PERSISTES.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-09",
+      "last_moved_at": "2026-08-09",
+      "routing_decision": "mainline",
+      "routing_reason": "Sous-chantier 5/10 de EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA : derivation et coherence transversale des verdicts persistes.",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/mainline/PLAN_COHERENCE_VERDICTS_PERSISTES.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          }
+        ]
+      }
     }
   ],
   "validation": {
