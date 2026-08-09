@@ -2611,3 +2611,37 @@ informatifs et ne fragilisent pas les empreintes.
 ### Suite
 
 Le durcissement CI et supply chain reste le sous-chantier 7/10 distinct.
+
+## 2026-08-09 - Workflow CI least-privilege et reproductible
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | Aucune ; audit de robustesse du 2026-08-08, lot CI/supply chain |
+| Fichiers impactes | Workflow GitHub Actions, ratchet CI et inventaire de tests |
+| Impact protocole | NONE |
+| Verification | YAML_PASS ; 5 tests CI + inventaire OK ; suite canonique 279 tests OK (1 skipped) ; Pyrefly 0 erreur |
+
+### Contexte
+
+Le workflow utilisait deux tags d'actions mutables, des permissions implicites
+et trois dependances CI directes sans version exacte.
+
+### Decision
+
+Passer les deux actions sur les SHA officiels commentes, declarer
+`contents: read`, desactiver la persistance des credentials checkout et
+versionner exactement jsonschema, numpy et pandas. Un test stdlib compare les
+ensembles complets d'actions et d'installations.
+
+### Impact
+
+Une action ou installation flottante additionnelle, un retour aux tags, une
+permission absente ou une preuve historique retiree fait echouer la suite
+canonique. Aucun setting GitHub externe n'est modifie.
+
+### Suite
+
+L'hygiene `.gitignore` racine reste l'enfant 7B distinct.

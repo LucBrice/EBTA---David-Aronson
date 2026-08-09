@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune. |
 | Autorite executable | `.github/workflows/ebta-runtime-suite.yml`. |
@@ -183,20 +183,20 @@ git diff --check
 
 ## 12. Definition of Done
 
-- [ ] Deux actions sur SHA exact commente.
-- [ ] Permissions read-only et credentials non persistants.
-- [ ] Trois dependances directes exactement versionnees.
-- [ ] Steps de preuve existants conserves.
-- [ ] Ratchet, inventaire et suite complete verts.
-- [ ] Audits sans finding bloquant.
-- [ ] Aucun fichier interdit ou setting externe touche.
+- [x] Deux actions sur SHA exact commente.
+- [x] Permissions read-only et credentials non persistants.
+- [x] Trois dependances directes exactement versionnees.
+- [x] Steps de preuve existants conserves.
+- [x] Ratchet, inventaire et suite complete verts.
+- [x] Audits sans finding bloquant.
+- [x] Aucun fichier interdit ou setting externe touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | YAML valide ; 5 tests CI et inventaire verts ; suite canonique 279 tests `OK` (1 skipped) ; Pyrefly 0 erreur. Cinq mutations hostiles sont rejetees. |
+| Ecart | Aucun ecart de scope. Le run GitHub distant reste non execute, car aucun push n'est autorise ou revendique. |
 | Suite | 7B `PLAN_HYGIENE_GITIGNORE_RACINE`. |
 
 ## 14. Journal d'audits post-route
