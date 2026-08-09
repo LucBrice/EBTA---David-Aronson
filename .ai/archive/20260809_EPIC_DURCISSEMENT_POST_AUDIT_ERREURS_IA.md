@@ -61,7 +61,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `IMPLEMENTE_AUDITE` |
+| Statut | `DONE` |
 | Date de creation | 2026-08-08 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/` reste l'autorite scientifique EBTA ; aucune evolution normative attendue. |

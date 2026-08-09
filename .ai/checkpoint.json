@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2027,10 +2027,10 @@
       "id": "EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA",
       "title": "Durcissement post-audit face aux erreurs silencieuses IA",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md",
+      "source_path": ".ai/archive/20260809_EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260808_AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-08.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-08",
@@ -2040,12 +2040,12 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Dix enfants DONE; 292 tests OK; Ruff/Pyrefly 0; schemas/references valides; ratio gouvernance mesure; settings GitHub et push explicitement differes.",
       "non_goals": [],
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2061,10 +2061,15 @@
             "id": "baseline_commit",
             "reference": "f773d8c",
             "recorded_at": "2026-08-08"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md#16-audit-global-de-conformite",
+            "recorded_at": "2026-08-09"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     },
     {
       "id": "PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE",
