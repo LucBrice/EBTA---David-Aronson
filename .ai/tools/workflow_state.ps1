@@ -194,16 +194,29 @@ function Test-EvidenceReferenceSubstance {
         $content = Get-Content -Raw -LiteralPath $fullPath
         $targetSlug = (ConvertTo-HeadingSlug $anchor)
         $found = $false
+        $validSlugs = New-Object System.Collections.Generic.List[string]
         foreach ($line in ($content -split "`r?`n")) {
             if ($line -match "^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$") {
-                if ((ConvertTo-HeadingSlug $Matches[1]) -eq $targetSlug) {
+                $headingSlug = (ConvertTo-HeadingSlug $Matches[1])
+                if (-not [string]::IsNullOrWhiteSpace($headingSlug)) {
+                    $validSlugs.Add($headingSlug)
+                }
+                if ($headingSlug -eq $targetSlug) {
                     $found = $true
                     break
                 }
             }
         }
         if (-not $found) {
-            throw "Workflow evidence '$Id' reference anchor '#$anchor' was not found among Markdown headings of '$relativePath'."
+            $sortedValidSlugs = @($validSlugs | Sort-Object -Unique)
+            $validSlugSummary = if ($sortedValidSlugs.Count -gt 0) {
+                $sortedValidSlugs -join ", "
+            } else {
+                "<none>"
+            }
+            throw ("Workflow evidence '$Id' reference anchor '#$anchor' " +
+                "(requested slug: '$targetSlug') was not found among Markdown headings of " +
+                "'$relativePath'. Valid heading slugs: $validSlugSummary.")
         }
     }
 }

@@ -23,6 +23,20 @@ function Assert-Throws {
     }
 }
 
+function Assert-ThrowsMessage {
+    param([scriptblock]$Action, [string]$ExpectedMessage, [string]$Message)
+    $actualMessage = $null
+    try {
+        & $Action
+    } catch {
+        $actualMessage = $_.Exception.Message
+    }
+    if ($null -eq $actualMessage) {
+        throw "$Message Expected a terminating error."
+    }
+    Assert-Equal $actualMessage $ExpectedMessage $Message
+}
+
 function Invoke-Git {
     param([string[]]$Arguments)
     & git @Arguments
@@ -69,10 +83,11 @@ Assert-Throws {
 Assert-Throws {
     Add-WorkflowEvidence -State $substanceState -Id "plan_conformance" -Reference "unit:fake"
 } "plan_conformance was accepted without -RepoRoot (fail-closed expected)."
-Assert-Throws {
+Assert-ThrowsMessage {
     Add-WorkflowEvidence -State $substanceState -Id "plan_conformance" `
-        -Reference ".ai/tools/tests/test_workflow_state_machine.ps1#section-inexistante" -RepoRoot $repoRoot
-} "plan_conformance accepted a reference with a non-existent Markdown anchor."
+        -Reference ".ai/workflows/common/WORKFLOW.json#section-inexistante" -RepoRoot $repoRoot
+} "Workflow evidence 'plan_conformance' reference anchor '#section-inexistante' (requested slug: 'section-inexistante') was not found among Markdown headings of '.ai/workflows/common/WORKFLOW.json'. Valid heading slugs: <none>." `
+    "plan_conformance non-existent anchor diagnostic changed or did not fail closed."
 Assert-Throws {
     Add-WorkflowEvidence -State $substanceState -Id "plan_conformance" `
         -Reference ".ai/tools/tests/test_workflow_state_machine.ps1#" -RepoRoot $repoRoot
@@ -80,6 +95,33 @@ Assert-Throws {
 # A substantiated id with a real, existing file reference must still be accepted.
 Add-WorkflowEvidence -State $substanceState -Id "bug_hunter" -Reference ".ai/tools/tests/test_workflow_state_machine.ps1" -RepoRoot $repoRoot
 Assert-Equal (@($substanceState.evidence | Where-Object { $_.id -eq "bug_hunter" }).Count) 1 "valid substantiated evidence was not recorded."
+# A real Markdown anchor must remain accepted after enriching the negative
+# diagnostic. This also proves that valid heading discovery does not turn into
+# an unconditional rejection path.
+Add-WorkflowEvidence -State $substanceState -Id "adversarial_tester" -Reference ".ai/README.md#roles" -RepoRoot $repoRoot
+Assert-Equal (@($substanceState.evidence | Where-Object { $_.id -eq "adversarial_tester" }).Count) 1 "valid anchored evidence was not recorded."
+# A Markdown file with headings must expose normalized, sorted choices while
+# keeping the requested missing anchor rejected.
+$diagnosticState = New-WorkflowState -Contract $coreEngine
+$diagnosticMessage = $null
+try {
+    Add-WorkflowEvidence -State $diagnosticState -Id "plan_conformance" `
+        -Reference ".ai/README.md#section-inexistante" -RepoRoot $repoRoot
+} catch {
+    $diagnosticMessage = $_.Exception.Message
+}
+if ($null -eq $diagnosticMessage) {
+    throw "missing Markdown anchor was accepted instead of producing suggestions."
+}
+if ($diagnosticMessage -notmatch [regex]::Escape("requested slug: 'section-inexistante'")) {
+    throw "missing-anchor diagnostic omitted the requested normalized slug."
+}
+if ($diagnosticMessage -notmatch [regex]::Escape("Valid heading slugs: ")) {
+    throw "missing-anchor diagnostic omitted valid heading slugs."
+}
+if ($diagnosticMessage -notmatch "Valid heading slugs: [^.]*cockpit-ia-ebta[^.]*roles") {
+    throw "missing-anchor diagnostic did not expose sorted known heading slugs."
+}
 # Non-substantiated ids remain unaffected by the new check (no RepoRoot required).
 Add-WorkflowEvidence -State $substanceState -Id "intake_audit" -Reference "unit:intake"
 

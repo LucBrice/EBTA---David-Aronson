@@ -188,19 +188,19 @@ git diff --check -- .ai
 
 ## 12. Definition of Done
 
-- [ ] Scope, track, type et classification coherents.
-- [ ] Exit criteria 1-6 prouves.
-- [ ] Harnais workflow complet PASS.
-- [ ] Fichiers interdits sans diff.
-- [ ] Bug-hunter classe; adversarial et conformite sans finding.
-- [ ] Checkpoint valide et aucun push.
+- [x] Scope, track, type et classification coherents.
+- [x] Exit criteria 1-6 prouves.
+- [x] Harnais workflow complet PASS.
+- [x] Fichiers interdits sans diff.
+- [x] Bug-hunter classe; adversarial et conformite sans finding.
+- [x] Checkpoint valide et aucun push.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir lors de `/close` |
-| Ecarts | A remplir lors de `/close` |
+| Resultat final | `DONE` — diagnostic fail-closed actionnable et regressions PASS |
+| Ecarts | Premier test terminal `FAIL` car les commentaires `#` du fichier PowerShell sont des titres pour le parseur; fixture sans titre corrigee vers `WORKFLOW.json`, puis harnais complet PASS. |
 | Suites | Retour au parent pour audit global et cloture |
 
 ## 14. Journal d'audits post-hoc
@@ -218,3 +218,29 @@ git diff --check -- .ai
 | --- | --- | --- | --- |
 | `/evaluate` 1 | Le plan doit figer une sentinelle sans titre et eviter de changer le helper existant. | `Assert-ThrowsMessage` separe et sentinelle explicite ajoutes. | Correction appliquee. |
 | `/evaluate` 2 | Contre-audit du plan corrige contre producteurs, appelants, JSON et harnais. Aucun changement de contrat machine ni angle mort majeur. | Aucune. | `CONVERGE` en 2 passes. |
+
+### Preuves d'implementation et d'audits
+
+| Preuve | Resultat | Detail |
+| --- | --- | --- |
+| Diff fonctionnel | `PASS` | `workflow_state.ps1` collecte, trie et deduplique les slugs; le harnais controle erreur et positif ancre. |
+| Premier harnais | `FAIL_TEST` | La fixture `.ps1` contenait des commentaires commencant par `#`, reconnus comme titres; aucun PASS declare. |
+| Harnais corrige | `PASS` | `.ai/tools/tests/test_workflow_state_machine.ps1` -> `workflow_state_machine=PASS`. |
+| Contrats interdits | `PASS` | Aucun diff JSON, schema ou `plan.ps1`. |
+| Checkpoint | `PASS` | Validation JSON Schema apres activation. |
+| Bug-hunter | `NON_APPLICABLE` | Aucun fichier `Implementation/` ni code Python touche; classification explicite, pas de faux PASS. |
+| Adversarial-tester | `PASS_ADVERSARIAL` | Ancre absente rejetee; `<none>` sans titre; slugs tries/dedupliques; aucun contenu de preuve; positif ancre accepte; aucun fallback. |
+
+### Audit de conformite pre-close
+
+| # | Exit criterion | Classification | Preuve |
+| --- | --- | --- | --- |
+| 1 | Ancre valide acceptee | `IMPLEMENTE` | Cas `.ai/README.md#roles` enregistre dans le harnais. |
+| 2 | Ancre absente rejetee | `IMPLEMENTE` | Deux cas negatifs exigent une exception terminante. |
+| 3 | Slug demande et slugs valides uniquement | `IMPLEMENTE` | Message borne aux metadonnees, chemin relatif et slugs; assertions dediees. |
+| 4 | Tri, deduplication et sans-titre | `IMPLEMENTE` | `Sort-Object -Unique` et sentinelle exacte `<none>`. |
+| 5 | Harnais complet PASS | `IMPLEMENTE` | `workflow_state_machine=PASS` apres correction de fixture. |
+| 6 | Aucun contrat ou fichier hors perimetre | `IMPLEMENTE` | Diff fonctionnel limite aux deux fichiers autorises; plan/checkpoint sont traces gouvernees. |
+
+Verdict `plan-conformance-audit` : `PASS`, 6/6 criteres implementes, aucun
+Non-goal viole et aucun finding ouvert.
