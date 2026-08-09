@@ -11,7 +11,7 @@
 | --- | --- |
 | ID | `EPIC_AMELIORATIONS_POST_RETROSPECTIVE_CI_NODE20` |
 | Track | `fix` |
-| Lifecycle | `TRIAGED` |
+| Lifecycle | `ACTIVE` — trois lots `DONE`, audit global pre-close en cours |
 | Portee | `meta` — gouvernance IA et outillage du workflow, sans changement scientifique EBTA |
 | Classification | `GOVERNANCE` |
 | Type de chantier | `MULTI_LOT` — chantier mere de coordination, sans implementation directe |
@@ -22,7 +22,7 @@
 | Synchronisation Git verifiee | `HEAD` est en avance de 4 commits et en retard de 0 sur `origin/main`; aucun pull n'est requis avant le routage |
 | Decision normative requise | Non : aucun lot ne touche `Protocole/`, une SOP, un seuil, un gate ou un verdict EBTA |
 | Resultat du test multi-lot | `MULTI_LOT` : pour chacun des Lots 1, 2 et 3, l'Exit criteria est autonome, l'ordre peut changer sans modifier le sens, et un blocage local n'empeche pas les deux autres d'avancer |
-| Autorisation actuelle | La decision humaine `Je valide tes propositions` autorise la persistance et le `/start`; elle n'autorise ni commit, ni push, ni publication externe |
+| Autorisation actuelle | `/continue` autorise l'execution et les commits locaux gouvernes; aucun push ni publication externe |
 
 ## Audit IA de promotion
 
@@ -74,7 +74,7 @@ schema du checkpoint.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` — route mais non baseline, non actif et non executable |
+| Statut | `ACTIVE` — trois lots `DONE`; audit global convergent avant `/close` |
 | Date de creation | 2026-08-09 |
 | Autorite normative | `Protocole/` reste inchange et hors perimetre |
 | Autorite procedurale | `.ai/workflows/common/WORKFLOW.md` et `.agents/skills/epic-orchestrator/SKILL.md` |
@@ -187,7 +187,8 @@ tests et des clotures sans benefice technique.
 
 - Les trois propositions sont acceptees pour persistance.
 - L'ordre propose est 1, 2, 3; il est organisationnel, pas technique.
-- Aucun commit ou push n'est inclus dans l'autorisation actuelle.
+- Les commits locaux gouvernes sont couverts par `/continue`; aucun push ou
+  publication externe n'est autorise.
 
 ### Structure cible
 
@@ -409,6 +410,7 @@ affaibli pour clore un lot.
 | Date | Decision | Portee |
 | --- | --- | --- |
 | 2026-08-09 | `Je valide tes propositions`. | Autorise la persistance du chantier mere et confirme les trois orientations. N'autorise ni commit, ni push, ni publication externe. |
+| 2026-08-09 | `/continue`. | Autorise l'execution gouvernee des lots et leurs commits locaux; aucun push. |
 | 2026-08-09 | Lot 1 clos `DONE` par `cb02758`. | Gate contractuelle ajoutee au skill; autorise la reprise de la coordination sur le Lot 2 sans fusionner les lots. |
 | 2026-08-09 | Lot 2 clos `DONE` par `1ba3074`. | Contrat A/B ajoute au workflow conversationnel sans changement executable; autorise l'ouverture du Lot 3. |
 | 2026-08-09 | Lot 3 clos `DONE` par `7a6de9b`. | Diagnostic fail-closed et regressions livres; autorise l'audit global puis la cloture du parent. |
@@ -424,24 +426,24 @@ affaibli pour clore un lot.
 
 ## 12. Definition of Done
 
-- [ ] Portee `meta`, track `fix`, classification `GOVERNANCE` et workflow
+- [x] Portee `meta`, track `fix`, classification `GOVERNANCE` et workflow
       `common` restent coherents avec le sujet reel.
-- [ ] Lots 1, 2 et 3 `DONE` ou explicitement differes par decision humaine.
-- [ ] Chaque lot possede son propre cycle complet et son propre commit.
-- [ ] Audit final bug-hunter applicable sur l'union des fichiers touches par
+- [x] Lots 1, 2 et 3 `DONE` ou explicitement differes par decision humaine.
+- [x] Chaque lot possede son propre cycle complet et son propre commit.
+- [x] Audit final bug-hunter applicable sur l'union des fichiers touches par
       les lots, depuis la baseline du parent, sans finding ouvert.
-- [ ] Audit de conformite du parent contre ses Exit criteria sans manque.
-- [ ] Aucun fichier humain parallele absorbe ou modifie.
-- [ ] Checkpoint valide apres chaque transition.
-- [ ] Aucun commit ou push realise sans autorisation correspondante.
+- [x] Audit de conformite du parent contre ses Exit criteria sans manque.
+- [x] Aucun fichier humain parallele absorbe ou modifie.
+- [x] Checkpoint valide apres chaque transition.
+- [x] Aucun commit ou push realise sans autorisation correspondante.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A renseigner lors de `/close` |
-| Ecarts par rapport au plan initial | A renseigner lors de `/close` |
-| Suites a prevoir (hors perimetre de ce plan) | A renseigner lors de `/close`; aucune cascade automatique |
+| Resultat final | `DONE` — trois ameliorations autonomes livrees, auditees et cloturees |
+| Ecarts par rapport au plan initial | Validateur canonique du skill retrouve; proprietaire general du contrat A/B corrige; fixture sans-titre du Lot 3 corrigee apres un `FAIL_TEST`. Aucun relachement ni extension scientifique. |
+| Suites a prevoir (hors perimetre de ce plan) | Aucune suite obligatoire; publication distante reste non autorisee |
 
 ### Resultat d'execution (a dupliquer a chaque session d'execution significative)
 
@@ -454,6 +456,34 @@ affaibli pour clore un lot.
 | Ecart par rapport au plan | Lot 2 a corrige le proprietaire documentaire; Lot 3 a remplace une fixture sans-titre invalide apres un premier `FAIL_TEST`; aucun relachement fonctionnel |
 
 ## 14. Journal d'audits post-hoc
+
+### Audit global pre-close
+
+Union auditee : `git diff 5e29a89..HEAD`, soit les trois lots, leurs plans,
+leurs checkpoints et les mises a jour de coordination du parent.
+
+| Controle | Resultat | Preuve |
+| --- | --- | --- |
+| Lots terminaux | `PASS` | Lots 1, 2 et 3 `DONE` dans le checkpoint avec clotures `cb02758`, `1ba3074`, `7a6de9b`. |
+| Cycles et commits separes | `PASS` | Chaque lot a ses commits de plan, attestation, implementation/cloture et mise a jour parent; 13 commits depuis `5e29a89`. |
+| Skill Lot 1 | `PASS` | Validateur canonique `quick_validate.py` -> `Skill is valid!`; forward-test archive PASS. |
+| Workflow Lots 2-3 | `PASS` | Harnais complet -> `workflow_state_machine=PASS`; JSON, schemas et backend inchanges par les lots. |
+| Bug-hunter global | `NON_APPLICABLE` | Union sans fichier `Implementation/` ni code Python executable; classification explicite, aucun faux PASS. |
+| Adversarial global | `PASS_ADVERSARIAL` | Scan incomplet bloque `/evaluate`; A n'autorise pas B; ancre invalide reste rejetee; aucun fallback positif ou verdict fabrique. |
+| Hygiene et checkpoint | `PASS` | JSON Schema PASS, `git diff --check 5e29a89..HEAD` PASS. |
+| Fichiers humains paralleles | `PASS` | Seuls les trois intakes enfants gouvernes sont ajoutes/archives; suppressions et brouillons preexistants hors perimetre restent non indexes. |
+
+### Audit de conformite parent pre-close
+
+| # | Exit criterion parent | Classification | Preuve |
+| --- | --- | --- | --- |
+| 1 | Trois lots `DONE` ou differes humainement | `IMPLEMENTE` | Trois workstreams `DONE`; aucun report. |
+| 2 | Workstreams, audits, baselines, implementations et clotures distincts | `IMPLEMENTE` | Historique Git et checkpoint separes par lot. |
+| 3 | Audit final de l'union depuis la baseline parent | `IMPLEMENTE` | Union `5e29a89..HEAD` verifiee par validations skill, workflow, adversarial, schema et hygiene. |
+| 4 | Aucun brouillon humain parallele absorbe ou modifie | `IMPLEMENTE` | Index et commits bornes; changements humains preexistants preserves hors index. |
+
+Verdict `plan-conformance-audit` parent : `PASS`, 4/4 criteres implementes,
+aucun Non-goal viole et aucun finding ouvert.
 
 ### Journal de convergence de l'intake
 
