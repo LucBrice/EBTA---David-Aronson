@@ -40,9 +40,9 @@ coherence persistee et garde AST restent independants.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `ACTIVE` — implementation et gates de fermeture termines |
 | Date de creation | 2026-08-09 |
-| Date d'activation | - |
+| Date d'activation | 2026-08-09 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` pour G0-G14 et `REGISTRE DES DECISIONS NORMATIVES EBTA.md` pour les taxonomies. |
 | Autorite executable | `Implementation/ebta_engine/validators/gate_validator.py`. |
 | Changement normatif attendu | Aucun ; classification Guardian `CONTRACT_ENCODING`. |
@@ -357,31 +357,31 @@ un fallback truthy, transformer un statut ou masquer un resultat non-PASS.
 
 ## 12. Definition of Done
 
-- [ ] Toutes les phases et commandes de section 9 passent.
-- [ ] Tous les Exit criteria du Triage sont prouves.
-- [ ] Aucun fichier hors perimetre n'est modifie.
-- [ ] Suite complete et inventaire restent verts.
-- [ ] Historique runtime mis a jour ; Protocole intact.
-- [ ] `bug-hunter`, `adversarial-tester` et `plan-conformance-audit` sans finding bloquant.
-- [ ] Aucun stub, fallback truthy ou pseudo-PASS ne subsiste dans le scope.
+- [x] Toutes les phases et commandes de section 9 passent.
+- [x] Tous les Exit criteria du Triage sont prouves.
+- [x] Aucun fichier hors perimetre n'est modifie par le chantier.
+- [x] Suite complete et inventaire restent verts.
+- [x] Historique runtime mis a jour ; Protocole intact.
+- [x] `bug-hunter`, `adversarial-tester` et `plan-conformance-audit` sans finding bloquant.
+- [x] Aucun stub, fallback truthy ou pseudo-PASS ne subsiste dans le scope.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A renseigner apres les gates de fermeture. |
-| Ecarts par rapport au plan initial | A renseigner. |
+| Resultat final | Pret pour `READY_TO_CLOSE` : contrat type fail-closed implemente, fixture normalisee, 253 tests `OK`, trois audits sans finding bloquant. |
+| Ecarts par rapport au plan initial | Aucun ecart fonctionnel. Le nombre de tests canonique passe de 246 a 253 par ajout de sept regressions. |
 | Suites a prevoir | 3B approbation live, 3C coherence persistee, 3D garde AST ; hors scope. |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
-| Date | - |
-| Phases executees | - |
-| Artefact produit | - |
-| Validation | - |
-| Ecart par rapport au plan | - |
+| Date | 2026-08-09 |
+| Phases executees | 1 contrat type ; 2 fixture et regressions ; 3 validation et trace runtime. |
+| Artefact produit | `GateRequirement` avec kinds `identifier`, `verdict_pass`, `boolean_true`; fixture et matrice negative alignees. |
+| Validation | `test_gates.py` 19/19 ; `test_package_validator.py` 10/10 ; inventaire 1/1 ; suite 253/253 ; Pyrefly 0 ; adversarial 7/7 + controle positif ; schema checkpoint et diff a revalider a la fermeture. |
+| Ecart par rapport au plan | Aucun. Les brouillons humains preexistants restent hors index et intacts par ce chantier. |
 
 ## 14. Journal d'audits post-route
 

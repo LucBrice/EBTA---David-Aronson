@@ -6,6 +6,16 @@ Source: Protocole/PAQUET D'EXECUTION EBTA.md section 2 and section 4.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
+
+
+RequirementKind = Literal["identifier", "verdict_pass", "boolean_true"]
+
+
+@dataclass(frozen=True)
+class GateRequirement:
+    name: str
+    kind: RequirementKind
 
 
 @dataclass(frozen=True)
@@ -16,41 +26,67 @@ class GateResult:
     present: list[str]
 
 
-GATE_REQUIREMENTS = {
-    "G0": ["config_id", "project_id", "research_family_id", "hypothesis_id", "process_version_id", "template_hash"],
-    "G1": ["data_snapshots", "availability_timestamps", "anti_leakage_report"],
-    "G2": ["registry_initialized", "candidate_catalog", "local_matrix", "independent_registry_review"],
-    "G3": ["selection_rule", "train_only_calibration_log", "selected_candidate_id"],
-    "G4": ["wrc_report", "wrc_status", "wrc_family_matrix"],
-    "G5": ["robustness_report", "robustness_matrix", "pre_oos_robustness_verdict"],
-    "G6": ["execution_report", "cost_model", "capacity_grid", "nav_reconciliation"],
-    "G7": ["pre_oos_manifest", "frozen_config", "test_reports", "independent_pre_oos_approval"],
-    "G8": ["oos_access_log", "opening_authorization", "single_oos_execution_log"],
-    "G9": ["oos_report", "concatenated_oos_series", "oos_bootstrap_report", "power_report"],
-    "G10": ["economic_report", "statistical_gate_report", "economic_gate_report"],
-    "G11": ["validation_ready_manifest", "reproduction_report", "incubation_approval"],
-    "G12": ["incubation_report", "paper_trading_log", "monitoring_plan"],
-    "G13": ["deployment_certified_manifest", "live_version_id", "kill_switch", "live_approval"],
-    "G14": ["lifecycle_archive", "incident_log", "retention_policy"],
-}
+def _requirements(kind: RequirementKind, *names: str) -> tuple[GateRequirement, ...]:
+    return tuple(GateRequirement(name, kind) for name in names)
 
-VERDICT_VALUES = {"PASS", "FAIL", "INCONCLUSIVE"}
+
+GATE_REQUIREMENTS: dict[str, tuple[GateRequirement, ...]] = {
+    "G0": _requirements(
+        "identifier", "config_id", "project_id", "research_family_id", "hypothesis_id", "process_version_id", "template_hash"
+    ),
+    "G1": _requirements("verdict_pass", "data_snapshots", "availability_timestamps", "anti_leakage_report"),
+    "G2": _requirements(
+        "verdict_pass", "registry_initialized", "candidate_catalog", "local_matrix", "independent_registry_review"
+    ),
+    "G3": _requirements("verdict_pass", "selection_rule", "train_only_calibration_log")
+    + _requirements("identifier", "selected_candidate_id"),
+    "G4": _requirements("verdict_pass", "wrc_report", "wrc_status", "wrc_family_matrix"),
+    "G5": _requirements("verdict_pass", "robustness_report", "robustness_matrix", "pre_oos_robustness_verdict"),
+    "G6": _requirements("verdict_pass", "execution_report", "cost_model", "capacity_grid", "nav_reconciliation"),
+    "G7": _requirements(
+        "verdict_pass", "pre_oos_manifest", "frozen_config", "test_reports", "independent_pre_oos_approval"
+    ),
+    "G8": _requirements("verdict_pass", "oos_access_log", "opening_authorization", "single_oos_execution_log"),
+    "G9": _requirements("verdict_pass", "oos_report", "concatenated_oos_series", "oos_bootstrap_report", "power_report"),
+    "G10": _requirements("verdict_pass", "economic_report", "statistical_gate_report", "economic_gate_report"),
+    "G11": _requirements("verdict_pass", "validation_ready_manifest", "reproduction_report", "incubation_approval"),
+    "G12": _requirements("verdict_pass", "incubation_report", "paper_trading_log", "monitoring_plan"),
+    "G13": (
+        *_requirements("verdict_pass", "deployment_certified_manifest"),
+        *_requirements("identifier", "live_version_id"),
+        *_requirements("verdict_pass", "kill_switch"),
+        *_requirements("boolean_true", "live_approval"),
+    ),
+    "G14": _requirements("verdict_pass", "lifecycle_archive", "incident_log", "retention_policy"),
+}
 
 
 def validate_gates(evidence: dict) -> list[GateResult]:
     results: list[GateResult] = []
     for gate_id, requirements in GATE_REQUIREMENTS.items():
-        missing = [name for name in requirements if not _requirement_satisfied(evidence.get(name))]
-        present = [name for name in requirements if _requirement_satisfied(evidence.get(name))]
+        missing = [
+            requirement.name
+            for requirement in requirements
+            if not _requirement_satisfied(requirement, evidence.get(requirement.name))
+        ]
+        present = [
+            requirement.name
+            for requirement in requirements
+            if _requirement_satisfied(requirement, evidence.get(requirement.name))
+        ]
         status = "PASS" if not missing else "INCONCLUSIVE"
         results.append(GateResult(gate_id, status, missing, present))
     return results
 
 
-def _requirement_satisfied(value: object) -> bool:
-    if value in VERDICT_VALUES:
-        return value == "PASS"
-    return bool(value)
+def _requirement_satisfied(requirement: GateRequirement, value: object) -> bool:
+    if requirement.kind == "identifier":
+        return isinstance(value, str) and bool(value.strip())
+    if requirement.kind == "verdict_pass":
+        return isinstance(value, str) and value == "PASS"
+    if requirement.kind == "boolean_true":
+        return value is True
+    raise ValueError(f"Unknown gate requirement kind: {requirement.kind!r}")
 
 
 def gate_report(evidence: dict) -> dict:

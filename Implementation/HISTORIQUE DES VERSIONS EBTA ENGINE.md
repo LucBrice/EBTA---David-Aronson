@@ -2465,3 +2465,43 @@ meme maniere et son verdict reste visible independamment de l'agent.
 
 Aucune. Le commit cassant est revert dans la meme session, immediatement
 apres observation du run CI en echec.
+
+## 2026-08-09 - Contrat type et fail-closed des exigences G0-G14
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | `Protocole/PAQUET D'EXECUTION EBTA.md` ; `Protocole/REGISTRE DES DECISIONS NORMATIVES EBTA.md` ; audit de robustesse du 2026-08-09 finding A1 |
+| Fichiers impactes | `Implementation/ebta_engine/validators/gate_validator.py`, `Implementation/ebta_engine/tests/test_gates.py`, `Implementation/ebta_engine/tests/test_inventory.txt`, `Implementation/ebta_engine/fixtures/valid_minimal/reports/gates.json` |
+| Impact protocole | NONE |
+| Verification | Tests gates, package valide minimal, inventaire, suite runtime complete et audits de fermeture du workstream |
+
+### Contexte
+
+Le validateur reconnaissait uniquement trois chaines de verdict puis appliquait
+`bool(value)` a toute autre valeur. Des statuts negatifs ou inconnus tels que
+`NOT_VALIDATED`, `REJECTED_ECONOMIC`, `DENIED` ou `UNKNOWN` pouvaient donc etre
+comptes comme preuves presentes et produire un gate `PASS`.
+
+### Decision
+
+Associer chaque exigence a une nature fermee : `identifier`, `verdict_pass` ou
+`boolean_true`. Un verdict exige desormais la chaine exacte `PASS`, un
+identifiant une chaine non vide apres trim, et `live_approval` le singleton
+`True`. Tout kind inconnu leve une erreur au lieu d'utiliser un repli.
+
+### Impact
+
+La forme publique de `GateResult` et de `gate_report()` ainsi que l'ordre
+G0-G14 restent inchanges. La fixture minimale remplace ses pseudo-verdicts
+booleens par `PASS`. Aucun statut, schema ou principe scientifique n'est
+modifie ; les valeurs negatives et inconnues sont simplement refusees comme
+le contrat l'exige.
+
+### Suite
+
+Les corrections distinctes de l'approbation live derivee, de la coherence des
+verdicts persistes et de la garde AST restent portees par les enfants suivants
+de `EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA`.
