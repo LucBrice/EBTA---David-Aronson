@@ -169,6 +169,7 @@ Autorise :
 
 ```text
 .agents/skills/code-architecture-evaluator/SKILL.md  MODIFIER
+.ai/backlog/fixes/PLAN_EVALUATE_RECHERCHE_CONSOMMATEURS_CONTRACTUELS.md  MODIFIER - preuves et cloture du plan
 ```
 
 Interdits :
@@ -321,33 +322,33 @@ absence de sortie ne devient une preuve positive.
 
 ## 12. Definition of Done
 
-- [ ] Portee `meta`, track `fix`, type `SINGLE` coherents.
-- [ ] Phases 1 et 2 validees avec sorties reelles.
-- [ ] Exit criteria du Triage entierement prouve.
-- [ ] Aucun fichier hors perimetre modifie.
-- [ ] `quick_validate.py` PASS et fichier sous 500 lignes.
-- [ ] Forward-test probant et consigne.
-- [ ] Audits requis sans finding ouvert.
-- [ ] Checkpoint valide apres transitions.
-- [ ] Aucun push.
+- [x] Portee `meta`, track `fix`, type `SINGLE` coherents.
+- [x] Phases 1 et 2 validees avec sorties reelles.
+- [x] Exit criteria du Triage entierement prouve.
+- [x] Aucun fichier hors perimetre modifie.
+- [x] `quick_validate.py` PASS et fichier sous 500 lignes.
+- [x] Forward-test probant et consigne.
+- [x] Audits requis sans finding ouvert.
+- [x] Checkpoint valide apres transitions.
+- [x] Aucun push.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir lors de `/close` |
-| Ecarts par rapport au plan initial | A remplir lors de `/close` |
-| Suites a prevoir | Retour au parent puis revalidation du Lot 2; aucune cascade non gouvernee |
+| Resultat final | `DONE` — Gate 2 bis livree; validations structurelle et comportementale PASS; audits sans finding ouvert |
+| Ecarts par rapport au plan initial | Premier forward-test sans sortie interrompu et non compte; relance bornee probante. Plan ajoute explicitement a son propre perimetre pour persister preuves et cloture. |
+| Suites a prevoir | Mettre a jour le parent, puis revalider et ouvrir le Lot 2 dans son propre cycle; aucune fusion de lots |
 
 ### Resultat d'execution
 
 | Champ | Valeur |
 | --- | --- |
 | Date | 2026-08-09 |
-| Phases executees | Aucune avant baseline |
-| Artefact produit | Plan uniquement |
-| Validation | Intake converge 2 passes; quick_validate initial PASS |
-| Ecart | Aucun |
+| Phases executees | Phase 1 et Phase 2 |
+| Artefact produit | Gate 2 bis dans `.agents/skills/code-architecture-evaluator/SKILL.md` |
+| Validation | `quick_validate.py`: `Skill is valid!`; 461 lignes; assertions textuelles PASS; diff check PASS; forward-test probant |
+| Ecart | Premier forward-test sans sortie, explicitement non-PASS; relance bornee reussie |
 
 ## 14. Journal d'audits post-hoc
 
@@ -364,3 +365,31 @@ absence de sortie ne devient une preuve positive.
 | --- | --- | --- | --- |
 | `/evaluate` 1 | Defaut de sequence : la decision d'architecture placait la gate entre ingestion du repo et extraction du plan, donc avant de connaitre precisement les contrats proposes. La Phase 2 etait classee `TEST_FIXTURE` alors qu'elle ne cree aucune fixture persistante. | Gate repositionnee apres extraction du plan et avant audit critique; Phase 2 requalifiee `GOVERNANCE`. Les autres angles morts (migration, API, tests, deploiement, transition, monitoring, dependances, documentation) ont ete controles; seuls contrats/tests/dependances sont applicables et deja couverts. | Corrections appliquees; seconde passe requise. |
 | `/evaluate` 2 | Contre-audit complet du plan corrige : la sequence ingestion -> extraction du plan -> scan contractuel -> audit critique est coherente; le changement reste mono-fichier, `SINGLE`, sans migration, deploiement ni contrat runtime. Les commandes de structure et la preuve comportementale sont complementaires et l'arret sur extension de scope est explicite. | Aucune correction supplementaire. | `CONVERGE` en 2 passes post-route; aucun angle mort majeur restant. |
+
+### Preuves d'implementation et de validation
+
+| Preuve | Resultat | Detail |
+| --- | --- | --- |
+| Diff cible | `PASS` | Une seule section `Gate 2 bis` ajoutee apres extraction du plan et avant audit critique; aucun frontmatter ni fichier auxiliaire modifie. |
+| Validation structurelle | `PASS` | `python C:/Users/liant/.codex/skills/.system/skill-creator/scripts/quick_validate.py .agents/skills/code-architecture-evaluator` -> `Skill is valid!`. |
+| Taille | `PASS` | `(Get-Content .../SKILL.md).Count` -> `461`, inferieur a 500. |
+| Assertions textuelles | `PASS` | Declencheurs, producteurs, lecteurs, appelants, validateurs, tests, fixtures, snapshots, CI, incertitude et interdiction de conclure `VALIDE` sont tous presents. |
+| Forward-test initial | `NO_RESULT` | Agent isole sans sortie dans le delai; interrompu; jamais compte comme PASS. |
+| Forward-test borne | `PASS` | Sur un plan hypothetique limite a `.github/workflows/ebta-runtime-suite.yml`, l'agent a spontanement inspecte `Implementation/ebta_engine/tests/test_ci_supply_chain.py:9,13-16,31-41,66-76`, rejete le scope mono-fichier et exige la synchronisation de l'allowlist sans l'affaiblir. Aucun fichier edite. |
+| Bug-hunter | `NON_APPLICABLE` | Aucun fichier sous `Implementation/` n'est modifie; le skill a ete invoque et son perimetre confirme. Aucun balayage Pyrefly hors scope n'est fabrique comme preuve. |
+| Adversarial-tester | `PASS_ADVERSARIAL` | Entree hostile : plan affirmant un scope limite au workflow malgre une allowlist de test figee. Point d'entree : Gate 2 bis impose le scan. Resultat final observe : `NON-VIABLE`, test contractuel cite et extension de scope exigee; aucun `VALIDE`, valeur plausible ou repli silencieux. Le diff n'est pas du code EBTA, donc l'invocation etait recommandee plutot que mecaniquement obligatoire, mais le pattern de verdict a ete teste reellement. |
+
+### Audit de conformite pre-close
+
+| # | Exit criterion | Classification | Preuve |
+| --- | --- | --- | --- |
+| 1 | Declenchement sur les familles de contrats | `IMPLEMENTE` | `SKILL.md`, Gate 2 bis : workflow, configuration, schema, manifeste, format serialise, enumeration, valeur persistee. |
+| 2 | Couverture de tous les consommateurs et preuve citee | `IMPLEMENTE` | Etapes 1-4 de la Gate 2 bis; forward-test cite le workflow et `test_ci_supply_chain.py`. |
+| 3 | Recherche impossible fail-closed | `IMPLEMENTE` | Fin de la Gate 2 bis : incertitude obligatoire et interdiction de conclure `VALIDE`. |
+| 4 | `quick_validate.py` | `IMPLEMENTE` | Sortie reelle `Skill is valid!`. |
+| 5 | Forward-test contractuel | `IMPLEMENTE` | Relance bornee `PASS`; test contractuel exact inspecte avant verdict. |
+| 6 | Frontmatter, imperatif, moins de 500 lignes | `IMPLEMENTE` | Frontmatter valide; verbes d'action; compte `461`. |
+| 7 | Aucun fichier hors perimetre | `IMPLEMENTE` | Diff fonctionnel limite au skill; plan et checkpoint sont uniquement les traces gouvernees declarees. Fichiers humains preexistants preserves. |
+
+Verdict `plan-conformance-audit` : `PASS`, aucun Exit criterion manquant,
+aucun Non-goal viole et aucun finding ouvert.

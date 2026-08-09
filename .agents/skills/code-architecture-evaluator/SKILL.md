@@ -52,6 +52,27 @@ Identifier et structurer le plan fourni :
 □ Contraintes métier mentionnées
 ```
 
+### Gate 2 bis : Recherche des consommateurs contractuels (BLOQUANTE)
+
+Appliquer cette gate avant de classer ou valider tout plan qui modifie un
+workflow, une configuration, un schema, un manifeste, un format serialise,
+une enumeration ou une valeur de contrat persistee.
+
+1. Identifier les fichiers, cles, symboles, valeurs litterales, versions et
+   identifiants que le plan compte modifier.
+2. Rechercher leurs producteurs, lecteurs, appelants et validateurs directs
+   et indirects dans le codebase reel.
+3. Inspecter les tests, fixtures, snapshots, CI et artefacts generes qui
+   citent ou figent leurs noms, valeurs, ordre ou format exacts.
+4. Citer les chemins et fonctions trouves dans le rapport, puis rectifier le
+   scope, la classification, les migrations et les validations du plan en
+   fonction de ces consommateurs.
+
+Si cette recherche ne peut pas etre executee ou reste incomplete, declarer
+l'incertitude et les consommateurs non verifies. Ne jamais conclure
+`VALIDE` ni attribuer un score de coherence comme si le contrat avait ete
+inspecte.
+
 ### Phase 3️⃣ : Audit Critique (RAPPORT STRUCTURÉ)
 
 **Délivrer un rapport aux 6 sections obligatoires :**
