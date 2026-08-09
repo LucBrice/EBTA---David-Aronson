@@ -2455,6 +2455,38 @@
           }
         ]
       }
+    },
+    {
+      "id": "PLAN_DURCISSEMENT_WORKFLOW_CI",
+      "title": "Durcissement du workflow CI",
+      "track": "mainline",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "CONTRACT_ENCODING",
+      "source_path": ".ai/backlog/mainline/PLAN_DURCISSEMENT_WORKFLOW_CI.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_DURCISSEMENT_WORKFLOW_CI.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-09",
+      "last_moved_at": "2026-08-09",
+      "routing_decision": "mainline",
+      "routing_reason": "Enfant 7A de PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN : permissions minimales, actions sur SHA et dependances CI exactes.",
+      "moved_by": "ai",
+      "blocks_mainline": true,
+      "advances_mainline": true,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "core-engine",
+        "contract_version": "1.0.0",
+        "stage": "TRIAGED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": ".ai/backlog/mainline/PLAN_DURCISSEMENT_WORKFLOW_CI.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          }
+        ]
+      }
     }
   ],
   "validation": {
