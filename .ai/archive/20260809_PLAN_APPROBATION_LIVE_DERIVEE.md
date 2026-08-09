@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `ACTIVE` — implementation et gates de fermeture termines |
+| Statut | `DONE` |
 | Date | 2026-08-09 |
 | Autorite normative | SOP 11 ; G13 du paquet d'execution ; DN-036 et DN-040. |
 | Autorite executable | `incubation_report.py`, `human_evidence.py`, `lifecycle.py`, builder pilote. |
@@ -218,7 +218,7 @@ git diff --check
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | Pret pour `READY_TO_CLOSE` : verdict live exact, preuve humaine liee, deployment/G13 derives, 259 tests `OK`. |
+| Resultat | `DONE` : verdict live exact, preuve humaine liee, deployment/G13 derives, 259 tests `OK` et fermeture mecanique validee. |
 | Ecart | Rescope documente : ajout de la plomberie optionnelle et des tests du package builder Nautilus, necessaire pour conserver son controle positif G13. Aucun appel NautilusTrader touche. |
 | Suite | 5/10 `PLAN_COHERENCE_VERDICTS_PERSISTES`. |
 
