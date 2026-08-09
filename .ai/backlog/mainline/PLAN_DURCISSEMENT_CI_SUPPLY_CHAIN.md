@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune ; securite reproductible du depot uniquement. |
 | Autorite executable | Workflow GitHub Actions versionne et regles Git locales. |
@@ -202,16 +202,16 @@ resolue par ce coordinateur.
 ## 12. Definition of Done
 
 - [x] 7A `DONE` avec workflow et ratchet verts (279 tests `OK`, commit de cloture `67509b8`).
-- [ ] 7B `DONE` avec politique d'ignore prouvee.
-- [ ] Suite canonique `OK` apres les deux.
-- [ ] Aucun reglage GitHub externe ou fichier hors scopes enfants touche.
-- [ ] Coordinateur clos sans implementation directe.
+- [x] 7B `DONE` avec politique d'ignore prouvee (284 tests `OK`, commit de cloture `d8eaa2c`).
+- [x] Suite canonique `OK` apres les deux.
+- [x] Aucun reglage GitHub externe ou fichier hors scopes enfants touche.
+- [x] Coordinateur pret a etre clos sans implementation directe.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | 7A `DONE` ; 7B reste a executer avant toute cloture du coordinateur. |
+| Resultat | 7A et 7B `DONE` ; suite canonique finale 284 tests `OK` (1 skipped) ; coordinateur sans diff technique propre. |
 | Ecart | Decomposition du lot composite en deux enfants atomiques. |
 | Suite | Enfant top-level 8/10 `PLAN_INTEGRITE_REFERENCES_ETAT`. |
 
@@ -229,3 +229,22 @@ resolue par ce coordinateur.
 | 1 | Workflow et absence de gitignore confrontes au test multi-lot. | Deux enfants requis, implementation directe interdite. |
 | 2 | Frontieres 8-10 et action externe relues. | Pins/permissions 7A ; ignore 7B ; aucun chevauchement. |
 | 3 | Ordre et preuves revalides. | 7A puis 7B ; convergence. |
+
+## 15. Audit de conformite de cloture
+
+### Verdict
+
+PASS — les deux enfants sont `DONE`, leurs preuves sont vertes et le
+coordinateur n'a porte aucune implementation technique directe.
+
+| Critere | Preuve | Verdict |
+| --- | --- | --- |
+| 7A termine | `PLAN_DURCISSEMENT_WORKFLOW_CI` `DONE`, commit `67509b8` | PASS |
+| 7B termine | `PLAN_HYGIENE_GITIGNORE_RACINE` `DONE`, commit `d8eaa2c` | PASS |
+| Regression finale | Suite canonique 284 tests `OK`, 1 skipped | PASS |
+| Etat machine | Checkpoint valide contre son schema | PASS |
+| Absence d'implementation parent | Diff du coordinateur limite a son journal et son statut | PASS |
+| Frontiere externe | Aucun setting, ruleset, secret ou push GitHub | PASS |
+
+Aucun critere manque. La decision GitHub externe reste `A_TRANCHER` dans
+l'epic parent et n'est pas maquillee en accomplissement local.
