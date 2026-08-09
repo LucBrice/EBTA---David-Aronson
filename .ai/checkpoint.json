@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "PLAN_GARDE_LITTERAUX_VERDICT",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2360,8 +2360,8 @@
       "id": "PLAN_GARDE_LITTERAUX_VERDICT",
       "title": "Garde AST des litteraux de verdict",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "CONTRACT_ENCODING",
       "source_path": ".ai/backlog/mainline/PLAN_GARDE_LITTERAUX_VERDICT.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_GARDE_LITTERAUX_VERDICT.md",
@@ -2369,7 +2369,7 @@
       "opened_at": "2026-08-09",
       "last_moved_at": "2026-08-09",
       "routing_decision": "mainline",
-      "routing_reason": "Sous-chantier 6/10 de EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA : garde AST de non-regression apres correction des producteurs 3A-3C.",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
@@ -2378,7 +2378,7 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2396,7 +2396,8 @@
             "recorded_at": "2026-08-09"
           }
         ]
-      }
+      },
+      "is_active": true
     }
   ],
   "validation": {
