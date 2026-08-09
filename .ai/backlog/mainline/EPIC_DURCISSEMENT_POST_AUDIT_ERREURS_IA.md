@@ -370,10 +370,10 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfants clos | Sous-chantiers 1 a 8 — `DONE` ; suite portee a 289 tests `OK`. Le lot 8 corrige deux pointeurs et garde une absence RAG historique exacte. |
-| Prochain enfant | `PLAN_PYREFLY_CI_NOTEBOOK` — `A_ROUTER` |
-| Action | Auditer le mode Pyrefly portable, le notebook detecte et son integration CI sans simuler le venv Nautilus. |
-| Blocage | La configuration doit distinguer les imports externes neutralises des erreurs internes ; aucune installation du venv Nautilus lourd en CI. |
+| Enfants clos | Sous-chantiers 1 a 9 — `DONE` ; suite portee a 291 tests `OK`. Pyrefly CI equivalent retourne 0 erreur. |
+| Prochain enfant | `PLAN_RUFF_CI_BUGS_CIBLES` — `A_ROUTER` |
+| Action | Auditer les 26 findings Ruff avec le ruleset cible `F,E9,B,PLE,RUF`, classifier chaque signal et limiter les corrections aux bugs admis. |
+| Blocage | Aucun `--select ALL`, nettoyage stylistique massif ou auto-fix aveugle ; chaque finding doit etre classe avant modification. |
 
 ### Suivi des sous-chantiers
 
@@ -387,7 +387,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `DONE` | Garde exact-key 32/32, allowlist annotee, nouveau/stale/parse bloquants ; 274 tests `OK`, Pyrefly 0. |
 | 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `DONE` | Coordinateur clos apres 7A/7B ; actions sur SHA, permissions read-only, pins directs, gitignore racine minimal ; 284 tests `OK`. |
 | 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `DONE` | Deux pointeurs archives corriges, garde fail-closed a chaque commit, exception RAG exacte ; 289 tests `OK`. |
-| 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
+| 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `DONE` | Pyrefly 1.1.1 CI portable, notebook corrige sans artefact durable ; 291 tests `OK`. |
 | 10 | `PLAN_RUFF_CI_BUGS_CIBLES` | `A_ROUTER` | En attente. |
 
 ### Decision humaine du 2026-08-09 et resultat de l'audit du lot 3
