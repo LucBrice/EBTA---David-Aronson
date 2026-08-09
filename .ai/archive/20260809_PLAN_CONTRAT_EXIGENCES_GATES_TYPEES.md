@@ -40,7 +40,7 @@ coherence persistee et garde AST restent independants.
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `ACTIVE` — implementation et gates de fermeture termines |
+| Statut | `DONE` |
 | Date de creation | 2026-08-09 |
 | Date d'activation | 2026-08-09 |
 | Autorite normative | `Protocole/PAQUET D'EXECUTION EBTA.md` pour G0-G14 et `REGISTRE DES DECISIONS NORMATIVES EBTA.md` pour les taxonomies. |
@@ -369,7 +369,7 @@ un fallback truthy, transformer un statut ou masquer un resultat non-PASS.
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | Pret pour `READY_TO_CLOSE` : contrat type fail-closed implemente, fixture normalisee, 253 tests `OK`, trois audits sans finding bloquant. |
+| Resultat final | `DONE` : contrat type fail-closed implemente, fixture normalisee, 253 tests `OK`, trois audits sans finding bloquant et fermeture mecanique validee. |
 | Ecarts par rapport au plan initial | Aucun ecart fonctionnel. Le nombre de tests canonique passe de 246 a 253 par ajout de sept regressions. |
 | Suites a prevoir | 3B approbation live, 3C coherence persistee, 3D garde AST ; hors scope. |
 
@@ -380,7 +380,7 @@ un fallback truthy, transformer un statut ou masquer un resultat non-PASS.
 | Date | 2026-08-09 |
 | Phases executees | 1 contrat type ; 2 fixture et regressions ; 3 validation et trace runtime. |
 | Artefact produit | `GateRequirement` avec kinds `identifier`, `verdict_pass`, `boolean_true`; fixture et matrice negative alignees. |
-| Validation | `test_gates.py` 19/19 ; `test_package_validator.py` 10/10 ; inventaire 1/1 ; suite 253/253 ; Pyrefly 0 ; adversarial 7/7 + controle positif ; schema checkpoint et diff a revalider a la fermeture. |
+| Validation | `test_gates.py` 19/19 ; `test_package_validator.py` 10/10 ; inventaire 1/1 ; suite 253/253 ; Pyrefly 0 ; adversarial 7/7 + controle positif ; checkpoint JSON/schema et diff de fermeture valides. |
 | Ecart par rapport au plan | Aucun. Les brouillons humains preexistants restent hors index et intacts par ce chantier. |
 
 ## 14. Journal d'audits post-route
