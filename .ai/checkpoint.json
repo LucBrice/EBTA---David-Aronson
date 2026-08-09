@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": null,
+  "active_workstream_id": "EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA",
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2027,14 +2027,14 @@
       "id": "EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA",
       "title": "Durcissement post-audit face aux erreurs silencieuses IA",
       "track": "mainline",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "ACTIVE",
+      "lifecycle": "ACTIVE",
       "classification": "GOVERNANCE",
       "source_path": ".ai/backlog/mainline/EPIC_DURCISSEMENT_POST_AUDIT_ERREURS_IA.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260808_AUDIT_ROBUSTESSE_ARCHITECTURE_FACE_ERREURS_IA_2026-08-08.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-08",
-      "last_moved_at": "2026-08-08",
+      "last_moved_at": "2026-08-09",
       "routing_decision": "mainline",
       "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
@@ -2045,7 +2045,7 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "ACTIVE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2064,7 +2064,7 @@
           }
         ]
       },
-      "is_active": false
+      "is_active": true
     },
     {
       "id": "PLAN_TESTS_WRC_CALIBRATION_METAMORPHIQUE",
