@@ -2645,3 +2645,37 @@ canonique. Aucun setting GitHub externe n'est modifie.
 ### Suite
 
 L'hygiene `.gitignore` racine reste l'enfant 7B distinct.
+
+## 2026-08-09 - Hygiene `.gitignore` racine
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING / TEST_FIXTURE |
+| Statut | ACCEPTED |
+| Source normative | Aucune ; audit de robustesse du 2026-08-08, lot CI/supply chain |
+| Fichiers impactes | `.gitignore` racine, ratchet Git et inventaire de tests |
+| Impact protocole | NONE |
+| Verification | 5 tests gitignore + inventaire OK ; suite canonique 284 tests OK (1 skipped) ; Pyrefly 0 erreur ; aucun fichier suivi ignore |
+
+### Contexte
+
+Le depot ne partageait aucune politique racine pour les caches Python,
+environnements locaux, fichiers `.env`, reglages Claude locaux et temporaires.
+
+### Decision
+
+Ajouter une liste exacte et minimale de motifs, avec exception explicite pour
+`.env.example`. Le test interroge `git check-ignore --no-index` sur des cas
+positifs et negatifs et controle qu'aucun fichier suivi n'est ignore.
+
+### Impact
+
+Les artefacts locaux cibles cessent d'apparaitre comme candidats au commit,
+sans masquer `.vscode`, les intakes Markdown, les sources Implementation ou
+le Protocole. Les regles propres aux packages de recherche restent dans
+`Implementation/.gitignore`.
+
+### Suite
+
+Clore le coordinateur 7, puis reprendre l'enfant top-level 8/10.

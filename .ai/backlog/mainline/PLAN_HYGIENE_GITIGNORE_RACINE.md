@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune. |
 | Autorite executable | Regles Git locales versionnees. |
@@ -170,19 +170,19 @@ git diff --check
 
 ## 12. Definition of Done
 
-- [ ] Politique racine minimale versionnee.
-- [ ] Cas positifs et negatifs prouves par Git.
-- [ ] Aucun fichier suivi ignore.
-- [ ] Ratchet, inventaire et suite complete verts.
-- [ ] Audits sans finding bloquant.
-- [ ] Aucun fichier interdit ou mutation externe touche.
+- [x] Politique racine minimale versionnee.
+- [x] Cas positifs et negatifs prouves par Git.
+- [x] Aucun fichier suivi ignore.
+- [x] Ratchet, inventaire et suite complete verts.
+- [x] Audits sans finding bloquant.
+- [x] Aucun fichier interdit ou mutation externe touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | 5 tests gitignore et inventaire verts ; suite canonique 284 tests `OK` (1 skipped) ; Pyrefly 0 erreur ; 4 mutations hostiles rejetees. |
+| Ecart | Aucun. Les secrets deja suivis ou presents dans l'historique Git restent hors capacite de `.gitignore`. |
 | Suite | Cloture du coordinateur `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN`. |
 
 ## 14. Journal d'audits post-route
