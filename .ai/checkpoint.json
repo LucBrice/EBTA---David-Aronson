@@ -2971,6 +2971,48 @@
         ]
       },
       "is_active": false
+    },
+    {
+      "id": "PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE",
+      "title": "Integration automatique de /learn-session en fin de /close",
+      "track": "annexe",
+      "status": "PENDING",
+      "lifecycle": "TRIAGED",
+      "classification": "GOVERNANCE",
+      "source_path": ".ai/backlog/annexes/PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md",
+      "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md",
+      "active_runtime_path": null,
+      "opened_at": "2026-08-09",
+      "last_moved_at": "2026-08-09",
+      "routing_decision": "annexe",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
+      "moved_by": "ai",
+      "blocks_mainline": false,
+      "advances_mainline": false,
+      "closure_reason": null,
+      "non_goals": [],
+      "workflow": {
+        "id": "common",
+        "contract_version": "1.0.0",
+        "stage": "BASELINED",
+        "evidence": [
+          {
+            "id": "intake_audit",
+            "reference": "0 - HUMAN START HERE/archive/20260809_PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md#19-journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/annexes/PLAN_INTEGRATION_LEARN_SESSION_POST_CLOSE.md#14-journal-daudits-post-hoc",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "518a0ff",
+            "recorded_at": "2026-08-09"
+          }
+        ]
+      }
     }
   ],
   "validation": {
