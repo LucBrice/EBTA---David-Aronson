@@ -2867,20 +2867,20 @@
       "id": "PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS",
       "title": "Correction de la depreciation Node.js 20 dans ebta-runtime-suite",
       "track": "fix",
-      "status": "PENDING",
-      "lifecycle": "TRIAGED",
+      "status": "DONE",
+      "lifecycle": "SUPERSEDED",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS.md",
+      "source_path": ".ai/archive/20260809_PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-09",
       "last_moved_at": "2026-08-09",
       "routing_decision": "fix",
-      "routing_reason": "/start explicite du 2026-08-09; correctif CI isole visant uniquement les deux pins SHA d'actions officielles responsables du warning Node.js 20, sans modification du runtime EBTA.",
+      "routing_reason": "Updated via .ai/tools/plan.ps1",
       "moved_by": "ai",
       "blocks_mainline": false,
       "advances_mainline": false,
-      "closure_reason": null,
+      "closure_reason": "Superseded par decision humaine du 2026-08-09: le contrat executable test_ci_supply_chain.py exige un workstream CONTRACT_ENCODING/core-engine couvrant YAML et test.",
       "non_goals": [
         "No change to workflow steps, ordering, permissions, triggers, runner, Python version, or Python dependency pins",
         "No Protocole/, Implementation/, .agents/, or .codex/ modification",
@@ -2889,7 +2889,7 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "BASELINED",
+        "stage": "SUPERSEDED",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2907,7 +2907,8 @@
             "recorded_at": "2026-08-09"
           }
         ]
-      }
+      },
+      "is_active": false
     }
   ],
   "validation": {

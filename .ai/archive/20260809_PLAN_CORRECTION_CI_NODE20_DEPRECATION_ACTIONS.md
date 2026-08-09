@@ -334,6 +334,7 @@ L'IA peut choisir les couples tag/SHA qui appliquent strictement la decision d'a
 | 2026-08-09 | Demander la redaction d'un plan avant tout fix du warning Node.js 20. | Autorisait le brouillon `INTAKE` seulement. |
 | 2026-08-09 | `/start D:\Livre\Trading\Trading algorithmic\EBTA - David Aronson\0 - HUMAN START HERE\PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS.md` | Autorise l'audit, la reecriture, l'archivage du brouillon et le routage du plan. N'autorise ni implementation, ni commit, ni push. |
 | 2026-08-09 | `Go`, en reponse a l'etape annoncee « double audit post-promotion puis baseline ». | Autorise les corrections du plan, le commit de baseline du plan et le commit separe de transition `TRIAGED -> BASELINED`. N'autorise ni `/continue`, ni modification du workflow CI, ni push. |
+| 2026-08-09 | `Oui`, en reponse a la demande de superseder ce workstream et de creer/promouvoir un remplacement `CONTRACT_ENCODING/core-engine` couvrant le YAML et son test supply-chain. | Autorise la cloture `SUPERSEDED`, la creation/promotion/baseline du remplacement et l'extension a `Implementation/ebta_engine/tests/test_ci_supply_chain.py`. N'autorise toujours aucun push. |
 
 ## 11. Risques et blocages connus
 
@@ -343,6 +344,7 @@ L'IA peut choisir les couples tag/SHA qui appliquent strictement la decision d'a
 | Une nouvelle majeure change un input ou son comportement. | Regression du workflow. | G3 : changelog + inputs relus; escalade si incompatibilite. |
 | Le push n'est pas autorise. | Preuve CI distante impossible. | Arret apres validations locales; demander l'autorisation sans fabriquer `PASS`. |
 | Le run echoue pour une cause differente. | Exit criteria non atteint. | Diagnostiquer la cause et replanifier si elle depasse les deux lignes autorisees. |
+| `Implementation/ebta_engine/tests/test_ci_supply_chain.py` fige les anciens SHA dans `EXPECTED_USES` et dans la mutation hostile `mutable_tag`. | La suite canonique echoue avec 2 tests en `FAIL` apres le bump pourtant conforme aux nouvelles releases. Le precedent `.ai/archive/20260809_PLAN_DURCISSEMENT_WORKFLOW_CI.md` classait ce meme contrat de test `CONTRACT_ENCODING` sous `core-engine`; une simple extension du workstream actuel `GOVERNANCE/common` serait incoherente. | Decision humaine requise pour remplacer/superseder ce workstream par un plan `CONTRACT_ENCODING/core-engine` couvrant le YAML et les trois substitutions du test; ne pas affaiblir ni supprimer les assertions supply-chain. |
 
 ## 12. Definition of Done
 
@@ -359,9 +361,9 @@ L'IA peut choisir les couples tag/SHA qui appliquent strictement la decision d'a
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | [a remplir a `/close`] |
-| Ecarts par rapport au plan initial | [a remplir] |
-| Suites a prevoir | [a remplir] |
+| Resultat final | `SUPERSEDED` — classification `GOVERNANCE/common` insuffisante apres decouverte du contrat executable figeant les SHA sous `Implementation/`. |
+| Ecarts par rapport au plan initial | Le changement YAML de deux lignes exige trois substitutions synchrones dans `test_ci_supply_chain.py`; le workflow live a ete restaure avant supersession, donc aucune implementation partielle n'est conservee par ce chantier. |
+| Suites a prevoir | Nouveau workstream `PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE`, `CONTRACT_ENCODING/core-engine`, couvrant le YAML et le contrat de test. |
 
 ### Resultat d'execution (a dupliquer a chaque session significative)
 
@@ -372,6 +374,16 @@ L'IA peut choisir les couples tag/SHA qui appliquent strictement la decision d'a
 | Artefact produit | [a remplir] |
 | Validation | [PASS/FAIL/INCONCLUSIVE + commandes et run-id] |
 | Ecart par rapport au plan | [aucun / liste] |
+
+### Resultat d'execution — 2026-08-09 `/continue` (partiel)
+
+| Champ | Valeur |
+| --- | --- |
+| Date | 2026-08-09 |
+| Phases executees | Phases 1 et 2 terminees; Phase 3 arretee sur suite canonique `FAIL`. |
+| Artefact produit | `.github/workflows/ebta-runtime-suite.yml` modifie localement sur les deux lignes `uses:`, puis restaure avant supersession; aucun commit d'implementation, aucun push. |
+| Validation | G1-G4 `PASS`; Pyrefly `PASS` (`0 errors`, 1 suppression); Ruff `PASS`; schemas checkpoint/tracking `PASS`; unittest `FAIL` (292 tests, 2 echecs dans `test_ci_supply_chain.py` dus aux anciens SHA attendus). Simulation non persistante des trois substitutions proposees : 8/8 tests supply-chain `PASS`, y compris `test_hostile_workflow_mutations_are_rejected`. |
+| Ecart par rapport au plan | Dependance cachee hors perimetre : le contrat de test supply-chain doit etre synchronise avec les nouveaux pins examines. Extension de scope non deduite. |
 
 ## 14. Journal d'audits post-hoc
 
