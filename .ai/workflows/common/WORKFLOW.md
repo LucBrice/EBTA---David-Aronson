@@ -34,6 +34,32 @@ plans. `.ai/tools/plan.ps1` est leur backend mecanique : il peut refuser une
 promotion dangereuse, mais ne remplace jamais l'audit, la structuration ou les
 gates portes par l'IA.
 
+### Autorisations de publication en deux temps
+
+Quand un gate distant exige une publication avant `/close`, distinguer et
+nommer explicitement les deux operations potentielles dans la demande
+d'autorisation :
+
+- **push A** : publier le ou les commits d'implementation nommes afin
+  d'executer et de verifier le gate distant ;
+- **push B** : publier conditionnellement le seul commit de fermeture cree
+  apres les validations et la resolution complete de `/close`, retrospective
+  automatique comprise.
+
+L'autorisation du push A n'autorise jamais le push B. Une autorisation
+anticipee peut couvrir A et B uniquement si elle les nomme separement. B reste
+alors conditionne a la reussite des validations et du commit de fermeture ; si
+l'un des deux echoue ou n'existe pas, B est interdit. Si seul A est autorise,
+laisser le commit de fermeture local et signaler que B attend une autorisation
+separee.
+
+Avant chaque push, rafraichir la reference distante et enumerer la plage
+distante -> `HEAD`. La plage de A doit contenir exactement les commits
+d'implementation autorises ; apres la retrospective, la plage de B doit
+contenir exactement le commit de fermeture autorise. Tout correctif
+retrospectif, commit concurrent ou autre commit additionnel impose un arret et
+une autorisation separee. Aucun push ne devient automatique par cette regle.
+
 ### `/learn-session` - retrospective sans transition d'etat
 
 `/learn-session` invoque la procedure canonique

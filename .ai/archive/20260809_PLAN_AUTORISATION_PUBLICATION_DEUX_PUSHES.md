@@ -64,7 +64,7 @@
 
 | Element | Role |
 | --- | --- |
-| `WORKFLOW.md` | Proprietaire du contrat conversationnel; seul comportement modifie. |
+| `WORKFLOW.md` | Proprietaire du contrat conversationnel; seul comportement modifie par une nouvelle sous-section generale, sans reutiliser le contrat local de `/learn-session`. |
 | `WORKFLOW.json` | Autorite machine des transitions/preuves; doit rester identique. |
 | `plan.ps1` | Backend de transition et fermeture; doit rester identique. |
 | Ce plan | Contrat d'execution et preuves du Lot 2. |
@@ -108,7 +108,7 @@ Hierarchie :
 
 | Element | Chemin | Role reel | Suffisant ? |
 | --- | --- | --- | --- |
-| Contrat d'autorisation | `WORKFLOW.md:49-57` | Separe analyse, persistance, commit et push | Partiel : aucun cycle A/B |
+| Contrat d'autorisation `/learn-session` | `WORKFLOW.md:49-57` | Separe analyse, persistance, commit et push pour la retrospective uniquement | A conserver local; ne doit pas porter le cycle general A/B |
 | Fermeture | `WORKFLOW.md:164-208` | Commit local automatique apres validations; jamais de push | Oui, a conserver |
 | Transitions | `WORKFLOW.json` | TRIAGED -> BASELINED -> ACTIVE -> READY_TO_CLOSE -> DONE | Oui, inchange |
 | Tests | `.ai/tools/tests/test_workflow_state_machine.ps1` | Verifie contrats et transitions | Oui pour non-regression machine |
@@ -121,9 +121,10 @@ Hierarchie :
 
 ## 5. Decision d'architecture
 
-Ajouter un item au contrat d'autorisation universel, et non a `/close` ou au
-JSON : la question intervient avant publication et concerne la portee du
-consentement humain, pas une nouvelle transition machine.
+Ajouter une nouvelle sous-section soeur sous `## Commandes
+conversationnelles`, distincte du contrat local de `/learn-session`, et non
+a `/close` ou au JSON : la question intervient avant publication et concerne
+la portee du consentement humain, pas une nouvelle transition machine.
 
 ### Frontieres explicites
 
@@ -150,7 +151,7 @@ commit additionnel n'est pas couvert par B et impose une autorisation separee.
 
 | Decision | Justification |
 | --- | --- |
-| Texte dans contrat d'autorisation | Proprietaire du consentement, avant toute action externe |
+| Nouvelle sous-section generale de publication | Evite de donner une portee universelle au contrat local de `/learn-session` et place le consentement avant toute action externe |
 | Aucun changement JSON | Aucune transition ni preuve machine nouvelle |
 | B strictement conditionnel | Evite qu'une autorisation anticipee transforme un echec en publication |
 | Plage distante -> HEAD verifiee avant B | Empeche qu'un correctif retrospectif ou commit concurrent parte avec le commit de fermeture |
@@ -195,7 +196,8 @@ Classification : GOVERNANCE
 
 Actions :
 
-- Inserer un item concis dans le contrat d'autorisation.
+- Inserer une sous-section generale concise sous `Commandes conversationnelles`,
+  sans modifier le contrat local de `/learn-session`.
 - Nommer A, B, ordre, separation, condition de B, comportement A-seul/echec
   et controle de la plage distante -> HEAD apres retrospective.
 - Preserver l'interdiction de push automatique.
@@ -311,20 +313,20 @@ anticipee de B ne survit pas a l'echec de sa condition.
 
 ## 12. Definition of Done
 
-- [ ] Portee meta, track fix, type SINGLE coherents.
-- [ ] Exit criteria 1-8 prouves.
-- [ ] Tests workflow PASS.
-- [ ] Fichiers executables interdits sans diff.
-- [ ] Adversarial et conformite sans finding.
-- [ ] Checkpoint valide apres transitions.
-- [ ] Aucun push.
+- [x] Portee meta, track fix, type SINGLE coherents.
+- [x] Exit criteria 1-8 prouves.
+- [x] Tests workflow PASS.
+- [x] Fichiers executables interdits sans diff.
+- [x] Adversarial et conformite sans finding.
+- [x] Checkpoint valide apres transitions.
+- [x] Aucun push.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A remplir lors de `/close` |
-| Ecarts | A remplir lors de `/close` |
+| Resultat final | `DONE` — contrat A/B explicite, tests et audits PASS, aucun push |
+| Ecarts | Gate de consommateurs du Lot 1 a detecte pre-implementation que le contrat existant etait local a `/learn-session`; nouvelle sous-section generale creee. Premiere assertion textuelle trop litterale en echec sur un retour a la ligne, puis motif whitespace-aware PASS. |
 | Suites a prevoir | Retour au parent puis Lot 3 autonome |
 
 ### Resultat d'execution
@@ -332,10 +334,10 @@ anticipee de B ne survit pas a l'echec de sa condition.
 | Champ | Valeur |
 | --- | --- |
 | Date | 2026-08-09 |
-| Phases executees | Aucune avant baseline |
-| Artefact | Plan uniquement |
-| Validation | Intake converge en 2 passes |
-| Ecart | Aucun |
+| Phases executees | Phase 1 et Phase 2 |
+| Artefact | Sous-section `Autorisations de publication en deux temps` dans `WORKFLOW.md` |
+| Validation | Workflow state machine PASS; contrats executables sans diff; assertions A/B PASS; adversarial et conformite PASS |
+| Ecart | Une passe `/evaluate` post-route supplementaire apres correction du proprietaire; assertion litterale corrigee sans changer le contrat |
 
 ## 14. Journal d'audits post-hoc
 
@@ -351,4 +353,34 @@ anticipee de B ne survit pas a l'echec de sa condition.
 | Passe | Constat | Correction | Resultat |
 | --- | --- | --- | --- |
 | `/evaluate` 1 | Angle mort : la retrospective automatique s'execute apres le commit de fermeture et peut, sous autorisation preexistante, creer un correctif local distinct. Un push B non borne publierait alors plus que le commit de fermeture nomme. | Ajout d'une verification de la plage distante -> HEAD apres retrospective; tout commit additionnel impose arret et autorisation separee. Gates, invariants, NO GO et Exit criteria mis a jour. | Corrections appliquees; seconde passe requise. |
-| `/evaluate` 2 | Contre-audit du plan corrige contre l'ordre reel `/close` -> commit -> retrospective et le contrat Git du depot. A, B et les commits intermediaires sont bornes sans ajouter de transition; le texte reste dans le proprietaire conversationnel, les preuves machine demeurent inchangees et le chantier reste `SINGLE`. | Aucune correction supplementaire. | `CONVERGE` en 2 passes post-route; aucun angle mort majeur restant. |
+| `/evaluate` 2 | Contre-audit du plan corrige contre l'ordre reel `/close` -> commit -> retrospective et le contrat Git du depot. A, B et les commits intermediaires sont bornes sans ajouter de transition; le texte reste dans le proprietaire conversationnel, les preuves machine demeurent inchangees et le chantier reste `SINGLE`. | Aucune correction supplementaire. | Convergence provisoire. |
+| Revalidation pre-implementation | Le bloc `Contrat d'autorisation` vise uniquement `/learn-session`; l'utiliser pour A/B aurait melange retrospective et publication generale. | Architecture corrigee : nouvelle sous-section soeur sous `Commandes conversationnelles`, contrat local `/learn-session` inchange. | Correction majeure; passe 3 requise. |
+| `/evaluate` 3 | Contre-audit apres correction : la nouvelle sous-section generale s'applique aux cycles avec gate distant, tandis que `/learn-session`, `/close`, JSON et backend conservent leurs responsabilites. Aucun changement de transition ni nouveau couplage. | Aucune correction supplementaire. | `CONVERGE` en 3 passes post-route; aucun angle mort majeur restant. |
+
+### Preuves d'implementation et de validation
+
+| Preuve | Resultat | Detail |
+| --- | --- | --- |
+| Diff fonctionnel | `PASS` | Nouvelle sous-section generale dans `WORKFLOW.md`; contrat local `/learn-session` inchange. |
+| Workflow state machine | `PASS` | `.ai/tools/tests/test_workflow_state_machine.ps1` -> `workflow_state_machine=PASS`; harnais temporaire restaure. |
+| Contrats executables | `PASS` | Aucun diff dans `WORKFLOW.json`, les Mermaid, `plan.ps1` ou `pre_push_hook.py`. |
+| Assertions initiales | `FAIL_OUTILLAGE` | Le motif litteral `correctif retrospectif` n'a pas traverse un retour a la ligne Markdown; le contenu etait present. Aucun PASS declare sur cette commande. |
+| Assertions corrigees | `PASS` | Motif `correctif\s+retrospectif` et huit autres assertions A/B/condition/plage/absence d'automatisme passent. |
+| Bug-hunter | `NON_APPLICABLE` | Aucun fichier `Implementation/` ou code Python touche. |
+| Adversarial-tester | `PASS_ADVERSARIAL` | A seul -> B en attente; validation/commit absent -> B interdit; commit retrospectif dans la plage -> arret; A+B non nommes -> aucune autorisation implicite; aucun fallback positif. |
+
+### Audit de conformite pre-close
+
+| # | Exit criterion | Classification | Preuve |
+| --- | --- | --- | --- |
+| 1 | A et B nommes/ordonnes | `IMPLEMENTE` | Sous-section generale, definitions push A puis push B. |
+| 2 | A n'autorise jamais B | `IMPLEMENTE` | Phrase litterale dans `WORKFLOW.md`. |
+| 3 | A+B explicites, B conditionnel et scope ferme | `IMPLEMENTE` | Paragraphes 2 et 3 de la sous-section. |
+| 4 | A seul et echec bornes | `IMPLEMENTE` | Commit local en attente; B interdit si validation/commit echoue. |
+| 5 | Plage distante -> HEAD inspectee | `IMPLEMENTE` | Plages A/B exactes; correctif retrospectif ou commit additionnel bloque. |
+| 6 | Aucun push automatique, JSON inchange, tests PASS | `IMPLEMENTE` | Phrase finale, diff interdit vide, workflow state machine PASS. |
+| 7 | Contre-preuve sans autorisation implicite | `IMPLEMENTE` | Scenarios adversariaux A-seul/echec/extra tous fail-closed. |
+| 8 | Aucun fichier hors perimetre | `IMPLEMENTE` | Diff fonctionnel limite a `WORKFLOW.md`; plan/checkpoint sont traces gouvernees. |
+
+Verdict `plan-conformance-audit` : `PASS`, aucun critere manquant, aucun
+Non-goal viole et aucun finding ouvert.
