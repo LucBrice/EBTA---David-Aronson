@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2418,10 +2418,10 @@
       "id": "PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN",
       "title": "Durcissement CI et hygiene Git",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "GOVERNANCE",
-      "source_path": ".ai/backlog/mainline/PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN.md",
+      "source_path": ".ai/archive/20260809_PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_EPIC_DURCISSEMENT_CI_SUPPLY_CHAIN.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-09",
@@ -2431,12 +2431,12 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Enfants 7A et 7B DONE; suite canonique finale 284 tests OK; aucune implementation directe ni mutation GitHub externe.",
       "non_goals": [],
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2452,10 +2452,15 @@
             "id": "baseline_commit",
             "reference": "662b85f18834a474dc915787f10a410efdacb5eb",
             "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": ".ai/backlog/mainline/PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN.md#15-audit-de-conformite-de-cloture",
+            "recorded_at": "2026-08-09"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     },
     {
       "id": "PLAN_DURCISSEMENT_WORKFLOW_CI",
