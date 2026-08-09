@@ -2378,11 +2378,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/mainline/PLAN_GARDE_LITTERAUX_VERDICT.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/mainline/PLAN_GARDE_LITTERAUX_VERDICT.md#14-journal-daudits-post-route",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "a3e47b08a473f8e4a27c01107a86411e72e780ea",
             "recorded_at": "2026-08-09"
           }
         ]
