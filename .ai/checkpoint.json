@@ -2436,11 +2436,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/mainline/PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/mainline/PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN.md#14-journal-daudits-post-route",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "662b85f18834a474dc915787f10a410efdacb5eb",
             "recorded_at": "2026-08-09"
           }
         ]
