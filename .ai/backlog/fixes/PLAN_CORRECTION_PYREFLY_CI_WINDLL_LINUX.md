@@ -359,6 +359,10 @@ En dehors de la confirmation de push et de l'arret pour cause differente listee 
 
 ## 14. Journal d'audits post-hoc
 
+Boucle `code-architecture-evaluator` executee entre `/start` et `/baseline`, conformement a `CLAUDE.md` (minimum 2 passes, arret a convergence).
+
 | Date de l'audit | Ce qui a ete corrige | Pourquoi |
 | --- | --- | --- |
-| [a remplir lors de la boucle /evaluate] | | |
+| 2026-08-09 (passe 1) | Section 4 "Etat des lieux" : le garde `os.name == "nt"` ne citait que la ligne 383 (`_working_set_bytes`) ; ajout de la ligne 370-371 (`_process_parent_map` -> `_windows_process_parent_map`), second point d'entree menant a l'erreur `long_data.py:407`. Section 6 Phase 1 : ajout d'un avertissement explicite sur l'obligation de `--python-platform linux`. | Verifie par grep que les deux gardes existent et menent bien aux 3 lignes en erreur ; sans le rappel explicite en Phase 1, une IA a froid aurait pu valider la commande Pyrefly telle qu'ecrite dans le workflow YAML depuis un poste Windows et obtenir un faux `0 errors` sans avoir reproduit la condition reelle du runner CI `ubuntu-latest`. |
+| 2026-08-09 (passe 2) | Section "Audit IA de promotion" : la justification du `track: fix` citait a tort les precedents `PLAN_PYREFLY_CI_NOTEBOOK`/`PLAN_RUFF_CI_BUGS_CIBLES` comme "fix ou mainline" ; corrige pour dire qu'ils sont tous deux `mainline` (sous-chantiers d'un epic actif) et que `fix` est justifie ici par l'absence d'epic parent actif, pas par alignement sur ces precedents. | Verifie directement dans `.ai/checkpoint.json` (`track: "mainline"` pour les deux workstreams cites) plutot que suppose par analogie. |
+| 2026-08-09 (passe 3, confirmation) | Relecture structurelle complete du plan corrige : toutes les sections obligatoires du gabarit `.ai/backlog/TEMPLATE_PLAN_IMPLEMENTATION.md` presentes et numerotees correctement. Aucun nouveau blocage majeur trouve. | Convergence confirmee — arret de la boucle conformement a la regle "une passe qui ne trouve rien de nouveau n'est pas une preuve de convergence isolee, mais la 3e passe consecutive sans nouveau blocage majeur ici l'est". |
