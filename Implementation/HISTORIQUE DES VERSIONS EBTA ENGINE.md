@@ -2714,3 +2714,36 @@ ne s'etend pas aux autres workstreams rejetes.
 ### Suite
 
 Poursuivre avec l'enfant 9/10 Pyrefly CI/notebook apres cloture gouvernee.
+
+## 2026-08-09 - Pyrefly portable en CI et correction notebook
+
+| Champ | Valeur |
+| --- | --- |
+| Version runtime | `EBTA-ENGINE-0.1.0` |
+| Type | CONTRACT_ENCODING / CI_TOOLING |
+| Statut | ACCEPTED |
+| Source normative | Aucune ; audit de robustesse du 2026-08-08, lot Pyrefly |
+| Fichiers impactes | Workflow CI, notebook candidate matrix, ratchet et inventaire |
+| Impact protocole | NONE |
+| Verification | Pyrefly 1.1.1 en venv CI equivalent 0 erreur ; 7 tests CI + inventaire OK ; YAML_PASS ; suite canonique 291 tests OK (1 skipped) |
+
+### Contexte
+
+Pyrefly restait une preuve procedurale auto-rapportee. Sa commande portable a
+confirme un appel invalide du notebook a `build_nautilus_inputs` sans
+`package_dir`.
+
+### Decision
+
+Epingler Pyrefly 1.1.1 dans le runner, surcharger l'interpreteur Windows du
+pyproject, remplacer seulement les imports `nautilus_trader.*` et verifier le
+moteur plus les notebooks. Le notebook passe un repertoire temporaire.
+
+### Impact
+
+Une erreur de type interne ou le retrait/affaiblissement du gate fait echouer
+la CI/ratchet. Aucun venv Nautilus lourd ni dependance runtime n'est ajoute.
+
+### Suite
+
+Poursuivre avec l'enfant 10/10 Ruff cible apres cloture gouvernee.

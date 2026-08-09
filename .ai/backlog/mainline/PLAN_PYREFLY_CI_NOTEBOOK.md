@@ -35,7 +35,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date | 2026-08-09 |
 | Autorite normative | Aucune. |
 | Autorite executable | Workflow CI et code notebook. |
@@ -171,20 +171,20 @@ git diff --check
 
 ## 12. Definition of Done
 
-- [ ] Notebook corrige sans artefact durable.
-- [ ] Pyrefly 1.1.1 epingle et execute en CI.
-- [ ] Interpreteur CI et frontiere Nautilus explicites.
-- [ ] Ratchet refuse retrait/affaiblissement du gate.
-- [ ] Pyrefly, inventaire et suite complete verts.
-- [ ] Audits sans finding bloquant.
-- [ ] Aucun fichier interdit touche.
+- [x] Notebook corrige sans artefact durable.
+- [x] Pyrefly 1.1.1 epingle et execute en CI.
+- [x] Interpreteur CI et frontiere Nautilus explicites.
+- [x] Ratchet refuse retrait/affaiblissement du gate.
+- [x] Pyrefly, inventaire et suite complete verts.
+- [x] Audits sans finding bloquant.
+- [x] Aucun fichier interdit touche.
 
 ## 13. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat | A renseigner. |
-| Ecart | A renseigner. |
+| Resultat | Venv CI equivalent : Pyrefly 1.1.1, 0 erreur ; 7 tests CI + inventaire verts ; YAML_PASS ; suite canonique 291 tests `OK` (1 skipped). |
+| Ecart | Aucun fichier du depot. Le run GitHub distant n'est pas revendique sans push. Le venv temporaire de preuve reste sous Temp car sa suppression a ete refusee par la politique d'execution. |
 | Suite | Enfant 10/10 `PLAN_RUFF_CI_BUGS_CIBLES`. |
 
 ## 14. Journal d'audits post-route

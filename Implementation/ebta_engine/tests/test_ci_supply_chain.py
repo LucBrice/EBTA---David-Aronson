@@ -1,3 +1,4 @@
+import json
 import re
 import unittest
 from pathlib import Path
@@ -5,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 WORKFLOW_PATH = ROOT / ".github" / "workflows" / "ebta-runtime-suite.yml"
+NOTEBOOK_PATH = ROOT / "Implementation" / "notebooks" / "03_candidate_matrix_build.ipynb"
 
 EXPECTED_USES = {
     "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2",
@@ -13,7 +15,13 @@ EXPECTED_USES = {
 EXPECTED_INSTALLS = {
     "python -m pip install jsonschema==4.23.0",
     "python -m pip install numpy==2.2.6 pandas==2.3.3",
+    "python -m pip install pyrefly==1.1.1",
 }
+PYREFLY_COMMAND = (
+    'python -m pyrefly check --python-interpreter-path python '
+    '--replace-imports-with-any "nautilus_trader.*" '
+    'Implementation/ebta_engine Implementation/notebooks'
+)
 
 
 def workflow_contract_errors(workflow):
@@ -38,6 +46,8 @@ def workflow_contract_errors(workflow):
         errors.append("checkout credentials are persisted or unspecified")
     if "python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation" not in workflow:
         errors.append("canonical unittest command is missing")
+    if PYREFLY_COMMAND not in workflow:
+        errors.append("portable Pyrefly command is missing")
     return errors
 
 
@@ -71,6 +81,7 @@ class CiSupplyChainTests(unittest.TestCase):
                 "python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation",
                 "python -m unittest",
             ),
+            "missing_pyrefly_gate": self.workflow.replace(PYREFLY_COMMAND, "python -m pyrefly check"),
         }
         for scenario, mutated_workflow in mutations.items():
             with self.subTest(scenario=scenario):
@@ -91,12 +102,24 @@ class CiSupplyChainTests(unittest.TestCase):
         }
         self.assertEqual(installs, EXPECTED_INSTALLS)
 
+    def test_pyrefly_gate_is_portable_and_exact(self):
+        self.assertEqual(self.workflow.count(PYREFLY_COMMAND), 1)
+        self.assertNotIn("pip install nautilus_trader", self.workflow)
+
+    def test_notebook_supplies_temporary_package_dir(self):
+        notebook = json.loads(NOTEBOOK_PATH.read_text(encoding="utf-8"))
+        source = "".join(line for cell in notebook["cells"] for line in cell.get("source", []))
+        self.assertIn("with TemporaryDirectory(prefix='ebta_candidate_matrix_') as temp_dir:", source)
+        self.assertIn("build_nautilus_inputs(package_dir=Path(temp_dir))", source)
+        self.assertNotIn("build_nautilus_inputs()", source)
+
     def test_triggers_and_existing_proof_steps_remain_present(self):
         for fragment in (
             '"on":\n  push:\n  workflow_dispatch:',
             "runs-on: ubuntu-latest",
             'python-version: "3.13"',
             "python -m unittest discover -s Implementation/ebta_engine/tests -t Implementation",
+            PYREFLY_COMMAND,
             "json.load(open('.ai/checkpoint.json', encoding='utf-8'))",
             "json.load(open('Implementation/Active/tracking.json', encoding='utf-8'))",
         ):
