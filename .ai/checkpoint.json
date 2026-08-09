@@ -53,7 +53,7 @@
     "codex_adapter": ".codex/README.md",
     "adapter_boundary": "BACKTRADER remains reference-only; NautilusTrader is confined to the EBTA adapter boundary as simulator/execution layer"
   },
-  "active_workstream_id": "PLAN_HYGIENE_GITIGNORE_RACINE",
+  "active_workstream_id": null,
   "next_actions": [
     {
       "id": "NEXT_NATIVE_ENGINE_PREREQUISITES",
@@ -2519,10 +2519,10 @@
       "id": "PLAN_HYGIENE_GITIGNORE_RACINE",
       "title": "Hygiene gitignore racine",
       "track": "mainline",
-      "status": "ACTIVE",
-      "lifecycle": "ACTIVE",
+      "status": "DONE",
+      "lifecycle": "DONE",
       "classification": "CONTRACT_ENCODING",
-      "source_path": ".ai/backlog/mainline/PLAN_HYGIENE_GITIGNORE_RACINE.md",
+      "source_path": ".ai/archive/20260809_PLAN_HYGIENE_GITIGNORE_RACINE.md",
       "original_draft_path": "0 - HUMAN START HERE/archive/20260809_PLAN_HYGIENE_GITIGNORE_RACINE.md",
       "active_runtime_path": null,
       "opened_at": "2026-08-09",
@@ -2532,12 +2532,12 @@
       "moved_by": "ai",
       "blocks_mainline": true,
       "advances_mainline": true,
-      "closure_reason": null,
+      "closure_reason": "Politique gitignore racine minimale livree; 5 tests cibles, inventaire et suite canonique 284 tests OK; aucun fichier suivi ignore; trois audits PASS.",
       "non_goals": [],
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "ACTIVE",
+        "stage": "DONE",
         "evidence": [
           {
             "id": "intake_audit",
@@ -2553,10 +2553,25 @@
             "id": "baseline_commit",
             "reference": "10dbb25",
             "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "bug_hunter",
+            "reference": "0 - HUMAN START HERE/AUDIT_BUG_HUNTER_PLAN_HYGIENE_GITIGNORE_RACINE_2026-08-09.md#verdict",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "adversarial_tester",
+            "reference": "0 - HUMAN START HERE/AUDIT_ADVERSARIAL_PLAN_HYGIENE_GITIGNORE_RACINE_2026-08-09.md#verdict",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_conformance",
+            "reference": "0 - HUMAN START HERE/AUDIT_CONFORMITE_PLAN_HYGIENE_GITIGNORE_RACINE_2026-08-09.md#verdict",
+            "recorded_at": "2026-08-09"
           }
         ]
       },
-      "is_active": true
+      "is_active": false
     }
   ],
   "validation": {
