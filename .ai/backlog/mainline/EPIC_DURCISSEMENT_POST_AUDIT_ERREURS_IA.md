@@ -370,10 +370,10 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | Champ | Valeur |
 | --- | --- |
 | Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfants clos | Sous-chantiers 1 a 5 — `DONE` ; suite portee a 266 tests `OK`. |
-| Prochain enfant | `PLAN_GARDE_LITTERAUX_VERDICT` — `A_ROUTER` |
-| Action | Revalider l'inventaire vivant des literals sensibles, definir la classification et l'allowlist minimales, puis auditer le garde AST avant routage. |
-| Blocage | Toute interdiction generale non deduite des producteurs corriges, ou tout besoin de nouvelle taxonomie normative de verdict, exige une decision humaine. |
+| Enfants clos | Sous-chantiers 1 a 6 — `DONE` ; suite portee a 274 tests `OK`. |
+| Prochain enfant | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` — `A_ROUTER` |
+| Action | Auditer le workflow CI vivant, ses actions, permissions, dependances et hygiene de depot, puis fermer un scope minimal sans mutation GitHub externe. |
+| Blocage | Tout reglage de ruleset/protection/secrets ou toute action externe exige une autorisation humaine distincte ; le plan local doit rester reproductible sans la supposer. |
 
 ### Suivi des sous-chantiers
 
@@ -384,7 +384,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | 3 | `PLAN_CONTRAT_EXIGENCES_GATES_TYPEES` | `DONE` | Contrat `identifier` / `verdict_pass` / `boolean_true`, fixture normalisee, 253 tests `OK`, Pyrefly 0, adversarial 7/7. |
 | 4 | `PLAN_APPROBATION_LIVE_DERIVEE` | `DONE` | Verdict live exact, preuve liee au `live_version_id`, literals supprimes, 259 tests `OK`, Pyrefly 0, adversarial 10/10. |
 | 5 | `PLAN_COHERENCE_VERDICTS_PERSISTES` | `DONE` | Helper unique, INV-010 et recoupement WRC/economic/invariant ; 266 tests `OK`, Pyrefly 0, adversarial sans faux succes. |
-| 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `A_ROUTER` | Installer le garde AST sur les producteurs maintenant corriges et une classification stabilisee. |
+| 6 | `PLAN_GARDE_LITTERAUX_VERDICT` | `DONE` | Garde exact-key 32/32, allowlist annotee, nouveau/stale/parse bloquants ; 274 tests `OK`, Pyrefly 0. |
 | 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `A_ROUTER` | En attente. |
 | 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `A_ROUTER` | En attente. |
 | 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `A_ROUTER` | En attente. |
