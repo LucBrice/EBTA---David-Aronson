@@ -2716,11 +2716,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": "0 - HUMAN START HERE/PLAN_RUFF_CI_BUGS_CIBLES.md#journal-de-convergence-de-lintake",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/mainline/PLAN_RUFF_CI_BUGS_CIBLES.md#14-journal-daudits-post-route",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "86b52c7",
             "recorded_at": "2026-08-09"
           }
         ]
