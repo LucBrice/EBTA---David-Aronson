@@ -61,7 +61,7 @@
 
 | Champ | Valeur |
 | --- | --- |
-| Statut | `NON_DEMARRE` |
+| Statut | `IMPLEMENTE_AUDITE` |
 | Date de creation | 2026-08-08 |
 | Date d'activation | - |
 | Autorite normative | `Protocole/` reste l'autorite scientifique EBTA ; aucune evolution normative attendue. |
@@ -340,23 +340,23 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 
 ## 11. Definition of Done
 
-- [ ] Decision GitHub externe tracee comme realisee avec preuve ou explicitement differee.
-- [ ] Les dix sous-chantiers existent et sont `DONE`.
-- [ ] Chaque sous-chantier a suivi ses deux boucles d'evaluation, sa baseline et son workflow complet.
-- [ ] Les audits `bug-hunter`, `adversarial-tester` et `plan-conformance-audit` requis sont reels et sans finding bloquant.
-- [ ] La suite unittest complete est `OK` apres le dernier lot.
-- [ ] `.ai/checkpoint.json` et `Implementation/Active/tracking.json` sont valides si touches.
-- [ ] Aucun fichier hors perimetre des plans enfants n'a ete modifie.
-- [ ] Aucun changement de `Protocole/`, aucune mutation BACKTRADER et aucun push automatique.
-- [ ] Le ratio de cout de gouvernance signale par la dissidence de la Partie F est mesure et consigne honnêtement.
+- [x] Decision GitHub externe explicitement differee faute d'autorisation humaine ; aucun setting distant modifie.
+- [x] Les dix sous-chantiers existent et sont `DONE`.
+- [x] Chaque sous-chantier a suivi ses deux boucles d'evaluation, sa baseline et son workflow complet.
+- [x] Les audits `bug-hunter`, `adversarial-tester` et `plan-conformance-audit` requis sont reels et sans finding bloquant.
+- [x] La suite unittest complete est `OK` apres le dernier lot.
+- [x] `.ai/checkpoint.json` et `Implementation/Active/tracking.json` sont valides si touches.
+- [x] Aucun fichier hors perimetre des plans enfants n'a ete modifie.
+- [x] Aucun changement de `Protocole/`, aucune mutation BACKTRADER et aucun push automatique.
+- [x] Le ratio de cout de gouvernance signale par la dissidence de la Partie F est mesure et consigne honnêtement.
 
 ## 12. Cloture
 
 | Champ | Valeur |
 | --- | --- |
-| Resultat final | A renseigner apres fermeture de tous les enfants. |
+| Resultat final | Dix enfants `DONE` ; suite 242 -> 292 tests `OK` (1 skipped) ; Ruff/Pyrefly 0 ; schemas et references d'etat valides ; verdicts scientifiques preserves. |
 | Ecarts par rapport au plan initial | La promotion a remplace deux lots techniques composites par sept sous-chantiers atomiques ; l'audit d'architecture du 2026-08-09 a ensuite remplace l'ancien lot 3 composite par quatre workstreams, portant le total a dix. |
-| Suites a prevoir | Aucune tant que les sous-chantiers ne sont pas routes individuellement. |
+| Suites a prevoir | Reglages GitHub externes explicitement differes ; publication locale non effectuee. Aucun nouveau chantier de gouvernance a deduire automatiquement. |
 
 ## 13. Journal d'audits post-route
 
@@ -369,11 +369,11 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 
 | Champ | Valeur |
 | --- | --- |
-| Parent | `BASELINED`, sans appel `continue` direct tant que les enfants ne sont pas tous `DONE`. |
-| Enfants clos | Sous-chantiers 1 a 9 — `DONE` ; suite portee a 291 tests `OK`. Pyrefly CI equivalent retourne 0 erreur. |
-| Prochain enfant | `PLAN_RUFF_CI_BUGS_CIBLES` — `A_ROUTER` |
-| Action | Auditer les 26 findings Ruff avec le ruleset cible `F,E9,B,PLE,RUF`, classifier chaque signal et limiter les corrections aux bugs admis. |
-| Blocage | Aucun `--select ALL`, nettoyage stylistique massif ou auto-fix aveugle ; chaque finding doit etre classe avant modification. |
+| Parent | `IMPLEMENTE_AUDITE`, active seulement apres les dix enfants `DONE`. |
+| Enfants clos | Sous-chantiers 1 a 10 — `DONE` ; suite finale 292 tests `OK`. Ruff et Pyrefly retournent 0. |
+| Prochain enfant | Aucun. |
+| Action | Audit global et cloture du parent. |
+| Blocage | Aucun blocker local. Settings GitHub externes et push restent non autorises/differes. |
 
 ### Suivi des sous-chantiers
 
@@ -388,7 +388,7 @@ Premier lot executable propose apres decisions et audits : `PLAN_TESTS_WRC_CALIB
 | 7 | `PLAN_DURCISSEMENT_CI_SUPPLY_CHAIN` | `DONE` | Coordinateur clos apres 7A/7B ; actions sur SHA, permissions read-only, pins directs, gitignore racine minimal ; 284 tests `OK`. |
 | 8 | `PLAN_INTEGRITE_REFERENCES_ETAT` | `DONE` | Deux pointeurs archives corriges, garde fail-closed a chaque commit, exception RAG exacte ; 289 tests `OK`. |
 | 9 | `PLAN_PYREFLY_CI_NOTEBOOK` | `DONE` | Pyrefly 1.1.1 CI portable, notebook corrige sans artefact durable ; 291 tests `OK`. |
-| 10 | `PLAN_RUFF_CI_BUGS_CIBLES` | `A_ROUTER` | En attente. |
+| 10 | `PLAN_RUFF_CI_BUGS_CIBLES` | `DONE` | Ruff 0.16.2 cible, 25 findings classes puis 0, faux positif de re-export corrige ; 292 tests `OK`. |
 
 ### Decision humaine du 2026-08-09 et resultat de l'audit du lot 3
 
@@ -435,7 +435,48 @@ trois defauts de contrat plus larges rendent un simple garde AST insuffisant :
 3. INV-010 accepte trois `PASS` litteraux meme quand le rapport economique est
    `REJECTED_ECONOMIC`.
 
-Conclusion d'architecture : l'ancien lot 3 est remplace par quatre
-workstreams atomiques 3A a 3D. Les trois corrections de producteurs et de
-contrats sont maintenant closes ; le prochain cycle gouverne porte le garde
-AST `PLAN_GARDE_LITTERAUX_VERDICT`.
+Conclusion d'architecture : l'ancien lot 3 a ete remplace par quatre
+workstreams atomiques 3A a 3D, tous maintenant `DONE`, garde AST inclus.
+
+## 15. Mesure du cout de gouvernance
+
+Perimetre mesure : `f773d8c..HEAD`, depuis la baseline du parent jusqu'a la
+fin du dernier enfant, avant le commit de cloture parent.
+
+| Mesure | Valeur |
+| --- | ---: |
+| Commits touchant `.ai/` | 69 |
+| Total commits du perimetre | 69 |
+| Lignes ajoutees sous `Implementation/ebta_engine/tests/` | 1 563 |
+| Dont inventaire + allowlist declarative | 490 |
+| Lignes Python/test hors inventaire + allowlist | 1 073 |
+| Lignes tests strictes par commit `.ai/` | 15,6 |
+
+Le seuil dissident de la Partie F n'est pas atteint : 69 commits `.ai/` ne
+depassent ni 1 073 lignes de tests strictes ni 1 563 lignes de preuves sous
+le dossier tests. Cela ne rend pas 69 commits gratuits : le cout de
+gouvernance est eleve et visible. Ce ratio est un signal grossier, pas une
+mesure de qualite, et ne justifie aucun nouveau chantier automatique.
+
+## 16. Audit global de conformite
+
+### Verdict
+
+PASS — les criteres du parent sont satisfaits localement, sans transformer
+les actions GitHub non autorisees en preuve realisee.
+
+| Critere | Preuve | Verdict |
+| --- | --- | --- |
+| Dix enfants | Tous `status: DONE`, `workflow.stage: DONE` dans le checkpoint | PASS |
+| Workflows enfants | Routage, deux passes, baseline, activation, ready et close traces | PASS |
+| Audits | Rapports bug-hunter/adversarial/conformite enregistres par les lots core-engine | PASS |
+| Regression finale | 292 tests `OK`, 1 skipped | PASS |
+| Analyse statique | Ruff 0.16.2 : 0 finding ; Pyrefly 1.1.1 : 0 erreur | PASS |
+| Etat machine | Checkpoint et tracking valides ; references 0 erreur + 1 absence historique exacte | PASS |
+| Frontieres | Aucun diff Protocole/BACKTRADER depuis la baseline ; aucun push | PASS |
+| Externe | Settings GitHub non modifies, explicitement differes | DEFERRED conforme |
+| Cout | 69 commits `.ai/` pour 1 073 lignes tests strictes ajoutees | PASS seuil, cout eleve |
+
+Les verdicts scientifiques `FAIL`, `DENIED` et `INCONCLUSIVE` n'ont pas ete
+convertis en `PASS` pour fermer l'epic. Les fermetures attestent des capacites
+et contrats techniques, pas une performance de trading.
