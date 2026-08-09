@@ -2889,11 +2889,21 @@
       "workflow": {
         "id": "common",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS.md#journal-audits-intake-2026-08-09",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_ACTIONS.md#journal-audits-post-hoc-2026-08-09",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "a1ead6902c1c03ecf7e41c68feb79b6e8805bf0f",
             "recorded_at": "2026-08-09"
           }
         ]
