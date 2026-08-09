@@ -2936,11 +2936,21 @@
       "workflow": {
         "id": "core-engine",
         "contract_version": "1.0.0",
-        "stage": "TRIAGED",
+        "stage": "BASELINED",
         "evidence": [
           {
             "id": "intake_audit",
             "reference": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md#journal-audits-intake",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "plan_audit",
+            "reference": ".ai/backlog/fixes/PLAN_CORRECTION_CI_NODE20_DEPRECATION_CORE_ENGINE.md#journal-audits-post-hoc",
+            "recorded_at": "2026-08-09"
+          },
+          {
+            "id": "baseline_commit",
+            "reference": "7069e0a6202b6c1c6663a57930c797a4bcf7887a",
             "recorded_at": "2026-08-09"
           }
         ]
