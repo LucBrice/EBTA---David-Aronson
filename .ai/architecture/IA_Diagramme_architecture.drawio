@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="ChatGPT Work — process-first architectural refactor">
   <diagram id="page_process_first" name="Architecture process-first">
-    <mxGraphModel grid="0" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="8400" pageHeight="5300" math="0" shadow="0">
+    <mxGraphModel dx="731" dy="478" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="8400" pageHeight="5300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="layer_core_process" parent="0" style="locked=1;" value="01 — CORE PROCESS" />
@@ -283,8 +283,8 @@
           <mxCell edge="1" parent="layer_core_process" source="node_user" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_interface">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
-                <mxPoint x="275" y="491" />
-                <mxPoint x="5150" y="491" />
+                <mxPoint x="276" y="4170" />
+                <mxPoint x="5150" y="4170" />
               </Array>
             </mxGeometry>
           </mxCell>
@@ -299,7 +299,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="VALIDATE" relation_type="VALIDATE" id="edge_verification_to_artifact_validate">
+        <object label="VALIDATE" relation_type="VALIDATE" kind="RELATION" id="edge_verification_to_artifact_validate">
           <mxCell edge="1" parent="layer_core_process" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.744;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -309,7 +309,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="layer_feedback_recovery" parent="0" style="locked=1;" value="02 — FEEDBACK &amp; RECOVERY" visible="0" />
+        <mxCell id="layer_feedback_recovery" parent="0" style="locked=0;" value="02 — FEEDBACK &amp; RECOVERY" visible="0" />
         <object label="&lt;b&gt;FAIL / REPAIR LOOP&lt;/b&gt;&lt;br&gt;&lt;br&gt;Bloque la promotion et déclenche la réparation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L10] [R]&lt;/b&gt;&lt;/font&gt;" component="repair_loop" layer_primary="L08" layer_related="L10" robustness="RECOVERY" kind="RECOVERY_MECHANISM" id="node_repair_loop">
           <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFEBE6;strokeColor=#DE350B;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
             <mxGeometry height="110" width="300" x="6800" y="1510" as="geometry" />
@@ -319,8 +319,8 @@
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_decision_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.373;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_repair_loop">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
-                <mxPoint x="7590" y="629" />
-                <mxPoint x="6912" y="629" />
+                <mxPoint x="7590" y="691.5" />
+                <mxPoint x="6912" y="691.5" />
               </Array>
             </mxGeometry>
           </mxCell>
@@ -465,6 +465,16 @@
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
+        <object label="STATE" relation_type="READ" kind="RELATION" id="edge_resume_to_checkpoint">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_resume" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_checkpoint">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="685" y="3650.3" />
+                <mxPoint x="515" y="3650.3" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
         <object label="&lt;b&gt;ROLLBACK&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="rollback" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_rollback">
           <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
             <mxGeometry height="90" width="150" x="780" y="3530" as="geometry" />
@@ -527,7 +537,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="layer_control_security" parent="0" style="locked=1;" value="03 — CONTROL &amp; SECURITY" visible="0" />
+        <mxCell id="layer_control_security" parent="0" style="locked=0;" value="03 — CONTROL &amp; SECURITY" visible="0" />
         <object label="&lt;b&gt;POLICY / PERMISSIONS / GUARDRAILS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Authorization · allowlist · denylist · secrets access · restrictions&lt;br&gt;Human approval / gate · budget · escalation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09] [P]&lt;/b&gt;&lt;/font&gt;" component="policy" layer_primary="L10" layer_related="L09" robustness="PREVENTION" kind="POLICY" id="node_policy">
           <mxCell parent="layer_control_security" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
             <mxGeometry height="220" width="760" x="100" y="2700" as="geometry" />
@@ -608,7 +618,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="layer_observability" parent="0" style="locked=1;" value="04 — OBSERVABILITY" />
+        <mxCell id="layer_observability" parent="0" style="locked=0;" value="04 — OBSERVABILITY" visible="0" />
         <object label="&lt;b&gt;OBSERVABILITY SYSTEM&lt;/b&gt;&lt;br&gt;&lt;br&gt;Logs · metrics · traces · events · alerts · dashboards · monitoring&lt;br&gt;Observabilité ≠ mémoire : observe l’exécution, puis persiste les preuves&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L09 · L06] [D/E]&lt;/b&gt;&lt;/font&gt;" component="observability" layer_primary="L09" layer_related="L06" robustness="DETECTION,EVIDENCE" kind="OBSERVABILITY" id="node_observability">
           <mxCell parent="layer_observability" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
             <mxGeometry height="220" width="760" x="1650" y="3600" as="geometry" />
@@ -679,7 +689,7 @@
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <mxCell id="layer_memory_evidence" parent="0" style="locked=1;" value="05 — MEMORY &amp; EVIDENCE" />
+        <mxCell id="layer_memory_evidence" parent="0" style="locked=0;" value="05 — MEMORY &amp; EVIDENCE" visible="0" />
         <object label="&lt;b&gt;REPOSITORY / CODE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Code et état versionné&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06 · L09]&lt;/b&gt;&lt;/font&gt;" component="repository" layer_primary="L06" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_repository">
           <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
             <mxGeometry height="115" width="310" x="1350" y="820" as="geometry" />
@@ -800,7 +810,27 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="layer_internal_details" parent="0" style="locked=1;" value="06 — INTERNAL DETAILS" />
+        <object label="LESSON" relation_type="WRITE" kind="RELATION" id="edge_correction_to_memory">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_correction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_memory">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4965" y="1700" />
+                <mxPoint x="1530" y="1700" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="LESSON" relation_type="WRITE" kind="RELATION" id="edge_merge_to_memory">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_merge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_memory">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7045" y="4100" />
+                <mxPoint x="1530" y="4100" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_internal_details" parent="0" style="locked=0;" value="06 — INTERNAL DETAILS" visible="0" />
         <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_tool_api">
           <mxCell edge="1" parent="layer_internal_details" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.778;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_tool_api">
             <mxGeometry relative="1" as="geometry">
@@ -1136,7 +1166,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="layer_domain_ebta" parent="0" style="locked=1;" value="07 — DOMAIN / EBTA" />
+        <mxCell id="layer_domain_ebta" parent="0" style="locked=0;" value="07 — DOMAIN / EBTA" />
         <object label="&lt;b&gt;DATA LIFECYCLE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Ingestion · stockage · validation · normalisation · transformation · versionnement&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L02] [P]&lt;/b&gt;&lt;/font&gt;" component="data_lifecycle" layer_primary="L02" layer_related="" robustness="PREVENTION" kind="DOMAIN_COMPONENT" id="node_data_lifecycle">
           <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
             <mxGeometry height="135" width="360" x="1750" y="980" as="geometry" />
@@ -1197,13 +1227,21 @@
             </mxGeometry>
           </mxCell>
         </object>
+        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_experiment_campaign_to_research_space">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_experiment_campaign" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_research_space">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
         <object label="RESEARCH TASK" relation_type="READ" kind="RELATION" id="edge_worker_agent_to_research_space">
-          <mxCell edge="1" parent="layer_domain_ebta" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.857;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.605;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_research_space">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.605;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;exitX=0.62;exitY=0.009;exitDx=0;exitDy=0;exitPerimeter=0;" target="node_research_space">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
-                <mxPoint x="4635.7" y="373" />
+                <mxPoint x="4529" y="433.67" />
+                <mxPoint x="4635.67" y="433.67" />
+                <mxPoint x="4635.67" y="373" />
                 <mxPoint x="336" y="373" />
               </Array>
+              <mxPoint x="4550.67" y="465.92" as="sourcePoint" />
             </mxGeometry>
           </mxCell>
         </object>
@@ -1278,6 +1316,11 @@
                 <mxPoint x="3071.4" y="3266" />
               </Array>
             </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="RESULTS" relation_type="READ" kind="RELATION" id="edge_scientific_validation_to_backtest_engine">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_backtest_engine">
+            <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
         <mxCell id="layer_legend_documentation" parent="0" style="locked=1;" value="08 — LEGEND &amp; DOCUMENTATION" />
