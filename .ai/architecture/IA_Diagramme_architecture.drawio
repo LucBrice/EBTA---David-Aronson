@@ -1,0 +1,1318 @@
+<mxfile host="app.diagrams.net" agent="ChatGPT Work — process-first architectural refactor">
+  <diagram id="page_process_first" name="Architecture process-first">
+    <mxGraphModel grid="0" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="8400" pageHeight="5300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="layer_core_process" parent="0" style="locked=1;" value="01 — CORE PROCESS" />
+        <object label="&lt;b&gt;USER / EXTERNAL TRIGGER&lt;/b&gt;&lt;br&gt;&lt;br&gt;Mission humaine ou événement système&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L07]&lt;/b&gt;&lt;/font&gt;" component="user" layer_primary="L07" layer_related="" robustness="" kind="HUMAN_INTERFACE" id="node_user">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="350" x="100" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;OBJECTIVE / REQUEST / TICKET&lt;/b&gt;&lt;br&gt;&lt;br&gt;Objectif métier · issue · bug · tâche&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L01 · L07]&lt;/b&gt;&lt;/font&gt;" component="objective" layer_primary="L01" layer_related="L07" robustness="" kind="SPECIFICATION" id="node_objective">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="420" x="520" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;SOURCE OF TRUTH / SPECIFICATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Contrats · critères d’acceptation · règles métier · SOP · contrats I/O&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L01] [P]&lt;/b&gt;&lt;/font&gt;" component="specification" layer_primary="L08" layer_related="L01" robustness="PREVENTION" kind="SPECIFICATION" id="node_specification">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="500" x="1010" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CONTEXT LOADER&lt;/b&gt;&lt;br&gt;&lt;br&gt;Charge le contexte utile et l’état courant&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06 · L02 · L05] [P]&lt;/b&gt;&lt;/font&gt;" component="context_loader" layer_primary="L06" layer_related="L02,L05" robustness="PREVENTION" kind="CONTEXT" id="node_context_loader">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="470" x="1590" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;PLANNER / ARCHITECT&lt;/b&gt;&lt;br&gt;&lt;br&gt;Comprend l’objectif et élabore la stratégie&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L05]&lt;/b&gt;&lt;/font&gt;" component="planner" layer_primary="L10" layer_related="L05" robustness="" kind="AI_REASONING" id="node_planner">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAE6FF;strokeColor=#6554C0;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="450" x="2120" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TASK DECOMPOSITION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Tâches atomiques · dépendances · ordre · critères&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05] [P]&lt;/b&gt;&lt;/font&gt;" component="task_decomposition" layer_primary="L05" layer_related="" robustness="PREVENTION" kind="ORCHESTRATION" id="node_task_decomposition">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="470" x="2640" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;ORCHESTRATOR&lt;/b&gt;&lt;br&gt;&lt;br&gt;Coordonne le plan, les états et les contrôles&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L10]&lt;/b&gt;&lt;/font&gt;" component="orchestrator" layer_primary="L05" layer_related="L10" robustness="" kind="ORCHESTRATION" id="node_orchestrator">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="450" x="3160" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;QUEUE / SCHEDULER / TASK ROUTER&lt;/b&gt;&lt;br&gt;&lt;br&gt;Priorisation · async · multi-workers · états des tâches&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05]&lt;/b&gt;&lt;/font&gt;" component="scheduler" layer_primary="L05" layer_related="" robustness="" kind="ORCHESTRATION" id="node_scheduler">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="510" x="3680" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;WORKER AGENT&lt;/b&gt;&lt;br&gt;&lt;br&gt;Raisonne · interprète · génère · diagnostique&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L05]&lt;/b&gt;&lt;/font&gt;" component="worker_agent" layer_primary="L10" layer_related="L05" robustness="" kind="AI_AGENT" id="node_worker_agent">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAE6FF;strokeColor=#6554C0;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="450" x="4250" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TOOL ROUTER&lt;/b&gt;&lt;br&gt;&lt;br&gt;Choisit l’outil · valide arguments et permissions · journalise&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L05] [P]&lt;/b&gt;&lt;/font&gt;" component="tool_router" layer_primary="L10" layer_related="L05" robustness="PREVENTION" kind="AI_CONTROL" id="node_tool_router">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="430" x="4770" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TOOLS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Catalogue d’outils autorisés et déterministes&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tools" layer_primary="L10" layer_related="L09" robustness="" kind="TOOL" id="node_tools">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="430" x="5280" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;ISOLATED EXECUTION ENVIRONMENT&lt;/b&gt;&lt;br&gt;&lt;br&gt;Sandbox · Docker/Container · MicroVM · Git Worktree · Git Branch · Staging (mécanismes distincts)&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L09 · L10] [C]&lt;/b&gt;&lt;/font&gt;" component="sandbox" layer_primary="L09" layer_related="L10" robustness="CONFINEMENT" kind="EXECUTION_ENVIRONMENT" id="node_sandbox">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="490" x="5790" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;ARTIFACT / OUTPUT&lt;/b&gt;&lt;br&gt;&lt;br&gt;Code · config · test · fichier · rapport · résultat · action préparée&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06]&lt;/b&gt;&lt;/font&gt;" component="artifact" layer_primary="L06" layer_related="" robustness="" kind="ARTIFACT" id="node_artifact">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="430" x="6350" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;VERIFICATION PIPELINE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Vérifications logicielles, contractuelles et indépendantes&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L04] [D]&lt;/b&gt;&lt;/font&gt;" component="verification" layer_primary="L08" layer_related="L04" robustness="DETECTION" kind="QUALITY_GATE" id="node_verification">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="155" width="500" x="6860" y="480" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;PASS / FAIL ?&lt;/b&gt;&lt;br&gt;&lt;br&gt;Vraie bifurcation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08] [D]&lt;/b&gt;&lt;/font&gt;" component="decision_gate" layer_primary="L08" layer_related="" robustness="DETECTION" kind="QUALITY_GATE" id="node_decision_gate">
+          <mxCell parent="layer_core_process" style="rhombus;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="115" width="300" x="7440" y="500" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_user_to_objective">
+          <mxCell edge="1" parent="layer_core_process" source="node_user" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_objective">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_objective_to_specification">
+          <mxCell edge="1" parent="layer_core_process" source="node_objective" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_specification">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_specification_to_context_loader">
+          <mxCell edge="1" parent="layer_core_process" source="node_specification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_context_loader">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_context_loader_to_planner">
+          <mxCell edge="1" parent="layer_core_process" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_planner">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_planner_to_task_decomposition">
+          <mxCell edge="1" parent="layer_core_process" source="node_planner" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_task_decomposition">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_task_decomposition_to_orchestrator">
+          <mxCell edge="1" parent="layer_core_process" source="node_task_decomposition" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_orchestrator">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_orchestrator_to_scheduler">
+          <mxCell edge="1" parent="layer_core_process" source="node_orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_scheduler">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_scheduler_to_worker_agent">
+          <mxCell edge="1" parent="layer_core_process" source="node_scheduler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_worker_agent">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_worker_agent_to_tool_router">
+          <mxCell edge="1" parent="layer_core_process" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_router">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tools">
+          <mxCell edge="1" parent="layer_core_process" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tools">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_tools_to_sandbox">
+          <mxCell edge="1" parent="layer_core_process" source="node_tools" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_sandbox">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_sandbox_to_artifact">
+          <mxCell edge="1" parent="layer_core_process" source="node_sandbox" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_artifact_to_verification">
+          <mxCell edge="1" parent="layer_core_process" source="node_artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.333;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_verification">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_verification_to_decision_gate">
+          <mxCell edge="1" parent="layer_core_process" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_decision_gate">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;PASS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Autorise l’intégration&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08]&lt;/b&gt;&lt;/font&gt;" component="pass" layer_primary="L08" layer_related="" robustness="" kind="DOMAIN_COMPONENT" id="node_pass">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="110" width="300" x="7460" y="1510" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="PASS" relation_type="FLOW" kind="RELATION" id="edge_decision_gate_to_pass">
+          <mxCell edge="1" parent="layer_core_process" source="node_decision_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.250;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.540;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_pass">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7515" y="651" />
+                <mxPoint x="7622" y="651" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;GIT CHANGE / BRANCH&lt;/b&gt;&lt;br&gt;&lt;br&gt;Changement isolé et réversible&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L09]&lt;/b&gt;&lt;/font&gt;" component="git_change" layer_primary="L08" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_git_change">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="330" x="7510" y="1800" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;COMMIT&lt;/b&gt;&lt;br&gt;&lt;br&gt;Snapshot explicite&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08]&lt;/b&gt;&lt;/font&gt;" component="commit" layer_primary="L08" layer_related="" robustness="" kind="DOMAIN_COMPONENT" id="node_commit">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="330" x="7510" y="2130" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;PUSH&lt;/b&gt;&lt;br&gt;&lt;br&gt;Publication de la branche&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L09]&lt;/b&gt;&lt;/font&gt;" component="push" layer_primary="L08" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_push">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="330" x="7510" y="2460" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;PULL REQUEST&lt;/b&gt;&lt;br&gt;&lt;br&gt;Proposition de changement&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08] [P/D]&lt;/b&gt;&lt;/font&gt;" component="pull_request" layer_primary="L08" layer_related="" robustness="PREVENTION,DETECTION" kind="DOMAIN_COMPONENT" id="node_pull_request">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="330" x="7510" y="2790" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;REVIEW&lt;/b&gt;&lt;br&gt;&lt;br&gt;Revue humaine ou indépendante&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L10] [D]&lt;/b&gt;&lt;/font&gt;" component="review" layer_primary="L08" layer_related="L10" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_review">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="330" x="7510" y="3120" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CONTINUOUS INTEGRATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Réexécute checks et tests&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L09] [D]&lt;/b&gt;&lt;/font&gt;" component="ci" layer_primary="L08" layer_related="L09" robustness="DETECTION" kind="CI_SYSTEM" id="node_ci">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="330" x="7510" y="3450" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CI PASS / FAIL ?&lt;/b&gt;&lt;br&gt;&lt;br&gt;Seconde bifurcation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L09] [D]&lt;/b&gt;&lt;/font&gt;" component="ci_decision" layer_primary="L08" layer_related="L09" robustness="DETECTION" kind="QUALITY_GATE" id="node_ci_decision">
+          <mxCell parent="layer_core_process" style="rhombus;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=13;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="150" width="430" x="7460" y="3780" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_pass_to_git_change">
+          <mxCell edge="1" parent="layer_core_process" source="node_pass" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.580;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.464;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_git_change">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7634" y="1656" />
+                <mxPoint x="7663" y="1656" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_git_change_to_commit">
+          <mxCell edge="1" parent="layer_core_process" source="node_git_change" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_commit">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_commit_to_push">
+          <mxCell edge="1" parent="layer_core_process" source="node_commit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_push">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_push_to_pull_request">
+          <mxCell edge="1" parent="layer_core_process" source="node_push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_pull_request">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_pull_request_to_review">
+          <mxCell edge="1" parent="layer_core_process" source="node_pull_request" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_review">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_review_to_ci">
+          <mxCell edge="1" parent="layer_core_process" source="node_review" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_ci">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_ci_to_ci_decision">
+          <mxCell edge="1" parent="layer_core_process" source="node_ci" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_ci_decision">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;MERGE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Intégration après CI PASS&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L09 · L08]&lt;/b&gt;&lt;/font&gt;" component="merge" layer_primary="L09" layer_related="L08" robustness="" kind="DOMAIN_COMPONENT" id="node_merge">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="390" x="6850" y="4200" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;RELEASE / DEPLOYMENT / ACTION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Promotion contrôlée · rollback possible&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L09 · L08]&lt;/b&gt;&lt;/font&gt;" component="release" layer_primary="L09" layer_related="L08" robustness="" kind="DOMAIN_COMPONENT" id="node_release">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="540" x="6210" y="4200" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TARGET SYSTEM / DOMAIN&lt;/b&gt;&lt;br&gt;&lt;br&gt;Application · backend · data pipeline · système autonome&lt;br&gt;Example target: EBTA&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L07 · L09]&lt;/b&gt;&lt;/font&gt;" component="target_system" layer_primary="L07" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_target_system">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="600" x="5500" y="4200" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="PASS" relation_type="FLOW" kind="RELATION" id="edge_ci_decision_to_merge">
+          <mxCell edge="1" parent="layer_core_process" source="node_ci_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.528;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_merge">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7687" y="3966" />
+                <mxPoint x="7045" y="3966" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_merge_to_release">
+          <mxCell edge="1" parent="layer_core_process" source="node_merge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_release">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="DEPLOY" relation_type="DEPLOY" kind="RELATION" id="edge_release_to_target_system">
+          <mxCell edge="1" parent="layer_core_process" source="node_release" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B7FF3C;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B7FF3C;labelBackgroundColor=#172B4D;" target="node_target_system">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;INTERFACES&lt;/b&gt;&lt;br&gt;&lt;br&gt;Frontend · UI · Browser · API · visualisations · dashboards&lt;br&gt;Expose le système et contrôle les expériences&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L07]&lt;/b&gt;&lt;/font&gt;" component="interface" layer_primary="L07" layer_related="" robustness="" kind="HUMAN_INTERFACE" id="node_interface">
+          <mxCell parent="layer_core_process" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="180" width="600" x="4750" y="4550" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="USE" relation_type="USE" kind="RELATION" id="edge_user_to_interface">
+          <mxCell edge="1" parent="layer_core_process" source="node_user" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_interface">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="275" y="491" />
+                <mxPoint x="5150" y="491" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="API / UI" relation_type="USE" kind="RELATION" id="edge_interface_to_target_system">
+          <mxCell edge="1" parent="layer_core_process" source="node_interface" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_target_system">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4950" y="4514" />
+                <mxPoint x="5800" y="4514" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="VALIDATE" relation_type="VALIDATE" id="edge_verification_to_artifact_validate">
+          <mxCell edge="1" parent="layer_core_process" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.744;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6824" y="583.3" />
+                <mxPoint x="6824" y="595.3" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_feedback_recovery" parent="0" style="locked=1;" value="02 — FEEDBACK &amp; RECOVERY" visible="0" />
+        <object label="&lt;b&gt;FAIL / REPAIR LOOP&lt;/b&gt;&lt;br&gt;&lt;br&gt;Bloque la promotion et déclenche la réparation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L10] [R]&lt;/b&gt;&lt;/font&gt;" component="repair_loop" layer_primary="L08" layer_related="L10" robustness="RECOVERY" kind="RECOVERY_MECHANISM" id="node_repair_loop">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFEBE6;strokeColor=#DE350B;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="110" width="300" x="6800" y="1510" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="FAIL" relation_type="FEEDBACK" kind="RELATION" id="edge_decision_gate_to_repair_loop">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_decision_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.373;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_repair_loop">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7590" y="629" />
+                <mxPoint x="6912" y="629" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;ERROR EVIDENCE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Logs · stack trace · failing test&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06 · L08] [E]&lt;/b&gt;&lt;/font&gt;" component="error_evidence" layer_primary="L06" layer_related="L08" robustness="EVIDENCE" kind="DOMAIN_COMPONENT" id="node_error_evidence">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="470" x="6320" y="1800" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;DIAGNOSTIC&lt;/b&gt;&lt;br&gt;&lt;br&gt;Debugging · analyse de l’échec&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L08] [D]&lt;/b&gt;&lt;/font&gt;" component="diagnostic" layer_primary="L10" layer_related="L08" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_diagnostic">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAE6FF;strokeColor=#6554C0;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="470" x="5790" y="1800" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;ROOT CAUSE / BUG LOCALIZATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Localisation causale&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L10] [D]&lt;/b&gt;&lt;/font&gt;" component="root_cause" layer_primary="L08" layer_related="L10" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_root_cause">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAE6FF;strokeColor=#6554C0;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="470" x="5260" y="1800" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CORRECTION&lt;/b&gt;&lt;br&gt;&lt;br&gt;TDD · Red → Green → Refactor&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L10] [R]&lt;/b&gt;&lt;/font&gt;" component="correction" layer_primary="L08" layer_related="L10" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_correction">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAE6FF;strokeColor=#6554C0;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="470" x="4730" y="1800" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;RE-TEST&lt;/b&gt;&lt;br&gt;&lt;br&gt;Controlled retry · nouvelle vérification&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L05] [D]&lt;/b&gt;&lt;/font&gt;" component="retest" layer_primary="L08" layer_related="L05" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_retest">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="145" width="470" x="4200" y="1800" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_repair_loop_to_error_evidence">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_repair_loop" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.577;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_error_evidence">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7000" y="1668" />
+                <mxPoint x="6591" y="1668" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_error_evidence_to_diagnostic">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_error_evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_diagnostic">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_diagnostic_to_root_cause">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_diagnostic" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_root_cause">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_root_cause_to_correction">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_root_cause" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_correction">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_correction_to_retest">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_correction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_retest">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="RE-TEST" relation_type="FLOW" kind="RELATION" id="edge_retest_to_verification">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_retest" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.474;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.222;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_verification">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4423" y="1764" />
+                <mxPoint x="6971.1" y="1764" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="IMPLEMENT" relation_type="FEEDBACK" kind="RELATION" id="edge_repair_loop_to_worker_agent">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_repair_loop" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.707;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.429;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=1;dashPattern=12 8;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_worker_agent">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7012" y="1474" />
+                <mxPoint x="4442.9" y="1474" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="FAIL → REPAIR" relation_type="FEEDBACK" kind="RELATION" id="edge_ci_decision_to_repair_loop">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_ci_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_repair_loop">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7603.3" y="3768" />
+                <mxPoint x="6900" y="3768" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_error_evidence_to_evidence_store">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_error_evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.429;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6555" y="1981" />
+                <mxPoint x="2882.9" y="1981" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;RECOVERY / RESILIENCE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Mécanismes appliqués aux étapes qui peuvent échouer&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="recovery_controller" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_recovery_controller">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="180" width="760" x="100" y="3300" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;RETRY&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="retry" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_retry">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="90" width="150" x="100" y="3530" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_retry">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_retry">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TIMEOUT&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="timeout" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_timeout">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="90" width="150" x="270" y="3530" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_timeout">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_timeout">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CHECKPOINT&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="checkpoint" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_checkpoint">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="90" width="150" x="440" y="3530" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_checkpoint">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_checkpoint">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;RESUME&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="resume" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_resume">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="90" width="150" x="610" y="3530" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_resume">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_resume">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;ROLLBACK&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L09] [R]&lt;/b&gt;&lt;/font&gt;" component="rollback" layer_primary="L05" layer_related="L09" robustness="RECOVERY" kind="DOMAIN_COMPONENT" id="node_rollback">
+          <mxCell parent="layer_feedback_recovery" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="90" width="150" x="780" y="3530" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_rollback">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_rollback">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_retry_to_orchestrator">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_retry" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.800;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_orchestrator">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="175" y="3446" />
+                <mxPoint x="4306.67" y="3446" />
+                <mxPoint x="4306.67" y="714.33" />
+                <mxPoint x="3520" y="714.33" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_timeout_to_worker_agent">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_timeout" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.747;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.571;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_worker_agent">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="382" y="3434" />
+                <mxPoint x="4507.1" y="3434" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="WRITE" kind="RELATION" id="edge_orchestrator_to_checkpoint">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.400;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_checkpoint">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3340" y="803" />
+                <mxPoint x="490" y="803" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_resume_to_scheduler">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_resume" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_scheduler">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="685" y="3458" />
+                <mxPoint x="3850" y="3458" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_rollback_to_release">
+          <mxCell edge="1" parent="layer_feedback_recovery" source="node_rollback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.750;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_release">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="855" y="3656" />
+                <mxPoint x="6615" y="3656" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_control_security" parent="0" style="locked=1;" value="03 — CONTROL &amp; SECURITY" visible="0" />
+        <object label="&lt;b&gt;POLICY / PERMISSIONS / GUARDRAILS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Authorization · allowlist · denylist · secrets access · restrictions&lt;br&gt;Human approval / gate · budget · escalation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09] [P]&lt;/b&gt;&lt;/font&gt;" component="policy" layer_primary="L10" layer_related="L09" robustness="PREVENTION" kind="POLICY" id="node_policy">
+          <mxCell parent="layer_control_security" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="220" width="760" x="100" y="2700" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_worker_agent">
+          <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.750;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.286;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_worker_agent">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="670" y="2624" />
+                <mxPoint x="4378.6" y="2624" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_tool_router">
+          <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.484;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.077;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_tool_router">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="468" y="2638" />
+                <mxPoint x="4803.1" y="2638" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_sandbox">
+          <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.250;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_sandbox">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="290" y="2676" />
+                <mxPoint x="6116.7" y="2676" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_release">
+          <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.682;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_release">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="618.7" y="2982" />
+                <mxPoint x="6480" y="2982" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;HUMAN APPROVAL / GATE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Approbation · interruption · arbitrage · escalade&lt;br&gt;Décision fondée sur les preuves&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L07 · L10] [P]&lt;/b&gt;&lt;/font&gt;" component="human_approval" layer_primary="L07" layer_related="L10" robustness="PREVENTION" kind="DOMAIN_COMPONENT" id="node_human_approval">
+          <mxCell parent="layer_control_security" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="180" width="620" x="900" y="3270" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="ESCALATE" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_human_approval">
+          <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.349;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_human_approval">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="365.3" y="2968" />
+                <mxPoint x="1210" y="2968" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="EVIDENCE" relation_type="READ" kind="RELATION" id="edge_human_approval_to_evidence_store">
+          <mxCell edge="1" parent="layer_control_security" source="node_human_approval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.571;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1106.7" y="3486" />
+                <mxPoint x="2977.1" y="3486" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="APPROVE" relation_type="CONTROL" kind="RELATION" id="edge_human_approval_to_release">
+          <mxCell edge="1" parent="layer_control_security" source="node_human_approval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.250;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_release">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1313.3" y="3512" />
+                <mxPoint x="6345" y="3512" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_observability" parent="0" style="locked=1;" value="04 — OBSERVABILITY" />
+        <object label="&lt;b&gt;OBSERVABILITY SYSTEM&lt;/b&gt;&lt;br&gt;&lt;br&gt;Logs · metrics · traces · events · alerts · dashboards · monitoring&lt;br&gt;Observabilité ≠ mémoire : observe l’exécution, puis persiste les preuves&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L09 · L06] [D/E]&lt;/b&gt;&lt;/font&gt;" component="observability" layer_primary="L09" layer_related="L06" robustness="DETECTION,EVIDENCE" kind="OBSERVABILITY" id="node_observability">
+          <mxCell parent="layer_observability" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#FFF0B3;strokeColor=#FF8B00;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="220" width="760" x="1650" y="3600" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_orchestrator">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.216;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.200;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_orchestrator">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1814" y="3588" />
+                <mxPoint x="3250" y="3588" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_worker_agent">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.800;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.143;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_worker_agent">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="2258" y="3474" />
+                <mxPoint x="4314.3" y="3474" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_sandbox">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.384;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_sandbox">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1942" y="3562" />
+                <mxPoint x="5953.3" y="3562" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_verification">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.600;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.135;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_verification">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="2106" y="3524" />
+                <mxPoint x="6927.6" y="3524" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_ci">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.667;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_ci">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="2446" y="3673.3" />
+                <mxPoint x="2446" y="3546.7" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_target_system">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.520;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_target_system">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="2030" y="3856" />
+                <mxPoint x="5812" y="3856" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_observability_to_evidence_store">
+          <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="layer_memory_evidence" parent="0" style="locked=1;" value="05 — MEMORY &amp; EVIDENCE" />
+        <object label="&lt;b&gt;REPOSITORY / CODE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Code et état versionné&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06 · L09]&lt;/b&gt;&lt;/font&gt;" component="repository" layer_primary="L06" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_repository">
+          <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="115" width="310" x="1350" y="820" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;DOCUMENTATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Docs · conventions · décisions&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06]&lt;/b&gt;&lt;/font&gt;" component="documentation" layer_primary="L06" layer_related="" robustness="" kind="DOMAIN_COMPONENT" id="node_documentation">
+          <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="115" width="310" x="1690" y="820" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CURRENT SYSTEM STATE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Dépendances · environnement · runtime&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L09 · L06]&lt;/b&gt;&lt;/font&gt;" component="current_state" layer_primary="L09" layer_related="L06" robustness="" kind="DOMAIN_COMPONENT" id="node_current_state">
+          <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="115" width="330" x="2030" y="820" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;MEMORY / KNOWLEDGE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Connaissance réutilisable · lessons learned · décisions&lt;br&gt;Mémoire ≠ logs ≠ historique brut&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06]&lt;/b&gt;&lt;/font&gt;" component="memory" layer_primary="L06" layer_related="" robustness="" kind="PERSISTENCE" id="node_memory">
+          <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="360" x="1350" y="980" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_repository">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_repository">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1903.3" y="753" />
+                <mxPoint x="1505" y="753" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_documentation">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.444;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_documentation">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1798.9" y="725" />
+                <mxPoint x="1845" y="725" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_current_state">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.111;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_current_state">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1642.2" y="683" />
+                <mxPoint x="2195" y="683" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="READ" relation_type="READ" kind="RELATION" id="edge_context_loader_to_memory">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.581;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_memory">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1863.1" y="739" />
+                <mxPoint x="1530" y="739" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;EVIDENCE &amp;amp; ARTIFACT STORE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Execution history · persisted logs · configs · seeds · versions&lt;br&gt;artifacts · metadata · provenance · results&lt;br&gt;Qui ? Quoi ? Entrée ? Version ? Configuration ? Résultat ?&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L06] [E]&lt;/b&gt;&lt;/font&gt;" component="evidence_store" layer_primary="L06" layer_related="" robustness="EVIDENCE" kind="PERSISTENCE" id="node_evidence_store">
+          <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="220" width="660" x="2600" y="3600" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_artifact_to_evidence_store">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.111;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.143;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6397.8" y="671" />
+                <mxPoint x="2694.3" y="671" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_verification_to_evidence_store">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.444;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.857;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7082.2" y="457" />
+                <mxPoint x="3165.7" y="457" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_ci_to_evidence_store">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_ci" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.555;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7474" y="3498.3" />
+                <mxPoint x="7474" y="3722" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TASK STATE MODEL&lt;/b&gt;&lt;br&gt;&lt;br&gt;Pending · running · blocked · succeeded · failed&lt;br&gt;Pas de boucle infinie silencieuse ; budget de tentatives et escalade&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L05 · L06]&lt;/b&gt;&lt;/font&gt;" component="task_state" layer_primary="L05" layer_related="L06" robustness="" kind="DOMAIN_COMPONENT" id="node_task_state">
+          <mxCell parent="layer_memory_evidence" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="180" width="620" x="900" y="3000" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="STATE" relation_type="WRITE" kind="RELATION" id="edge_orchestrator_to_task_state">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.600;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.353;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_task_state">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3430" y="817" />
+                <mxPoint x="1118.7" y="817" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="STATE" relation_type="READ" kind="RELATION" id="edge_scheduler_to_task_state">
+          <mxCell edge="1" parent="layer_memory_evidence" source="node_scheduler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.686;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_task_state">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4020" y="515" />
+                <mxPoint x="1325.3" y="515" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_internal_details" parent="0" style="locked=1;" value="06 — INTERNAL DETAILS" />
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_tool_api">
+          <mxCell edge="1" parent="layer_internal_details" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.778;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_tool_api">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1955.6" y="767" />
+                <mxPoint x="4966.7" y="767" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_tool_filesystem">
+          <mxCell edge="1" parent="layer_internal_details" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.889;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_tool_filesystem">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="2007.8" y="781" />
+                <mxPoint x="5626.7" y="781" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;WORKER SPECIALIZATIONS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Coding Agent · Research Agent · Test Agent · Reviewer Agent&lt;br&gt;Quality Controller · Adversarial Agent&lt;br&gt;Spécialisations d’un même rôle architectural&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L01 · L08]&lt;/b&gt;&lt;/font&gt;" component="agent_specializations" layer_primary="L10" layer_related="L01,L08" robustness="" kind="AI_AGENT" id="node_agent_specializations">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#EAE6FF;strokeColor=#6554C0;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="180" width="760" x="3970" y="820" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="USE" relation_type="USE" kind="RELATION" id="edge_worker_agent_to_agent_specializations">
+          <mxCell edge="1" parent="layer_internal_details" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.714;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_agent_specializations">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4571.33" y="718" />
+                <mxPoint x="4350" y="718" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;SEARCH / DOCUMENTATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_search" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_search">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="4540" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_search">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.769;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.541;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_search">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5100.8" y="975" />
+                <mxPoint x="4697" y="975" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CODE EDITOR&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_code_editor" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_code_editor">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="4870" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_code_editor">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.308;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_code_editor">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4902.3" y="915" />
+                <mxPoint x="5015" y="915" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;SHELL / TERMINAL&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_shell" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_shell">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5200" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_shell">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.846;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.459;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_shell">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5133.8" y="989" />
+                <mxPoint x="5333" y="989" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TEST RUNNER&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_test_runner" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_test_runner">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5530" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_test_runner">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.923;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_test_runner">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5166.9" y="1003" />
+                <mxPoint x="5675" y="1003" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;BROWSER / UI&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_browser" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_browser">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5860" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_browser">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.231;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.541;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_browser">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4869.2" y="853" />
+                <mxPoint x="6017" y="853" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;GIT&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_git" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_git">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="4540" y="1260" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_git">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.720;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_git">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5079.7" y="961" />
+                <mxPoint x="4685" y="961" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;API&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_api" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_api">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="4870" y="1260" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_api">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.154;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_api">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4836.2" y="503" />
+                <mxPoint x="5063.3" y="503" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;DATABASE&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_database" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_database">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5200" y="1260" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_database">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.385;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_database">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4935.4" y="545" />
+                <mxPoint x="5345" y="545" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;FILESYSTEM&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_filesystem" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_filesystem">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5530" y="1260" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_filesystem">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.615;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_filesystem">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5034.6" y="947" />
+                <mxPoint x="5723.3" y="947" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;DOMAIN TOOL&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L03 · L04]&lt;/b&gt;&lt;/font&gt;" component="tool_domain" layer_primary="L10" layer_related="L03,L04" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_domain">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5860" y="1260" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_domain">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.538;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.459;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_domain">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="5001.5" y="933" />
+                <mxPoint x="5993" y="933" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;DETERMINISTIC SCRIPT&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L10 · L09]&lt;/b&gt;&lt;/font&gt;" component="tool_deterministic_script" layer_primary="L10" layer_related="L09" robustness="" kind="DOMAIN_COMPONENT" id="node_tool_deterministic_script">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=12;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="105" width="290" x="5200" y="1420" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_deterministic_script">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.489;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.541;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_deterministic_script">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4980.5" y="571" />
+                <mxPoint x="5357" y="571" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;STATIC CHECKS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Formatting · Lint · Type Checking&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08] [P/D]&lt;/b&gt;&lt;/font&gt;" component="static_checks" layer_primary="L08" layer_related="" robustness="PREVENTION,DETECTION" kind="DOMAIN_COMPONENT" id="node_static_checks">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="410" x="6200" y="920" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;SOFTWARE TESTS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Unit · Integration · E2E&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08] [D]&lt;/b&gt;&lt;/font&gt;" component="software_tests" layer_primary="L08" layer_related="" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_software_tests">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="410" x="6640" y="920" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;TEST QUALITY&lt;/b&gt;&lt;br&gt;&lt;br&gt;Coverage · Mutation Testing&lt;br&gt;Coverage ≠ qualité des tests&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08] [D]&lt;/b&gt;&lt;/font&gt;" component="test_quality" layer_primary="L08" layer_related="" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_test_quality">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="410" x="7080" y="920" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CONTRACT / DOMAIN CHECKS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Assertions · invariants · business rules · domain validation&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L03] [D]&lt;/b&gt;&lt;/font&gt;" component="contract_validation" layer_primary="L08" layer_related="L03" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_contract_validation">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="150" width="470" x="6420" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;INDEPENDENT VERIFICATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;Independent Validator · Reviewer · asynchronous verification&lt;br&gt;L’agent n’est pas seul juge&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L08 · L10] [D]&lt;/b&gt;&lt;/font&gt;" component="independent_verification" layer_primary="L08" layer_related="L10" robustness="DETECTION" kind="DOMAIN_COMPONENT" id="node_independent_verification">
+          <mxCell parent="layer_internal_details" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="150" width="520" x="6940" y="1100" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_static_checks">
+          <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.778;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.637;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_static_checks">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7249.06" y="815.76" />
+                <mxPoint x="6461.18" y="815.76" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_static_checks_to_artifact">
+          <mxCell edge="1" parent="layer_internal_details" source="node_static_checks" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.304;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.778;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6324.7" y="896" />
+                <mxPoint x="6684.4" y="896" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_software_tests">
+          <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.353;exitY=0.99;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.754;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_software_tests">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7036.47" y="776.94" />
+                <mxPoint x="6949.06" y="776.94" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_software_tests_to_artifact">
+          <mxCell edge="1" parent="layer_internal_details" source="node_software_tests" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.722;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6776.7" y="884" />
+                <mxPoint x="6660.7" y="884" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_test_quality">
+          <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.889;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_test_quality">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7304.4" y="1029" />
+                <mxPoint x="7353.3" y="1029" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_test_quality_to_artifact">
+          <mxCell edge="1" parent="layer_internal_details" source="node_test_quality" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.889;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7216.7" y="872" />
+                <mxPoint x="6732.2" y="872" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_contract_validation">
+          <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.403;exitY=0.997;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.692;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_contract_validation">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7061.53" y="836.94" />
+                <mxPoint x="6745.18" y="836.94" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_contract_validation_to_artifact">
+          <mxCell edge="1" parent="layer_internal_details" source="node_contract_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6576.7" y="1064" />
+                <mxPoint x="6493.3" y="1064" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_independent_verification">
+          <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.556;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_independent_verification">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7138" y="695.76" />
+                <mxPoint x="7286.82" y="695.76" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_independent_verification_to_artifact">
+          <mxCell edge="1" parent="layer_internal_details" source="node_independent_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.444;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="7113.3" y="1076" />
+                <mxPoint x="6541.1" y="1076" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="DOMAIN EXECUTION" relation_type="USE" kind="RELATION" id="edge_tool_domain_to_backtest_engine">
+          <mxCell edge="1" parent="layer_internal_details" source="node_tool_domain" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.750;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_backtest_engine">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="6005" y="1401" />
+                <mxPoint x="3887.5" y="1401" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_domain_ebta" parent="0" style="locked=1;" value="07 — DOMAIN / EBTA" />
+        <object label="&lt;b&gt;DATA LIFECYCLE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Ingestion · stockage · validation · normalisation · transformation · versionnement&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L02] [P]&lt;/b&gt;&lt;/font&gt;" component="data_lifecycle" layer_primary="L02" layer_related="" robustness="PREVENTION" kind="DOMAIN_COMPONENT" id="node_data_lifecycle">
+          <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="360" x="1750" y="980" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;REPRODUCIBLE DATA&lt;/b&gt;&lt;br&gt;&lt;br&gt;Version · transformation · provenance connues&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L02 · L06] [E]&lt;/b&gt;&lt;/font&gt;" component="data_reproducibility" layer_primary="L02" layer_related="L06" robustness="EVIDENCE" kind="DOMAIN_COMPONENT" id="node_data_reproducibility">
+          <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#E3FCEF;strokeColor=#00875A;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="360" x="2150" y="980" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_data_lifecycle">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.222;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_data_lifecycle">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1694.4" y="697" />
+                <mxPoint x="1930" y="697" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_data_reproducibility">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.533;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_data_reproducibility">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1746.7" y="711" />
+                <mxPoint x="2342" y="711" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;RESEARCH SPACE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Hypothèses · règles · paramètres · variantes&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L01]&lt;/b&gt;&lt;/font&gt;" component="research_space" layer_primary="L01" layer_related="" robustness="" kind="DOMAIN_COMPONENT" id="node_research_space">
+          <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#F4F5F7;strokeColor=#5E6C84;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="390" x="100" y="820" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;CONTROLLED EXPERIMENTS&lt;/b&gt;&lt;br&gt;&lt;br&gt;Campagnes · variantes · critères de réussite&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L01 · L08] [P]&lt;/b&gt;&lt;/font&gt;" component="experiment_campaign" layer_primary="L01" layer_related="L08" robustness="PREVENTION" kind="DOMAIN_COMPONENT" id="node_experiment_campaign">
+          <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="135" width="390" x="100" y="990" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="" relation_type="FLOW" kind="RELATION" id="edge_objective_to_research_space">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_objective" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_research_space">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="730" y="611" />
+                <mxPoint x="230" y="611" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_specification_to_experiment_campaign">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_specification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.531;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_experiment_campaign">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="1260" y="839" />
+                <mxPoint x="307" y="839" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="RESEARCH TASK" relation_type="READ" kind="RELATION" id="edge_worker_agent_to_research_space">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.857;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.605;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_research_space">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="4635.7" y="373" />
+                <mxPoint x="336" y="373" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;BACKTEST ENGINE&lt;/b&gt;&lt;br&gt;&lt;br&gt;Signals · positions · simulated execution · P&amp;amp;L · fees · slippage · chronology&lt;br&gt;Sorties : trades · positions · résultats&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L03]&lt;/b&gt;&lt;/font&gt;" component="backtest_engine" layer_primary="L03" layer_related="" robustness="" kind="DOMAIN_COMPONENT" id="node_backtest_engine">
+          <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="210" width="650" x="3400" y="2700" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="&lt;b&gt;SCIENTIFIC VALIDATION&lt;/b&gt;&lt;br&gt;&lt;br&gt;WRC · Romano-Wolf · SPA · data mining control&lt;br&gt;Walk-Forward · OOS / Out-of-Sample · confidence intervals&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#5E6C84&quot;&gt;&lt;b&gt;[L04] [D]&lt;/b&gt;&lt;/font&gt;" component="scientific_validation" layer_primary="L04" layer_related="" robustness="DETECTION" kind="VALIDATOR" id="node_scientific_validation">
+          <mxCell parent="layer_domain_ebta" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#DEEBFF;strokeColor=#0052CC;strokeWidth=2;fontSize=15;fontFamily=Helvetica;spacing=8;" vertex="1">
+            <mxGeometry height="210" width="650" x="3400" y="3020" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="label_science_separation" kind="ANNOTATION" parent="layer_domain_ebta" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontFamily=Helvetica;" value="&lt;b&gt;Validation scientifique ≠ tests logiciels.&lt;/b&gt; L04 juge une conclusion méthodologique ; L08 juge le logiciel et ses contrats." vertex="1">
+          <mxGeometry height="55" width="1500" x="3400" y="3240" as="geometry" />
+        </mxCell>
+        <object label="DATA" relation_type="READ" kind="RELATION" id="edge_backtest_engine_to_data_reproducibility">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_backtest_engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_data_reproducibility">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3725" y="2650" />
+                <mxPoint x="2330" y="2650" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="RESULTS" relation_type="WRITE" kind="RELATION" id="edge_backtest_engine_to_artifact">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_backtest_engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.250;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.222;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3562.5" y="2664" />
+                <mxPoint x="6445.6" y="2664" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="SCIENTIFIC" relation_type="VALIDATE" kind="RELATION" id="edge_scientific_validation_to_artifact">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3616.7" y="2996" />
+                <mxPoint x="6636.9" y="2996" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="DOMAIN VERDICT" relation_type="FLOW" kind="RELATION" id="edge_scientific_validation_to_decision_gate">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.870;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_decision_gate">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3833.3" y="2934" />
+                <mxPoint x="7701" y="2934" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_backtest_engine_to_evidence_store">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_backtest_engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.518;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.286;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3737" y="2946" />
+                <mxPoint x="2788.6" y="2946" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_scientific_validation_to_evidence_store">
+          <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.482;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.714;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="3713" y="3266" />
+                <mxPoint x="3071.4" y="3266" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="layer_legend_documentation" parent="0" style="locked=1;" value="08 — LEGEND &amp; DOCUMENTATION" />
+        <mxCell id="label_title" kind="ANNOTATION" parent="layer_legend_documentation" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=30;fontFamily=Helvetica;" value="&lt;b&gt;ARCHITECTURE GÉNÉRALE D’UN AGENT IA ROBUSTE — PROCESS-FIRST&lt;/b&gt;" vertex="1">
+          <mxGeometry height="70" width="5200" x="100" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="label_subtitle" kind="ANNOTATION" parent="layer_legend_documentation" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="La géométrie montre le processus ; les briques sont des nœuds ; chaque relation est un edge ; L01–L10 sont des métadonnées." vertex="1">
+          <mxGeometry height="55" width="5100" x="100" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_how_to_read" kind="LEGEND" parent="layer_legend_documentation" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#FFFFFF;strokeColor=#172B4D;strokeWidth=3;fontSize=12;fontFamily=Helvetica;spacing=14;" value="&lt;div style=&quot;text-align:center;font-size:18px&quot;&gt;&lt;b&gt;COMMENT LIRE CE DIAGRAMME&lt;/b&gt;&lt;/div&gt;&lt;table style=&quot;width:100%;font-size:12px&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td style=&quot;width:24%;vertical-align:top;padding:8px&quot;&gt;&lt;b&gt;A — FLUX&lt;/b&gt;&lt;br&gt;&lt;b&gt;→ pleine&lt;/b&gt; : flux / appel / transfert&lt;br&gt;&lt;b&gt;↺ retour&lt;/b&gt; : feedback / correction / re-test&lt;br&gt;&lt;b&gt;→ labellisée&lt;/b&gt; : READ / WRITE / CONTROL / OBSERVE…&lt;br&gt;&lt;i&gt;Les flèches racontent d’abord le processus.&lt;/i&gt;&lt;/td&gt;&lt;td style=&quot;width:24%;vertical-align:top;padding:8px&quot;&gt;&lt;b&gt;B — TYPE DE BRIQUE&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#6554C0&quot;&gt;&lt;b&gt;Violet&lt;/b&gt;&lt;/font&gt; IA / probabiliste&lt;br&gt;&lt;font color=&quot;#0052CC&quot;&gt;&lt;b&gt;Bleu&lt;/b&gt;&lt;/font&gt; déterministe / mécanique&lt;br&gt;&lt;font color=&quot;#FF8B00&quot;&gt;&lt;b&gt;Orange&lt;/b&gt;&lt;/font&gt; contrôle / sécurité / confinement&lt;br&gt;&lt;font color=&quot;#00875A&quot;&gt;&lt;b&gt;Vert&lt;/b&gt;&lt;/font&gt; preuve / accepté&lt;br&gt;&lt;font color=&quot;#DE350B&quot;&gt;&lt;b&gt;Rouge&lt;/b&gt;&lt;/font&gt; erreur / FAIL / blocage&lt;/td&gt;&lt;td style=&quot;width:30%;vertical-align:top;padding:8px&quot;&gt;&lt;b&gt;C — COUCHE&lt;/b&gt;&lt;br&gt;L01 Recherche · L02 Données&lt;br&gt;L03 Backtest · L04 Validation scientifique&lt;br&gt;L05 Orchestration · L06 Persistance &amp;amp; preuves&lt;br&gt;L07 Interface · L08 Qualité logicielle&lt;br&gt;L09 Infrastructure · L10 Agents IA&lt;br&gt;&lt;b&gt;[Lxx]&lt;/b&gt; = principale ; codes suivants = interactions.&lt;br&gt;Ex. Tool Router &lt;b&gt;[L10 · L05]&lt;/b&gt;&lt;/td&gt;&lt;td style=&quot;width:22%;vertical-align:top;padding:8px&quot;&gt;&lt;b&gt;D — ROBUSTESSE&lt;/b&gt;&lt;br&gt;&lt;b&gt;P&lt;/b&gt; Prévention · &lt;b&gt;D&lt;/b&gt; Détection&lt;br&gt;&lt;b&gt;C&lt;/b&gt; Confinement · &lt;b&gt;R&lt;/b&gt; Récupération&lt;br&gt;&lt;b&gt;E&lt;/b&gt; Evidence / preuve&lt;br&gt;Ex. Sandbox &lt;b&gt;[L09 · L10] [C]&lt;/b&gt;&lt;br&gt;Type Checking &lt;b&gt;[L08] [P/D]&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div style=&quot;border-top: 2px solid rgb(179, 186, 197); margin-top: 4px; padding-top: 5px; font-size: 11px; line-height: 1.35;&quot;&gt;&lt;b&gt;E — COULEUR DES CONNEXIONS&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#4C9AFF&quot;&gt;&lt;b&gt;■ BLEU · FLOW&lt;/b&gt;&lt;/font&gt; Processus principal &amp;nbsp; &lt;font color=&quot;#B39DDB&quot;&gt;&lt;b&gt;■ VIOLET · USE&lt;/b&gt;&lt;/font&gt; Utilisation &amp;nbsp; &lt;font color=&quot;#FFAB00&quot;&gt;&lt;b&gt;■ ORANGE · CONTROL&lt;/b&gt;&lt;/font&gt; Permissions / guardrails &amp;nbsp; &lt;font color=&quot;#57D9A3&quot;&gt;&lt;b&gt;■ VERT · READ / WRITE&lt;/b&gt;&lt;/font&gt; Lecture / persistance / preuve&lt;br&gt;&lt;font color=&quot;#FF4FD8&quot;&gt;&lt;b&gt;■ ROSE / MAGENTA → VALIDATE&lt;/b&gt;&lt;/font&gt; Validation / quality gate &amp;nbsp; &lt;font color=&quot;#000000&quot;&gt;&lt;b&gt;■ NOIR → OBSERVE&lt;/b&gt;&lt;/font&gt; Observabilité / monitoring &amp;nbsp; &lt;font color=&quot;#FF7452&quot;&gt;&lt;b&gt;■ ROUGE · FAIL / FEEDBACK&lt;/b&gt;&lt;/font&gt; Erreur / correction / recovery &amp;nbsp; &lt;font color=&quot;#B7FF3C&quot;&gt;&lt;b&gt;■ VERT LIME → DEPLOY&lt;/b&gt;&lt;/font&gt; Release / déploiement&lt;br&gt;&lt;b&gt;La couleur aide à lire rapidement le graphe. La métadonnée &lt;code&gt;relation_type&lt;/code&gt; reste la source de vérité machine.&lt;/b&gt;&lt;br&gt;&lt;b&gt;Palette optimisée pour le mode sombre :&lt;/b&gt; aucune relation importante ne dépend d’une couleur sombre ou peu contrastée.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="325" width="2900" x="5400" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="note_add_new_concept" kind="ANNOTATION" parent="layer_legend_documentation" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontFamily=Helvetica;" value="&lt;b&gt;AJOUTER UN NOUVEAU CONCEPT&lt;/b&gt;&lt;br&gt;1. Quel problème résout-il ? &amp;nbsp; 2. Où intervient-il dans le processus ? &amp;nbsp; 3. Quelle brique complète-t-il ou remplace-t-il ?&lt;br&gt;4. Quelle couche Lxx ? &amp;nbsp; 5. Quelle fonction P / D / C / R / E ?" vertex="1">
+          <mxGeometry height="150" width="810" x="6510" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="layer_visual_guides" parent="0" style="locked=1;" value="09 — VISUAL GUIDES" />
+        <mxCell id="label_phase_intention" kind="ANNOTATION" parent="layer_visual_guides" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="&lt;b&gt;1 — INTENTION&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="1410" x="100" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="label_phase_context" kind="ANNOTATION" parent="layer_visual_guides" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="&lt;b&gt;2 — CONTEXTE&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="470" x="1590" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="label_phase_planning" kind="ANNOTATION" parent="layer_visual_guides" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="&lt;b&gt;3 — PLANIFICATION&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="990" x="2120" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="label_phase_orchestration" kind="ANNOTATION" parent="layer_visual_guides" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="&lt;b&gt;4 — ORCHESTRATION&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="1030" x="3160" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="label_phase_agent" kind="ANNOTATION" parent="layer_visual_guides" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="&lt;b&gt;5 — EXÉCUTION AGENTIQUE&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="2030" x="4250" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="label_phase_verification" kind="ANNOTATION" parent="layer_visual_guides" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontFamily=Helvetica;" value="&lt;b&gt;6 — VÉRIFICATION&lt;/b&gt;" vertex="1">
+          <mxGeometry height="45" width="1410" x="6340" y="385" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
