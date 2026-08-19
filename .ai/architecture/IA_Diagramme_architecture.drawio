@@ -79,72 +79,72 @@
             <mxGeometry height="115" width="300" x="7440" y="500" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_user_to_objective">
+        <object label="" source_label="USER / EXTERNAL TRIGGER" relation_type="FLOW" target_label="OBJECTIVE / REQUEST / TICKET" kind="RELATION" id="edge_user_to_objective">
           <mxCell edge="1" parent="layer_core_process" source="node_user" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_objective">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_objective_to_specification">
+        <object label="" source_label="OBJECTIVE / REQUEST / TICKET" relation_type="FLOW" target_label="SOURCE OF TRUTH / SPECIFICATION" kind="RELATION" id="edge_objective_to_specification">
           <mxCell edge="1" parent="layer_core_process" source="node_objective" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_specification">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_specification_to_context_loader">
+        <object label="" source_label="SOURCE OF TRUTH / SPECIFICATION" relation_type="FLOW" target_label="CONTEXT LOADER" kind="RELATION" id="edge_specification_to_context_loader">
           <mxCell edge="1" parent="layer_core_process" source="node_specification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_context_loader">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_context_loader_to_planner">
+        <object label="" source_label="CONTEXT LOADER" relation_type="FLOW" target_label="PLANNER / ARCHITECT" kind="RELATION" id="edge_context_loader_to_planner">
           <mxCell edge="1" parent="layer_core_process" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_planner">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_planner_to_task_decomposition">
+        <object label="" source_label="PLANNER / ARCHITECT" relation_type="FLOW" target_label="TASK DECOMPOSITION" kind="RELATION" id="edge_planner_to_task_decomposition">
           <mxCell edge="1" parent="layer_core_process" source="node_planner" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_task_decomposition">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_task_decomposition_to_orchestrator">
+        <object label="" source_label="TASK DECOMPOSITION" relation_type="FLOW" target_label="ORCHESTRATOR" kind="RELATION" id="edge_task_decomposition_to_orchestrator">
           <mxCell edge="1" parent="layer_core_process" source="node_task_decomposition" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_orchestrator">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_orchestrator_to_scheduler">
+        <object label="" source_label="ORCHESTRATOR" relation_type="FLOW" target_label="QUEUE / SCHEDULER / TASK ROUTER" kind="RELATION" id="edge_orchestrator_to_scheduler">
           <mxCell edge="1" parent="layer_core_process" source="node_orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_scheduler">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_scheduler_to_worker_agent">
+        <object label="" source_label="QUEUE / SCHEDULER / TASK ROUTER" relation_type="FLOW" target_label="WORKER AGENT" kind="RELATION" id="edge_scheduler_to_worker_agent">
           <mxCell edge="1" parent="layer_core_process" source="node_scheduler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_worker_agent">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_worker_agent_to_tool_router">
+        <object label="" source_label="WORKER AGENT" relation_type="USE" target_label="TOOL ROUTER" kind="RELATION" id="edge_worker_agent_to_tool_router">
           <mxCell edge="1" parent="layer_core_process" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_router">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tools">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="TOOLS" kind="RELATION" id="edge_tool_router_to_tools">
           <mxCell edge="1" parent="layer_core_process" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tools">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_tools_to_sandbox">
+        <object label="" source_label="TOOLS" relation_type="FLOW" target_label="ISOLATED EXECUTION ENVIRONMENT" kind="RELATION" id="edge_tools_to_sandbox">
           <mxCell edge="1" parent="layer_core_process" source="node_tools" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_sandbox">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_sandbox_to_artifact">
+        <object label="" source_label="ISOLATED EXECUTION ENVIRONMENT" relation_type="FLOW" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_sandbox_to_artifact">
           <mxCell edge="1" parent="layer_core_process" source="node_sandbox" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_artifact_to_verification">
+        <object label="" source_label="ARTIFACT / OUTPUT" relation_type="FLOW" target_label="VERIFICATION PIPELINE" kind="RELATION" id="edge_artifact_to_verification">
           <mxCell edge="1" parent="layer_core_process" source="node_artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.333;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_verification">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_verification_to_decision_gate">
+        <object label="" source_label="VERIFICATION PIPELINE" relation_type="FLOW" target_label="PASS / FAIL ?" kind="RELATION" id="edge_verification_to_decision_gate">
           <mxCell edge="1" parent="layer_core_process" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_decision_gate">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -154,7 +154,7 @@
             <mxGeometry height="110" width="300" x="7460" y="1510" as="geometry" />
           </mxCell>
         </object>
-        <object label="PASS" relation_type="FLOW" kind="RELATION" id="edge_decision_gate_to_pass">
+        <object label="PASS" source_label="PASS / FAIL ?" relation_type="FLOW" target_label="PASS" kind="RELATION" id="edge_decision_gate_to_pass">
           <mxCell edge="1" parent="layer_core_process" source="node_decision_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.250;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.540;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_pass">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -199,7 +199,7 @@
             <mxGeometry height="150" width="430" x="7460" y="3780" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_pass_to_git_change">
+        <object label="" source_label="PASS" relation_type="FLOW" target_label="GIT CHANGE / BRANCH" kind="RELATION" id="edge_pass_to_git_change">
           <mxCell edge="1" parent="layer_core_process" source="node_pass" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.580;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.464;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_git_change">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -209,32 +209,32 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_git_change_to_commit">
+        <object label="" source_label="GIT CHANGE / BRANCH" relation_type="FLOW" target_label="COMMIT" kind="RELATION" id="edge_git_change_to_commit">
           <mxCell edge="1" parent="layer_core_process" source="node_git_change" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_commit">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_commit_to_push">
+        <object label="" source_label="COMMIT" relation_type="FLOW" target_label="PUSH" kind="RELATION" id="edge_commit_to_push">
           <mxCell edge="1" parent="layer_core_process" source="node_commit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_push">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_push_to_pull_request">
+        <object label="" source_label="PUSH" relation_type="FLOW" target_label="PULL REQUEST" kind="RELATION" id="edge_push_to_pull_request">
           <mxCell edge="1" parent="layer_core_process" source="node_push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_pull_request">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_pull_request_to_review">
+        <object label="" source_label="PULL REQUEST" relation_type="FLOW" target_label="REVIEW" kind="RELATION" id="edge_pull_request_to_review">
           <mxCell edge="1" parent="layer_core_process" source="node_pull_request" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_review">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_review_to_ci">
+        <object label="" source_label="REVIEW" relation_type="FLOW" target_label="CONTINUOUS INTEGRATION" kind="RELATION" id="edge_review_to_ci">
           <mxCell edge="1" parent="layer_core_process" source="node_review" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_ci">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_ci_to_ci_decision">
+        <object label="" source_label="CONTINUOUS INTEGRATION" relation_type="FLOW" target_label="CI PASS / FAIL ?" kind="RELATION" id="edge_ci_to_ci_decision">
           <mxCell edge="1" parent="layer_core_process" source="node_ci" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_ci_decision">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -254,7 +254,7 @@
             <mxGeometry height="145" width="600" x="5500" y="4200" as="geometry" />
           </mxCell>
         </object>
-        <object label="PASS" relation_type="FLOW" kind="RELATION" id="edge_ci_decision_to_merge">
+        <object label="PASS" source_label="CI PASS / FAIL ?" relation_type="FLOW" target_label="MERGE" kind="RELATION" id="edge_ci_decision_to_merge">
           <mxCell edge="1" parent="layer_core_process" source="node_ci_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.528;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_merge">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -264,12 +264,12 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_merge_to_release">
+        <object label="" source_label="MERGE" relation_type="FLOW" target_label="RELEASE / DEPLOYMENT / ACTION" kind="RELATION" id="edge_merge_to_release">
           <mxCell edge="1" parent="layer_core_process" source="node_merge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_release">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="DEPLOY" relation_type="DEPLOY" kind="RELATION" id="edge_release_to_target_system">
+        <object label="DEPLOY" source_label="RELEASE / DEPLOYMENT / ACTION" relation_type="DEPLOY" target_label="TARGET SYSTEM / DOMAIN" kind="RELATION" id="edge_release_to_target_system">
           <mxCell edge="1" parent="layer_core_process" source="node_release" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B7FF3C;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B7FF3C;labelBackgroundColor=#172B4D;" target="node_target_system">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -279,7 +279,7 @@
             <mxGeometry height="180" width="600" x="4750" y="4550" as="geometry" />
           </mxCell>
         </object>
-        <object label="USE" relation_type="USE" kind="RELATION" id="edge_user_to_interface">
+        <object label="USE" source_label="USER / EXTERNAL TRIGGER" relation_type="USE" target_label="INTERFACES" kind="RELATION" id="edge_user_to_interface">
           <mxCell edge="1" parent="layer_core_process" source="node_user" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_interface">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -289,7 +289,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="API / UI" relation_type="USE" kind="RELATION" id="edge_interface_to_target_system">
+        <object label="API / UI" source_label="INTERFACES" relation_type="USE" target_label="TARGET SYSTEM / DOMAIN" kind="RELATION" id="edge_interface_to_target_system">
           <mxCell edge="1" parent="layer_core_process" source="node_interface" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_target_system">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -299,7 +299,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="VALIDATE" relation_type="VALIDATE" kind="RELATION" id="edge_verification_to_artifact_validate">
+        <object label="VALIDATE" source_label="VERIFICATION PIPELINE" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_verification_to_artifact_validate">
           <mxCell edge="1" parent="layer_core_process" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.744;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -315,7 +315,7 @@
             <mxGeometry height="110" width="300" x="6800" y="1510" as="geometry" />
           </mxCell>
         </object>
-        <object label="FAIL" relation_type="FEEDBACK" kind="RELATION" id="edge_decision_gate_to_repair_loop">
+        <object label="FAIL" source_label="PASS / FAIL ?" relation_type="FEEDBACK" target_label="FAIL / REPAIR LOOP" kind="RELATION" id="edge_decision_gate_to_repair_loop">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_decision_gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.373;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_repair_loop">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -350,7 +350,7 @@
             <mxGeometry height="145" width="470" x="4200" y="1800" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_repair_loop_to_error_evidence">
+        <object label="" source_label="FAIL / REPAIR LOOP" relation_type="READ" target_label="ERROR EVIDENCE" kind="RELATION" id="edge_repair_loop_to_error_evidence">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_repair_loop" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.577;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_error_evidence">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -360,27 +360,27 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_error_evidence_to_diagnostic">
+        <object label="" source_label="ERROR EVIDENCE" relation_type="FLOW" target_label="DIAGNOSTIC" kind="RELATION" id="edge_error_evidence_to_diagnostic">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_error_evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_diagnostic">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_diagnostic_to_root_cause">
+        <object label="" source_label="DIAGNOSTIC" relation_type="FLOW" target_label="ROOT CAUSE / BUG LOCALIZATION" kind="RELATION" id="edge_diagnostic_to_root_cause">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_diagnostic" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_root_cause">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_root_cause_to_correction">
+        <object label="" source_label="ROOT CAUSE / BUG LOCALIZATION" relation_type="FLOW" target_label="CORRECTION" kind="RELATION" id="edge_root_cause_to_correction">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_root_cause" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_correction">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_correction_to_retest">
+        <object label="" source_label="CORRECTION" relation_type="FLOW" target_label="RE-TEST" kind="RELATION" id="edge_correction_to_retest">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_correction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_retest">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="RE-TEST" relation_type="FLOW" kind="RELATION" id="edge_retest_to_verification">
+        <object label="RE-TEST" source_label="RE-TEST" relation_type="FLOW" target_label="VERIFICATION PIPELINE" kind="RELATION" id="edge_retest_to_verification">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_retest" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.474;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.222;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_verification">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -390,7 +390,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="IMPLEMENT" relation_type="FEEDBACK" kind="RELATION" id="edge_repair_loop_to_worker_agent">
+        <object label="IMPLEMENT" source_label="FAIL / REPAIR LOOP" relation_type="FEEDBACK" target_label="WORKER AGENT" kind="RELATION" id="edge_repair_loop_to_worker_agent">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_repair_loop" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.707;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.429;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=2.5;opacity=100;dashed=1;dashPattern=12 8;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_worker_agent">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -400,7 +400,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="FAIL → REPAIR" relation_type="FEEDBACK" kind="RELATION" id="edge_ci_decision_to_repair_loop">
+        <object label="FAIL → REPAIR" source_label="CI PASS / FAIL ?" relation_type="FEEDBACK" target_label="FAIL / REPAIR LOOP" kind="RELATION" id="edge_ci_decision_to_repair_loop">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_ci_decision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF7452;strokeWidth=3;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF7452;labelBackgroundColor=#172B4D;" target="node_repair_loop">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -410,7 +410,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_error_evidence_to_evidence_store">
+        <object label="WRITE" source_label="ERROR EVIDENCE" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_error_evidence_to_evidence_store">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_error_evidence" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.429;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -430,7 +430,7 @@
             <mxGeometry height="90" width="150" x="100" y="3530" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_retry">
+        <object label="" source_label="RECOVERY / RESILIENCE" relation_type="USE" target_label="RETRY" kind="RELATION" id="edge_recovery_controller_to_retry">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_retry">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -440,7 +440,7 @@
             <mxGeometry height="90" width="150" x="270" y="3530" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_timeout">
+        <object label="" source_label="RECOVERY / RESILIENCE" relation_type="USE" target_label="TIMEOUT" kind="RELATION" id="edge_recovery_controller_to_timeout">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_timeout">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -450,7 +450,7 @@
             <mxGeometry height="90" width="150" x="440" y="3530" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_checkpoint">
+        <object label="" source_label="RECOVERY / RESILIENCE" relation_type="USE" target_label="CHECKPOINT" kind="RELATION" id="edge_recovery_controller_to_checkpoint">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_checkpoint">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -460,12 +460,12 @@
             <mxGeometry height="90" width="150" x="610" y="3530" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_resume">
+        <object label="" source_label="RECOVERY / RESILIENCE" relation_type="USE" target_label="RESUME" kind="RELATION" id="edge_recovery_controller_to_resume">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_resume">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="STATE" relation_type="READ" kind="RELATION" id="edge_resume_to_checkpoint">
+        <object label="STATE" source_label="RESUME" relation_type="READ" target_label="CHECKPOINT" kind="RELATION" id="edge_resume_to_checkpoint">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_resume" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_checkpoint">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -480,12 +480,12 @@
             <mxGeometry height="90" width="150" x="780" y="3530" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_recovery_controller_to_rollback">
+        <object label="" source_label="RECOVERY / RESILIENCE" relation_type="USE" target_label="ROLLBACK" kind="RELATION" id="edge_recovery_controller_to_rollback">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_recovery_controller" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_rollback">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_retry_to_orchestrator">
+        <object label="" source_label="RETRY" relation_type="CONTROL" target_label="ORCHESTRATOR" kind="RELATION" id="edge_retry_to_orchestrator">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_retry" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.800;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_orchestrator">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -497,7 +497,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_timeout_to_worker_agent">
+        <object label="" source_label="TIMEOUT" relation_type="CONTROL" target_label="WORKER AGENT" kind="RELATION" id="edge_timeout_to_worker_agent">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_timeout" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.747;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.571;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_worker_agent">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -507,7 +507,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="WRITE" kind="RELATION" id="edge_orchestrator_to_checkpoint">
+        <object label="" source_label="ORCHESTRATOR" relation_type="WRITE" target_label="CHECKPOINT" kind="RELATION" id="edge_orchestrator_to_checkpoint">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.400;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_checkpoint">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -517,7 +517,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_resume_to_scheduler">
+        <object label="" source_label="RESUME" relation_type="CONTROL" target_label="QUEUE / SCHEDULER / TASK ROUTER" kind="RELATION" id="edge_resume_to_scheduler">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_resume" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_scheduler">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -527,7 +527,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="CONTROL" kind="RELATION" id="edge_rollback_to_release">
+        <object label="" source_label="ROLLBACK" relation_type="CONTROL" target_label="RELEASE / DEPLOYMENT / ACTION" kind="RELATION" id="edge_rollback_to_release">
           <mxCell edge="1" parent="layer_feedback_recovery" source="node_rollback" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.750;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_release">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -543,7 +543,7 @@
             <mxGeometry height="220" width="760" x="100" y="2700" as="geometry" />
           </mxCell>
         </object>
-        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_worker_agent">
+        <object label="CONTROL" source_label="POLICY / PERMISSIONS / GUARDRAILS" relation_type="CONTROL" target_label="WORKER AGENT" kind="RELATION" id="edge_policy_to_worker_agent">
           <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.750;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.286;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_worker_agent">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -553,7 +553,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_tool_router">
+        <object label="CONTROL" source_label="POLICY / PERMISSIONS / GUARDRAILS" relation_type="CONTROL" target_label="TOOL ROUTER" kind="RELATION" id="edge_policy_to_tool_router">
           <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.484;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.077;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_tool_router">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -563,7 +563,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_sandbox">
+        <object label="CONTROL" source_label="POLICY / PERMISSIONS / GUARDRAILS" relation_type="CONTROL" target_label="ISOLATED EXECUTION ENVIRONMENT" kind="RELATION" id="edge_policy_to_sandbox">
           <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.250;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_sandbox">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -573,7 +573,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_release">
+        <object label="CONTROL" source_label="POLICY / PERMISSIONS / GUARDRAILS" relation_type="CONTROL" target_label="RELEASE / DEPLOYMENT / ACTION" kind="RELATION" id="edge_policy_to_release">
           <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.682;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_release">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -588,7 +588,7 @@
             <mxGeometry height="180" width="620" x="900" y="3270" as="geometry" />
           </mxCell>
         </object>
-        <object label="ESCALATE" relation_type="CONTROL" kind="RELATION" id="edge_policy_to_human_approval">
+        <object label="ESCALATE" source_label="POLICY / PERMISSIONS / GUARDRAILS" relation_type="CONTROL" target_label="HUMAN APPROVAL / GATE" kind="RELATION" id="edge_policy_to_human_approval">
           <mxCell edge="1" parent="layer_control_security" source="node_policy" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.349;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_human_approval">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -598,7 +598,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="EVIDENCE" relation_type="READ" kind="RELATION" id="edge_human_approval_to_evidence_store">
+        <object label="EVIDENCE" source_label="HUMAN APPROVAL / GATE" relation_type="READ" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_human_approval_to_evidence_store">
           <mxCell edge="1" parent="layer_control_security" source="node_human_approval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.571;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -608,7 +608,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="APPROVE" relation_type="CONTROL" kind="RELATION" id="edge_human_approval_to_release">
+        <object label="APPROVE" source_label="HUMAN APPROVAL / GATE" relation_type="CONTROL" target_label="RELEASE / DEPLOYMENT / ACTION" kind="RELATION" id="edge_human_approval_to_release">
           <mxCell edge="1" parent="layer_control_security" source="node_human_approval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.250;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_release">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -624,7 +624,7 @@
             <mxGeometry height="220" width="760" x="1650" y="3600" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_orchestrator">
+        <object label="" source_label="OBSERVABILITY SYSTEM" relation_type="OBSERVE" target_label="ORCHESTRATOR" kind="RELATION" id="edge_observability_to_orchestrator">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.216;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.200;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_orchestrator">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -634,7 +634,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_worker_agent">
+        <object label="" source_label="OBSERVABILITY SYSTEM" relation_type="OBSERVE" target_label="WORKER AGENT" kind="RELATION" id="edge_observability_to_worker_agent">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.800;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.143;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_worker_agent">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -644,7 +644,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_sandbox">
+        <object label="" source_label="OBSERVABILITY SYSTEM" relation_type="OBSERVE" target_label="ISOLATED EXECUTION ENVIRONMENT" kind="RELATION" id="edge_observability_to_sandbox">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.384;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_sandbox">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -654,7 +654,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_verification">
+        <object label="" source_label="OBSERVABILITY SYSTEM" relation_type="OBSERVE" target_label="VERIFICATION PIPELINE" kind="RELATION" id="edge_observability_to_verification">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.600;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.135;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_verification">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -664,7 +664,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_ci">
+        <object label="" source_label="OBSERVABILITY SYSTEM" relation_type="OBSERVE" target_label="CONTINUOUS INTEGRATION" kind="RELATION" id="edge_observability_to_ci">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.667;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_ci">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -674,7 +674,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="OBSERVE" kind="RELATION" id="edge_observability_to_target_system">
+        <object label="" source_label="OBSERVABILITY SYSTEM" relation_type="OBSERVE" target_label="TARGET SYSTEM / DOMAIN" kind="RELATION" id="edge_observability_to_target_system">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.520;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#000000;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#000000;labelBackgroundColor=#172B4D;" target="node_target_system">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -684,7 +684,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_observability_to_evidence_store">
+        <object label="WRITE" source_label="OBSERVABILITY SYSTEM" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_observability_to_evidence_store">
           <mxCell edge="1" parent="layer_observability" source="node_observability" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.000;exitY=0.667;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
@@ -710,7 +710,7 @@
             <mxGeometry height="135" width="360" x="1350" y="980" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_repository">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="REPOSITORY / CODE" kind="RELATION" id="edge_context_loader_to_repository">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_repository">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -720,7 +720,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_documentation">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="DOCUMENTATION" kind="RELATION" id="edge_context_loader_to_documentation">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.444;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_documentation">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -730,7 +730,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_current_state">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="CURRENT SYSTEM STATE" kind="RELATION" id="edge_context_loader_to_current_state">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.111;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_current_state">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -740,7 +740,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="READ" relation_type="READ" kind="RELATION" id="edge_context_loader_to_memory">
+        <object label="READ" source_label="CONTEXT LOADER" relation_type="READ" target_label="MEMORY / KNOWLEDGE" kind="RELATION" id="edge_context_loader_to_memory">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.581;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_memory">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -755,7 +755,7 @@
             <mxGeometry height="220" width="660" x="2600" y="3600" as="geometry" />
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_artifact_to_evidence_store">
+        <object label="WRITE" source_label="ARTIFACT / OUTPUT" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_artifact_to_evidence_store">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_artifact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.111;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.143;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -765,7 +765,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_verification_to_evidence_store">
+        <object label="WRITE" source_label="VERIFICATION PIPELINE" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_verification_to_evidence_store">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.444;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.857;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -775,7 +775,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_ci_to_evidence_store">
+        <object label="WRITE" source_label="CONTINUOUS INTEGRATION" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_ci_to_evidence_store">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_ci" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.000;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=1;entryX=1.000;entryY=0.555;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -790,7 +790,7 @@
             <mxGeometry height="180" width="620" x="900" y="3000" as="geometry" />
           </mxCell>
         </object>
-        <object label="STATE" relation_type="WRITE" kind="RELATION" id="edge_orchestrator_to_task_state">
+        <object label="STATE" source_label="ORCHESTRATOR" relation_type="WRITE" target_label="TASK STATE MODEL" kind="RELATION" id="edge_orchestrator_to_task_state">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.600;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.353;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_task_state">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -800,7 +800,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="STATE" relation_type="READ" kind="RELATION" id="edge_scheduler_to_task_state">
+        <object label="STATE" source_label="QUEUE / SCHEDULER / TASK ROUTER" relation_type="READ" target_label="TASK STATE MODEL" kind="RELATION" id="edge_scheduler_to_task_state">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_scheduler" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.686;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_task_state">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -810,7 +810,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="LESSON" relation_type="WRITE" kind="RELATION" id="edge_correction_to_memory">
+        <object label="LESSON" source_label="CORRECTION" relation_type="WRITE" target_label="MEMORY / KNOWLEDGE" kind="RELATION" id="edge_correction_to_memory">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_correction" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_memory">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -820,7 +820,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="LESSON" relation_type="WRITE" kind="RELATION" id="edge_merge_to_memory">
+        <object label="LESSON" source_label="MERGE" relation_type="WRITE" target_label="MEMORY / KNOWLEDGE" kind="RELATION" id="edge_merge_to_memory">
           <mxCell edge="1" parent="layer_memory_evidence" source="node_merge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_memory">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -831,7 +831,7 @@
           </mxCell>
         </object>
         <mxCell id="layer_internal_details" parent="0" style="locked=0;" value="06 — INTERNAL DETAILS" visible="0" />
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_tool_api">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="API" kind="RELATION" id="edge_context_loader_to_tool_api">
           <mxCell edge="1" parent="layer_internal_details" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.778;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_tool_api">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -841,7 +841,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_tool_filesystem">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="FILESYSTEM" kind="RELATION" id="edge_context_loader_to_tool_filesystem">
           <mxCell edge="1" parent="layer_internal_details" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.889;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_tool_filesystem">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -856,7 +856,7 @@
             <mxGeometry height="180" width="760" x="3970" y="820" as="geometry" />
           </mxCell>
         </object>
-        <object label="USE" relation_type="USE" kind="RELATION" id="edge_worker_agent_to_agent_specializations">
+        <object label="USE" source_label="WORKER AGENT" relation_type="USE" target_label="WORKER SPECIALIZATIONS" kind="RELATION" id="edge_worker_agent_to_agent_specializations">
           <mxCell edge="1" parent="layer_internal_details" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.714;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_agent_specializations">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -871,7 +871,7 @@
             <mxGeometry height="105" width="290" x="4540" y="1100" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_search">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="SEARCH / DOCUMENTATION" kind="RELATION" id="edge_tool_router_to_tool_search">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.769;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.541;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_search">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -886,7 +886,7 @@
             <mxGeometry height="105" width="290" x="4870" y="1100" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_code_editor">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="CODE EDITOR" kind="RELATION" id="edge_tool_router_to_tool_code_editor">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.308;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_code_editor">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -901,7 +901,7 @@
             <mxGeometry height="105" width="290" x="5200" y="1100" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_shell">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="SHELL / TERMINAL" kind="RELATION" id="edge_tool_router_to_tool_shell">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.846;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.459;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_shell">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -916,7 +916,7 @@
             <mxGeometry height="105" width="290" x="5530" y="1100" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_test_runner">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="TEST RUNNER" kind="RELATION" id="edge_tool_router_to_tool_test_runner">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.923;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_test_runner">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -931,7 +931,7 @@
             <mxGeometry height="105" width="290" x="5860" y="1100" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_browser">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="BROWSER / UI" kind="RELATION" id="edge_tool_router_to_tool_browser">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.231;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.541;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_browser">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -946,7 +946,7 @@
             <mxGeometry height="105" width="290" x="4540" y="1260" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_git">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="GIT" kind="RELATION" id="edge_tool_router_to_tool_git">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.720;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_git">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -961,7 +961,7 @@
             <mxGeometry height="105" width="290" x="4870" y="1260" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_api">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="API" kind="RELATION" id="edge_tool_router_to_tool_api">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.154;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_api">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -976,7 +976,7 @@
             <mxGeometry height="105" width="290" x="5200" y="1260" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_database">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="DATABASE" kind="RELATION" id="edge_tool_router_to_tool_database">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.385;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_database">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -991,7 +991,7 @@
             <mxGeometry height="105" width="290" x="5530" y="1260" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_filesystem">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="FILESYSTEM" kind="RELATION" id="edge_tool_router_to_tool_filesystem">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.615;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_filesystem">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1006,7 +1006,7 @@
             <mxGeometry height="105" width="290" x="5860" y="1260" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_domain">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="DOMAIN TOOL" kind="RELATION" id="edge_tool_router_to_tool_domain">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.538;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.459;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_domain">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1021,7 +1021,7 @@
             <mxGeometry height="105" width="290" x="5200" y="1420" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_tool_router_to_tool_deterministic_script">
+        <object label="" source_label="TOOL ROUTER" relation_type="USE" target_label="DETERMINISTIC SCRIPT" kind="RELATION" id="edge_tool_router_to_tool_deterministic_script">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_router" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.489;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.541;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_tool_deterministic_script">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1056,7 +1056,7 @@
             <mxGeometry height="150" width="520" x="6940" y="1100" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_static_checks">
+        <object label="" source_label="VERIFICATION PIPELINE" relation_type="USE" target_label="STATIC CHECKS" kind="RELATION" id="edge_verification_to_static_checks">
           <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.778;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.637;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_static_checks">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1066,7 +1066,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_static_checks_to_artifact">
+        <object label="" source_label="STATIC CHECKS" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_static_checks_to_artifact">
           <mxCell edge="1" parent="layer_internal_details" source="node_static_checks" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.304;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.778;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1076,7 +1076,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_software_tests">
+        <object label="" source_label="VERIFICATION PIPELINE" relation_type="USE" target_label="SOFTWARE TESTS" kind="RELATION" id="edge_verification_to_software_tests">
           <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.353;exitY=0.99;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.754;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_software_tests">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1086,7 +1086,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_software_tests_to_artifact">
+        <object label="" source_label="SOFTWARE TESTS" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_software_tests_to_artifact">
           <mxCell edge="1" parent="layer_internal_details" source="node_software_tests" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.722;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1096,7 +1096,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_test_quality">
+        <object label="" source_label="VERIFICATION PIPELINE" relation_type="USE" target_label="TEST QUALITY" kind="RELATION" id="edge_verification_to_test_quality">
           <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.889;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_test_quality">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1106,7 +1106,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_test_quality_to_artifact">
+        <object label="" source_label="TEST QUALITY" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_test_quality_to_artifact">
           <mxCell edge="1" parent="layer_internal_details" source="node_test_quality" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.889;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1116,7 +1116,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_contract_validation">
+        <object label="" source_label="VERIFICATION PIPELINE" relation_type="USE" target_label="CONTRACT / DOMAIN CHECKS" kind="RELATION" id="edge_verification_to_contract_validation">
           <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.403;exitY=0.997;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.692;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_contract_validation">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1126,7 +1126,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_contract_validation_to_artifact">
+        <object label="" source_label="CONTRACT / DOMAIN CHECKS" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_contract_validation_to_artifact">
           <mxCell edge="1" parent="layer_internal_details" source="node_contract_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1136,7 +1136,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="USE" kind="RELATION" id="edge_verification_to_independent_verification">
+        <object label="" source_label="VERIFICATION PIPELINE" relation_type="USE" target_label="INDEPENDENT VERIFICATION" kind="RELATION" id="edge_verification_to_independent_verification">
           <mxCell edge="1" parent="layer_internal_details" source="node_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.556;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_independent_verification">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1146,7 +1146,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="VALIDATE" kind="RELATION" id="edge_independent_verification_to_artifact">
+        <object label="" source_label="INDEPENDENT VERIFICATION" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_independent_verification_to_artifact">
           <mxCell edge="1" parent="layer_internal_details" source="node_independent_verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.444;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1156,7 +1156,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="DOMAIN EXECUTION" relation_type="USE" kind="RELATION" id="edge_tool_domain_to_backtest_engine">
+        <object label="DOMAIN EXECUTION" source_label="DOMAIN TOOL" relation_type="USE" target_label="BACKTEST ENGINE" kind="RELATION" id="edge_tool_domain_to_backtest_engine">
           <mxCell edge="1" parent="layer_internal_details" source="node_tool_domain" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.750;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#B39DDB;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#B39DDB;labelBackgroundColor=#172B4D;" target="node_backtest_engine">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1177,7 +1177,7 @@
             <mxGeometry height="135" width="360" x="2150" y="980" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_data_lifecycle">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="DATA LIFECYCLE" kind="RELATION" id="edge_context_loader_to_data_lifecycle">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.222;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_data_lifecycle">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1187,7 +1187,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="" relation_type="READ" kind="RELATION" id="edge_context_loader_to_data_reproducibility">
+        <object label="" source_label="CONTEXT LOADER" relation_type="READ" target_label="REPRODUCIBLE DATA" kind="RELATION" id="edge_context_loader_to_data_reproducibility">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_context_loader" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.533;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_data_reproducibility">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1207,7 +1207,7 @@
             <mxGeometry height="135" width="390" x="100" y="990" as="geometry" />
           </mxCell>
         </object>
-        <object label="" relation_type="FLOW" kind="RELATION" id="edge_objective_to_research_space">
+        <object label="" source_label="OBJECTIVE / REQUEST / TICKET" relation_type="FLOW" target_label="RESEARCH SPACE" kind="RELATION" id="edge_objective_to_research_space">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_objective" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.333;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_research_space">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1217,7 +1217,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_specification_to_experiment_campaign">
+        <object label="CONTROL" source_label="SOURCE OF TRUTH / SPECIFICATION" relation_type="CONTROL" target_label="CONTROLLED EXPERIMENTS" kind="RELATION" id="edge_specification_to_experiment_campaign">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_specification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.531;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_experiment_campaign">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1227,12 +1227,12 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="CONTROL" relation_type="CONTROL" kind="RELATION" id="edge_experiment_campaign_to_research_space">
+        <object label="CONTROL" source_label="CONTROLLED EXPERIMENTS" relation_type="CONTROL" target_label="RESEARCH SPACE" kind="RELATION" id="edge_experiment_campaign_to_research_space">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_experiment_campaign" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FFAB00;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FFAB00;labelBackgroundColor=#172B4D;" target="node_research_space">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
         </object>
-        <object label="RESEARCH TASK" relation_type="READ" kind="RELATION" id="edge_worker_agent_to_research_space">
+        <object label="RESEARCH TASK" source_label="WORKER AGENT" relation_type="READ" target_label="RESEARCH SPACE" kind="RELATION" id="edge_worker_agent_to_research_space">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_worker_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.605;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;exitX=0.62;exitY=0.009;exitDx=0;exitDy=0;exitPerimeter=0;" target="node_research_space">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1258,7 +1258,7 @@
         <mxCell id="label_science_separation" kind="ANNOTATION" parent="layer_domain_ebta" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontFamily=Helvetica;" value="&lt;b&gt;Validation scientifique ≠ tests logiciels.&lt;/b&gt; L04 juge une conclusion méthodologique ; L08 juge le logiciel et ses contrats." vertex="1">
           <mxGeometry height="55" width="1500" x="3400" y="3240" as="geometry" />
         </mxCell>
-        <object label="DATA" relation_type="READ" kind="RELATION" id="edge_backtest_engine_to_data_reproducibility">
+        <object label="DATA" source_label="BACKTEST ENGINE" relation_type="READ" target_label="REPRODUCIBLE DATA" kind="RELATION" id="edge_backtest_engine_to_data_reproducibility">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_backtest_engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_data_reproducibility">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1268,7 +1268,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="RESULTS" relation_type="WRITE" kind="RELATION" id="edge_backtest_engine_to_artifact">
+        <object label="RESULTS" source_label="BACKTEST ENGINE" relation_type="WRITE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_backtest_engine_to_artifact">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_backtest_engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.250;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.222;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1278,7 +1278,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="SCIENTIFIC" relation_type="VALIDATE" kind="RELATION" id="edge_scientific_validation_to_artifact">
+        <object label="SCIENTIFIC" source_label="SCIENTIFIC VALIDATION" relation_type="VALIDATE" target_label="ARTIFACT / OUTPUT" kind="RELATION" id="edge_scientific_validation_to_artifact">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.333;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.667;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#FF4FD8;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#FF4FD8;labelBackgroundColor=#172B4D;" target="node_artifact">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1288,7 +1288,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="DOMAIN VERDICT" relation_type="FLOW" kind="RELATION" id="edge_scientific_validation_to_decision_gate">
+        <object label="DOMAIN VERDICT" source_label="SCIENTIFIC VALIDATION" relation_type="FLOW" target_label="PASS / FAIL ?" kind="RELATION" id="edge_scientific_validation_to_decision_gate">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.667;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.870;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#4C9AFF;strokeWidth=2.5;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#4C9AFF;labelBackgroundColor=#172B4D;" target="node_decision_gate">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1298,7 +1298,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_backtest_engine_to_evidence_store">
+        <object label="WRITE" source_label="BACKTEST ENGINE" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_backtest_engine_to_evidence_store">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_backtest_engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.518;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.286;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1308,7 +1308,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="WRITE" relation_type="WRITE" kind="RELATION" id="edge_scientific_validation_to_evidence_store">
+        <object label="WRITE" source_label="SCIENTIFIC VALIDATION" relation_type="WRITE" target_label="EVIDENCE &amp; ARTIFACT STORE" kind="RELATION" id="edge_scientific_validation_to_evidence_store">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.482;exitY=1.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.714;entryY=0.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_evidence_store">
             <mxGeometry relative="1" as="geometry">
               <Array as="points">
@@ -1318,7 +1318,7 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <object label="RESULTS" relation_type="READ" kind="RELATION" id="edge_scientific_validation_to_backtest_engine">
+        <object label="RESULTS" source_label="SCIENTIFIC VALIDATION" relation_type="READ" target_label="BACKTEST ENGINE" kind="RELATION" id="edge_scientific_validation_to_backtest_engine">
           <mxCell edge="1" parent="layer_domain_ebta" source="node_scientific_validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;exitPerimeter=1;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;entryPerimeter=1;strokeColor=#57D9A3;strokeWidth=2.25;opacity=100;dashed=0;jumpStyle=arc;jumpSize=8;endArrow=block;endFill=1;endSize=10;fontColor=#57D9A3;labelBackgroundColor=#172B4D;" target="node_backtest_engine">
             <mxGeometry relative="1" as="geometry" />
           </mxCell>
